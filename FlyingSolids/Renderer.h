@@ -68,6 +68,9 @@ public:
     /// Starts MP4 recording at the requested frame rate.
     bool StartRecording(const wchar_t* path, unsigned frameRate);
 
+    /// Tests MP4 recording of the current render target before a file is selected.
+    bool CheckRecordingSupport(unsigned frameRate) const;
+
     /// Finalizes the current recording and releases its resources.
     void StopRecording();
 
@@ -79,6 +82,9 @@ public:
 
     /// Saves the current render target as a PNG image.
     bool SaveSnapshot(const wchar_t* path) const;
+
+    /// Tests PNG capture and encoding in memory before a file is selected.
+    bool CheckSnapshotSupport() const;
 
     /// Current render-target dimensions
 

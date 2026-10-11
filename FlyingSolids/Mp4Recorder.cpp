@@ -53,6 +53,7 @@ constexpr LONGLONG MEDIA_FOUNDATION_UNITS_PER_SECOND = 10000000;
 constexpr wchar_t MEDIA_FOUNDATION_LIBRARY[] = L"mfplat.dll";
 constexpr wchar_t VIDEO_RENDERER_LIBRARY[] = L"evr.dll";
 constexpr char COPY_IMAGE_FUNCTION[] = "MFCopyImage";
+constexpr wchar_t RECORDING_TEST_PREFIX[] = L"FSP";
 
 /// Resolves image copying from Media Foundation, or from the system EVR library used before Windows 7.
 /// Retains a successfully loaded EVR module for the lifetime of the cached function pointer.
@@ -195,6 +196,43 @@ bool Mp4Recorder::FailStart(HRESULT error) {
         impl->comInitialized = false;
     }
     return false;
+}
+
+/// Tests initialization, frame encoding and finalization without touching the active recorder or a user file.
+HRESULT Mp4Recorder::CheckSupport(ID3D11Device* device, ID3D11DeviceContext* context, ID3D11Texture2D* source,
+        UINT width, UINT height, UINT frameRate) {
+    if (!device || !context || !source || width == 0 || height == 0 || frameRate == 0) {
+        return E_INVALIDARG;
+    }
+    wchar_t directory[MAX_PATH]{};
+    const DWORD length = GetTempPathW(MAX_PATH, directory);
+    if (length == 0) {
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
+    if (length >= MAX_PATH) {
+        return HRESULT_FROM_WIN32(ERROR_INSUFFICIENT_BUFFER);
+    }
+    wchar_t file[MAX_PATH]{};
+    if (!GetTempFileNameW(directory, RECORDING_TEST_PREFIX, 0, file)) {
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
+    Mp4Recorder recorder;
+    HRESULT result = S_OK;
+    if (!recorder.Start(device, file, width, height, frameRate)) {
+        result = recorder.LastError();
+    } else {
+        if (!recorder.CaptureFrame(context, source)) {
+            result = recorder.LastError();
+        }
+        const HRESULT stopResult = recorder.Stop();
+        if (SUCCEEDED(result)) {
+            result = stopResult;
+        }
+    }
+    if (!DeleteFileW(file) && SUCCEEDED(result)) {
+        result = HRESULT_FROM_WIN32(GetLastError());
+    }
+    return result;
 }
 
 /// Configures a hardware-assisted H.264 sink and its CPU-readable staging texture.

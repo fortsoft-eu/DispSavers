@@ -126,6 +126,9 @@ const wchar_t* DisablePreviewText(AppLanguage language);
 /// Returns the localized status text for paused animation.
 const wchar_t* PausedStatusText(AppLanguage language);
 
+/// Returns the localized ready status when no animation surface is rendering.
+const wchar_t* ReadyStatusText(AppLanguage language);
+
 /// Returns the localized Help button caption.
 const wchar_t* HelpButtonText(AppLanguage language);
 

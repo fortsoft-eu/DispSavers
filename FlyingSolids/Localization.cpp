@@ -513,7 +513,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Pokračovat",
         L"Nainstalovat spořič",
         L"Konec",
-        L"Animace běží.",
+        L"Animace běží…",
         L"Probíhá záznam MP4…",
         L"Záznam byl uložen.",
         L"Záznam MP4 se nepodařilo spustit.",
@@ -548,7 +548,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Resume",
         L"Install screen saver",
         L"Exit",
-        L"Animation is running.",
+        L"Animation is running…",
         L"MP4 recording in progress…",
         L"Recording was saved.",
         L"Could not start MP4 recording.",
@@ -583,7 +583,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Fortsetzen",
         L"Bildschirmschoner installieren",
         L"Beenden",
-        L"Animation läuft.",
+        L"Animation läuft…",
         L"MP4-Aufnahme läuft…",
         L"Aufnahme wurde gespeichert.",
         L"MP4-Aufnahme konnte nicht gestartet werden.",
@@ -618,7 +618,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Reprendre",
         L"Installer l’économiseur",
         L"Quitter",
-        L"L’animation est en cours.",
+        L"L’animation est en cours…",
         L"Enregistrement MP4 en cours…",
         L"L’enregistrement a été sauvegardé.",
         L"Impossible de démarrer l’enregistrement MP4.",
@@ -653,7 +653,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Continuar",
         L"Instalar salvapantallas",
         L"Salir",
-        L"La animación está activa.",
+        L"La animación está activa…",
         L"Grabando MP4…",
         L"La grabación se guardó.",
         L"No se pudo iniciar la grabación MP4.",
@@ -688,7 +688,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Riprendi",
         L"Installa salvaschermo",
         L"Esci",
-        L"Animazione in esecuzione.",
+        L"Animazione in esecuzione…",
         L"Registrazione MP4 in corso…",
         L"Registrazione salvata.",
         L"Impossibile avviare la registrazione MP4.",
@@ -723,7 +723,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Wznów",
         L"Zainstaluj wygaszacz",
         L"Zakończ",
-        L"Animacja działa.",
+        L"Animacja działa…",
         L"Trwa nagrywanie MP4…",
         L"Nagranie zapisano.",
         L"Nie udało się rozpocząć nagrywania MP4.",
@@ -758,7 +758,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Pokračovať",
         L"Nainštalovať šetrič",
         L"Koniec",
-        L"Animácia beží.",
+        L"Animácia beží…",
         L"Prebieha záznam MP4…",
         L"Záznam bol uložený.",
         L"Záznam MP4 sa nepodarilo spustiť.",
@@ -793,7 +793,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Resume",
         L"Install screen saver",
         L"Exit",
-        L"Animation is running.",
+        L"Animation is running…",
         L"MP4 recording in progress…",
         L"Recording was saved.",
         L"Could not start MP4 recording.",
@@ -828,7 +828,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Resume",
         L"Install screen saver",
         L"Exit",
-        L"Animation is running.",
+        L"Animation is running…",
         L"MP4 recording in progress…",
         L"Recording was saved.",
         L"Could not start MP4 recording.",
@@ -863,7 +863,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Continuar",
         L"Instalar proteção de ecrã",
         L"Sair",
-        L"A animação está em execução.",
+        L"A animação está em execução…",
         L"Gravação MP4 em curso…",
         L"A gravação foi guardada.",
         L"Não foi possível iniciar a gravação MP4.",
@@ -898,7 +898,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Fortsett",
         L"Installer skjermsparer",
         L"Avslutt",
-        L"Animasjonen kjører.",
+        L"Animasjonen kjører…",
         L"MP4-opptak pågår…",
         L"Opptaket ble lagret.",
         L"Kunne ikke starte MP4-opptak.",
@@ -933,7 +933,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Fortsätt",
         L"Installera skärmsläckare",
         L"Avsluta",
-        L"Animeringen körs.",
+        L"Animeringen körs…",
         L"MP4-inspelning pågår…",
         L"Inspelningen sparades.",
         L"Det gick inte att starta MP4-inspelningen.",
@@ -968,7 +968,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Jatka",
         L"Asenna näytönsäästäjä",
         L"Lopeta",
-        L"Animaatio on käynnissä.",
+        L"Animaatio on käynnissä…",
         L"MP4-tallennus käynnissä…",
         L"Tallenne tallennettiin.",
         L"MP4-tallennusta ei voitu aloittaa.",
@@ -1003,7 +1003,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Fortsæt",
         L"Installer pauseskærm",
         L"Afslut",
-        L"Animationen kører.",
+        L"Animationen kører…",
         L"MP4-optagelse i gang…",
         L"Optagelsen blev gemt.",
         L"MP4-optagelsen kunne ikke startes.",
@@ -1038,7 +1038,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Halda áfram",
         L"Setja upp skjáhvílu",
         L"Hætta",
-        L"Hreyfimyndin er í gangi.",
+        L"Hreyfimyndin er í gangi…",
         L"MP4-upptaka í gangi…",
         L"Upptakan var vistuð.",
         L"Ekki tókst að hefja MP4-upptöku.",
@@ -1073,7 +1073,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Sürdür",
         L"Ekran koruyucuyu yükle",
         L"Çıkış",
-        L"Animasyon çalışıyor.",
+        L"Animasyon çalışıyor…",
         L"MP4 kaydı sürüyor…",
         L"Kayıt kaydedildi.",
         L"MP4 kaydı başlatılamadı.",
@@ -1184,6 +1184,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> DISABLE_PREVIEW_TEXTS = {
     L"Deaktivér forhåndsvisning",
     L"Slökkva á forskoðun",
     L"Önizlemeyi kapat"
+};
+
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> READY_STATUS_TEXTS = {
+    L"Připraven.",
+    L"Ready.",
+    L"Bereit.",
+    L"Prêt.",
+    L"Listo.",
+    L"Pronto.",
+    L"Gotowy.",
+    L"Pripravený.",
+    L"Ready.",
+    L"Ready.",
+    L"Pronto.",
+    L"Klar.",
+    L"Redo.",
+    L"Valmis.",
+    L"Klar.",
+    L"Tilbúið.",
+    L"Hazır."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> PAUSED_STATUS_TEXTS = {
@@ -2075,6 +2095,11 @@ const wchar_t* DisablePreviewText(AppLanguage language) {
 /// Returns the localized paused-state status text.
 const wchar_t* PausedStatusText(AppLanguage language) {
     return PAUSED_STATUS_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+}
+
+/// Returns the localized ready status when no animation is rendering.
+const wchar_t* ReadyStatusText(AppLanguage language) {
+    return READY_STATUS_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the localized Help button caption.

@@ -92,6 +92,7 @@ constexpr wchar_t NO_ANIMATION_MONITORS[] = L"{none}";
 constexpr UINT ENSURE_SETTINGS_CONTROL_VISIBLE = WM_APP + 1;
 constexpr UINT RESTORE_SETTINGS_FOCUS = WM_APP + 2;
 constexpr UINT ACTIVATE_APPLICATION_WINDOW = WM_APP + 3;
+constexpr UINT UPDATE_SETTINGS_ACTION_BUTTONS = WM_APP + 4;
 constexpr UINT_PTR ABOUT_CONTROL_SUBCLASS = 0xF503;
 constexpr UINT_PTR INFORMATION_TEXT_SUBCLASS_ID = 0xF504;
 
@@ -462,6 +463,13 @@ static RenderSurface* PrimarySurface() {
         return app->surfaces.front().get();
     }
     return nullptr;
+}
+
+/// Reports whether the primary surface has a rendered frame and can accept capture commands.
+static bool HasReadyPrimarySurface() {
+    RenderSurface* surface = PrimarySurface();
+    return surface && surface->renderer && surface->renderedFrames.load(std::memory_order_relaxed) != 0
+        && !surface->stopRequested.load(std::memory_order_relaxed);
 }
 
 /// Returns the renderer owned by the primary animation surface.
@@ -838,6 +846,9 @@ static bool PrimaryIsRecording() {
 /// Chooses the persistent status text implied by current runtime state.
 static const wchar_t* CurrentStatusText() {
     const LocalizedText& strings = Text(ActiveLanguage());
+    if (!HasReadyPrimarySurface()) {
+        return ReadyStatusText(ActiveLanguage());
+    }
     if (PrimaryIsRecording()) {
         return strings.recording;
     }
@@ -862,7 +873,25 @@ static void ShowTransientStatus(const wchar_t* text) {
     SetTimer(app->controlWindow, ID_STATUS_RESET_TIMER, 10000, nullptr);
 }
 
-/// Synchronizes the record button caption with the recorder state.
+/// Enables only settings actions that can change the current state or operate on a rendered animation.
+static void UpdateSettingsActionButtons(HWND window) {
+    window = GetAncestor(window, GA_ROOT);
+    const SettingsWindowData* data = reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+    if (!data || !data->settings) {
+        return;
+    }
+    const HWND controls = SettingsContentWindow(window);
+    EnableWindow(GetDlgItem(controls, ID_ALL_SOLIDS), data->settings->enabledSolids != ALL_SOLID_MASK);
+    EnableWindow(GetDlgItem(controls, ID_NO_SOLIDS), data->settings->enabledSolids != 0);
+    if (data->appMode) {
+        const bool animationReady = HasReadyPrimarySurface();
+        EnableWindow(GetDlgItem(controls, ID_RECORD_TOGGLE), animationReady);
+        EnableWindow(GetDlgItem(controls, ID_SNAPSHOT), animationReady);
+        EnableWindow(GetDlgItem(controls, ID_PAUSE), animationReady);
+    }
+}
+
+/// Synchronizes the record button caption and enabled settings actions with the current animation state.
 static void UpdateRecordingButton() {
     if (!app || !app->controlWindow) {
         return;
@@ -871,6 +900,7 @@ static void UpdateRecordingButton() {
     SetDlgItemTextW(SettingsContentWindow(app->controlWindow), ID_RECORD_TOGGLE, PrimaryIsRecording()
         ? strings.stopRecording
         : strings.startRecording);
+    UpdateSettingsActionButtons(app->controlWindow);
 }
 
 /// Finalizes recording on one animation surface while holding its renderer lock.
@@ -887,6 +917,18 @@ static bool StopSurfaceRecording(RenderSurface& surface) {
 static bool StartSurfaceRecording(RenderSurface& surface, const wchar_t* file, unsigned recordingRate) {
     const std::lock_guard lock(surface.rendererMutex);
     return surface.renderer->StartRecording(file, recordingRate);
+}
+
+/// Tests recording support while holding the renderer lock, without retaining the lock during a dialog.
+static bool CheckSurfaceRecordingSupport(RenderSurface& surface, unsigned recordingRate) {
+    const std::lock_guard lock(surface.rendererMutex);
+    return surface.renderer->CheckRecordingSupport(recordingRate);
+}
+
+/// Tests PNG capture support while holding the renderer lock, without retaining the lock during a dialog.
+static bool CheckSurfaceSnapshotSupport(RenderSurface& surface) {
+    const std::lock_guard lock(surface.rendererMutex);
+    return surface.renderer->CheckSnapshotSupport();
 }
 
 /// Saves one animation surface while holding its renderer lock.
@@ -914,6 +956,13 @@ static void StartRecording(HWND owner) {
     if (PrimaryIsRecording()) {
         StopRecording();
     }
+    const unsigned recordingRate = !app->surfaces.empty()
+        ? app->surfaces.front()->refreshRate
+        : app->refreshRate;
+    if (!CheckSurfaceRecordingSupport(*surface, recordingRate)) {
+        MessageBoxW(owner, Text(ActiveLanguage()).recordingFailed, PRODUCT_NAME, MB_OK | MB_ICONERROR);
+        return;
+    }
     wchar_t file[MAX_PATH]{};
     wcscpy_s(file, TimestampedFileName(MP4_EXTENSION).c_str());
     const std::wstring initialDirectory = ExistingKnownFolder(CSIDL_MYVIDEO, CSIDL_PERSONAL);
@@ -929,9 +978,6 @@ static void StartRecording(HWND owner) {
     if (!GetSaveFileNameW(&dialog)) {
         return;
     }
-    const unsigned recordingRate = !app->surfaces.empty()
-        ? app->surfaces.front()->refreshRate
-        : app->refreshRate;
     const bool started = StartSurfaceRecording(*surface, file, recordingRate);
     if (started) {
         SetStatus(Text(ActiveLanguage()).recording);
@@ -945,6 +991,10 @@ static void StartRecording(HWND owner) {
 static void SaveSnapshot(HWND owner) {
     RenderSurface* surface = PrimarySurface();
     if (!app || app->mode != RunMode::Application || !surface || !surface->renderer) {
+        return;
+    }
+    if (!CheckSurfaceSnapshotSupport(*surface)) {
+        MessageBoxW(owner, SnapshotFailedText(ActiveLanguage()), PRODUCT_NAME, MB_OK | MB_ICONERROR);
         return;
     }
     wchar_t file[MAX_PATH]{};
@@ -1243,6 +1293,7 @@ static void ApplyLocalizedCaptions(HWND window, SettingsWindowData& data) {
     UpdateSettingsTextControlLayout(window);
     RefreshInformationWindows(data.language, data.appMode);
     data.updating = false;
+    UpdateSettingsActionButtons(window);
 }
 
 /// Reports whether one surface can use swap-chain presentation pacing. Invisible self-test windows are
@@ -1264,6 +1315,14 @@ static void GetSurfaceDimensions(RenderSurface& surface, unsigned& width, unsign
 static void DrawSurface(RenderSurface& surface, const SceneState& scene, bool inspect) {
     const std::lock_guard lock(surface.rendererMutex);
     surface.renderer->Draw(scene, inspect, 1);
+}
+
+/// Counts one completed frame and asks the UI thread to enable animation actions after the first frame.
+static void CompleteSurfaceFrame(Application& application, RenderSurface& surface) {
+    const unsigned previousFrames = surface.renderedFrames.fetch_add(1, std::memory_order_relaxed);
+    if (previousFrames == 0 && application.mode == RunMode::Application && application.controlWindow) {
+        PostMessageW(application.controlWindow, UPDATE_SETTINGS_ACTION_BUTTONS, 0, 0);
+    }
 }
 
 /// Advances and presents one monitor surface on its refresh-paced worker thread. Keep each monitor's presentation
@@ -1320,7 +1379,7 @@ static void RenderSurfaceLoop(Application* app, RenderSurface* surface) {
         scene.mainLight = app->runtimeMainLight.load(std::memory_order_relaxed);
         scene.fillLight = app->runtimeFillLight.load(std::memory_order_relaxed);
         DrawSurface(*surface, scene, inspect);
-        surface->renderedFrames.fetch_add(1, std::memory_order_relaxed);
+        CompleteSurfaceFrame(*app, *surface);
         QueryPerformanceCounter(&now);
         const double remainingTicks = periodTicks - static_cast<double>(now.QuadPart - frameStarted.QuadPart);
         if (!presentationPaced && remainingTicks > 0.0) {
@@ -3112,6 +3171,10 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 }
             }
             return 0;
+        case UPDATE_SETTINGS_ACTION_BUTTONS:
+            UpdateSettingsActionButtons(window);
+            RestoreCurrentStatus();
+            return 0;
         case ENSURE_SETTINGS_CONTROL_VISIBLE:
             if (data) {
                 EnsureSettingsControlVisible(window, *data, reinterpret_cast<HWND>(wParam));
@@ -3286,6 +3349,7 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     if (data->appMode) {
                         data->settings->Save();
                     }
+                    UpdateSettingsActionButtons(window);
                     return 0;
                 }
                 if ((LOWORD(wParam) == ID_ALL_SOLIDS || LOWORD(wParam) == ID_NO_SOLIDS) && data->settings) {
@@ -3301,6 +3365,7 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     if (data->appMode) {
                         data->settings->Save();
                     }
+                    UpdateSettingsActionButtons(window);
                     return 0;
                 }
                 if ((LOWORD(wParam) == ID_CAMERA_STATIC || LOWORD(wParam) == ID_CAMERA_FLIGHT) && data->settings) {
@@ -3612,6 +3677,8 @@ static void ApplyAnimationMonitors() {
     if (app->refreshRate == 0) {
         app->refreshRate = 60;
     }
+    UpdateRecordingButton();
+    RestoreCurrentStatus();
     UpdateControlWindowTopmost(app->controlWindow);
     SetForegroundWindow(app->controlWindow);
 }

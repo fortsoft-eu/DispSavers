@@ -481,9 +481,9 @@ struct Renderer::Impl {
         context->Unmap(staging.Get(), 0);
     }
 
-    /// Renders the last scene without presentation and encodes the valid back buffer as a PNG through WIC.
+    /// Encodes the last scene as a PNG without presentation, using memory when no output path is supplied.
     bool SaveSnapshot(const wchar_t* path) {
-        if (!path || !*path || !device || !context || !backBuffer || width == 0 || height == 0 || !hasSnapshotScene) {
+        if (path && !*path || !device || !context || !backBuffer || width == 0 || height == 0 || !hasSnapshotScene) {
             return false;
         }
         Draw(snapshotScene, false, 0, false);
@@ -512,6 +512,7 @@ struct Renderer::Impl {
         ComPtr<IWICBitmapEncoder> encoder;
         ComPtr<IWICBitmapFrameEncode> frame;
         ComPtr<IPropertyBag2> properties;
+        ComPtr<IStream> memory;
         HRESULT result = CoCreateInstance(CLSID_WICImagingFactory2, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&factory));
         if (result == REGDB_E_CLASSNOTREG) {
             result = CoCreateInstance(CLSID_WICImagingFactory1, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&factory));
@@ -520,7 +521,14 @@ struct Renderer::Impl {
             result = factory->CreateStream(&stream);
         }
         if (SUCCEEDED(result)) {
-            result = stream->InitializeFromFilename(path, GENERIC_WRITE);
+            if (path) {
+                result = stream->InitializeFromFilename(path, GENERIC_WRITE);
+            } else {
+                result = CreateStreamOnHGlobal(nullptr, TRUE, &memory);
+                if (SUCCEEDED(result)) {
+                    result = stream->InitializeFromIStream(memory.Get());
+                }
+            }
         }
         if (SUCCEEDED(result)) {
             result = factory->CreateEncoder(GUID_ContainerFormatPng, nullptr, &encoder);
@@ -559,11 +567,12 @@ struct Renderer::Impl {
         frame.Reset();
         encoder.Reset();
         stream.Reset();
+        memory.Reset();
         factory.Reset();
         if (SUCCEEDED(comResult)) {
             CoUninitialize();
         }
-        if (FAILED(result)) {
+        if (FAILED(result) && path) {
             DeleteFileW(path);
         }
         return SUCCEEDED(result);
@@ -652,6 +661,13 @@ bool Renderer::StartRecording(const wchar_t* path, unsigned frameRate) {
     return impl->recorder.Start(impl->device.Get(), path, impl->width, impl->height, frameRate);
 }
 
+/// Tests the current GPU target and recording format without changing the active recorder.
+bool Renderer::CheckRecordingSupport(unsigned frameRate) const {
+    const HRESULT result = Mp4Recorder::CheckSupport(impl->device.Get(), impl->context.Get(), impl->backBuffer.Get(),
+        impl->width, impl->height, frameRate);
+    return SUCCEEDED(result);
+}
+
 /// Finalizes active MP4 capture.
 void Renderer::StopRecording() {
     impl->recorder.Stop();
@@ -669,7 +685,15 @@ HRESULT Renderer::RecordingError() const {
 
 /// Saves the current back buffer as a PNG image.
 bool Renderer::SaveSnapshot(const wchar_t* path) const {
+    if (!path || !*path) {
+        return false;
+    }
     return impl->SaveSnapshot(path);
+}
+
+/// Tests the complete PNG capture pipeline with the current scene and an in-memory stream.
+bool Renderer::CheckSnapshotSupport() const {
+    return impl->SaveSnapshot(nullptr);
 }
 
 /// Returns the current render-target width.

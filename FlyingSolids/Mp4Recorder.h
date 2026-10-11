@@ -51,6 +51,10 @@ public:
     /// Opens an output file and prepares resources for the supplied GPU device.
     bool Start(ID3D11Device* device, const wchar_t* filePath, UINT width, UINT height, UINT frameRate);
 
+    /// Tests the complete recording pipeline with one frame in a disposable temporary file.
+    static HRESULT CheckSupport(ID3D11Device* device, ID3D11DeviceContext* context, ID3D11Texture2D* source,
+        UINT width, UINT height, UINT frameRate);
+
     /// Finalizes the file and releases all recording resources.
     HRESULT Stop();
 
