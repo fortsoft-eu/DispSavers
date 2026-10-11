@@ -1,0 +1,7 @@
+﻿<Solution>
+  <Configurations>
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="FlyingSolids/FlyingSolids.vcxproj" Id="bd7f6079-1029-4b8a-9743-756c7991d204" />
+  <Project Path="FlyingSolids/FlyingSolidsScr.vcxproj" Id="a9c08e34-7800-4af9-95d4-0f72642810d5" />
+</Solution>

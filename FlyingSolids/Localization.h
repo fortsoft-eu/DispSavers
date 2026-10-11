@@ -1,0 +1,188 @@
+﻿/**
+ * This is open-source software licensed under the terms of the MIT License.
+ *
+ * Copyright (c) 2026 Petr Červinka - FortSoft <cervinka@fortsoft.eu>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ **
+ * Last modified for version 1.0.0.0
+ */
+
+#pragma once
+
+#include "Effects.h"
+#include <array>
+
+/// Supported user-interface languages in combo-box display order.
+enum class AppLanguage : int {
+    Czech,
+    EnglishUs,
+    German,
+    French,
+    Spanish,
+    Italian,
+    Polish,
+    Slovak,
+    EnglishUk,
+    EnglishAu,
+    Portuguese,
+    Norwegian,
+    Swedish,
+    Finnish,
+    Danish,
+    Icelandic,
+    Turkish,
+    Count
+};
+
+/// Core localized strings displayed by both settings-window variants.
+struct LocalizedText {
+    const wchar_t* languageName;
+    const wchar_t* controlTitle;
+    const wchar_t* settingsTitle;
+    const wchar_t* language;
+    const wchar_t* objectSpeed;
+    const wchar_t* cameraSpeed;
+    const wchar_t* observeSpace;
+    const wchar_t* flyThroughSpace;
+    const wchar_t* mainLight;
+    const wchar_t* fillLight;
+    const wchar_t* solidObjects;
+    const wchar_t* enableAll;
+    const wchar_t* disableAll;
+    const wchar_t* animationMonitor;
+    const wchar_t* monitor;
+    const wchar_t* resolution;
+    const wchar_t* position;
+    const wchar_t* primary;
+    const wchar_t* ok;
+    const wchar_t* cancel;
+    const wchar_t* startRecording;
+    const wchar_t* stopRecording;
+    const wchar_t* pause;
+    const wchar_t* resume;
+    const wchar_t* installScreenSaver;
+    const wchar_t* exit;
+    const wchar_t* ready;
+    const wchar_t* recording;
+    const wchar_t* recordingSaved;
+    const wchar_t* recordingFailed;
+    const wchar_t* installationFailed;
+    const wchar_t* installationSucceeded;
+    const wchar_t* rendererFailed;
+    std::array<const wchar_t*, SOLID_COUNT> solids;
+};
+
+/// Number of selectable user-interface languages.
+inline constexpr std::size_t LANGUAGE_COUNT = static_cast<std::size_t>(AppLanguage::Count);
+
+/// Core language-table access and conversion
+
+/// Returns the core text record, normalizing unsupported language values to US English.
+const LocalizedText& Text(AppLanguage language);
+
+/// Maps the current user's Windows UI language to the nearest supported language.
+AppLanguage DetectSystemLanguage();
+
+/// Maps unsupported persisted language values to US English.
+AppLanguage NormalizeLanguage(int language);
+
+/// Returns a supported language's position in the language selector.
+int LanguageIndex(AppLanguage language);
+
+/// Resolves a language-selector index, using US English for an invalid index.
+AppLanguage LanguageAtIndex(int index);
+
+/// Supplementary settings-window strings
+
+/// Returns the localized copy-count slider caption.
+const wchar_t* CopyCountText(AppLanguage language);
+
+/// Returns the localized object-size slider caption.
+const wchar_t* ObjectSizeText(AppLanguage language);
+
+/// Returns the localized command that starts the settings preview.
+const wchar_t* EnablePreviewText(AppLanguage language);
+
+/// Returns the localized command that stops the settings preview.
+const wchar_t* DisablePreviewText(AppLanguage language);
+
+/// Returns the localized status text for paused animation.
+const wchar_t* PausedStatusText(AppLanguage language);
+
+/// Returns the localized Help button caption.
+const wchar_t* HelpButtonText(AppLanguage language);
+
+/// Returns the localized About button caption.
+const wchar_t* AboutButtonText(AppLanguage language);
+
+/// Returns the localized Close button caption.
+const wchar_t* CloseButtonText(AppLanguage language);
+
+/// Returns the localized snapshot button caption.
+const wchar_t* SnapshotButtonText(AppLanguage language);
+
+/// Returns the localized status text for a successfully saved snapshot.
+const wchar_t* SnapshotSavedText(AppLanguage language);
+
+/// Returns the localized status text for a failed snapshot.
+const wchar_t* SnapshotFailedText(AppLanguage language);
+
+/// Screen-saver installation strings
+
+/// Returns the localized command that uninstalls the screen saver.
+const wchar_t* UninstallScreenSaverText(AppLanguage language);
+
+/// Returns the localized status text for successful screen-saver uninstallation.
+const wchar_t* UninstallationSucceededText(AppLanguage language);
+
+/// Returns the generic localized screen-saver uninstallation failure text.
+const wchar_t* UninstallationFailedText(AppLanguage language);
+
+/// Returns the instruction to close settings that prevent screen-saver uninstallation.
+const wchar_t* UninstallationBlockedBySettingsText(AppLanguage language);
+
+/// Returns the instruction to close the Windows preview that prevents screen-saver uninstallation.
+const wchar_t* UninstallationBlockedBySystemPreviewText(AppLanguage language);
+
+/// Returns the instruction to stop an active screen saver before uninstalling it.
+const wchar_t* UninstallationBlockedByRunningSaverText(AppLanguage language);
+
+/// Help and About dialog strings
+
+/// Returns localized Help content for standalone or screen-saver settings.
+const wchar_t* HelpBodyText(AppLanguage language, bool appMode);
+
+/// Returns the localized one-line product description.
+const wchar_t* AboutDescriptionText(AppLanguage language);
+
+/// Returns the localized target-platform label.
+const wchar_t* AboutPlatformLabel(AppLanguage language);
+
+/// Returns the localized website label.
+const wchar_t* AboutWebsiteLabel(AppLanguage language);
+
+/// Returns the localized context command that opens the product website.
+const wchar_t* OpenInBrowserText(AppLanguage language);
+
+/// Returns the localized context command that copies the website URL.
+const wchar_t* CopyUrlText(AppLanguage language);
+
+/// Returns the localized context command that copies product information.
+const wchar_t* CopyInformationText(AppLanguage language);
