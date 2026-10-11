@@ -182,7 +182,7 @@ float2 SurfaceLight(float3 normal, float3 view, float3 light) {
     return float2(diffuse, specular);
 }
 
-/// Shades every solid in linear light with independently enabled key and fill illumination.
+/// Shades every solid in linear light with independently enabled key, fill, ambient and rim illumination.
 float4 ShadeSolid(float3 surfaceNormal, float3 viewPosition, uint kind) {
     float3 normal = normalize(surfaceNormal);
     if (dot(normal, -viewPosition) < 0.0) {
@@ -196,7 +196,7 @@ float4 ShadeSolid(float3 surfaceNormal, float3 viewPosition, uint kind) {
     const float diffuse = key.x * lightSettings.x + fill.x * lightSettings.y;
     const float specular = key.y * lightSettings.x + fill.y * lightSettings.y;
     const float rim = pow(saturate(1.0 - abs(dot(normal, view))), 2.0);
-    const float illumination = 0.16 + 0.78 * diffuse + 0.12 * rim;
+    const float illumination = lightSettings.z + 0.78 * diffuse + lightSettings.w * rim;
     const float3 base = LinearColor(ObjectColor(kind));
     const float3 color = saturate(base * illumination + specular * 0.48);
     return float4(color, 1.0);

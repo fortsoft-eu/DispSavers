@@ -111,6 +111,15 @@ AppLanguage LanguageAtIndex(int index);
 
 /// Supplementary settings-window strings
 
+/// Returns the localized option that inhibits the screen saver during visible animation.
+const wchar_t* PreventScreenSaverText(AppLanguage language);
+
+/// Returns the localized ambient-light checkbox caption.
+const wchar_t* AmbientLightText(AppLanguage language);
+
+/// Returns the localized rim-light checkbox caption.
+const wchar_t* RimLightText(AppLanguage language);
+
 /// Returns the localized copy-count slider caption.
 const wchar_t* CopyCountText(AppLanguage language);
 

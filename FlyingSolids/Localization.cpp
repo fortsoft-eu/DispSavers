@@ -1186,6 +1186,66 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> DISABLE_PREVIEW_TEXTS = {
     L"Önizlemeyi kapat"
 };
 
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> PREVENT_SCREEN_SAVER_TEXTS = {
+    L"Blokovat spořič při animaci",
+    L"Prevent screen saver during animation",
+    L"Bildschirmschoner bei Animation sperren",
+    L"Bloquer l’écran de veille pendant l’animation",
+    L"Bloquear salvapantallas durante la animación",
+    L"Blocca salvaschermo durante l’animazione",
+    L"Blokuj wygaszacz podczas animacji",
+    L"Blokovať šetrič pri animácii",
+    L"Prevent screen saver during animation",
+    L"Prevent screen saver during animation",
+    L"Bloquear proteção de ecrã durante a animação",
+    L"Hindre skjermsparer under animasjon",
+    L"Blockera skärmsläckare under animering",
+    L"Estä näytönsäästäjä animaation aikana",
+    L"Blokér pauseskærm under animation",
+    L"Hindra skjáhvílu meðan hreyfimynd er í gangi",
+    L"Animasyon sırasında ekran koruyucuyu engelle"
+};
+
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> AMBIENT_LIGHT_TEXTS = {
+    L"Základní jas",
+    L"Ambient light",
+    L"Umgebungslicht",
+    L"Éclairage ambiant",
+    L"Luz ambiental",
+    L"Luce ambientale",
+    L"Światło otoczenia",
+    L"Základný jas",
+    L"Ambient light",
+    L"Ambient light",
+    L"Luz ambiente",
+    L"Omgivelseslys",
+    L"Omgivningsljus",
+    L"Ympäristövalo",
+    L"Omgivende lys",
+    L"Umhverfislýsing",
+    L"Ortam ışığı"
+};
+
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> RIM_LIGHT_TEXTS = {
+    L"Přisvětlení obrysů",
+    L"Rim light",
+    L"Konturlicht",
+    L"Éclairage des contours",
+    L"Iluminación de contornos",
+    L"Illuminazione dei contorni",
+    L"Oświetlenie konturów",
+    L"Prisvetlenie obrysov",
+    L"Rim light",
+    L"Rim light",
+    L"Iluminação dos contornos",
+    L"Konturlys",
+    L"Konturljus",
+    L"Reunavalo",
+    L"Konturlys",
+    L"Útlínulýsing",
+    L"Kenar aydınlatması"
+};
+
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> READY_STATUS_TEXTS = {
     L"Připraven.",
     L"Ready.",
@@ -2095,6 +2155,21 @@ const wchar_t* DisablePreviewText(AppLanguage language) {
 /// Returns the localized paused-state status text.
 const wchar_t* PausedStatusText(AppLanguage language) {
     return PAUSED_STATUS_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+}
+
+/// Returns the localized option that inhibits the screen saver during visible animation.
+const wchar_t* PreventScreenSaverText(AppLanguage language) {
+    return PREVENT_SCREEN_SAVER_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+}
+
+/// Returns the localized ambient-light checkbox caption.
+const wchar_t* AmbientLightText(AppLanguage language) {
+    return AMBIENT_LIGHT_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+}
+
+/// Returns the localized rim-light checkbox caption.
+const wchar_t* RimLightText(AppLanguage language) {
+    return RIM_LIGHT_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the localized ready status when no animation is rendering.

@@ -60,6 +60,8 @@ struct SceneState {
     bool cameraFlight = false;
     bool mainLight = true;
     bool fillLight = false;
+    bool ambientLight = true;
+    bool rimLight = true;
 };
 
 /// Advances object motion, collisions and the optional forward flight camera.

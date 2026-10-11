@@ -37,9 +37,11 @@
 #include <avrt.h>
 #include <commctrl.h>
 #include <commdlg.h>
+#include <dwmapi.h>
 #include <RestartManager.h>
 #include <shlobj.h>
 #include <shellapi.h>
+#include <uxtheme.h>
 #include <windowsx.h>
 #include <algorithm>
 #include <atomic>
@@ -57,6 +59,8 @@
 #pragma comment(lib, "comdlg32.lib")
 #pragma comment(lib, "shell32.lib")
 #pragma comment(lib, "avrt.lib")
+#pragma comment(lib, "dwmapi.lib")
+#pragma comment(lib, "uxtheme.lib")
 
 /// Window classes and product constants
 constexpr wchar_t PRODUCT_NAME[] = L"FlyingSolids";
@@ -74,6 +78,7 @@ constexpr wchar_t MP4_EXTENSION[] = L"mp4";
 constexpr wchar_t SHELL_OPEN_VERB[] = L"open";
 constexpr wchar_t INSTALL_ELEVATED_ARGUMENT[] = L"/install-elevated";
 constexpr wchar_t UNINSTALL_ELEVATED_ARGUMENT[] = L"/uninstall-elevated";
+constexpr wchar_t KERNEL_LIBRARY[] = L"kernel32.dll";
 
 /// Windows screen-saver registry constants
 constexpr wchar_t DESKTOP_REGISTRY_PATH[] = L"Control Panel\\Desktop";
@@ -93,8 +98,14 @@ constexpr UINT ENSURE_SETTINGS_CONTROL_VISIBLE = WM_APP + 1;
 constexpr UINT RESTORE_SETTINGS_FOCUS = WM_APP + 2;
 constexpr UINT ACTIVATE_APPLICATION_WINDOW = WM_APP + 3;
 constexpr UINT UPDATE_SETTINGS_ACTION_BUTTONS = WM_APP + 4;
+constexpr UINT UPDATE_SETTINGS_CONTROL_METRICS = WM_APP + 5;
 constexpr UINT_PTR ABOUT_CONTROL_SUBCLASS = 0xF503;
 constexpr UINT_PTR INFORMATION_TEXT_SUBCLASS_ID = 0xF504;
+constexpr UINT SCREEN_SAVER_CHECK_INTERVAL = 1000;
+
+/// Optional Windows 7 power-request entry points, resolved without raising the minimum supported system.
+using CreatePowerRequest = HANDLE(WINAPI*)(PREASON_CONTEXT);
+using SetPowerRequest = BOOL(WINAPI*)(HANDLE, POWER_REQUEST_TYPE);
 
 /// Supported executable and screen-saver invocation modes.
 enum class RunMode {
@@ -152,9 +163,13 @@ enum ControlId {
     ID_MONITOR_LIST,
     ID_MAIN_LIGHT = 1160,
     ID_FILL_LIGHT,
+    ID_PREVENT_SCREEN_SAVER,
+    ID_AMBIENT_LIGHT,
+    ID_RIM_LIGHT,
     ID_SOLID_FIRST = 1200,
     ID_INSTALL_POLL_TIMER = 1400,
     ID_STATUS_RESET_TIMER,
+    ID_SCREEN_SAVER_CHECK_TIMER,
     ID_INFORMATION_TEXT = 1500,
     ID_INFORMATION_ICON,
     ID_INFORMATION_PRODUCT,
@@ -208,6 +223,7 @@ struct Application {
     HWND previewParent = nullptr;
     HWND status = nullptr;
     HANDLE installProcess = nullptr;
+    HANDLE screenSaverInhibition = nullptr;
     ProgramIcons programIcons;
 
     /// Invocation mode and owned model state
@@ -235,6 +251,8 @@ struct Application {
     std::atomic_bool runtimeCameraFlight = false;
     std::atomic_bool runtimeMainLight = true;
     std::atomic_bool runtimeFillLight = false;
+    std::atomic_bool runtimeAmbientLight = true;
+    std::atomic_bool runtimeRimLight = true;
     std::atomic_uint32_t runtimeEnabledSolids = ALL_SOLID_MASK;
 
     /// Screen-saver installation state
@@ -339,6 +357,9 @@ static void RequestScreenSaverChange(HWND owner);
 
 /// Extends settings text controls to the content edge and restores their clipping Z-order.
 static void UpdateSettingsTextControlLayout(HWND parent);
+
+/// Aligns settings text baselines using CalClock's native control-metric calculation.
+static void UpdateSettingsControlMetrics(HWND window);
 
 /// Updates the language and presentation mode of all open information windows.
 static void RefreshInformationWindows(AppLanguage language, bool appMode);
@@ -472,6 +493,164 @@ static bool HasReadyPrimarySurface() {
         && !surface->stopRequested.load(std::memory_order_relaxed);
 }
 
+/// Reports whether a top-level window is shown on the current virtual desktop and is not minimized.
+static bool IsUncloakedWindowVisible(HWND window) {
+    if (!IsWindowVisible(window) || IsIconic(window)) {
+        return false;
+    }
+    DWORD cloaked = 0;
+    DwmGetWindowAttribute(window, DWMWA_CLOAKED, &cloaked, sizeof(cloaked));
+    return cloaked == 0;
+}
+
+/// Reports whether the animation's desktop is currently displayed rather than locked or switched away.
+static bool IsAnimationDesktopVisible() {
+    HDESK inputDesktop = OpenInputDesktop(0, FALSE, DESKTOP_READOBJECTS);
+    if (!inputDesktop) {
+        return false;
+    }
+    wchar_t inputName[256]{};
+    wchar_t threadName[256]{};
+    DWORD required = 0;
+    const bool visible = GetUserObjectInformationW(inputDesktop, UOI_NAME, inputName, sizeof(inputName), &required)
+        && GetUserObjectInformationW(GetThreadDesktop(GetCurrentThreadId()), UOI_NAME, threadName, sizeof(threadName),
+            &required)
+        && _wcsicmp(inputName, threadName) == 0;
+    CloseDesktop(inputDesktop);
+    return visible;
+}
+
+/// Reports whether a covering window can be treated as opaque when checking animation visibility.
+static bool IsOpaqueWindow(HWND window) {
+    if ((GetWindowLongPtrW(window, GWL_EXSTYLE) & WS_EX_LAYERED) == 0) {
+        return true;
+    }
+    COLORREF colorKey = 0;
+    BYTE alpha = 0;
+    DWORD flags = 0;
+    return GetLayeredWindowAttributes(window, &colorKey, &alpha, &flags)
+        && (flags & LWA_COLORKEY) == 0
+        && ((flags & LWA_ALPHA) == 0 || alpha == 255);
+}
+
+/// Removes one opaque window's shape from the remaining visible animation region.
+static void SubtractCoveringWindow(HRGN visible, HWND window) {
+    RECT bounds{};
+    if (!GetWindowRect(window, &bounds)) {
+        return;
+    }
+    HRGN covering = CreateRectRgn(0, 0, 0, 0);
+    if (!covering) {
+        return;
+    }
+    if (GetWindowRgn(window, covering) != ERROR) {
+        OffsetRgn(covering, bounds.left, bounds.top);
+    } else {
+        SetRectRgn(covering, bounds.left, bounds.top, bounds.right, bounds.bottom);
+    }
+    CombineRgn(visible, visible, covering, RGN_DIFF);
+    DeleteObject(covering);
+}
+
+/// Reports whether any on-screen part of an animation client area remains uncovered by opaque windows.
+static bool IsAnimationWindowVisible(HWND window) {
+    if (!IsUncloakedWindowVisible(window)) {
+        return false;
+    }
+    RECT bounds{};
+    MONITORINFO monitor{};
+    monitor.cbSize = sizeof(monitor);
+    if (!GetClientRect(window, &bounds) || !GetMonitorInfoW(MonitorFromWindow(window, MONITOR_DEFAULTTONULL), &monitor)) {
+        return false;
+    }
+    MapWindowPoints(window, HWND_DESKTOP, reinterpret_cast<POINT*>(&bounds), 2);
+    if (!IntersectRect(&bounds, &bounds, &monitor.rcMonitor)) {
+        return false;
+    }
+    HRGN visible = CreateRectRgn(bounds.left, bounds.top, bounds.right, bounds.bottom);
+    if (!visible) {
+        return false;
+    }
+    for (HWND covering = GetWindow(window, GW_HWNDPREV); covering; covering = GetWindow(covering, GW_HWNDPREV)) {
+        if (IsUncloakedWindowVisible(covering) && IsOpaqueWindow(covering)) {
+            SubtractCoveringWindow(visible, covering);
+        }
+        if (GetRgnBox(visible, &bounds) == NULLREGION) {
+            break;
+        }
+    }
+    const bool uncovered = GetRgnBox(visible, &bounds) > NULLREGION;
+    DeleteObject(visible);
+    return uncovered;
+}
+
+/// Enables screen-saver inhibition only for an opted-in, unpaused standalone animation that is actually visible.
+static bool ShouldInhibitScreenSaver() {
+    if (!app
+            || app->mode != RunMode::Application
+            || !app->settings.preventScreenSaver
+            || app->paused.load(std::memory_order_relaxed)
+            || app->closing.load(std::memory_order_relaxed)
+            || app->settings.enabledSolids == 0
+            || !IsAnimationDesktopVisible()) {
+        return false;
+    }
+    for (const std::unique_ptr<RenderSurface>& surface : app->surfaces) {
+        if (surface->renderer
+                && surface->renderedFrames.load(std::memory_order_relaxed) != 0
+                && !surface->stopRequested.load(std::memory_order_relaxed)
+                && IsAnimationWindowVisible(surface->window)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/// Releases the process-owned display request without changing the user's screen-saver configuration.
+static void ReleaseScreenSaverInhibition(Application& application) {
+    if (application.screenSaverInhibition) {
+        CloseHandle(application.screenSaverInhibition);
+        application.screenSaverInhibition = nullptr;
+    }
+}
+
+/// Uses a Windows 7 display request while animation is visible; older systems retain native SC_SCREENSAVE handling.
+static void UpdateScreenSaverInhibition() {
+    if (!app) {
+        return;
+    }
+    if (!ShouldInhibitScreenSaver()) {
+        ReleaseScreenSaverInhibition(*app);
+        return;
+    }
+    if (app->screenSaverInhibition) {
+        return;
+    }
+    HMODULE kernel = GetModuleHandleW(KERNEL_LIBRARY);
+    if (!kernel) {
+        return;
+    }
+    const CreatePowerRequest createRequest =
+        reinterpret_cast<CreatePowerRequest>(GetProcAddress(kernel, "PowerCreateRequest"));
+    const SetPowerRequest setRequest = reinterpret_cast<SetPowerRequest>(GetProcAddress(kernel, "PowerSetRequest"));
+    if (!createRequest || !setRequest) {
+        return;
+    }
+    REASON_CONTEXT reason{};
+    reason.Version = POWER_REQUEST_CONTEXT_VERSION;
+    reason.Flags = POWER_REQUEST_CONTEXT_SIMPLE_STRING;
+    reason.Reason.SimpleReasonString = const_cast<wchar_t*>(PreventScreenSaverText(ActiveLanguage()));
+    HANDLE request = createRequest(&reason);
+    if (request == INVALID_HANDLE_VALUE) {
+        return;
+    }
+    if (!setRequest(request, PowerRequestDisplayRequired)) {
+        CloseHandle(request);
+        return;
+    }
+    app->screenSaverInhibition = request;
+}
+
 /// Returns the renderer owned by the primary animation surface.
 static Renderer* PrimaryRenderer() {
     RenderSurface* surface = PrimarySurface();
@@ -490,6 +669,8 @@ static void SyncRuntimeSettings(Application& app) {
     app.runtimeCameraFlight.store(app.settings.cameraFlight, std::memory_order_relaxed);
     app.runtimeMainLight.store(app.settings.mainLight, std::memory_order_relaxed);
     app.runtimeFillLight.store(app.settings.fillLight, std::memory_order_relaxed);
+    app.runtimeAmbientLight.store(app.settings.ambientLight, std::memory_order_relaxed);
+    app.runtimeRimLight.store(app.settings.rimLight, std::memory_order_relaxed);
     app.runtimeEnabledSolids.store(app.settings.enabledSolids, std::memory_order_relaxed);
 }
 
@@ -860,6 +1041,7 @@ static const wchar_t* CurrentStatusText() {
 
 /// Restores persistent status after a transient notification expires.
 static void RestoreCurrentStatus() {
+    UpdateScreenSaverInhibition();
     SetStatus(CurrentStatusText());
 }
 
@@ -875,8 +1057,10 @@ static void ShowTransientStatus(const wchar_t* text) {
 
 /// Enables only settings actions that can change the current state or operate on a rendered animation.
 static void UpdateSettingsActionButtons(HWND window) {
+    UpdateScreenSaverInhibition();
     window = GetAncestor(window, GA_ROOT);
-    const SettingsWindowData* data = reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+    const SettingsWindowData* data =
+        reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
     if (!data || !data->settings) {
         return;
     }
@@ -1025,6 +1209,7 @@ static void CloseApplication() {
     if (!app || app->closing.exchange(true, std::memory_order_relaxed)) {
         return;
     }
+    ReleaseScreenSaverInhibition(*app);
     StopRecording();
     PostQuitMessage(0);
 }
@@ -1253,10 +1438,15 @@ static void ApplyLocalizedCaptions(HWND window, SettingsWindowData& data) {
         : strings.settingsTitle);
     window = SettingsContentWindow(window);
     SetDlgItemTextW(window, ID_LANGUAGE_LABEL, strings.language);
+    if (data.appMode) {
+        SetDlgItemTextW(window, ID_PREVENT_SCREEN_SAVER, PreventScreenSaverText(data.language));
+    }
     SetDlgItemTextW(window, ID_CAMERA_STATIC, strings.observeSpace);
     SetDlgItemTextW(window, ID_CAMERA_FLIGHT, strings.flyThroughSpace);
     SetDlgItemTextW(window, ID_MAIN_LIGHT, strings.mainLight);
     SetDlgItemTextW(window, ID_FILL_LIGHT, strings.fillLight);
+    SetDlgItemTextW(window, ID_AMBIENT_LIGHT, AmbientLightText(data.language));
+    SetDlgItemTextW(window, ID_RIM_LIGHT, RimLightText(data.language));
     SetDlgItemTextW(window, ID_SOLIDS_GROUP, strings.solidObjects);
     SetDlgItemTextW(window, ID_ALL_SOLIDS, strings.enableAll);
     SetDlgItemTextW(window, ID_NO_SOLIDS, strings.disableAll);
@@ -1378,6 +1568,8 @@ static void RenderSurfaceLoop(Application* app, RenderSurface* surface) {
         SceneState scene = surface->simulation.State();
         scene.mainLight = app->runtimeMainLight.load(std::memory_order_relaxed);
         scene.fillLight = app->runtimeFillLight.load(std::memory_order_relaxed);
+        scene.ambientLight = app->runtimeAmbientLight.load(std::memory_order_relaxed);
+        scene.rimLight = app->runtimeRimLight.load(std::memory_order_relaxed);
         DrawSurface(*surface, scene, inspect);
         CompleteSurfaceFrame(*app, *surface);
         QueryPerformanceCounter(&now);
@@ -1475,6 +1667,111 @@ static void ApplySystemDialogFont(HWND window, SettingsWindowData& data) {
     if (data.systemDialogFont) {
         EnumChildWindows(window, ApplySystemDialogFont, reinterpret_cast<LPARAM>(data.systemDialogFont));
     }
+    UpdateSettingsControlMetrics(window);
+}
+
+/// Aligns a settings push button or checkbox with adjacent text using their shared application font.
+/// Accounts for classic buttons' inclusive text rectangles and preserves size, horizontal position, and Z order.
+static void AlignSettingsButton(HWND button, HWND reference) {
+    WINDOWINFO buttonInfo = {};
+    buttonInfo.cbSize = sizeof(buttonInfo);
+    WINDOWINFO referenceInfo = {};
+    referenceInfo.cbSize = sizeof(referenceInfo);
+    if (button == nullptr
+            || reference == nullptr
+            || !GetWindowInfo(button, &buttonInfo)
+            || !GetWindowInfo(reference, &referenceInfo)) {
+        return;
+    }
+    HDC dc = GetDC(button);
+    if (dc == nullptr) {
+        return;
+    }
+    HFONT font = reinterpret_cast<HFONT>(SendMessageW(button, WM_GETFONT, 0, 0));
+    HGDIOBJ previousFont = font == nullptr ? nullptr : SelectObject(dc, font);
+    TEXTMETRICW metrics = {};
+    bool measured = GetTextMetricsW(dc, &metrics) != FALSE;
+    if (previousFont != nullptr && previousFont != HGDI_ERROR) {
+        SelectObject(dc, previousFont);
+    }
+    ReleaseDC(button, dc);
+    if (!measured) {
+        return;
+    }
+    wchar_t className[32] = {};
+    GetClassNameW(reference, className, ARRAYSIZE(className));
+    LONG textTop = referenceInfo.rcClient.top;
+    if (_wcsicmp(className, WC_COMBOBOXW) == 0) {
+        COMBOBOXINFO combo = {};
+        combo.cbSize = sizeof(combo);
+        if (!GetComboBoxInfo(reference, &combo)) {
+            return;
+        }
+        textTop += combo.rcItem.top + GetSystemMetrics(SM_CYBORDER);
+    } else if (_wcsicmp(className, L"EDIT") == 0) {
+        RECT text = {};
+        SendMessageW(reference, EM_GETRECT, 0, reinterpret_cast<LPARAM>(&text));
+        textTop += text.top;
+    } else if (_wcsicmp(className, L"BUTTON") == 0) {
+        LONG contentHeight = referenceInfo.rcClient.bottom - referenceInfo.rcClient.top;
+        if (GetWindowTheme(reference) == nullptr) {
+            contentHeight -= GetSystemMetrics(SM_CYBORDER);
+        }
+        textTop += (contentHeight - metrics.tmHeight) / 2;
+    }
+    LONG buttonContentHeight = buttonInfo.rcClient.bottom - buttonInfo.rcClient.top;
+    if (GetWindowTheme(button) == nullptr) {
+        buttonContentHeight -= GetSystemMetrics(SM_CYBORDER);
+    }
+    LONG buttonTextTop = buttonInfo.rcClient.top - buttonInfo.rcWindow.top + (buttonContentHeight - metrics.tmHeight) / 2;
+    LONG top = textTop - buttonTextTop;
+    if (top != buttonInfo.rcWindow.top) {
+        POINT position = {
+            buttonInfo.rcWindow.left,
+            top
+        };
+        ScreenToClient(GetParent(button), &position);
+        SetWindowPos(button, nullptr, position.x, position.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+    }
+}
+
+/// Aligns the language label with the native combo text origin used by CalClock's button alignment.
+static void AlignSettingsLanguageLabel(HWND parent) {
+    HWND label = GetDlgItem(parent, ID_LANGUAGE_LABEL);
+    HWND reference = GetDlgItem(parent, ID_LANGUAGE);
+    WINDOWINFO labelInfo = {};
+    labelInfo.cbSize = sizeof(labelInfo);
+    WINDOWINFO referenceInfo = {};
+    referenceInfo.cbSize = sizeof(referenceInfo);
+    COMBOBOXINFO combo = {};
+    combo.cbSize = sizeof(combo);
+    if (label == nullptr || reference == nullptr
+            || !GetWindowInfo(label, &labelInfo) || !GetWindowInfo(reference, &referenceInfo)
+            || !GetComboBoxInfo(reference, &combo)) {
+        return;
+    }
+    LONG textTop = referenceInfo.rcClient.top + combo.rcItem.top + GetSystemMetrics(SM_CYBORDER);
+    LONG labelTextTop = labelInfo.rcClient.top - labelInfo.rcWindow.top;
+    LONG top = textTop - labelTextTop;
+    if (top != labelInfo.rcWindow.top) {
+        POINT position = {
+            labelInfo.rcWindow.left,
+            top
+        };
+        ScreenToClient(GetParent(label), &position);
+        SetWindowPos(label, nullptr, position.x, position.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+    }
+}
+
+/// Aligns mixed settings rows after the shared font, theme, DPI or native control metrics change.
+static void UpdateSettingsControlMetrics(HWND window) {
+    window = SettingsContentWindow(window);
+    AlignSettingsLanguageLabel(window);
+    AlignSettingsButton(GetDlgItem(window, ID_PREVENT_SCREEN_SAVER), GetDlgItem(window, ID_LANGUAGE));
+    AlignSettingsButton(GetDlgItem(window, ID_AMBIENT_LIGHT), GetDlgItem(window, ID_CAMERA_STATIC));
+    AlignSettingsButton(GetDlgItem(window, ID_MAIN_LIGHT), GetDlgItem(window, ID_CAMERA_STATIC));
+    AlignSettingsButton(GetDlgItem(window, ID_RIM_LIGHT), GetDlgItem(window, ID_CAMERA_FLIGHT));
+    AlignSettingsButton(GetDlgItem(window, ID_FILL_LIGHT), GetDlgItem(window, ID_CAMERA_FLIGHT));
 }
 
 /// Calculates a scrollable fixed-content window that fits the monitor work area.
@@ -1781,6 +2078,9 @@ static LRESULT CALLBACK SettingsTabStopSubclass(HWND control, UINT msg, WPARAM w
         UINT_PTR subclassId, DWORD_PTR) {
     HWND parent = GetParent(control);
     SettingsWindowData* data = reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(parent, GWLP_USERDATA));
+    if (msg == WM_SETFONT || msg == WM_THEMECHANGED || msg == WM_DPICHANGED_AFTERPARENT) {
+        PostMessageW(GetAncestor(control, GA_ROOT), UPDATE_SETTINGS_CONTROL_METRICS, 0, 0);
+    }
     if (msg == WM_SETFOCUS) {
         if (data) {
             data->lastFocusedControl = control;
@@ -1857,9 +2157,14 @@ static std::vector<int> SettingsTabOrder(const SettingsWindowData& data) {
         ID_COPY_COUNT,
         ID_OBJECT_SIZE,
         ID_CAMERA_STATIC,
+        ID_AMBIENT_LIGHT,
+        ID_RIM_LIGHT,
         ID_MAIN_LIGHT,
         ID_FILL_LIGHT
     };
+    if (data.appMode) {
+        order.insert(order.begin() + 1, ID_PREVENT_SCREEN_SAVER);
+    }
     for (std::size_t index = 0; index < SOLID_COUNT; index++) {
         order.push_back(ID_SOLID_FIRST + static_cast<int>(index));
     }
@@ -2581,6 +2886,9 @@ static LRESULT CALLBACK InformationProc(HWND window, UINT msg, WPARAM wParam, LP
             }
             break;
         case WM_SYSCOMMAND:
+            if ((wParam & 0xFFF0) == SC_SCREENSAVE && ShouldInhibitScreenSaver()) {
+                return 0;
+            }
             if ((wParam & 0xFFF0) == SC_MINIMIZE) {
                 SaveInformationWindowPosition(window, data);
             }
@@ -2947,6 +3255,12 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
     constexpr int sliderWidth = 435;
     const int fullControlWidth = data->contentWidth - 2 * contentMargin;
     constexpr int rightSliderX = 476;
+    constexpr int checkboxWidth = 288;
+    constexpr int columnX[]{
+        24,
+        320,
+        617
+    };
     if (data->appMode) {
         if (!SetPropW(window, INSTANCE_WINDOW_PROPERTY, window)) {
             return -1;
@@ -2968,7 +3282,14 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
     CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, 18, top, 196, 22, window,
         reinterpret_cast<HMENU>(ID_LANGUAGE_LABEL), nullptr, nullptr);
     HWND languageCombo = CreateWindowExW(0, WC_COMBOBOXW, L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | CBS_DROPDOWNLIST,
-        221, top - 4, 394, 400, window, reinterpret_cast<HMENU>(ID_LANGUAGE), nullptr, nullptr);
+        221, top - 4, data->appMode ? 370 : 394, 400, window, reinterpret_cast<HMENU>(ID_LANGUAGE), nullptr, nullptr);
+    if (data->appMode) {
+        HWND preventScreenSaver = CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX,
+            columnX[2], top, checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_PREVENT_SCREEN_SAVER), nullptr,
+            nullptr);
+        SendMessageW(preventScreenSaver, BM_SETCHECK, data->settings->preventScreenSaver ? BST_CHECKED : BST_UNCHECKED, 0);
+        SetTimer(settingsWindow, ID_SCREEN_SAVER_CHECK_TIMER, SCREEN_SAVER_CHECK_INTERVAL, nullptr);
+    }
     for (std::size_t index = 0; index < LANGUAGE_COUNT; index++) {
         const AppLanguage language = LanguageAtIndex(static_cast<int>(index));
         SendMessageW(languageCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(Text(language).languageName));
@@ -3008,11 +3329,18 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
         window, reinterpret_cast<HMENU>(ID_CAMERA_FLIGHT), nullptr, nullptr);
     SendMessageW(staticCamera, BM_SETCHECK, data->settings->cameraFlight ? BST_UNCHECKED : BST_CHECKED, 0);
     SendMessageW(flight, BM_SETCHECK, data->settings->cameraFlight ? BST_CHECKED : BST_UNCHECKED, 0);
+    HWND ambientLight = CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP
+        | BS_AUTOCHECKBOX, columnX[1], top + 148, checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_AMBIENT_LIGHT),
+        nullptr, nullptr);
+    HWND rimLight = CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX,
+        columnX[1], top + 168, checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_RIM_LIGHT), nullptr, nullptr);
+    SendMessageW(ambientLight, BM_SETCHECK, data->settings->ambientLight ? BST_CHECKED : BST_UNCHECKED, 0);
+    SendMessageW(rimLight, BM_SETCHECK, data->settings->rimLight ? BST_CHECKED : BST_UNCHECKED, 0);
     HWND mainLight = CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_AUTOCHECKBOX,
-        rightSliderX + 6, top + 148, sliderWidth - 6, 21, window, reinterpret_cast<HMENU>(ID_MAIN_LIGHT), nullptr,
+        columnX[2], top + 148, checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_MAIN_LIGHT), nullptr,
         nullptr);
     HWND fillLight = CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX,
-        rightSliderX + 6, top + 168, sliderWidth - 6, 21, window, reinterpret_cast<HMENU>(ID_FILL_LIGHT), nullptr,
+        columnX[2], top + 168, checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_FILL_LIGHT), nullptr,
         nullptr);
     SendMessageW(mainLight, BM_SETCHECK, data->settings->mainLight ? BST_CHECKED : BST_UNCHECKED, 0);
     SendMessageW(fillLight, BM_SETCHECK, data->settings->fillLight ? BST_CHECKED : BST_UNCHECKED, 0);
@@ -3020,12 +3348,6 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
     CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, 18, solidsTop, 330, 22, window,
         reinterpret_cast<HMENU>(ID_SOLIDS_GROUP), nullptr, nullptr);
     constexpr int columns = 3;
-    constexpr int columnX[]{
-        24,
-        320,
-        617
-    };
-    constexpr int checkboxWidth = 288;
     constexpr int rowHeight = 20;
     for (std::size_t index = 0; index < SOLID_COUNT; index++) {
         const int column = static_cast<int>(index % columns);
@@ -3175,6 +3497,24 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             UpdateSettingsActionButtons(window);
             RestoreCurrentStatus();
             return 0;
+        case UPDATE_SETTINGS_CONTROL_METRICS:
+            if (data) {
+                UpdateSettingsControlMetrics(window);
+            }
+            return 0;
+        case WM_SETTINGCHANGE:
+        case WM_DPICHANGED:
+            if (data) {
+                PostMessageW(window, UPDATE_SETTINGS_CONTROL_METRICS, 0, 0);
+            }
+            break;
+        case WM_THEMECHANGED:
+        case WM_SYSCOLORCHANGE:
+            if (data) {
+                PostMessageW(window, UPDATE_SETTINGS_CONTROL_METRICS, 0, 0);
+                RedrawWindow(window, nullptr, nullptr, RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+            }
+            break;
         case ENSURE_SETTINGS_CONTROL_VISIBLE:
             if (data) {
                 EnsureSettingsControlVisible(window, *data, reinterpret_cast<HWND>(wParam));
@@ -3215,6 +3555,7 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
         case WM_WINDOWPOSCHANGED:
             if (data && data->appMode) {
                 UpdateControlWindowTopmost(window);
+                UpdateScreenSaverInhibition();
             }
             break;
         case WM_SIZE:
@@ -3226,6 +3567,10 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             }
             return 0;
         case WM_TIMER:
+            if (wParam == ID_SCREEN_SAVER_CHECK_TIMER) {
+                UpdateScreenSaverInhibition();
+                return 0;
+            }
             if (wParam == ID_STATUS_RESET_TIMER) {
                 KillTimer(window, ID_STATUS_RESET_TIMER);
                 RestoreCurrentStatus();
@@ -3378,12 +3723,20 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     }
                     return 0;
                 }
-                if ((LOWORD(wParam) == ID_MAIN_LIGHT || LOWORD(wParam) == ID_FILL_LIGHT) && data->settings) {
+                const bool lightControl = LOWORD(wParam) == ID_MAIN_LIGHT
+                    || LOWORD(wParam) == ID_FILL_LIGHT
+                    || LOWORD(wParam) == ID_AMBIENT_LIGHT
+                    || LOWORD(wParam) == ID_RIM_LIGHT;
+                if (lightControl && data->settings) {
                     const bool enabled = SendDlgItemMessageW(controls, LOWORD(wParam), BM_GETCHECK, 0, 0) == BST_CHECKED;
                     if (LOWORD(wParam) == ID_MAIN_LIGHT) {
                         data->settings->mainLight = enabled;
-                    } else {
+                    } else if (LOWORD(wParam) == ID_FILL_LIGHT) {
                         data->settings->fillLight = enabled;
+                    } else if (LOWORD(wParam) == ID_AMBIENT_LIGHT) {
+                        data->settings->ambientLight = enabled;
+                    } else {
+                        data->settings->rimLight = enabled;
                     }
                     if ((data->appMode || data->previewActive) && app) {
                         SyncRuntimeSettings(*app);
@@ -3395,6 +3748,15 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 }
                 if (data->appMode && app) {
                     switch (LOWORD(wParam)) {
+                        case ID_PREVENT_SCREEN_SAVER:
+                            if (!data->settings) {
+                                return 0;
+                            }
+                            data->settings->preventScreenSaver =
+                                SendDlgItemMessageW(controls, ID_PREVENT_SCREEN_SAVER, BM_GETCHECK, 0, 0) == BST_CHECKED;
+                            data->settings->Save();
+                            UpdateScreenSaverInhibition();
+                            return 0;
                         case ID_RECORD_TOGGLE:
                             if (PrimaryIsRecording()) {
                                 StopRecording();
@@ -3451,9 +3813,10 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                         const int item = ListView_GetNextItem(list, -1, LVNI_FOCUSED);
                         RECT itemRect{};
                         RECT clientRect{};
-                        if (item >= 0
-                                && ListView_GetItemRect(list, item, &itemRect, LVIR_BOUNDS)
-                                && GetClientRect(list, &clientRect)) {
+                        const bool canDrawFocusRect = item >= 0
+                            && ListView_GetItemRect(list, item, &itemRect, LVIR_BOUNDS)
+                            && GetClientRect(list, &clientRect);
+                        if (canDrawFocusRect) {
                             itemRect.left = clientRect.left + 1;
                             itemRect.right = clientRect.right - 1;
                             DrawFocusRect(customDraw->nmcd.hdc, &itemRect);
@@ -3474,9 +3837,10 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     }
                     if (reinterpret_cast<NMHDR*>(lParam)->code == LVN_ITEMCHANGED) {
                         const NMLISTVIEW* change = reinterpret_cast<NMLISTVIEW*>(lParam);
-                        if (!data->updating
-                                && (change->uChanged & LVIF_STATE) != 0
-                                && ((change->uOldState ^ change->uNewState) & LVIS_STATEIMAGEMASK) != 0) {
+                        const bool stateImageChanged = !data->updating
+                            && (change->uChanged & LVIF_STATE) != 0
+                            && ((change->uOldState ^ change->uNewState) & LVIS_STATEIMAGEMASK) != 0;
+                        if (stateImageChanged) {
                             HWND list = GetDlgItem(controls, ID_MONITOR_LIST);
                             std::vector<std::size_t> selected;
                             for (std::size_t index = 0; index < data->monitors.size(); index++) {
@@ -3499,6 +3863,11 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
         case WM_EXITSIZEMOVE:
             SaveControlWindowPosition(window, data);
             return 0;
+        case WM_SYSCOMMAND:
+            if ((wParam & 0xFFF0) == SC_SCREENSAVE && ShouldInhibitScreenSaver()) {
+                return 0;
+            }
+            break;
         case WM_CLOSE:
             if (data) {
                 if (data->appMode) {
@@ -3937,6 +4306,7 @@ static LRESULT CALLBACK RenderProc(HWND window, UINT msg, WPARAM wParam, LPARAM 
         case WM_WINDOWPOSCHANGED:
             if (app && app->mode == RunMode::Application) {
                 UpdateControlWindowTopmost(app->controlWindow);
+                UpdateScreenSaverInhibition();
             }
             break;
         case WM_SIZE:
@@ -3989,6 +4359,11 @@ static LRESULT CALLBACK RenderProc(HWND window, UINT msg, WPARAM wParam, LPARAM 
                 }
             }
             return 0;
+        case WM_SYSCOMMAND:
+            if ((wParam & 0xFFF0) == SC_SCREENSAVE && ShouldInhibitScreenSaver()) {
+                return 0;
+            }
+            break;
         case WM_CLOSE:
             CloseApplication();
             return 0;
@@ -4409,6 +4784,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstan
         SetForegroundWindow(application.surfaces.front()->window);
     }
     RunApplicationMessageLoop(application, appSettingsData);
+    ReleaseScreenSaverInhibition(application);
     StopAllRenderSurfaces(application);
     for (std::unique_ptr<RenderSurface>& surface : application.surfaces) {
         const std::lock_guard lock(surface->rendererMutex);

@@ -380,8 +380,8 @@ struct Renderer::Impl {
         const Float4 lightSettings{
             scene.mainLight ? 0.65f : 0.0f,
             scene.fillLight ? 0.35f : 0.0f,
-            0.0f,
-            0.0f
+            scene.ambientLight ? 0.12f : 0.0f,
+            scene.rimLight ? 0.12f : 0.0f
         };
         const FrameConstants frame{
             screen,

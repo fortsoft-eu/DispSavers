@@ -42,6 +42,8 @@ constexpr wchar_t OBJECT_SIZE_VALUE_NAME[] = L"ObjectSize";
 constexpr wchar_t CAMERA_FLIGHT_VALUE_NAME[] = L"CameraFlight";
 constexpr wchar_t MAIN_LIGHT_VALUE_NAME[] = L"MainLight";
 constexpr wchar_t FILL_LIGHT_VALUE_NAME[] = L"FillLight";
+constexpr wchar_t AMBIENT_LIGHT_VALUE_NAME[] = L"AmbientLight";
+constexpr wchar_t RIM_LIGHT_VALUE_NAME[] = L"RimLight";
 constexpr wchar_t ENABLED_SOLIDS_VALUE_NAME[] = L"EnabledSolids";
 constexpr wchar_t ANIMATION_MONITOR_VALUE_NAME[] = L"AnimationMonitor";
 constexpr wchar_t CONTROL_WINDOW_X_VALUE_NAME[] = L"ControlWindowX";
@@ -51,6 +53,7 @@ constexpr wchar_t HELP_Y_VALUE_NAME[] = L"HelpY";
 constexpr wchar_t ABOUT_X_VALUE_NAME[] = L"AboutX";
 constexpr wchar_t ABOUT_Y_VALUE_NAME[] = L"AboutY";
 constexpr wchar_t LANGUAGE_VALUE_NAME[] = L"Language";
+constexpr wchar_t PREVENT_SCREEN_SAVER_VALUE_NAME[] = L"PreventScreenSaver";
 
 /// Returns the registry branch assigned to a settings profile.
 static const wchar_t* RegistryPath(SettingsProfile profile) {
@@ -99,6 +102,8 @@ void AppSettings::Load(SettingsProfile selectedProfile) {
         cameraFlight = ReadValue(key, CAMERA_FLIGHT_VALUE_NAME, cameraFlight ? 1 : 0) != 0;
         mainLight = ReadValue(key, MAIN_LIGHT_VALUE_NAME, mainLight ? 1 : 0) != 0;
         fillLight = ReadValue(key, FILL_LIGHT_VALUE_NAME, fillLight ? 1 : 0) != 0;
+        ambientLight = ReadValue(key, AMBIENT_LIGHT_VALUE_NAME, ambientLight ? 1 : 0) != 0;
+        rimLight = ReadValue(key, RIM_LIGHT_VALUE_NAME, rimLight ? 1 : 0) != 0;
         enabledSolids = static_cast<std::uint32_t>(ReadValue(key, ENABLED_SOLIDS_VALUE_NAME,
             static_cast<int>(enabledSolids))) & ALL_SOLID_MASK;
         animationMonitorDevice = ReadString(key, ANIMATION_MONITOR_VALUE_NAME);
@@ -109,6 +114,9 @@ void AppSettings::Load(SettingsProfile selectedProfile) {
         aboutX = ReadValue(key, ABOUT_X_VALUE_NAME, aboutX);
         aboutY = ReadValue(key, ABOUT_Y_VALUE_NAME, aboutY);
         language = ReadValue(key, LANGUAGE_VALUE_NAME, language);
+        if (profile == SettingsProfile::Standalone) {
+            preventScreenSaver = ReadValue(key, PREVENT_SCREEN_SAVER_VALUE_NAME, preventScreenSaver ? 1 : 0) != 0;
+        }
         RegCloseKey(key);
     }
     objectSpeedPercent = std::clamp(objectSpeedPercent, 0, 1600);
@@ -166,6 +174,8 @@ void AppSettings::Save() const {
     const DWORD cameraFlightValue = cameraFlight ? 1U : 0U;
     const DWORD mainLightValue = mainLight ? 1U : 0U;
     const DWORD fillLightValue = fillLight ? 1U : 0U;
+    const DWORD ambientLightValue = ambientLight ? 1U : 0U;
+    const DWORD rimLightValue = rimLight ? 1U : 0U;
     const DWORD enabledSolidsValue = enabledSolids & ALL_SOLID_MASK;
     RegSetValueExW(key, OBJECT_SPEED_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&objectSpeed), sizeof(objectSpeed));
@@ -181,6 +191,10 @@ void AppSettings::Save() const {
         reinterpret_cast<const BYTE*>(&mainLightValue), sizeof(mainLightValue));
     RegSetValueExW(key, FILL_LIGHT_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&fillLightValue), sizeof(fillLightValue));
+    RegSetValueExW(key, AMBIENT_LIGHT_VALUE_NAME, 0, REG_DWORD,
+        reinterpret_cast<const BYTE*>(&ambientLightValue), sizeof(ambientLightValue));
+    RegSetValueExW(key, RIM_LIGHT_VALUE_NAME, 0, REG_DWORD,
+        reinterpret_cast<const BYTE*>(&rimLightValue), sizeof(rimLightValue));
     RegSetValueExW(key, ENABLED_SOLIDS_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&enabledSolidsValue), sizeof(enabledSolidsValue));
     RegSetValueExW(key, ANIMATION_MONITOR_VALUE_NAME, 0, REG_SZ,
@@ -190,5 +204,10 @@ void AppSettings::Save() const {
     const DWORD languageValue = static_cast<DWORD>(language);
     RegSetValueExW(key, LANGUAGE_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&languageValue), sizeof(languageValue));
+    if (profile == SettingsProfile::Standalone) {
+        const DWORD preventScreenSaverValue = preventScreenSaver ? 1U : 0U;
+        RegSetValueExW(key, PREVENT_SCREEN_SAVER_VALUE_NAME, 0, REG_DWORD,
+            reinterpret_cast<const BYTE*>(&preventScreenSaverValue), sizeof(preventScreenSaverValue));
+    }
     RegCloseKey(key);
 }

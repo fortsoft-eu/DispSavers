@@ -47,9 +47,12 @@ struct AppSettings {
     bool cameraFlight = false;
     bool mainLight = true;
     bool fillLight = false;
+    bool ambientLight = true;
+    bool rimLight = true;
     std::uint32_t enabledSolids = ALL_SOLID_MASK;
 
     /// User-interface state
+    bool preventScreenSaver = false;
     std::wstring animationMonitorDevice;
     int controlWindowX = std::numeric_limits<int>::min();
     int controlWindowY = std::numeric_limits<int>::min();
