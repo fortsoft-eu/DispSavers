@@ -137,6 +137,6 @@ inline constexpr std::array<float, SOLID_COUNT> COLLISION_RADII{
     0.935f,
     1.039f,
     1.175f,
-    0.855f,
+    0.895f,
     1.166f
 };

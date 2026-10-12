@@ -33,10 +33,10 @@
 inline constexpr float CAPSULE_RADIUS = .7f;
 inline constexpr float CAPSULE_HALF_LENGTH = .75f;
 
-/// Shared spherical-layer thickness and dimensions of the slightly wider, half-thickness spheroplatelet.
+/// Shared spherical-layer thickness and dimensions of the rounded circular spheroplatelet.
 inline constexpr float SPHERICAL_LAYER_HALF_THICKNESS = .55f;
-inline constexpr float SPHEROPLATELET_OUTER_RADIUS = 1.05f;
-inline constexpr float SPHEROPLATELET_ROUNDING_RADIUS = SPHERICAL_LAYER_HALF_THICKNESS * .5f;
+inline constexpr float SPHEROPLATELET_OUTER_RADIUS = 1.1f;
+inline constexpr float SPHEROPLATELET_ROUNDING_RADIUS = .25f;
 inline constexpr float SPHEROPLATELET_DISC_RADIUS = SPHEROPLATELET_OUTER_RADIUS - SPHEROPLATELET_ROUNDING_RADIUS;
 
 /// Shared cylinder and half-torus dimensions of the rounded hollow cylinder.
