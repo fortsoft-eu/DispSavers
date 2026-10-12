@@ -97,6 +97,7 @@
     <ClCompile Include="SystemSync.cpp" />
     <ClCompile Include="SystemTime.cpp" />
     <ClCompile Include="Wow64Redirection.cpp" />
+    <ClCompile Include="WindowRedrawScope.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppSettings.h" />
@@ -109,6 +110,7 @@
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="SelectionEdit.h" />
     <ClInclude Include="Wow64Redirection.h" />
+    <ClInclude Include="WindowRedrawScope.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

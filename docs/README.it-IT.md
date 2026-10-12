@@ -15,11 +15,15 @@ FlyingSolids è un’applicazione nativa Win32/x86 basata su Direct3D e un salva
 - Rendering adattato alla frequenza di aggiornamento di ogni monitor
 - Istantanee PNG e registrazione MP4 nell’applicazione autonoma
 - Impostazioni separate per applicazione e salvaschermo
-- 27 tipi di solidi e interfaccia in 17 lingue
+- 30 tipi di solidi e interfaccia in 17 lingue
 
 ## Solidi
 
 Il catalogo comprende poliedri, prismi regolari, piramidi e relativi tagli piani, coni e cilindri e relativi tagli piani, un paraboloide di rotazione chiuso da un piano, solidi derivati dalla sfera, ellissoidi, un ovoide, uno sferocilindro e un toro. L’interfaccia usa la terminologia geometrica italiana consolidata.
+
+- Uno sferoide prolato ha un semiasse più lungo e due semiassi più corti di uguale lunghezza.
+- Un disco arrotondato (spheroplatelet) ha due facce circolari piane e un bordo arrotondato continuo; il suo diametro è leggermente maggiore di quello del segmento sferico a due basi e il suo spessore è la metà.
+- Un cilindro cavo con estremità toroidali ha superfici cilindriche esterna e interna unite da semitori, che formano semicirconferenze esatte in una sezione assiale.
 
 ## Illuminazione
 
@@ -52,7 +56,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 I sistemi da Windows 7 a Windows 11 supportano tutte le funzioni, comprese le istantanee PNG e la registrazione MP4.
 
-Windows Vista SP2: KB971512, KB2117917. La registrazione MP4 non funziona in Vista nella versione attuale.
+Per eseguire l’applicazione su Windows Vista SP2, è necessario installare gli aggiornamenti KB971512 e KB2117917. La registrazione MP4 non funziona in Vista nella versione attuale.
 
 La visualizzazione richiede Direct3D 11, non soltanto un vecchio runtime DirectX. La registrazione MP4 richiede componenti Media Foundation e un codificatore H.264 disponibili.
 

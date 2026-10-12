@@ -47,6 +47,7 @@ enum class SolidKind : std::uint32_t {
     PerpendicularConicalCut,
     Cylinder,
     HollowCylinder,
+    RoundedHollowCylinder,
     Paraboloid,
     Sphere,
     Hemisphere,
@@ -54,9 +55,11 @@ enum class SolidKind : std::uint32_t {
     SphereWithoutOneCap,
     SphereWithoutCaps,
     Ellipsoid,
+    ProlateEllipsoid,
     OblateEllipsoid,
     Egg,
     Capsule,
+    Spheroplatelet,
     Torus,
     Count
 };
@@ -72,6 +75,9 @@ inline constexpr std::uint32_t ALL_SOLID_MASK = (1U << SOLID_COUNT) - 1U;
 /// Per-mesh visual scale factors applied by the renderer.
 inline constexpr std::array<float, SOLID_COUNT> SOLID_RENDER_SCALES{
     0.64f,
+    0.80f,
+    0.80f,
+    0.80f,
     0.80f,
     0.80f,
     0.80f,
@@ -119,6 +125,7 @@ inline constexpr std::array<float, SOLID_COUNT> COLLISION_RADII{
     1.146f,
     1.146f,
     1.146f,
+    1.200f,
     1.265f,
     0.815f,
     0.909f,
@@ -127,7 +134,9 @@ inline constexpr std::array<float, SOLID_COUNT> COLLISION_RADII{
     0.815f,
     1.055f,
     0.935f,
+    0.935f,
     1.039f,
     1.175f,
+    0.855f,
     1.166f
 };

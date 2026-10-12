@@ -15,11 +15,15 @@ FlyingSolids är ett inbyggt Win32/x86 Direct3D-program och en skärmsläckare f
 - Återgivning anpassad till varje bildskärms uppdateringsfrekvens
 - PNG-skärmbilder och MP4-inspelning i det fristående programmet
 - Separata inställningar för program och skärmsläckare
-- 27 kroppstyper och gränssnitt på 17 språk
+- 30 kroppstyper och gränssnitt på 17 språk
 
 ## Geometriska kroppar
 
 Utbudet omfattar polyedrar, regelbundna prismor, pyramider och plansnitt, koner och cylindrar och deras plansnitt, en rotationsparaboloid sluten av ett plan, klotbaserade kroppar, ellipsoider, ovoid, sfärocylinder och torus. Gränssnittet använder etablerad svensk geometrisk terminologi.
+
+- En prolat sfäroid har en längre halvaxel och två lika långa kortare halvaxlar.
+- En avrundad skiva (spheroplatelet) har två plana cirkelytor och en jämnt avrundad kant; diametern är något större än hos klotsegmentet med två baser och tjockleken är hälften så stor.
+- En ihålig cylinder med toroidala ändar har yttre och inre cylinderytor förenade med halva torusar, som bildar exakta halvcirklar i ett axiellt snitt.
 
 ## Belysning
 
@@ -52,7 +56,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 Windows 7 till Windows 11 stöder alla funktioner, inklusive PNG-skärmbilder och MP4-inspelning.
 
-Windows Vista SP2: KB971512, KB2117917. MP4-inspelning fungerar inte på Vista i den aktuella versionen.
+För att köra programmet på Windows Vista SP2 måste uppdateringarna KB971512 och KB2117917 installeras. MP4-inspelning fungerar inte på Vista i den aktuella versionen.
 
 Visningen kräver Direct3D 11, inte bara en äldre DirectX-körningsmiljö. MP4-inspelning kräver tillgängliga Media Foundation-komponenter och en H.264-kodare.
 

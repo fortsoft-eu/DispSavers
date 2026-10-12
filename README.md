@@ -20,7 +20,11 @@ FlyingSolids is a native Win32/x86 Direct3D application and Windows screen saver
 
 ## Geometric objects
 
-The 27 selectable solids are: cube; regular square pyramid; square pyramidal frustum; square pyramids cut by an oblique plane or by a plane perpendicular to the base; regular triangular, pentagonal and hexagonal prisms; regular octahedron; pentagonal bipyramid; right circular cone; conical frustum; cones cut by an oblique plane or by a plane perpendicular to the base; right circular cylinder; hollow right circular cylinder; paraboloid of revolution closed by a plane; sphere; hemisphere; spherical segment; major spherical segment; spherical layer; triaxial ellipsoid; oblate spheroid; ovoid; spherocylinder; and torus.
+The 30 selectable solids are: cube; regular square pyramid; square pyramidal frustum; square pyramids cut by an oblique plane or by a plane perpendicular to the base; regular triangular, pentagonal and hexagonal prisms; regular octahedron; pentagonal bipyramid; right circular cone; conical frustum; cones cut by an oblique plane or by a plane perpendicular to the base; right circular cylinder; hollow right circular cylinder; hollow cylinder with toroidal ends; paraboloid of revolution closed by a plane; sphere; hemisphere; spherical segment; major spherical segment; spherical layer; triaxial ellipsoid; prolate spheroid; oblate spheroid; ovoid; spherocylinder; rounded disc (spheroplatelet); and torus.
+
+- A prolate spheroid has one longer semi-axis and two equal shorter semi-axes.
+- A rounded disc (spheroplatelet) has two flat circular faces and a smoothly rounded rim; its diameter is slightly larger than that of the spherical layer and its thickness is half as large.
+- A hollow cylinder with toroidal ends has outer and inner cylindrical surfaces joined by half-torus ends that form exact semicircles in an axial section.
 
 ## Lighting
 
@@ -59,7 +63,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 Windows 7 through Windows 11 support all features, including PNG snapshots and MP4 recording.
 
-Windows Vista SP2: KB971512, KB2117917. MP4 recording does not work on Vista in the current version.
+To run the application on Windows Vista SP2, you must install updates KB971512 and KB2117917. MP4 recording does not work on Vista in the current version.
 
 Rendering requires Direct3D 11, not just an older DirectX runtime. MP4 recording requires available Media Foundation components and an H.264 encoder.
 

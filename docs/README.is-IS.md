@@ -15,11 +15,15 @@ FlyingSolids er innbyggt Win32/x86 Direct3D-forrit og Windows-skjáhvíla sem s�
 - Myndgerð löguð að endurnýjunartíðni hvers skjás
 - PNG-skjámyndir og MP4-upptaka í sjálfstæða forritinu
 - Aðskildar stillingar forrits og skjáhvílu
-- 27 tegundir hluta og viðmót á 17 tungumálum
+- 30 tegundir hluta og viðmót á 17 tungumálum
 
 ## Rúmfræðilegir hlutir
 
 Úrvalið nær yfir margflötunga, reglulega strendinga, pýramída og planskurði, keilur og sívalninga og planskurði þeirra, snúningsfleygbreiðu lokaða með plani, kúluafleidda hluti, sporvölur, egglaga kropp, kúluhylki og tórus. Viðmótið notar viðurkennd íslensk rúmfræðiheiti.
+
+- Ílöng snúningssporvala hefur einn lengri hálfás og tvo jafn langa styttri hálfása.
+- Rúnaður diskur (spheroplatelet) hefur tvo flata hringlaga fleti og samfellt rúnnaðan jaðar; þvermál hans er örlítið stærra en þvermál kúlulags og þykktin helmingur þykktar kúlulags.
+- Holur sívalningur með tórusendum hefur ytri og innri sívalningsfleti tengda með hálfum tórusum, sem mynda nákvæma hálfhringi í áslægum þverskurði.
 
 ## Lýsing
 
@@ -52,7 +56,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 Windows 7 til Windows 11 styðja alla eiginleika, þar á meðal PNG-skjámyndir og MP4-upptöku.
 
-Windows Vista SP2: KB971512, KB2117917. MP4-upptaka virkar ekki í Vista í núverandi útgáfu.
+Til að keyra forritið á Windows Vista SP2 þarf að setja upp uppfærslurnar KB971512 og KB2117917. MP4-upptaka virkar ekki í Vista í núverandi útgáfu.
 
 Birting krefst Direct3D 11, ekki aðeins eldri DirectX-keyrsluumhverfis. MP4-upptaka krefst tiltækra Media Foundation-íhluta og H.264-kóðara.
 

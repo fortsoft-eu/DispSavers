@@ -15,11 +15,15 @@ FlyingSolids ist eine native Win32/x86-Direct3D-Anwendung und ein Windows-Bildsc
 - An die Bildwiederholfrequenz jedes Monitors angepasste Darstellung
 - PNG-Schnappschüsse und MP4-Aufnahme in der eigenständigen Anwendung
 - Getrennte Einstellungen für Anwendung und Bildschirmschoner
-- 27 Körperarten und eine Oberfläche in 17 Sprachen
+- 30 Körperarten und eine Oberfläche in 17 Sprachen
 
 ## Körper
 
 Der Katalog umfasst Polyeder, regelmäßige Prismen, Pyramiden und ebene Schnitte, Kegel und Zylinder und deren ebene Schnitte, einen durch eine Ebene geschlossenen Rotationsparaboloid, von der Kugel abgeleitete Körper, Ellipsoide, Ovoid, Sphärozylinder und Torus. Das Programm verwendet die fachüblichen deutschen geometrischen Bezeichnungen.
+
+- Ein verlängertes Rotationsellipsoid besitzt eine längere und zwei gleich lange kürzere Halbachsen.
+- Eine abgerundete Scheibe (Spheroplatelet) hat zwei ebene Kreisflächen und einen stetig abgerundeten Rand; ihr Durchmesser ist etwas größer als der einer Kugelschicht und ihre Dicke halb so groß.
+- Ein Hohlzylinder mit toroidalen Enden besitzt eine äußere und eine innere Zylinderfläche, die durch Halbtori verbunden sind; im Axialschnitt bilden die Enden exakte Halbkreise.
 
 ## Beleuchtung
 
@@ -52,7 +56,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 Windows 7 bis Windows 11 unterstützen alle Funktionen einschließlich PNG-Schnappschüssen und MP4-Aufnahmen.
 
-Windows Vista SP2: KB971512, KB2117917. MP4-Aufnahmen funktionieren unter Vista in der aktuellen Version nicht.
+Zum Ausführen der Anwendung unter Windows Vista SP2 müssen die Updates KB971512 und KB2117917 installiert werden. MP4-Aufnahmen funktionieren unter Vista in der aktuellen Version nicht.
 
 Die Darstellung erfordert Direct3D 11, nicht nur eine ältere DirectX-Laufzeitumgebung. MP4-Aufnahmen benötigen verfügbare Media-Foundation-Komponenten und einen H.264-Encoder.
 

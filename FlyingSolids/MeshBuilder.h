@@ -33,6 +33,21 @@
 inline constexpr float CAPSULE_RADIUS = .7f;
 inline constexpr float CAPSULE_HALF_LENGTH = .75f;
 
+/// Shared spherical-layer thickness and dimensions of the slightly wider, half-thickness spheroplatelet.
+inline constexpr float SPHERICAL_LAYER_HALF_THICKNESS = .55f;
+inline constexpr float SPHEROPLATELET_OUTER_RADIUS = 1.05f;
+inline constexpr float SPHEROPLATELET_ROUNDING_RADIUS = SPHERICAL_LAYER_HALF_THICKNESS * .5f;
+inline constexpr float SPHEROPLATELET_DISC_RADIUS = SPHEROPLATELET_OUTER_RADIUS - SPHEROPLATELET_ROUNDING_RADIUS;
+
+/// Shared cylinder and half-torus dimensions of the rounded hollow cylinder.
+inline constexpr float ROUNDED_HOLLOW_CYLINDER_OUTER_RADIUS = 1.0f;
+inline constexpr float ROUNDED_HOLLOW_CYLINDER_INNER_RADIUS = .6f;
+inline constexpr float ROUNDED_HOLLOW_CYLINDER_HALF_LENGTH = 1.0f;
+inline constexpr float ROUNDED_HOLLOW_CYLINDER_TORUS_RADIUS =
+    (ROUNDED_HOLLOW_CYLINDER_OUTER_RADIUS + ROUNDED_HOLLOW_CYLINDER_INNER_RADIUS) * .5f;
+inline constexpr float ROUNDED_HOLLOW_CYLINDER_ROUNDING_RADIUS =
+    (ROUNDED_HOLLOW_CYLINDER_OUTER_RADIUS - ROUNDED_HOLLOW_CYLINDER_INNER_RADIUS) * .5f;
+
 /// Position and unit normal of one triangle-mesh vertex.
 struct Vertex {
     float x;

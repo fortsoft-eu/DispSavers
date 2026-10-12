@@ -15,11 +15,15 @@ FlyingSolids est une application native Win32/x86 utilisant Direct3D et un écon
 - Rendu adapté à la fréquence de rafraîchissement de chaque écran
 - Captures PNG et enregistrement MP4 dans l’application autonome
 - Réglages distincts pour l’application et l’économiseur
-- 27 types de solides et interface en 17 langues
+- 30 types de solides et interface en 17 langues
 
 ## Solides
 
 Le catalogue comprend des polyèdres, prismes réguliers, pyramides et leurs coupes planes, cônes et cylindres et leurs coupes planes, un paraboloïde de révolution fermé par un plan, des solides dérivés de la boule, des ellipsoïdes, un ovoïde, un sphérocylindre et un tore. Les libellés emploient la terminologie géométrique française consacrée.
+
+- Un sphéroïde allongé possède un demi-axe plus long et deux demi-axes plus courts de même longueur.
+- Un disque arrondi (spheroplatelet) possède deux faces circulaires planes et un bord arrondi continu ; son diamètre est légèrement supérieur à celui du segment sphérique à deux bases et son épaisseur est deux fois plus petite.
+- Un cylindre creux à extrémités toriques possède des surfaces cylindriques extérieure et intérieure reliées par des demi-tores, dont la section axiale forme des demi-cercles exacts.
 
 ## Éclairage
 
@@ -52,7 +56,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 Windows 7 à Windows 11 prennent en charge toutes les fonctions, y compris les captures PNG et l’enregistrement MP4.
 
-Windows Vista SP2: KB971512, KB2117917. L’enregistrement MP4 ne fonctionne pas sous Vista dans la version actuelle.
+Pour exécuter l’application sous Windows Vista SP2, il est nécessaire d’installer les mises à jour KB971512 et KB2117917. L’enregistrement MP4 ne fonctionne pas sous Vista dans la version actuelle.
 
 L’affichage nécessite Direct3D 11, et pas seulement un ancien environnement d’exécution DirectX. L’enregistrement MP4 nécessite les composants Media Foundation et un encodeur H.264 disponibles.
 

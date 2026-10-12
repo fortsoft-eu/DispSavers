@@ -32,18 +32,23 @@
 #include "Renderer.h"
 #include "SelectionEdit.h"
 #include "Wow64Redirection.h"
+#include "WindowRedrawScope.h"
 #include "resource.h"
 #include <windows.h>
 #include <avrt.h>
 #include <commctrl.h>
 #include <commdlg.h>
 #include <dwmapi.h>
+#include <dxgi1_6.h>
 #include <RestartManager.h>
 #include <shlobj.h>
 #include <shellapi.h>
 #include <uxtheme.h>
+#include <winver.h>
 #include <windowsx.h>
+#include <wrl/client.h>
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <cmath>
 #include <cwchar>
@@ -61,6 +66,7 @@
 #pragma comment(lib, "avrt.lib")
 #pragma comment(lib, "dwmapi.lib")
 #pragma comment(lib, "uxtheme.lib")
+#pragma comment(lib, "Version.lib")
 
 /// Window classes and product constants
 constexpr wchar_t PRODUCT_NAME[] = L"FlyingSolids";
@@ -87,9 +93,10 @@ constexpr wchar_t SCREEN_SAVER_ACTIVE_VALUE_NAME[] = L"ScreenSaveActive";
 
 /// Settings-window layout and animation constants
 constexpr int SETTINGS_WIDTH = 945;
-constexpr int SCREEN_SAVER_SETTINGS_HEIGHT = 529;
-constexpr int APPLICATION_SETTINGS_HEIGHT = 685;
+constexpr int SCREEN_SAVER_SETTINGS_HEIGHT = 549;
+constexpr int APPLICATION_SETTINGS_HEIGHT = 705;
 constexpr int PUSH_BUTTON_HEIGHT = 28;
+constexpr int MONITOR_COLUMN_COUNT = 8;
 constexpr double SYSTEM_PREVIEW_SPEED_MULTIPLIER = 64.0;
 constexpr wchar_t NO_ANIMATION_MONITORS[] = L"{none}";
 
@@ -106,6 +113,12 @@ constexpr UINT SCREEN_SAVER_CHECK_INTERVAL = 1000;
 /// Optional Windows 7 power-request entry points, resolved without raising the minimum supported system.
 using CreatePowerRequest = HANDLE(WINAPI*)(PREASON_CONTEXT);
 using SetPowerRequest = BOOL(WINAPI*)(HANDLE, POWER_REQUEST_TYPE);
+
+/// Optional display-configuration entry points, unavailable on Windows Vista.
+using GetDisplayConfigSizes = LONG(WINAPI*)(UINT32, UINT32*, UINT32*);
+using QueryCurrentDisplayConfig = LONG(WINAPI*)(UINT32, UINT32*, DISPLAYCONFIG_PATH_INFO*, UINT32*,
+    DISPLAYCONFIG_MODE_INFO*, DISPLAYCONFIG_TOPOLOGY_ID*);
+using GetDisplayConfigInfo = LONG(WINAPI*)(DISPLAYCONFIG_DEVICE_INFO_HEADER*);
 
 /// Supported executable and screen-saver invocation modes.
 enum class RunMode {
@@ -189,6 +202,22 @@ struct DisplayMonitor {
     bool primary = false;
 };
 
+/// Current monitor metadata, retaining unknown values when the operating system cannot report them.
+struct MonitorDetails {
+    std::wstring model;
+    DISPLAYCONFIG_RATIONAL refreshRate{};
+    UINT bitsPerColor = 0;
+    UINT bitsPerPixel = 0;
+    DISPLAYCONFIG_COLOR_ENCODING colorEncoding = DISPLAYCONFIG_COLOR_ENCODING_FORCE_UINT32;
+    DXGI_COLOR_SPACE_TYPE colorSpace = DXGI_COLOR_SPACE_CUSTOM;
+};
+
+/// Stable source metadata and displayed values of one monitor-list item.
+struct MonitorListEntry {
+    MonitorDetails details;
+    std::array<std::wstring, MONITOR_COLUMN_COUNT> text;
+};
+
 /// Window categories belonging to processes that lock the saver file.
 struct LockedScreenSaverWindows {
     std::vector<DWORD> processIds;
@@ -265,6 +294,9 @@ struct SettingsWindowData {
     AppSettings original;
     AppSettings* settings = nullptr;
     std::vector<DisplayMonitor> monitors;
+    std::vector<MonitorListEntry> monitorListEntries;
+    int monitorSortColumn = -1;
+    bool monitorSortAscending = true;
 
     /// Window resources
     HFONT systemDialogFont = nullptr;
@@ -411,6 +443,282 @@ static std::vector<DisplayMonitor> AvailableMonitors() {
         return left.rect.left < right.rect.left;
     });
     return monitors;
+}
+
+/// Removes the Win32 device-namespace prefix only from the displayed monitor name.
+static std::wstring MonitorDisplayName(const std::wstring& device) {
+    if (device.compare(0, 4, L"\\\\.\\") == 0) {
+        return device.substr(4);
+    }
+    return device;
+}
+
+/// Reads the active monitor description, integer refresh rate and pixel depth using Vista-compatible APIs.
+static void ReadLegacyMonitorDetails(const std::wstring& device, MonitorDetails& details) {
+    DISPLAY_DEVICEW display{};
+    display.cb = sizeof(display);
+    for (DWORD index = 0; EnumDisplayDevicesW(device.c_str(), index, &display, 0); index++) {
+        if ((display.StateFlags & DISPLAY_DEVICE_ACTIVE) != 0 && display.DeviceString[0] != L'\0') {
+            details.model = display.DeviceString;
+            break;
+        }
+        display = DISPLAY_DEVICEW{};
+        display.cb = sizeof(display);
+    }
+    DEVMODEW mode{};
+    mode.dmSize = sizeof(mode);
+    if (EnumDisplaySettingsW(device.c_str(), ENUM_CURRENT_SETTINGS, &mode)) {
+        if ((mode.dmFields & DM_DISPLAYFREQUENCY) != 0 && mode.dmDisplayFrequency > 1) {
+            details.refreshRate.Numerator = mode.dmDisplayFrequency;
+            details.refreshRate.Denominator = 1;
+        }
+        if ((mode.dmFields & DM_BITSPERPEL) != 0) {
+            details.bitsPerPixel = mode.dmBitsPerPel;
+        }
+    }
+}
+
+/// Reads current target metadata without interpreting advanced-color support as an active color space.
+static void ReadDisplayConfigTargetDetails(const DISPLAYCONFIG_PATH_INFO& path,
+        const std::vector<DISPLAYCONFIG_MODE_INFO>& modes, GetDisplayConfigInfo getDeviceInfo, MonitorDetails& details) {
+    DISPLAYCONFIG_TARGET_DEVICE_NAME target{};
+    target.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_TARGET_NAME;
+    target.header.size = sizeof(target);
+    target.header.adapterId = path.targetInfo.adapterId;
+    target.header.id = path.targetInfo.id;
+    if (getDeviceInfo(&target.header) == ERROR_SUCCESS && target.monitorFriendlyDeviceName[0] != L'\0') {
+        details.model = target.monitorFriendlyDeviceName;
+    }
+    DISPLAYCONFIG_RATIONAL rate = path.targetInfo.refreshRate;
+    const UINT32 modeIndex = path.targetInfo.modeInfoIdx;
+    if (modeIndex < modes.size()) {
+        const DISPLAYCONFIG_MODE_INFO& mode = modes[modeIndex];
+        if (mode.infoType == DISPLAYCONFIG_MODE_INFO_TYPE_TARGET
+                && mode.id == path.targetInfo.id
+                && mode.adapterId.HighPart == path.targetInfo.adapterId.HighPart
+                && mode.adapterId.LowPart == path.targetInfo.adapterId.LowPart) {
+            const DISPLAYCONFIG_RATIONAL signalRate = mode.targetMode.targetVideoSignalInfo.vSyncFreq;
+            if (signalRate.Numerator != 0 && signalRate.Denominator != 0) {
+                rate = signalRate;
+            }
+        }
+    }
+    if (rate.Numerator != 0 && rate.Denominator != 0) {
+        details.refreshRate = rate;
+    }
+    DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO color{};
+    color.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_ADVANCED_COLOR_INFO;
+    color.header.size = sizeof(color);
+    color.header.adapterId = path.targetInfo.adapterId;
+    color.header.id = path.targetInfo.id;
+    if (getDeviceInfo(&color.header) == ERROR_SUCCESS) {
+        details.bitsPerColor = color.bitsPerColorChannel;
+        details.colorEncoding = color.colorEncoding;
+    }
+}
+
+/// Upgrades legacy metadata from one consistent active display configuration, retrying topology changes.
+static void ReadDisplayConfigMonitorDetails(const std::vector<DisplayMonitor>& monitors,
+        std::vector<MonitorDetails>& details, GetDisplayConfigSizes getBufferSizes,
+        QueryCurrentDisplayConfig queryDisplayConfig, GetDisplayConfigInfo getDeviceInfo) {
+    if (!getBufferSizes || !queryDisplayConfig || !getDeviceInfo) {
+        return;
+    }
+    for (int attempt = 0; attempt < 3; attempt++) {
+        UINT32 pathCount = 0;
+        UINT32 modeCount = 0;
+        if (getBufferSizes(QDC_ONLY_ACTIVE_PATHS, &pathCount, &modeCount) != ERROR_SUCCESS) {
+            return;
+        }
+        std::vector<DISPLAYCONFIG_PATH_INFO> paths(pathCount);
+        std::vector<DISPLAYCONFIG_MODE_INFO> modes(modeCount);
+        const LONG result =
+            queryDisplayConfig(QDC_ONLY_ACTIVE_PATHS, &pathCount, paths.data(), &modeCount, modes.data(), nullptr);
+        if (result == ERROR_INSUFFICIENT_BUFFER) {
+            continue;
+        }
+        if (result != ERROR_SUCCESS) {
+            return;
+        }
+        paths.resize(pathCount);
+        modes.resize(modeCount);
+        for (const DISPLAYCONFIG_PATH_INFO& path : paths) {
+            if (!path.targetInfo.targetAvailable) {
+                continue;
+            }
+            DISPLAYCONFIG_SOURCE_DEVICE_NAME source{};
+            source.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_SOURCE_NAME;
+            source.header.size = sizeof(source);
+            source.header.adapterId = path.sourceInfo.adapterId;
+            source.header.id = path.sourceInfo.id;
+            if (getDeviceInfo(&source.header) != ERROR_SUCCESS) {
+                continue;
+            }
+            for (std::size_t index = 0; index < monitors.size(); index++) {
+                if (_wcsicmp(monitors[index].device.c_str(), source.viewGdiDeviceName) == 0) {
+                    ReadDisplayConfigTargetDetails(path, modes, getDeviceInfo, details[index]);
+                    break;
+                }
+            }
+        }
+        return;
+    }
+}
+
+/// Reads current output color-space metadata through an optional COM interface, including on mixed adapters.
+static void ReadDxgiMonitorDetails(const std::vector<DisplayMonitor>& monitors, std::vector<MonitorDetails>& details) {
+    Microsoft::WRL::ComPtr<IDXGIFactory> factory;
+    if (FAILED(CreateDXGIFactory(IID_PPV_ARGS(factory.GetAddressOf())))) {
+        return;
+    }
+    for (UINT adapterIndex = 0; ; adapterIndex++) {
+        Microsoft::WRL::ComPtr<IDXGIAdapter> adapter;
+        if (FAILED(factory->EnumAdapters(adapterIndex, adapter.GetAddressOf()))) {
+            break;
+        }
+        for (UINT outputIndex = 0; ; outputIndex++) {
+            Microsoft::WRL::ComPtr<IDXGIOutput> output;
+            if (FAILED(adapter->EnumOutputs(outputIndex, output.GetAddressOf()))) {
+                break;
+            }
+            Microsoft::WRL::ComPtr<IDXGIOutput6> modernOutput;
+            if (FAILED(output.As(&modernOutput))) {
+                continue;
+            }
+            DXGI_OUTPUT_DESC1 description{};
+            if (FAILED(modernOutput->GetDesc1(&description)) || !description.AttachedToDesktop) {
+                continue;
+            }
+            for (std::size_t index = 0; index < monitors.size(); index++) {
+                if (_wcsicmp(monitors[index].device.c_str(), description.DeviceName) == 0) {
+                    if (details[index].bitsPerColor == 0) {
+                        details[index].bitsPerColor = description.BitsPerColor;
+                    }
+                    details[index].colorSpace = description.ColorSpace;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+/// Collects monitor metadata without adding imports unavailable on Windows Vista.
+static std::vector<MonitorDetails> ReadMonitorDetails(const std::vector<DisplayMonitor>& monitors) {
+    std::vector<MonitorDetails> details(monitors.size());
+    for (std::size_t index = 0; index < monitors.size(); index++) {
+        ReadLegacyMonitorDetails(monitors[index].device, details[index]);
+    }
+    const HMODULE userLibrary = GetModuleHandleW(L"user32.dll");
+    if (userLibrary) {
+        const GetDisplayConfigSizes getBufferSizes =
+            reinterpret_cast<GetDisplayConfigSizes>(GetProcAddress(userLibrary, "GetDisplayConfigBufferSizes"));
+        const QueryCurrentDisplayConfig queryDisplayConfig =
+            reinterpret_cast<QueryCurrentDisplayConfig>(GetProcAddress(userLibrary, "QueryDisplayConfig"));
+        const GetDisplayConfigInfo getDeviceInfo =
+            reinterpret_cast<GetDisplayConfigInfo>(GetProcAddress(userLibrary, "DisplayConfigGetDeviceInfo"));
+        ReadDisplayConfigMonitorDetails(monitors, details, getBufferSizes, queryDisplayConfig, getDeviceInfo);
+    }
+    ReadDxgiMonitorDetails(monitors, details);
+    return details;
+}
+
+/// Formats the current refresh rate using the user's decimal separator and retaining fractional Hertz.
+static std::wstring MonitorRefreshRateText(const MonitorDetails& details) {
+    const DISPLAYCONFIG_RATIONAL rate = details.refreshRate;
+    if (rate.Numerator == 0 || rate.Denominator == 0) {
+        return L"—";
+    }
+    wchar_t value[64]{};
+    swprintf_s(value, L"%.2f", static_cast<double>(rate.Numerator) / rate.Denominator);
+    wchar_t decimalSeparator[8] = L".";
+    GetLocaleInfoW(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, decimalSeparator, 8);
+    NUMBERFMTW format{};
+    format.NumDigits = rate.Numerator % rate.Denominator == 0 ? 0 : 2;
+    format.LeadingZero = 1;
+    format.lpDecimalSep = decimalSeparator;
+    format.lpThousandSep = const_cast<LPWSTR>(L"");
+    format.NegativeOrder = 1;
+    wchar_t localized[64]{};
+    if (GetNumberFormatW(LOCALE_USER_DEFAULT, 0, value, &format, localized, 64)) {
+        return std::wstring(localized) + L" Hz";
+    }
+    return std::wstring(value) + L" Hz";
+}
+
+/// Formats channel depth when available, otherwise explicitly identifies legacy pixel depth.
+static std::wstring MonitorBitDepthText(const MonitorDetails& details, AppLanguage language) {
+    const MonitorColumnText& strings = MonitorColumnsText(language);
+    wchar_t value[64]{};
+    if (details.bitsPerColor != 0) {
+        swprintf_s(value, strings.channelDepth, details.bitsPerColor);
+        return value;
+    }
+    if (details.bitsPerPixel != 0) {
+        swprintf_s(value, strings.pixelDepth, details.bitsPerPixel);
+        return value;
+    }
+    return L"—";
+}
+
+/// Names the actual output color encoding without guessing from desktop pixel depth.
+static const wchar_t* MonitorColorFormatText(DISPLAYCONFIG_COLOR_ENCODING encoding) {
+    switch (encoding) {
+        case DISPLAYCONFIG_COLOR_ENCODING_RGB:
+            return L"RGB";
+        case DISPLAYCONFIG_COLOR_ENCODING_YCBCR444:
+            return L"YCbCr 4:4:4";
+        case DISPLAYCONFIG_COLOR_ENCODING_YCBCR422:
+            return L"YCbCr 4:2:2";
+        case DISPLAYCONFIG_COLOR_ENCODING_YCBCR420:
+            return L"YCbCr 4:2:0";
+        case DISPLAYCONFIG_COLOR_ENCODING_INTENSITY:
+            return L"Y";
+        default:
+            return L"—";
+    }
+}
+
+/// Names output color primaries and transfer characteristics reported by DXGI.
+static const wchar_t* MonitorColorSpaceText(DXGI_COLOR_SPACE_TYPE colorSpace) {
+    switch (colorSpace) {
+        case DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709:
+            return L"sRGB (SDR)";
+        case DXGI_COLOR_SPACE_RGB_FULL_G10_NONE_P709:
+            return L"BT.709 (linear)";
+        case DXGI_COLOR_SPACE_RGB_STUDIO_G22_NONE_P709:
+        case DXGI_COLOR_SPACE_YCBCR_FULL_G22_NONE_P709_X601:
+        case DXGI_COLOR_SPACE_YCBCR_STUDIO_G22_LEFT_P709:
+        case DXGI_COLOR_SPACE_YCBCR_FULL_G22_LEFT_P709:
+            return L"BT.709 (G22)";
+        case DXGI_COLOR_SPACE_YCBCR_STUDIO_G22_LEFT_P601:
+        case DXGI_COLOR_SPACE_YCBCR_FULL_G22_LEFT_P601:
+            return L"BT.601 (G22)";
+        case DXGI_COLOR_SPACE_RGB_STUDIO_G22_NONE_P2020:
+        case DXGI_COLOR_SPACE_YCBCR_STUDIO_G22_LEFT_P2020:
+        case DXGI_COLOR_SPACE_YCBCR_FULL_G22_LEFT_P2020:
+        case DXGI_COLOR_SPACE_YCBCR_STUDIO_G22_TOPLEFT_P2020:
+        case DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P2020:
+            return L"BT.2020 (G22)";
+        case DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020:
+        case DXGI_COLOR_SPACE_YCBCR_STUDIO_G2084_LEFT_P2020:
+        case DXGI_COLOR_SPACE_RGB_STUDIO_G2084_NONE_P2020:
+        case DXGI_COLOR_SPACE_YCBCR_STUDIO_G2084_TOPLEFT_P2020:
+            return L"BT.2020 (PQ/HDR10)";
+        case DXGI_COLOR_SPACE_YCBCR_STUDIO_GHLG_TOPLEFT_P2020:
+        case DXGI_COLOR_SPACE_YCBCR_FULL_GHLG_TOPLEFT_P2020:
+            return L"BT.2020 (HLG)";
+        case DXGI_COLOR_SPACE_RGB_STUDIO_G24_NONE_P709:
+        case DXGI_COLOR_SPACE_YCBCR_STUDIO_G24_LEFT_P709:
+            return L"BT.709 (G24)";
+        case DXGI_COLOR_SPACE_RGB_STUDIO_G24_NONE_P2020:
+        case DXGI_COLOR_SPACE_YCBCR_STUDIO_G24_LEFT_P2020:
+        case DXGI_COLOR_SPACE_YCBCR_STUDIO_G24_TOPLEFT_P2020:
+            return L"BT.2020 (G24)";
+        case DXGI_COLOR_SPACE_RGB_FULL_G10_NONE_P2020:
+            return L"BT.2020 (linear)";
+        default:
+            return L"—";
+    }
 }
 
 /// Chooses the saved monitor, otherwise the first available secondary display.
@@ -1377,6 +1685,188 @@ static void UpdateSliderLabels(HWND window, const SettingsWindowData& data) {
     UpdateSliderLabel(window, data, ID_OBJECT_SIZE);
 }
 
+/// Fits monitor columns to their contents and headings using CalClock's current-font calculation.
+static void UpdateMonitorColumnWidths(HWND list) {
+    if (list == nullptr) {
+        return;
+    }
+    HWND header = ListView_GetHeader(list);
+    if (header == nullptr || Header_GetItemCount(header) != MONITOR_COLUMN_COUNT) {
+        return;
+    }
+    HDC dc = GetDC(header);
+    if (dc == nullptr) {
+        return;
+    }
+    HFONT font = reinterpret_cast<HFONT>(SendMessageW(header, WM_GETFONT, 0, 0));
+    HGDIOBJ previousFont = font == nullptr ? nullptr : SelectObject(dc, font);
+    for (int column = 0; column < MONITOR_COLUMN_COUNT; column++) {
+        wchar_t caption[256]{};
+        HDITEMW item{};
+        item.mask = HDI_TEXT | HDI_FORMAT;
+        item.pszText = caption;
+        item.cchTextMax = static_cast<int>(std::size(caption));
+        if (!Header_GetItem(header, column, &item)) {
+            continue;
+        }
+        SIZE extent{};
+        GetTextExtentPoint32W(dc, caption, static_cast<int>(wcslen(caption)), &extent);
+        int headerWidth = static_cast<int>(extent.cx) + 2 * GetSystemMetrics(SM_CXEDGE) + 8;
+        if ((item.fmt & (HDF_SORTUP | HDF_SORTDOWN)) != 0) {
+            headerWidth += GetSystemMetrics(SM_CXVSCROLL);
+        }
+        ListView_SetColumnWidth(list, column, LVSCW_AUTOSIZE);
+        int contentWidth = ListView_GetColumnWidth(list, column);
+        ListView_SetColumnWidth(list, column, std::max(headerWidth, contentWidth));
+    }
+    if (previousFont != nullptr && previousFont != HGDI_ERROR) {
+        SelectObject(dc, previousFont);
+    }
+    ReleaseDC(header, dc);
+}
+
+/// Compares one numeric monitor value without converting it to displayed text.
+template<typename Value>
+static int CompareMonitorValues(Value left, Value right) {
+    if (left < right) {
+        return -1;
+    }
+    if (left > right) {
+        return 1;
+    }
+    return 0;
+}
+
+/// Compares exact fractional refresh rates, placing unavailable values before known values in ascending order.
+static int CompareMonitorRefreshRates(const DISPLAYCONFIG_RATIONAL& left, const DISPLAYCONFIG_RATIONAL& right) {
+    const bool leftKnown = left.Numerator != 0 && left.Denominator != 0;
+    const bool rightKnown = right.Numerator != 0 && right.Denominator != 0;
+    const int availability = CompareMonitorValues(leftKnown, rightKnown);
+    if (availability != 0 || !leftKnown) {
+        return availability;
+    }
+    const std::uint64_t leftValue = static_cast<std::uint64_t>(left.Numerator) * right.Denominator;
+    const std::uint64_t rightValue = static_cast<std::uint64_t>(right.Numerator) * left.Denominator;
+    return CompareMonitorValues(leftValue, rightValue);
+}
+
+/// Compares stable monitor indices by the chosen column, retaining source order for equal values as in CalClock.
+static int CALLBACK CompareMonitorListEntries(LPARAM left, LPARAM right, LPARAM sortData) {
+    const SettingsWindowData* data = reinterpret_cast<const SettingsWindowData*>(sortData);
+    const std::size_t leftIndex = static_cast<std::size_t>(left);
+    const std::size_t rightIndex = static_cast<std::size_t>(right);
+    if (!data || leftIndex >= data->monitorListEntries.size() || rightIndex >= data->monitorListEntries.size()
+            || data->monitorSortColumn < 0 || data->monitorSortColumn >= MONITOR_COLUMN_COUNT) {
+        return 0;
+    }
+    const MonitorListEntry& leftEntry = data->monitorListEntries[leftIndex];
+    const MonitorListEntry& rightEntry = data->monitorListEntries[rightIndex];
+    int comparison = 0;
+    if (data->monitorSortColumn == 3) {
+        comparison = CompareMonitorRefreshRates(leftEntry.details.refreshRate, rightEntry.details.refreshRate);
+    } else if (data->monitorSortColumn == 4) {
+        const UINT leftDepth = leftEntry.details.bitsPerColor != 0
+            ? leftEntry.details.bitsPerColor : leftEntry.details.bitsPerPixel;
+        const UINT rightDepth = rightEntry.details.bitsPerColor != 0
+            ? rightEntry.details.bitsPerColor : rightEntry.details.bitsPerPixel;
+        comparison = CompareMonitorValues(leftDepth, rightDepth);
+        if (comparison == 0) {
+            comparison = _wcsicmp(leftEntry.text[4].c_str(), rightEntry.text[4].c_str());
+        }
+    } else {
+        comparison = _wcsicmp(leftEntry.text[data->monitorSortColumn].c_str(),
+            rightEntry.text[data->monitorSortColumn].c_str());
+    }
+    if (comparison != 0) {
+        return data->monitorSortAscending ? comparison : -comparison;
+    }
+    if (leftIndex < rightIndex) {
+        return -1;
+    }
+    return leftIndex > rightIndex ? 1 : 0;
+}
+
+/// Applies the chosen monitor order and heading arrow without changing source monitor identities.
+static void ApplyMonitorListSort(HWND list, const SettingsWindowData& data) {
+    if (list == nullptr || data.monitorSortColumn < 0 || data.monitorSortColumn >= MONITOR_COLUMN_COUNT) {
+        return;
+    }
+    ListView_SortItems(list, CompareMonitorListEntries, reinterpret_cast<LPARAM>(&data));
+    HWND header = ListView_GetHeader(list);
+    if (header == nullptr) {
+        return;
+    }
+    for (int column = 0; column < MONITOR_COLUMN_COUNT; column++) {
+        HDITEMW item{};
+        item.mask = HDI_FORMAT;
+        if (!Header_GetItem(header, column, &item)) {
+            continue;
+        }
+        item.fmt &= ~(HDF_SORTUP | HDF_SORTDOWN);
+        if (column == data.monitorSortColumn) {
+            item.fmt |= data.monitorSortAscending ? HDF_SORTUP : HDF_SORTDOWN;
+        }
+        Header_SetItem(header, column, &item);
+    }
+}
+
+/// Selects or reverses monitor sorting after a heading click using CalClock's redraw and width-update sequence.
+static void SortMonitorListByColumn(HWND list, SettingsWindowData& data, int column) {
+    if (list == nullptr || column < 0 || column >= MONITOR_COLUMN_COUNT) {
+        return;
+    }
+    if (data.monitorSortColumn == column) {
+        data.monitorSortAscending = !data.monitorSortAscending;
+    } else {
+        data.monitorSortColumn = column;
+        data.monitorSortAscending = true;
+    }
+    const bool updating = data.updating;
+    data.updating = true;
+    WindowRedrawScope redraw(list);
+    ApplyMonitorListSort(list, data);
+    UpdateMonitorColumnWidths(list);
+    data.updating = updating;
+}
+
+/// Reads checked source monitor indices from stable item data, independent of the displayed row order.
+static std::vector<std::size_t> CheckedMonitorIndices(HWND list, const SettingsWindowData& data) {
+    std::vector<std::size_t> selected;
+    const int rowCount = ListView_GetItemCount(list);
+    for (int row = 0; row < rowCount; row++) {
+        if (!ListView_GetCheckState(list, row)) {
+            continue;
+        }
+        LVITEMW item{};
+        item.mask = LVIF_PARAM;
+        item.iItem = row;
+        if (!ListView_GetItem(list, &item)) {
+            continue;
+        }
+        const std::size_t index = static_cast<std::size_t>(item.lParam);
+        if (index < data.monitors.size()) {
+            selected.push_back(index);
+        }
+    }
+    std::sort(selected.begin(), selected.end());
+    return selected;
+}
+
+/// Selects all monitor rows with Ctrl+A, as in CalClock's log, without changing checkbox states.
+static LRESULT CALLBACK MonitorListSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam,
+        UINT_PTR subclassId, DWORD_PTR referenceData) {
+    UNREFERENCED_PARAMETER(referenceData);
+    bool selectAll = msg == WM_KEYDOWN && wParam == L'A' && GetKeyState(VK_CONTROL) < 0 && GetKeyState(VK_MENU) >= 0;
+    if (selectAll) {
+        ListView_SetItemState(window, -1, LVIS_SELECTED, LVIS_SELECTED);
+        return 0;
+    }
+    if (msg == WM_NCDESTROY) {
+        RemoveWindowSubclass(window, MonitorListSubclassProc, subclassId);
+    }
+    return DefSubclassProc(window, msg, wParam, lParam);
+}
+
 /// Rebuilds the monitor ListView and restores checked device selections.
 static void PopulateMonitorList(HWND window, SettingsWindowData& data) {
     window = SettingsContentWindow(window);
@@ -1384,16 +1874,30 @@ static void PopulateMonitorList(HWND window, SettingsWindowData& data) {
     if (!list) {
         return;
     }
+    const bool updating = data.updating;
+    data.updating = true;
+    WindowRedrawScope redraw(list);
     const LocalizedText& strings = Text(data.language);
+    const MonitorColumnText& monitorStrings = MonitorColumnsText(data.language);
+    const wchar_t* columnTitles[]{
+        strings.monitor,
+        monitorStrings.model,
+        strings.resolution,
+        monitorStrings.refreshRate,
+        monitorStrings.bitDepth,
+        monitorStrings.colorFormat,
+        monitorStrings.colorSpace,
+        strings.position
+    };
     LVCOLUMNW column{};
     column.mask = LVCF_TEXT;
-    column.pszText = const_cast<LPWSTR>(strings.monitor);
-    ListView_SetColumn(list, 0, &column);
-    column.pszText = const_cast<LPWSTR>(strings.resolution);
-    ListView_SetColumn(list, 1, &column);
-    column.pszText = const_cast<LPWSTR>(strings.position);
-    ListView_SetColumn(list, 2, &column);
+    for (int index = 0; index < static_cast<int>(std::size(columnTitles)); index++) {
+        column.pszText = const_cast<LPWSTR>(columnTitles[index]);
+        ListView_SetColumn(list, index, &column);
+    }
     ListView_DeleteAllItems(list);
+    const std::vector<MonitorDetails> monitorDetails = ReadMonitorDetails(data.monitors);
+    data.monitorListEntries.resize(data.monitors.size());
     std::vector<std::size_t> selected = SelectedMonitorIndices(data.monitors, data.settings->animationMonitorDevice);
     bool selEmpty = selected.empty();
     if (selEmpty && !data.monitors.empty() && !NoAnimationMonitorsSelected(data.settings->animationMonitorDevice)) {
@@ -1405,28 +1909,45 @@ static void PopulateMonitorList(HWND window, SettingsWindowData& data) {
         : JoinMonitorDevices(data.monitors, selected);
     for (std::size_t index = 0; index < data.monitors.size(); index++) {
         const DisplayMonitor& monitor = data.monitors[index];
-        std::wstring name = monitor.device;
+        MonitorListEntry& entry = data.monitorListEntries[index];
+        entry.details = monitorDetails[index];
+        const MonitorDetails& details = entry.details;
+        entry.text[0] = MonitorDisplayName(monitor.device);
         if (monitor.primary) {
-            name += std::wstring(L" (") + strings.primary + L")";
+            entry.text[0] += std::wstring(L" (") + strings.primary + L")";
         }
         LVITEMW item{};
         item.mask = LVIF_TEXT | LVIF_PARAM;
         item.iItem = static_cast<int>(index);
-        item.pszText = name.data();
+        item.pszText = entry.text[0].data();
         item.lParam = static_cast<LPARAM>(index);
         const int row = ListView_InsertItem(list, &item);
+        entry.text[1] = details.model.empty() ? L"—" : details.model;
         wchar_t value[96]{};
         swprintf_s(value, L"%ld × %ld", monitor.rect.right - monitor.rect.left, monitor.rect.bottom - monitor.rect.top);
-        ListView_SetItemText(list, row, 1, value);
+        entry.text[2] = value;
+        entry.text[3] = MonitorRefreshRateText(details);
+        entry.text[4] = MonitorBitDepthText(details, data.language);
+        entry.text[5] = MonitorColorFormatText(details.colorEncoding);
+        entry.text[6] = MonitorColorSpaceText(details.colorSpace);
         swprintf_s(value, L"x=%ld, y=%ld", monitor.rect.left, monitor.rect.top);
-        ListView_SetItemText(list, row, 2, value);
+        entry.text[7] = value;
+        for (int columnIndex = 1; columnIndex < MONITOR_COLUMN_COUNT; columnIndex++) {
+            ListView_SetItemText(list, row, columnIndex, entry.text[columnIndex].data());
+        }
         ListView_SetCheckState(list, row, std::find(selected.begin(), selected.end(), index) != selected.end());
     }
     if (!selEmpty) {
         ListView_SetItemState(list, static_cast<int>(selected.front()),
             LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
-        ListView_EnsureVisible(list, static_cast<int>(selected.front()), FALSE);
     }
+    ApplyMonitorListSort(list, data);
+    UpdateMonitorColumnWidths(list);
+    const int focusedRow = ListView_GetNextItem(list, -1, LVNI_FOCUSED);
+    if (focusedRow >= 0) {
+        ListView_EnsureVisible(list, focusedRow, FALSE);
+    }
+    data.updating = updating;
 }
 
 /// Applies one language atomically to all settings and information windows.
@@ -1772,6 +2293,7 @@ static void UpdateSettingsControlMetrics(HWND window) {
     AlignSettingsButton(GetDlgItem(window, ID_MAIN_LIGHT), GetDlgItem(window, ID_CAMERA_STATIC));
     AlignSettingsButton(GetDlgItem(window, ID_RIM_LIGHT), GetDlgItem(window, ID_CAMERA_FLIGHT));
     AlignSettingsButton(GetDlgItem(window, ID_FILL_LIGHT), GetDlgItem(window, ID_CAMERA_FLIGHT));
+    UpdateMonitorColumnWidths(GetDlgItem(window, ID_MONITOR_LIST));
 }
 
 /// Calculates a scrollable fixed-content window that fits the monitor work area.
@@ -2424,11 +2946,49 @@ static bool CopyInformationTextToClipboard(HWND owner, const std::wstring& text)
     return true;
 }
 
-/// Builds the localized product and target-platform block shown in About.
+/// Returns the executable's four-part product version, or a question mark if version information cannot be read.
+static std::wstring GetApplicationVersion() {
+    wchar_t path[MAX_PATH] = {};
+    if (GetModuleFileNameW(nullptr, path, ARRAYSIZE(path)) == 0) {
+        return L"?";
+    }
+    DWORD ignored = 0;
+    DWORD size = GetFileVersionInfoSizeW(path, &ignored);
+    if (size == 0) {
+        return L"?";
+    }
+    std::vector<BYTE> data(size);
+    if (!GetFileVersionInfoW(path, 0, size, data.data())) {
+        return L"?";
+    }
+    VS_FIXEDFILEINFO* information = nullptr;
+    UINT informationSize = 0;
+    bool invalidVersionInfo =
+        !VerQueryValueW(data.data(), L"\\", reinterpret_cast<void**>(&information), &informationSize)
+        || information == nullptr
+        || informationSize < sizeof(VS_FIXEDFILEINFO)
+        || information->dwSignature != VS_FFI_SIGNATURE;
+    if (invalidVersionInfo) {
+        return L"?";
+    }
+    wchar_t version[48] = {};
+    swprintf_s(version, L"%u.%u.%u.%u",
+        HIWORD(information->dwProductVersionMS),
+        LOWORD(information->dwProductVersionMS),
+        HIWORD(information->dwProductVersionLS),
+        LOWORD(information->dwProductVersionLS));
+    return version;
+}
+
+/// Builds localized product information including description, version, copyright, and target platform.
 static std::wstring AboutProductText(AppLanguage language) {
     std::wstring product = L"FlyingSolids\r\n";
     product += AboutDescriptionText(language);
-    product += L"\r\n\r\nCopyright © Petr Červinka – FortSoft 2026\r\n";
+    product += L"\r\n\r\n";
+    product += AboutVersionLabel(language);
+    product += L" ";
+    product += GetApplicationVersion();
+    product += L"\r\nCopyright © Petr Červinka – FortSoft 2026\r\n";
     product += AboutPlatformLabel(language);
     product += L" Win32 (x86)";
     return product;
@@ -3287,7 +3847,8 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
         HWND preventScreenSaver = CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX,
             rightSliderX, top, checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_PREVENT_SCREEN_SAVER), nullptr,
             nullptr);
-        SendMessageW(preventScreenSaver, BM_SETCHECK, data->settings->preventScreenSaver ? BST_CHECKED : BST_UNCHECKED, 0);
+        SendMessageW(preventScreenSaver, BM_SETCHECK, data->settings->preventScreenSaver ? BST_CHECKED : BST_UNCHECKED,
+            0);
         SetTimer(settingsWindow, ID_SCREEN_SAVER_CHECK_TIMER, SCREEN_SAVER_CHECK_INTERVAL, nullptr);
     }
     for (std::size_t index = 0; index < LANGUAGE_COUNT; index++) {
@@ -3329,8 +3890,8 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
         window, reinterpret_cast<HMENU>(ID_CAMERA_FLIGHT), nullptr, nullptr);
     SendMessageW(staticCamera, BM_SETCHECK, data->settings->cameraFlight ? BST_UNCHECKED : BST_CHECKED, 0);
     SendMessageW(flight, BM_SETCHECK, data->settings->cameraFlight ? BST_CHECKED : BST_UNCHECKED, 0);
-    HWND ambientLight = CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP
-        | BS_AUTOCHECKBOX, columnX[1], top + 148, checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_AMBIENT_LIGHT),
+    HWND ambientLight = CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP |
+        BS_AUTOCHECKBOX, columnX[1], top + 148, checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_AMBIENT_LIGHT),
         nullptr, nullptr);
     HWND rimLight = CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX,
         columnX[1], top + 168, checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_RIM_LIGHT), nullptr, nullptr);
@@ -3349,6 +3910,8 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
         reinterpret_cast<HMENU>(ID_SOLIDS_GROUP), nullptr, nullptr);
     constexpr int columns = 3;
     constexpr int rowHeight = 20;
+    const int solidRows = static_cast<int>((SOLID_COUNT + columns - 1) / columns);
+    const int actionButtonsTop = solidsTop + 22 + solidRows * rowHeight + 7;
     for (std::size_t index = 0; index < SOLID_COUNT; index++) {
         const int column = static_cast<int>(index % columns);
         const int row = static_cast<int>(index / columns);
@@ -3357,9 +3920,9 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
             reinterpret_cast<HMENU>(ID_SOLID_FIRST + index), nullptr, nullptr);
         SendMessageW(checkbox, BM_SETCHECK, data->settings->enabledSolids & 1U << index ? BST_CHECKED : BST_UNCHECKED, 0);
     }
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, data->appMode ? 14 : 24, solidsTop + 209, 150,
+    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, data->appMode ? 14 : 24, actionButtonsTop, 150,
         PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_ALL_SOLIDS), nullptr, nullptr);
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, data->appMode ? 171 : 181, solidsTop + 209,
+    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, data->appMode ? 171 : 181, actionButtonsTop,
         data->appMode ? 160 : 150, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_NO_SOLIDS), nullptr, nullptr);
     if (data->appMode) {
         constexpr int firstRowGap = 4;
@@ -3372,17 +3935,17 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
         const int pauseButtonX = secondButtonX + secondButtonWidth + firstRowGap;
         const int helpButtonX = pauseButtonX + pauseButtonWidth + firstRowGap;
         const int aboutButtonX = helpButtonX + informationButtonWidth + firstRowGap;
-        MoveWindow(GetDlgItem(window, ID_ALL_SOLIDS), firstButtonX, solidsTop + 209,
-            firstButtonWidth, PUSH_BUTTON_HEIGHT, FALSE);
-        MoveWindow(GetDlgItem(window, ID_NO_SOLIDS), secondButtonX, solidsTop + 209,
-            secondButtonWidth, PUSH_BUTTON_HEIGHT, FALSE);
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, pauseButtonX, solidsTop + 209,
+        MoveWindow(GetDlgItem(window, ID_ALL_SOLIDS), firstButtonX, actionButtonsTop, firstButtonWidth,
+            PUSH_BUTTON_HEIGHT, FALSE);
+        MoveWindow(GetDlgItem(window, ID_NO_SOLIDS), secondButtonX, actionButtonsTop, secondButtonWidth,
+            PUSH_BUTTON_HEIGHT, FALSE);
+        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, pauseButtonX, actionButtonsTop,
             pauseButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_PAUSE), nullptr, nullptr);
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, helpButtonX, solidsTop + 209,
+        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, helpButtonX, actionButtonsTop,
             informationButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_HELP), nullptr, nullptr);
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, aboutButtonX, solidsTop + 209,
+        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, aboutButtonX, actionButtonsTop,
             informationButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_ABOUT), nullptr, nullptr);
-        const int monitorTop = solidsTop + 246;
+        const int monitorTop = actionButtonsTop + 37;
         CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SS_LEFTNOWORDWRAP, contentMargin,
             monitorTop, fullControlWidth, 22, window, reinterpret_cast<HMENU>(ID_MONITOR_GROUP), nullptr, nullptr);
         HWND monitorList = CreateWindowExW(WS_EX_CLIENTEDGE, WC_LISTVIEWW, L"",
@@ -3391,14 +3954,13 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
         ListView_SetExtendedListViewStyle(monitorList,
             LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER | LVS_EX_CHECKBOXES);
         LVCOLUMNW column{};
-        column.mask = LVCF_TEXT | LVCF_WIDTH;
+        column.mask = LVCF_TEXT | LVCF_SUBITEM;
         column.pszText = const_cast<LPWSTR>(L"");
-        column.cx = 326;
-        ListView_InsertColumn(monitorList, 0, &column);
-        column.cx = 198;
-        ListView_InsertColumn(monitorList, 1, &column);
-        column.cx = 326;
-        ListView_InsertColumn(monitorList, 2, &column);
+        for (int index = 0; index < MONITOR_COLUMN_COUNT; index++) {
+            column.iSubItem = index;
+            ListView_InsertColumn(monitorList, index, &column);
+        }
+        SetWindowSubclass(monitorList, MonitorListSubclassProc, ID_MONITOR_LIST, 0);
         constexpr int bottomRowGap = firstRowGap;
         const int narrowButtonWidth = informationButtonWidth;
         const int snapshotButtonWidth = narrowButtonWidth + 12;
@@ -3428,22 +3990,22 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
         const int previewButtonX = secondButtonX + secondButtonWidth + firstRowGap;
         const int helpButtonX = previewButtonX + previewButtonWidth + firstRowGap;
         const int aboutButtonX = helpButtonX + informationButtonWidth + firstRowGap;
-        MoveWindow(GetDlgItem(window, ID_ALL_SOLIDS), firstButtonX, solidsTop + 209, firstButtonWidth,
+        MoveWindow(GetDlgItem(window, ID_ALL_SOLIDS), firstButtonX, actionButtonsTop, firstButtonWidth,
             PUSH_BUTTON_HEIGHT, FALSE);
-        MoveWindow(GetDlgItem(window, ID_NO_SOLIDS), secondButtonX, solidsTop + 209, secondButtonWidth,
+        MoveWindow(GetDlgItem(window, ID_NO_SOLIDS), secondButtonX, actionButtonsTop, secondButtonWidth,
             PUSH_BUTTON_HEIGHT, FALSE);
         if (data->screenSaverSettings) {
-            CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, previewButtonX, solidsTop + 209,
+            CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, previewButtonX, actionButtonsTop,
                 previewButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_PREVIEW_TOGGLE), nullptr,
                 nullptr);
         }
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, helpButtonX, solidsTop + 209,
+        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, helpButtonX, actionButtonsTop,
             informationButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_HELP), nullptr, nullptr);
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, aboutButtonX, solidsTop + 209,
+        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, aboutButtonX, actionButtonsTop,
             informationButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_ABOUT), nullptr, nullptr);
         constexpr int screenSaverButtonGap = firstRowGap;
         constexpr int confirmationButtonWidth = 124;
-        const int screenSaverButtonsTop = solidsTop + 246;
+        const int screenSaverButtonsTop = actionButtonsTop + 37;
         int buttonX = contentMargin + fullControlWidth - 2 * confirmationButtonWidth - screenSaverButtonGap;
         CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON, buttonX,
             screenSaverButtonsTop, confirmationButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_OK),
@@ -3506,6 +4068,15 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
         case WM_DPICHANGED:
             if (data) {
                 PostMessageW(window, UPDATE_SETTINGS_CONTROL_METRICS, 0, 0);
+            }
+            break;
+        case WM_DISPLAYCHANGE:
+            if (data && data->appMode) {
+                const bool updating = data->updating;
+                data->updating = true;
+                data->monitors = AvailableMonitors();
+                PopulateMonitorList(window, *data);
+                data->updating = updating;
             }
             break;
         case WM_THEMECHANGED:
@@ -3827,6 +4398,11 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             }
             if (data) {
                 if (data->settings && reinterpret_cast<NMHDR*>(lParam)->idFrom == ID_MONITOR_LIST) {
+                    if (reinterpret_cast<NMHDR*>(lParam)->code == LVN_COLUMNCLICK) {
+                        const NMLISTVIEW* click = reinterpret_cast<NMLISTVIEW*>(lParam);
+                        SortMonitorListByColumn(click->hdr.hwndFrom, *data, click->iSubItem);
+                        return 0;
+                    }
                     if (reinterpret_cast<NMHDR*>(lParam)->code == NM_DBLCLK) {
                         const NMITEMACTIVATE* click = reinterpret_cast<NMITEMACTIVATE*>(lParam);
                         if (click->iItem >= 0) {
@@ -3842,12 +4418,7 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                             && ((change->uOldState ^ change->uNewState) & LVIS_STATEIMAGEMASK) != 0;
                         if (stateImageChanged) {
                             HWND list = GetDlgItem(controls, ID_MONITOR_LIST);
-                            std::vector<std::size_t> selected;
-                            for (std::size_t index = 0; index < data->monitors.size(); index++) {
-                                if (ListView_GetCheckState(list, static_cast<int>(index))) {
-                                    selected.push_back(index);
-                                }
-                            }
+                            const std::vector<std::size_t> selected = CheckedMonitorIndices(list, *data);
                             data->settings->animationMonitorDevice = selected.empty()
                                 ? NO_ANIMATION_MONITORS
                                 : JoinMonitorDevices(data->monitors, selected);

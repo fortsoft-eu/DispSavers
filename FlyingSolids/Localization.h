@@ -92,10 +92,24 @@ struct LocalizedText {
 /// Number of selectable user-interface languages.
 inline constexpr std::size_t LANGUAGE_COUNT = static_cast<std::size_t>(AppLanguage::Count);
 
+/// Localized monitor-detail column captions and bit-depth formats.
+struct MonitorColumnText {
+    const wchar_t* model;
+    const wchar_t* refreshRate;
+    const wchar_t* bitDepth;
+    const wchar_t* colorFormat;
+    const wchar_t* colorSpace;
+    const wchar_t* channelDepth;
+    const wchar_t* pixelDepth;
+};
+
 /// Core language-table access and conversion
 
 /// Returns the core text record, normalizing unsupported language values to US English.
 const LocalizedText& Text(AppLanguage language);
+
+/// Returns localized monitor-detail column captions and bit-depth formats.
+const MonitorColumnText& MonitorColumnsText(AppLanguage language);
 
 /// Maps the current user's Windows UI language to the nearest supported language.
 AppLanguage DetectSystemLanguage();
@@ -183,6 +197,9 @@ const wchar_t* HelpBodyText(AppLanguage language, bool appMode);
 
 /// Returns the localized one-line product description.
 const wchar_t* AboutDescriptionText(AppLanguage language);
+
+/// Returns the localized product-version label.
+const wchar_t* AboutVersionLabel(AppLanguage language);
 
 /// Returns the localized target-platform label.
 const wchar_t* AboutPlatformLabel(AppLanguage language);

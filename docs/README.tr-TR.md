@@ -15,11 +15,15 @@ FlyingSolids, aydınlatılmış katı üç boyutlu geometrik nesneler gösteren 
 - Her monitörün yenileme hızına uyumlu görüntü oluşturma
 - Bağımsız uygulamada PNG görüntüsü ve MP4 kaydı
 - Uygulama ile ekran koruyucu için ayrı ayarlar
-- 27 katı cisim türü ve 17 dilde arayüz
+- 30 katı cisim türü ve 17 dilde arayüz
 
 ## Katı cisimler
 
 Katalogda çokyüzlüler, düzgün prizmalar, piramitler ve düzlemsel kesitleri, koniler ve silindirler ve bunların kesitleri, düzlemle kapatılmış dönel paraboloit, küreden türetilen cisimler, elipsoitler, ovoit, sferosilindir ve torus bulunur. Arayüz yerleşik Türkçe geometri terimlerini kullanır.
+
+- Prolat sferoitin bir uzun ve birbirine eşit iki kısa yarı ekseni vardır.
+- Yuvarlatılmış disk (spheroplatelet), iki düz dairesel yüze ve kesintisiz yuvarlatılmış bir kenara sahiptir; çapı küre tabakasından biraz daha büyük, kalınlığı ise onun yarısıdır.
+- Toroidal uçlu içi boş silindirin dış ve iç silindirik yüzeyleri yarım toruslarla birleştirilir; uçlar eksenel kesitte tam yarım daireler oluşturur.
 
 ## Aydınlatma
 
@@ -52,7 +56,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 Windows 7 ile Windows 11 arasındaki sürümler, PNG anlık görüntüler ve MP4 kaydı dâhil tüm özellikleri destekler.
 
-Windows Vista SP2: KB971512, KB2117917. Geçerli sürümde MP4 kaydı Vista'da çalışmaz.
+Uygulamayı Windows Vista SP2'de çalıştırmak için KB971512 ve KB2117917 güncellemelerini yüklemeniz gerekir. Geçerli sürümde MP4 kaydı Vista'da çalışmaz.
 
 Görüntüleme, yalnızca eski bir DirectX çalışma zamanı değil, Direct3D 11 gerektirir. MP4 kaydı, kullanılabilir Media Foundation bileşenleri ve bir H.264 kodlayıcı gerektirir.
 

@@ -49,6 +49,7 @@ constexpr SolidTextArray CZECH_SOLIDS = {
     L"Rotační kužel s řezem kolmým k podstavě",
     L"Rotační válec",
     L"Dutý rotační válec",
+    L"Dutý válec s toroidálními čely",
     L"Rotační paraboloid uzavřený rovinou",
     L"Koule",
     L"Polokoule",
@@ -56,9 +57,11 @@ constexpr SolidTextArray CZECH_SOLIDS = {
     L"Velká kulová úseč",
     L"Kulová vrstva",
     L"Trojosý elipsoid",
+    L"Protáhlý rotační elipsoid",
     L"Zploštělý rotační elipsoid",
     L"Ovoid",
     L"Kapsle (sferocylindr)",
+    L"Zaoblený disk (spheroplatelet)",
     L"Anuloid (torus)"
 };
 
@@ -79,6 +82,7 @@ constexpr SolidTextArray ENGLISH_US_SOLIDS = {
     L"Cone cut perpendicular to base",
     L"Right circular cylinder",
     L"Hollow right circular cylinder",
+    L"Hollow cylinder with toroidal ends",
     L"Paraboloid of revolution closed by a plane",
     L"Sphere",
     L"Hemisphere",
@@ -86,9 +90,11 @@ constexpr SolidTextArray ENGLISH_US_SOLIDS = {
     L"Major spherical cap",
     L"Spherical segment (two bases)",
     L"Triaxial ellipsoid",
+    L"Prolate spheroid",
     L"Oblate spheroid",
     L"Ovoid",
     L"Spherocylinder",
+    L"Rounded disc (spheroplatelet)",
     L"Torus"
 };
 
@@ -111,6 +117,7 @@ constexpr SolidTextArray GERMAN_SOLIDS = {
     L"Kreiskegel, Schnitt senkrecht zur Basis",
     L"Gerader Kreiszylinder",
     L"Hohlzylinder",
+    L"Hohlzylinder mit toroidalen Enden",
     L"Geschlossener Rotationsparaboloid",
     L"Kugel",
     L"Halbkugel",
@@ -118,9 +125,11 @@ constexpr SolidTextArray GERMAN_SOLIDS = {
     L"Großer Kugelabschnitt",
     L"Kugelschicht",
     L"Dreiachsiges Ellipsoid",
+    L"Verlängertes Rotationsellipsoid",
     L"Abgeplattetes Rotationsellipsoid",
     L"Ovoid",
     L"Sphärozylinder",
+    L"Abgerundete Scheibe (Spheroplatelet)",
     L"Torus"
 };
 
@@ -141,6 +150,7 @@ constexpr SolidTextArray FRENCH_SOLIDS = {
     L"Cône coupé perpendiculairement à la base",
     L"Cylindre de révolution",
     L"Cylindre creux",
+    L"Cylindre creux à extrémités toriques",
     L"Paraboloïde de révolution fermé par un plan",
     L"Boule",
     L"Demi-boule",
@@ -148,9 +158,11 @@ constexpr SolidTextArray FRENCH_SOLIDS = {
     L"Grand segment sphérique",
     L"Segment sphérique à deux bases",
     L"Ellipsoïde triaxial",
+    L"Sphéroïde allongé",
     L"Sphéroïde aplati",
     L"Ovoïde",
     L"Sphérocylindre",
+    L"Disque arrondi (spheroplatelet)",
     L"Tore"
 };
 
@@ -171,6 +183,7 @@ constexpr SolidTextArray SPANISH_SOLIDS = {
     L"Cono, corte perpendicular a la base",
     L"Cilindro circular recto",
     L"Cilindro hueco",
+    L"Cilindro hueco con extremos toroidales",
     L"Paraboloide de revolución cerrado por plano",
     L"Esfera",
     L"Hemisferio",
@@ -178,9 +191,11 @@ constexpr SolidTextArray SPANISH_SOLIDS = {
     L"Segmento esférico mayor",
     L"Segmento esférico de dos bases",
     L"Elipsoide triaxial",
+    L"Esferoide prolato",
     L"Esferoide oblato",
     L"Ovoide",
     L"Esferocilindro",
+    L"Disco redondeado (spheroplatelet)",
     L"Toro"
 };
 
@@ -201,6 +216,7 @@ constexpr SolidTextArray ITALIAN_SOLIDS = {
     L"Cono tagliato perpendicolarmente alla base",
     L"Cilindro circolare retto",
     L"Cilindro cavo",
+    L"Cilindro cavo con estremità toroidali",
     L"Paraboloide di rotazione chiuso da un piano",
     L"Sfera",
     L"Emisfero",
@@ -208,9 +224,11 @@ constexpr SolidTextArray ITALIAN_SOLIDS = {
     L"Segmento sferico maggiore",
     L"Segmento sferico a due basi",
     L"Ellissoide triassiale",
+    L"Sferoide prolato",
     L"Sferoide oblato",
     L"Ovoide",
     L"Sferocilindro",
+    L"Disco arrotondato (spheroplatelet)",
     L"Toro"
 };
 
@@ -231,6 +249,7 @@ constexpr SolidTextArray POLISH_SOLIDS = {
     L"Stożek, cięcie prostopadłe do podstawy",
     L"Walec obrotowy",
     L"Walec pusty",
+    L"Walec pusty z toroidalnymi końcami",
     L"Paraboloida obrotowa zamknięta płaszczyzną",
     L"Kula",
     L"Półkula",
@@ -238,9 +257,11 @@ constexpr SolidTextArray POLISH_SOLIDS = {
     L"Duży odcinek kuli",
     L"Warstwa kulista",
     L"Elipsoida trójosiowa",
+    L"Sferoida wydłużona",
     L"Sferoida spłaszczona",
     L"Owoida",
     L"Sferocylinder",
+    L"Zaokrąglony dysk (spheroplatelet)",
     L"Torus"
 };
 
@@ -261,6 +282,7 @@ constexpr SolidTextArray SLOVAK_SOLIDS = {
     L"Rotačný kužeľ s rezom kolmým na podstavu",
     L"Rotačný valec",
     L"Dutý rotačný valec",
+    L"Dutý valec s toroidálnymi čelami",
     L"Rotačný paraboloid uzavretý rovinou",
     L"Guľa",
     L"Pologuľa",
@@ -268,9 +290,11 @@ constexpr SolidTextArray SLOVAK_SOLIDS = {
     L"Veľký guľový odsek",
     L"Guľová vrstva",
     L"Trojosový elipsoid",
+    L"Predĺžený rotačný elipsoid",
     L"Sploštený rotačný elipsoid",
     L"Ovoid",
     L"Sferocylinder",
+    L"Zaoblený disk (spheroplatelet)",
     L"Anuloid (torus)"
 };
 
@@ -291,6 +315,7 @@ constexpr SolidTextArray PORTUGUESE_SOLIDS = {
     L"Cone, corte perpendicular à base",
     L"Cilindro circular reto",
     L"Cilindro oco",
+    L"Cilindro oco com extremidades toroidais",
     L"Paraboloide de revolução fechado por plano",
     L"Esfera",
     L"Hemisfério",
@@ -298,9 +323,11 @@ constexpr SolidTextArray PORTUGUESE_SOLIDS = {
     L"Segmento esférico maior",
     L"Segmento esférico de duas bases",
     L"Elipsoide triaxial",
+    L"Esferoide prolato",
     L"Esferoide oblato",
     L"Ovoide",
     L"Esferocilindro",
+    L"Disco arredondado (spheroplatelet)",
     L"Toro"
 };
 
@@ -321,6 +348,7 @@ constexpr SolidTextArray NORWEGIAN_SOLIDS = {
     L"Kjegle med snitt normalt på grunnflaten",
     L"Rett sirkelsylinder",
     L"Hul sylinder",
+    L"Hul sylinder med toroidale ender",
     L"Rotasjonsparaboloide lukket av et plan",
     L"Kule",
     L"Halvkule",
@@ -328,9 +356,11 @@ constexpr SolidTextArray NORWEGIAN_SOLIDS = {
     L"Stort kulesegment",
     L"Kulelag",
     L"Treakset ellipsoide",
+    L"Prolat sfæroide",
     L"Flattrykt sfæroide",
     L"Ovoide",
     L"Sfærosylinder",
+    L"Avrundet skive (spheroplatelet)",
     L"Torus"
 };
 
@@ -351,6 +381,7 @@ constexpr SolidTextArray SWEDISH_SOLIDS = {
     L"Kon med snitt vinkelrätt mot basen",
     L"Rät cirkulär cylinder",
     L"Ihålig cylinder",
+    L"Ihålig cylinder med toroidala ändar",
     L"Rotationsparaboloid sluten av ett plan",
     L"Klot",
     L"Halvklot",
@@ -358,9 +389,11 @@ constexpr SolidTextArray SWEDISH_SOLIDS = {
     L"Stort klotsegment",
     L"Klotsegment med två baser",
     L"Treaxlig ellipsoid",
+    L"Prolat sfäroid",
     L"Oblat sfäroid",
     L"Ovoid",
     L"Sfärocylinder",
+    L"Avrundad skiva (spheroplatelet)",
     L"Torus"
 };
 
@@ -381,6 +414,7 @@ constexpr SolidTextArray FINNISH_SOLIDS = {
     L"Kartio, pohjaan nähden kohtisuora leikkaus",
     L"Suora ympyrälieriö",
     L"Ontto lieriö",
+    L"Ontto lieriö, toroidiset päädyt",
     L"Tasolla suljettu pyörähdysparaboloidi",
     L"Pallo",
     L"Puolipallo",
@@ -388,9 +422,11 @@ constexpr SolidTextArray FINNISH_SOLIDS = {
     L"Suuri pallosegmentti",
     L"Katkaistu pallosegmentti",
     L"Kolmiakselinen ellipsoidi",
+    L"Prolaatti sferoidi",
     L"Litteä sferoidi",
     L"Ovoidi",
     L"Sferosylinteri",
+    L"Pyöristetty kiekko (spheroplatelet)",
     L"Torus"
 };
 
@@ -411,6 +447,7 @@ constexpr SolidTextArray DANISH_SOLIDS = {
     L"Kegle med snit vinkelret på grundfladen",
     L"Ret cirkulær cylinder",
     L"Hul cylinder",
+    L"Hul cylinder med toroidale ender",
     L"Rotationsparaboloide lukket af et plan",
     L"Kugle",
     L"Halvkugle",
@@ -418,9 +455,11 @@ constexpr SolidTextArray DANISH_SOLIDS = {
     L"Stort kuglesegment",
     L"Kuglelag",
     L"Treakset ellipsoide",
+    L"Prolat sfæroide",
     L"Fladtrykt sfæroide",
     L"Ovoide",
     L"Sfærocylinder",
+    L"Afrundet skive (spheroplatelet)",
     L"Torus"
 };
 
@@ -441,6 +480,7 @@ constexpr SolidTextArray ICELANDIC_SOLIDS = {
     L"Keila, skurður hornréttur á grunnflöt",
     L"Réttur hringsívalningur",
     L"Holur sívalningur",
+    L"Holur sívalningur með tórusendum",
     L"Lokaður snúningsfleygbogaflötur",
     L"Kúla",
     L"Hálfkúla",
@@ -448,9 +488,11 @@ constexpr SolidTextArray ICELANDIC_SOLIDS = {
     L"Stór kúluhluti",
     L"Kúlulag",
     L"Þríása sporvala",
+    L"Ílöng snúningssporvala",
     L"Flöt snúningssporvala",
     L"Egglaga rúmhlutur",
     L"Kúluhylki",
+    L"Rúnaður diskur (spheroplatelet)",
     L"Tórus"
 };
 
@@ -471,6 +513,7 @@ constexpr SolidTextArray TURKISH_SOLIDS = {
     L"Tabana dik düzlemle kesilmiş koni",
     L"Dik dairesel silindir",
     L"İçi boş silindir",
+    L"Toroidal uçlu içi boş silindir",
     L"Düzlemle kapatılmış dönel paraboloit",
     L"Küre",
     L"Yarım küre",
@@ -478,9 +521,11 @@ constexpr SolidTextArray TURKISH_SOLIDS = {
     L"Büyük küre parçası",
     L"Küre tabakası",
     L"Üç eksenli elipsoit",
+    L"Prolat sferoit",
     L"Basık sferoit",
     L"Ovoit",
     L"Sferosilindir",
+    L"Yuvarlatılmış disk (spheroplatelet)",
     L"Torus"
 };
 
@@ -1105,6 +1150,147 @@ constexpr std::array<AppLanguage, LANGUAGE_COUNT> DISPLAY_ORDER = {
     AppLanguage::Turkish
 };
 
+/// Monitor-detail column captions and explicit bit-depth units.
+constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
+    MonitorColumnText{
+        L"Model monitoru",
+        L"Obnovovací frekvence",
+        L"Bitová hloubka",
+        L"Formát barvy",
+        L"Barevný prostor",
+        L"%u bitů/kanál",
+        L"%u bitů/pixel"
+    }, MonitorColumnText{
+        L"Monitor model",
+        L"Refresh rate",
+        L"Bit depth",
+        L"Color format",
+        L"Color space",
+        L"%u bits/channel",
+        L"%u bits/pixel"
+    }, MonitorColumnText{
+        L"Monitormodell",
+        L"Bildwiederholfrequenz",
+        L"Bittiefe",
+        L"Farbformat",
+        L"Farbraum",
+        L"%u Bit/Kanal",
+        L"%u Bit/Pixel"
+    }, MonitorColumnText{
+        L"Modèle du moniteur",
+        L"Fréquence de rafraîchissement",
+        L"Profondeur de bits",
+        L"Format de couleur",
+        L"Espace colorimétrique",
+        L"%u bits/canal",
+        L"%u bits/pixel"
+    }, MonitorColumnText{
+        L"Modelo del monitor",
+        L"Frecuencia de actualización",
+        L"Profundidad de bits",
+        L"Formato de color",
+        L"Espacio de color",
+        L"%u bits/canal",
+        L"%u bits/píxel"
+    }, MonitorColumnText{
+        L"Modello del monitor",
+        L"Frequenza di aggiornamento",
+        L"Profondità di bit",
+        L"Formato colore",
+        L"Spazio colore",
+        L"%u bit/canale",
+        L"%u bit/pixel"
+    }, MonitorColumnText{
+        L"Model monitora",
+        L"Częstotliwość odświeżania",
+        L"Głębia bitowa",
+        L"Format koloru",
+        L"Przestrzeń barw",
+        L"%u bitów/kanał",
+        L"%u bitów/piksel"
+    }, MonitorColumnText{
+        L"Model monitora",
+        L"Obnovovacia frekvencia",
+        L"Bitová hĺbka",
+        L"Formát farby",
+        L"Farebný priestor",
+        L"%u bitov/kanál",
+        L"%u bitov/pixel"
+    }, MonitorColumnText{
+        L"Monitor model",
+        L"Refresh rate",
+        L"Bit depth",
+        L"Colour format",
+        L"Colour space",
+        L"%u bits/channel",
+        L"%u bits/pixel"
+    }, MonitorColumnText{
+        L"Monitor model",
+        L"Refresh rate",
+        L"Bit depth",
+        L"Colour format",
+        L"Colour space",
+        L"%u bits/channel",
+        L"%u bits/pixel"
+    }, MonitorColumnText{
+        L"Modelo do monitor",
+        L"Taxa de atualização",
+        L"Profundidade de bits",
+        L"Formato de cor",
+        L"Espaço de cor",
+        L"%u bits/canal",
+        L"%u bits/píxel"
+    }, MonitorColumnText{
+        L"Skjermmodell",
+        L"Oppdateringsfrekvens",
+        L"Bitdybde",
+        L"Fargeformat",
+        L"Fargerom",
+        L"%u bit/kanal",
+        L"%u bit/piksel"
+    }, MonitorColumnText{
+        L"Skärmmodell",
+        L"Uppdateringsfrekvens",
+        L"Bitdjup",
+        L"Färgformat",
+        L"Färgrymd",
+        L"%u bitar/kanal",
+        L"%u bitar/pixel"
+    }, MonitorColumnText{
+        L"Näytön malli",
+        L"Virkistystaajuus",
+        L"Bittisyvyys",
+        L"Värimuoto",
+        L"Väriavaruus",
+        L"%u bittiä/kanava",
+        L"%u bittiä/pikseli"
+    }, MonitorColumnText{
+        L"Skærmmodel",
+        L"Opdateringsfrekvens",
+        L"Bitdybde",
+        L"Farveformat",
+        L"Farverum",
+        L"%u bit/kanal",
+        L"%u bit/pixel"
+    }, MonitorColumnText{
+        L"Gerð skjás",
+        L"Endurnýjunartíðni",
+        L"Bitadýpt",
+        L"Litasnið",
+        L"Litarými",
+        L"%u bitar/rás",
+        L"%u bitar/myndpunktur"
+    }, MonitorColumnText{
+        L"Monitör modeli",
+        L"Yenileme hızı",
+        L"Bit derinliği",
+        L"Renk biçimi",
+        L"Renk alanı",
+        L"%u bit/kanal",
+        L"%u bit/piksel"
+    }
+};
+
 /// Supplementary settings-window text
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> COPY_COUNT_TEXTS = {
     L"Počet kopií každého objektu: %d",
@@ -1324,6 +1510,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_BUTTON_TEXTS = {
     L"Om",
     L"Um",
     L"Hakkında"
+};
+
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_VERSION_LABELS = {
+    L"Verze:",
+    L"Version:",
+    L"Version:",
+    L"Version :",
+    L"Versión:",
+    L"Versione:",
+    L"Wersja:",
+    L"Verzia:",
+    L"Version:",
+    L"Version:",
+    L"Versão:",
+    L"Versjon:",
+    L"Version:",
+    L"Versio:",
+    L"Version:",
+    L"Útgáfa:",
+    L"Sürüm:"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_PLATFORM_LABELS = {
@@ -1651,7 +1857,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_BLOCKED_BY_R
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"FlyingSolids zobrazuje osvětlená plná prostorová tělesa. Jezdci nastavují rychlost objektů a kamery v rozsahu 0–1600 %, jednu až deset "
     L"kopií každého tělesa a velikost 50–200 %. Vyberte Pozorování prostoru nebo přímý Průlet prostorem a zaškrtněte požadované druhy "
-    L"těles.\r\n\r\nZatržítka Hlavní světlo a Doplňkové světlo pod pravými jezdci nezávisle zapínají a vypínají obě světla pro celou scénu. "
+    L"těles.\r\n\r\nNa výběr je 30 těles. Protáhlý rotační elipsoid má jednu delší a dvě shodné kratší poloosy. "
+    L"Zaoblený disk (spheroplatelet) má dvě rovinné kruhové plochy a plynule zaoblený obvod; jeho průměr je "
+    L"mírně větší než u kulové vrstvy a tloušťka poloviční. Dutý válec s toroidálními čely má vnější a vnitřní "
+    L"válcovou plochu spojené půltorovými čely, která v osovém řezu tvoří přesné půlkruhy.\r\n\r\nZatržítka Hlavní "
+    L"světlo a Doplňkové světlo pod pravými jezdci nezávisle zapínají a vypínají obě světla pro celou scénu. "
     L"Výchozí stav: Hlavní světlo zapnuté, Doplňkové světlo vypnuté. Nastavení světel se ukládá zvlášť pro aplikaci a spořič "
     L"obrazovky.\r\n\r\nV seznamu lze označit více monitorů; dvojklikem na řádek monitor zapnete nebo vypnete a lze zrušit i výběr všech "
     L"monitorů. Každý monitor používá nezávislou scénu.\r\n\r\nSnímek ukládá PNG, tlačítko záznamu spouští a ukončuje MP4. Pozastavení zastaví "
@@ -1664,7 +1874,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"PNG a záznamu MP4. Windows Vista SP2: KB971512, KB2117917. Záznam MP4 na Vistě v současné verzi nefunguje.",
     L"FlyingSolids displays illuminated solid 3D objects. The sliders set object and camera speed from 0–1600%, one to ten copies of each "
     L"object, and size from 50–200%. Choose Space observation or the straight Fly through space mode and enable the required object "
-    L"types.\r\n\r\nThe Main light and Fill light checkboxes below the right-hand sliders independently enable or disable the two lights for "
+    L"types.\r\n\r\nThere are 30 selectable solids. A prolate spheroid has one longer semi-axis and two equal shorter semi-axes. "
+    L"A rounded disc (spheroplatelet) has two flat circular faces and a smoothly rounded rim; its diameter is slightly larger "
+    L"than that of the spherical layer and its thickness is half as large. A hollow cylinder with toroidal ends has outer "
+    L"and inner cylindrical surfaces joined by half-torus ends that form exact semicircles in an axial section.\r\n\r\nThe "
+    L"Main light and Fill light checkboxes below the right-hand sliders independently enable or disable the two lights for "
     L"the entire scene. By default, Main light is on and Fill light is off. Light settings are stored separately for the application and "
     L"screen saver.\r\n\r\nSelect several displays in the list; double-click a row to toggle it, or clear the selection for all displays. "
     L"Every display uses an independent scene.\r\n\r\nSnapshot saves a PNG and the recording button starts or stops an MP4. Pause stops the "
@@ -1678,7 +1892,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"on Vista in the current version.",
     L"FlyingSolids zeigt beleuchtete dreidimensionale Volumenkörper. Die Regler bestimmen Objekt- und Kamerageschwindigkeit von 0–1600 %, ein "
     L"bis zehn Exemplare je Körper und eine Größe von 50–200 %. Wählen Sie Raumbeobachtung oder Flug durch den Raum in gerader Linie und "
-    L"aktivieren Sie die gewünschten Körper.\r\n\r\nDie Kontrollkästchen Hauptlicht und Aufhelllicht unter den rechten Reglern schalten die "
+    L"aktivieren Sie die gewünschten Körper.\r\n\r\nEs stehen 30 Körper zur Auswahl. Ein verlängertes Rotationsellipsoid besitzt eine "
+    L"längere und zwei gleich lange kürzere Halbachsen. Eine abgerundete Scheibe (Spheroplatelet) hat zwei ebene Kreisflächen und einen "
+    L"stetig abgerundeten Rand; ihr Durchmesser ist etwas größer als der einer Kugelschicht und ihre Dicke halb so groß. Ein Hohlzylinder "
+    L"mit toroidalen Enden besitzt eine äußere und eine innere Zylinderfläche, die durch Halbtori verbunden sind; im Axialschnitt "
+    L"bilden die Enden exakte Halbkreise.\r\n\r\nDie Kontrollkästchen Hauptlicht und Aufhelllicht unter den rechten Reglern schalten die "
     L"beiden Lichtquellen für die gesamte Szene unabhängig ein oder aus. Standardmäßig ist Hauptlicht eingeschaltet und Aufhelllicht "
     L"ausgeschaltet. Die Lichteinstellungen werden für Anwendung und Bildschirmschoner getrennt gespeichert.\r\n\r\nIn der Liste sind mehrere "
     L"Monitore wählbar; ein Doppelklick schaltet einen Monitor um, auch alle können abgewählt werden. Jeder Monitor besitzt eine unabhängige "
@@ -1694,7 +1912,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Version nicht.",
     L"FlyingSolids affiche des solides 3D éclairés. Les curseurs règlent la vitesse des objets et de la caméra de 0 à 1 600 %, une à dix "
     L"copies de chaque solide et une taille de 50 à 200 %. Choisissez Observation de l’espace ou le Vol dans l’espace rectiligne, puis activez "
-    L"les solides voulus.\r\n\r\nLes cases Éclairage principal et Éclairage d’appoint sous les curseurs de droite activent ou désactivent "
+    L"les solides voulus.\r\n\r\nVous pouvez choisir parmi 30 solides. Un sphéroïde allongé possède un demi-axe plus long "
+    L"et deux demi-axes plus courts de même longueur. Un disque arrondi (spheroplatelet) possède deux faces circulaires "
+    L"planes et un bord arrondi continu ; son diamètre est légèrement supérieur à celui du segment sphérique à deux "
+    L"bases et son épaisseur est deux fois plus petite. Un cylindre creux à extrémités toriques possède des surfaces "
+    L"cylindriques extérieure et intérieure reliées par des demi-tores, dont la section axiale forme des demi-cercles "
+    L"exacts.\r\n\r\nLes cases Éclairage principal et Éclairage d’appoint sous les curseurs de droite activent ou désactivent "
     L"indépendamment les deux sources lumineuses pour toute la scène. Par défaut, Éclairage principal est activé et Éclairage d’appoint est "
     L"désactivé. Les réglages d’éclairage sont enregistrés séparément pour l’application et l’économiseur d’écran.\r\n\r\nSélectionnez "
     L"plusieurs moniteurs dans la liste ; un double-clic active ou désactive un moniteur, et vous pouvez tous les désélectionner. Chaque "
@@ -1710,7 +1933,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"la version actuelle.",
     L"FlyingSolids muestra sólidos 3D iluminados. Los controles ajustan la velocidad de objetos y cámara entre 0 y 1600 %, de una a diez "
     L"copias y el tamaño entre 50 y 200 %. Elija Observación del espacio o el Vuelo por el espacio en línea recta y active los sólidos "
-    L"deseados.\r\n\r\nLas casillas Luz principal y Luz de relleno bajo los controles deslizantes de la derecha activan o desactivan las dos "
+    L"deseados.\r\n\r\nHay 30 sólidos disponibles. Un esferoide prolato tiene un semieje más largo y dos semiejes más cortos de "
+    L"igual longitud. Un disco redondeado (spheroplatelet) tiene dos caras circulares planas y un borde redondeado continuo; su "
+    L"diámetro es ligeramente mayor que el del segmento esférico de dos bases y su grosor es la mitad. Un cilindro hueco con extremos "
+    L"toroidales tiene superficies cilíndricas exterior e interior unidas por semitoros, que forman semicírculos exactos en una sección "
+    L"axial.\r\n\r\nLas casillas Luz principal y Luz de relleno bajo los controles deslizantes de la derecha activan o desactivan las dos "
     L"luces de forma independiente para toda la escena. De forma predeterminada, Luz principal está activada y Luz de relleno está "
     L"desactivada. Los ajustes de iluminación se guardan por separado para la aplicación y el salvapantallas.\r\n\r\nSeleccione varios "
     L"monitores en la lista; un doble clic alterna la animación en un monitor y también puede desmarcarlos todos. Cada monitor usa una escena "
@@ -1725,7 +1952,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"en la versión actual.",
     L"FlyingSolids mostra solidi 3D illuminati. I cursori regolano la velocità di oggetti e camera tra 0 e 1600 %, da una a dieci copie e la "
     L"dimensione tra 50 e 200 %. Scegliere Osservazione dello spazio o il Volo nello spazio rettilineo e attivare i solidi "
-    L"desiderati.\r\n\r\nLe caselle Luce principale e Luce di riempimento sotto i cursori di destra attivano o disattivano le due luci in modo "
+    L"desiderati.\r\n\r\nSono disponibili 30 solidi. Uno sferoide prolato ha un semiasse più lungo e due semiassi "
+    L"più corti di uguale lunghezza. Un disco arrotondato (spheroplatelet) ha due facce circolari piane e un "
+    L"bordo arrotondato continuo; il suo diametro è leggermente maggiore di quello del segmento sferico a due basi "
+    L"e il suo spessore è la metà. Un cilindro cavo con estremità toroidali ha superfici cilindriche esterna e "
+    L"interna unite da semitori, che formano semicirconferenze esatte in una sezione assiale.\r\n\r\nLe caselle "
+    L"Luce principale e Luce di riempimento sotto i cursori di destra attivano o disattivano le due luci in modo "
     L"indipendente per l’intera scena. Per impostazione predefinita, Luce principale è attiva e Luce di riempimento è disattivata. Le "
     L"impostazioni di illuminazione vengono salvate separatamente per l’applicazione e il salvaschermo.\r\n\r\nNell’elenco si possono "
     L"selezionare più monitor; un doppio clic attiva o disattiva l’animazione su un monitor, ed è possibile deselezionarli tutti. Ogni monitor "
@@ -1741,7 +1973,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"nella versione attuale.",
     L"FlyingSolids wyświetla oświetlone pełne bryły 3D. Suwaki ustawiają prędkość obiektów i kamery od 0 do 1600%, od jednej do dziesięciu "
     L"kopii i rozmiar od 50 do 200%. Wybierz Obserwację przestrzeni lub prostoliniowy Przelot przez przestrzeń i włącz potrzebne "
-    L"bryły.\r\n\r\nPola wyboru Światło główne i Światło wypełniające pod prawymi suwakami niezależnie włączają lub wyłączają oba światła dla "
+    L"bryły.\r\n\r\nDo wyboru jest 30 brył. Sferoida wydłużona ma jedną dłuższą półoś i dwie jednakowe krótsze półosie. Zaokrąglony "
+    L"dysk (spheroplatelet) ma dwie płaskie powierzchnie kołowe i gładko zaokrąglony brzeg; jego średnica jest nieco większa "
+    L"niż średnica warstwy kulistej, a grubość jest o połowę mniejsza. Walec pusty z toroidalnymi końcami ma zewnętrzną i "
+    L"wewnętrzną powierzchnię walcową połączone półtorusami, które w przekroju osiowym tworzą dokładne półokręgi.\r\n\r\nPola "
+    L"wyboru Światło główne i Światło wypełniające pod prawymi suwakami niezależnie włączają lub wyłączają oba światła dla "
     L"całej sceny. Domyślnie Światło główne jest włączone, a Światło wypełniające wyłączone. Ustawienia oświetlenia są zapisywane osobno dla "
     L"aplikacji i wygaszacza ekranu.\r\n\r\nNa liście można zaznaczyć wiele monitorów; podwójne kliknięcie przełącza animację na monitorze, "
     L"można też odznaczyć wszystkie. Każdy monitor ma niezależną scenę.\r\n\r\nZrzut zapisuje PNG, a przycisk nagrywania rozpoczyna lub kończy "
@@ -1754,7 +1990,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Windows 7 do Windows 11 obsługują wszystkie funkcje, w tym zrzuty PNG i nagrywanie MP4. Windows Vista SP2: KB971512, KB2117917. "
     L"Nagrywanie MP4 nie działa w Vista w obecnej wersji.",
     L"FlyingSolids zobrazuje osvetlené plné 3D telesá. Jazdce nastavujú rýchlosť objektov a kamery 0–1600 %, jednu až desať kópií a veľkosť "
-    L"50–200 %. Vyberte Pozorovanie priestoru alebo priamy Prelet priestorom a zapnite požadované telesá.\r\n\r\nZačiarkavacie políčka Hlavné "
+    L"50–200 %. Vyberte Pozorovanie priestoru alebo priamy Prelet priestorom a zapnite požadované telesá.\r\n\r\nNa "
+    L"výber je 30 telies. Predĺžený rotačný elipsoid má jednu dlhšiu a dve zhodné kratšie poloosi. Zaoblený disk "
+    L"(spheroplatelet) má dve rovinné kruhové plochy a plynulo zaoblený obvod; jeho priemer je mierne väčší než pri "
+    L"guľovej vrstve a hrúbka polovičná. Dutý valec s toroidálnymi čelami má vonkajšiu a vnútornú valcovú plochu "
+    L"spojené polovicami torusu, ktoré v osovom reze tvoria presné polkruhy.\r\n\r\nZačiarkavacie políčka Hlavné "
     L"svetlo a Doplnkové svetlo pod pravými jazdcami nezávisle zapínajú alebo vypínajú obe svetlá pre celú scénu. Predvolene je Hlavné svetlo "
     L"zapnuté a Doplnkové svetlo vypnuté. Nastavenia svetiel sa ukladajú zvlášť pre aplikáciu a šetrič obrazovky.\r\n\r\nV zozname možno "
     L"označiť viac monitorov; dvojklik zapína alebo vypína animáciu na monitore a možno zrušiť aj výber všetkých. Každý monitor používa "
@@ -1767,7 +2007,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"obnovovacej frekvencii monitora, najviac však 60 snímkam za sekundu.\r\n\r\nWindows 7 až Windows 11 podporujú všetky funkcie vrátane "
     L"snímok PNG a záznamu MP4. Windows Vista SP2: KB971512, KB2117917. Záznam MP4 na Viste v súčasnej verzii nefunguje.",
     L"FlyingSolids displays illuminated solid 3D objects. The sliders set object and camera speed from 0–1600%, one to ten copies and size "
-    L"from 50–200%. Choose Space observation or the straight Fly through space mode and enable the required objects.\r\n\r\nThe Main light and "
+    L"from 50–200%. Choose Space observation or the straight Fly through space mode and enable the required objects.\r\n\r\nThere "
+    L"are 30 selectable solids. A prolate spheroid has one longer semi-axis and two equal shorter semi-axes. A rounded disc "
+    L"(spheroplatelet) has two flat circular faces and a smoothly rounded rim; its diameter is slightly larger than that "
+    L"of the spherical layer and its thickness is half as large. A hollow cylinder with toroidal ends has outer and inner "
+    L"cylindrical surfaces joined by half-torus ends that form exact semicircles in an axial section.\r\n\r\nThe Main light and "
     L"Fill light checkboxes below the right-hand sliders independently enable or disable the two lights for the entire scene. By default, Main "
     L"light is on and Fill light is off. Light settings are stored separately for the application and screen saver.\r\n\r\nSelect several "
     L"displays; double-click a row to toggle it, or clear the selection for all displays. Each display uses an independent "
@@ -1781,7 +2025,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"including PNG snapshots and MP4 recording. Windows Vista SP2: KB971512, KB2117917. MP4 recording does not work on Vista in the current "
     L"version.",
     L"FlyingSolids displays illuminated solid 3D objects. The sliders set object and camera speed from 0–1600%, one to ten copies and size "
-    L"from 50–200%. Choose Space observation or the straight Fly through space mode and enable the required objects.\r\n\r\nThe Main light and "
+    L"from 50–200%. Choose Space observation or the straight Fly through space mode and enable the required objects.\r\n\r\nThere "
+    L"are 30 selectable solids. A prolate spheroid has one longer semi-axis and two equal shorter semi-axes. A rounded disc "
+    L"(spheroplatelet) has two flat circular faces and a smoothly rounded rim; its diameter is slightly larger than that "
+    L"of the spherical layer and its thickness is half as large. A hollow cylinder with toroidal ends has outer and inner "
+    L"cylindrical surfaces joined by half-torus ends that form exact semicircles in an axial section.\r\n\r\nThe Main light and "
     L"Fill light checkboxes below the right-hand sliders independently enable or disable the two lights for the entire scene. By default, Main "
     L"light is on and Fill light is off. Light settings are stored separately for the application and screen saver.\r\n\r\nSelect several "
     L"displays; double-click a row to toggle it, or clear the selection for all displays. Each display uses an independent "
@@ -1795,7 +2043,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"including PNG snapshots and MP4 recording. Windows Vista SP2: KB971512, KB2117917. MP4 recording does not work on Vista in the current "
     L"version.",
     L"O FlyingSolids mostra sólidos 3D iluminados. Os controlos regulam a velocidade dos objetos e da câmara entre 0 e 1600%, uma a dez cópias "
-    L"e o tamanho entre 50 e 200%. Escolha Observação do espaço ou o Voo pelo espaço em linha reta e ative os sólidos pretendidos.\r\n\r\nAs "
+    L"e o tamanho entre 50 e 200%. Escolha Observação do espaço ou o Voo pelo espaço em linha reta e ative os sólidos "
+    L"pretendidos.\r\n\r\nEstão disponíveis 30 sólidos. Um esferoide prolato tem um semieixo mais longo e dois "
+    L"semieixos mais curtos de igual comprimento. Um disco arredondado (spheroplatelet) tem duas faces circulares "
+    L"planas e um bordo arredondado contínuo; o seu diâmetro é ligeiramente maior do que o do segmento esférico de "
+    L"duas bases e a sua espessura é metade. Um cilindro oco com extremidades toroidais tem superfícies cilíndricas "
+    L"exterior e interior unidas por meios toros, que formam semicírculos exatos numa secção axial.\r\n\r\nAs "
     L"caixas Luz principal e Luz de preenchimento sob os controlos deslizantes da direita ativam ou desativam as duas luzes de forma "
     L"independente em toda a cena. Por predefinição, Luz principal está ligada e Luz de preenchimento está desligada. As definições de "
     L"iluminação são guardadas separadamente para a aplicação e a proteção de ecrã.\r\n\r\nSelecione vários monitores; um duplo clique alterna "
@@ -1809,7 +2062,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"segundo.\r\n\r\nOs sistemas Windows 7 a Windows 11 suportam todas as funcionalidades, incluindo capturas PNG e gravação MP4. Windows "
     L"Vista SP2: KB971512, KB2117917. A gravação MP4 não funciona no Vista na versão atual.",
     L"FlyingSolids viser belyste solide 3D-legemer. Glidebryterne angir objekt- og kamerahastighet fra 0–1600 %, én til ti kopier og størrelse "
-    L"fra 50–200 %. Velg Romobservasjon eller Flyging gjennom rommet i rett linje og aktiver ønskede legemer.\r\n\r\nAvmerkingsboksene "
+    L"fra 50–200 %. Velg Romobservasjon eller Flyging gjennom rommet i rett linje og aktiver ønskede legemer.\r\n\r\nDet "
+    L"finnes 30 legemer å velge mellom. En prolat sfæroide har én lengre halvakse og to like lange kortere halvakser. "
+    L"En avrundet skive (spheroplatelet) har to plane sirkelflater og en jevnt avrundet kant; diameteren er litt større "
+    L"enn kulelagets, og tykkelsen er halvparten. En hul sylinder med toroidale ender har ytre og indre sylinderflater "
+    L"forbundet med halve toruser, som danner nøyaktige halvsirkler i et aksialsnitt.\r\n\r\nAvmerkingsboksene "
     L"Hovedlys og Utfyllingslys under glidebryterne til høyre slår de to lysene av eller på uavhengig av hverandre for hele scenen. Som "
     L"standard er Hovedlys på og Utfyllingslys av. Lysinnstillingene lagres separat for programmet og skjermspareren.\r\n\r\nVelg flere "
     L"skjermer i listen; dobbeltklikk en rad for å slå animasjonen av eller på, eller fjern valget for alle. Hver skjerm bruker en uavhengig "
@@ -1822,7 +2079,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"skjermens oppdateringsfrekvens, opptil 60 bilder per sekund.\r\n\r\nWindows 7 til Windows 11 støtter alle funksjoner, inkludert "
     L"PNG-skjermbilder og MP4-opptak. Windows Vista SP2: KB971512, KB2117917. MP4-opptak fungerer ikke på Vista i den gjeldende versjonen.",
     L"FlyingSolids visar belysta solida 3D-kroppar. Reglagen ställer in objekt- och kamerahastighet 0–1600 %, en till tio kopior och storlek "
-    L"50–200 %. Välj Rymdobservation eller Flygning genom rymden i rak linje och aktivera önskade kroppar.\r\n\r\nKryssrutorna Huvudljus och "
+    L"50–200 %. Välj Rymdobservation eller Flygning genom rymden i rak linje och aktivera önskade kroppar.\r\n\r\nDet finns "
+    L"30 kroppar att välja mellan. En prolat sfäroid har en längre halvaxel och två lika långa kortare halvaxlar. En avrundad "
+    L"skiva (spheroplatelet) har två plana cirkelytor och en jämnt avrundad kant; diametern är något större än hos klotsegmentet "
+    L"med två baser och tjockleken är hälften så stor. En ihålig cylinder med toroidala ändar har yttre och inre cylinderytor "
+    L"förenade med halva torusar, som bildar exakta halvcirklar i ett axiellt snitt.\r\n\r\nKryssrutorna Huvudljus och "
     L"Upplättningsljus under reglagen till höger slår på eller av de två ljusen oberoende av varandra för hela scenen. Som standard är "
     L"Huvudljus på och Upplättningsljus av. Ljusinställningarna sparas separat för programmet och skärmsläckaren.\r\n\r\nVälj flera "
     L"bildskärmar i listan; dubbelklicka en rad för att slå på eller av animeringen, eller avmarkera alla. Varje bildskärm använder en "
@@ -1837,7 +2098,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"i den aktuella versionen.",
     L"FlyingSolids näyttää valaistuja kiinteitä 3D-kappaleita. Liukusäätimillä asetetaan kohteiden ja kameran nopeus 0–1600 %, yhdestä "
     L"kymmeneen kopiota ja koko 50–200 %. Valitse Avaruuden tarkkailu tai Lento avaruuden halki suoraan eteenpäin ja ota halutut kappaleet "
-    L"käyttöön.\r\n\r\nOikeanpuoleisten liukusäätimien alla olevat Päävalo- ja Täytevalo-valintaruudut kytkevät koko näkymän kaksi valoa "
+    L"käyttöön.\r\n\r\nValittavana on 30 kappaletta. Prolaatilla sferoidilla on yksi pidempi puoliakseli ja kaksi "
+    L"yhtä pitkää lyhyempää puoliakselia. Pyöristetyllä kiekolla (spheroplatelet) on kaksi tasaista ympyräpintaa "
+    L"ja tasaisesti pyöristetty reuna; sen halkaisija on hieman suurempi kuin katkaistun pallosegmentin "
+    L"ja paksuus puolet sen paksuudesta. Onton lieriön ulompi ja sisempi lieriöpinta liittyvät toisiinsa "
+    L"toroidisilla päädyillä, jotka muodostavat aksiaalileikkauksessa tarkat puoliympyrät.\r\n\r\nOikeanpuoleisten "
+    L"liukusäätimien alla olevat Päävalo- ja Täytevalo-valintaruudut kytkevät koko näkymän kaksi valoa "
     L"päälle tai pois toisistaan riippumatta. Oletuksena Päävalo on päällä ja Täytevalo pois päältä. Valaistusasetukset tallennetaan erikseen "
     L"sovellukselle ja näytönsäästäjälle.\r\n\r\nLuettelosta voi valita useita näyttöjä; kaksoisnapsautus vaihtaa rivin tilaa ja kaikkien "
     L"näyttöjen valinnan voi poistaa. Jokaisella näytöllä on itsenäinen näkymä.\r\n\r\nTilannekuva tallentaa PNG:n ja tallennuspainike "
@@ -1850,7 +2116,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"virkistystaajuutta, enintään 60 kuvaa sekunnissa.\r\n\r\nWindows 7–Windows 11 tukevat kaikkia toimintoja, myös PNG-tilannekuvia ja "
     L"MP4-tallennusta. Windows Vista SP2: KB971512, KB2117917. MP4-tallennus ei toimi Vistassa nykyisessä versiossa.",
     L"FlyingSolids viser belyste solide 3D-legemer. Skyderne indstiller objekt- og kamerahastighed 0–1600 %, en til ti kopier og størrelse "
-    L"50–200 %. Vælg Rumobservation eller Flyvning gennem rummet i en lige linje og aktivér de ønskede legemer.\r\n\r\nAfkrydsningsfelterne "
+    L"50–200 %. Vælg Rumobservation eller Flyvning gennem rummet i en lige linje og aktivér de ønskede legemer.\r\n\r\nDer "
+    L"er 30 legemer at vælge imellem. En prolat sfæroide har én længere halvakse og to lige lange kortere halvakser. En "
+    L"afrundet skive (spheroplatelet) har to plane cirkelflader og en jævnt afrundet kant; diameteren er lidt større end "
+    L"kuglelagets, og tykkelsen er halvt så stor. En hul cylinder med toroidale ender har ydre og indre cylinderflader "
+    L"forbundet med halve torusser, som danner præcise halvcirkler i et aksialsnit.\r\n\r\nAfkrydsningsfelterne "
     L"Hovedlys og Udfyldningslys under skyderne til højre slår de to lys til eller fra uafhængigt af hinanden for hele scenen. Som standard er "
     L"Hovedlys slået til og Udfyldningslys slået fra. Lysindstillingerne gemmes separat for programmet og pauseskærmen.\r\n\r\nVælg flere "
     L"skærme i listen; dobbeltklik på en række for at slå animationen til eller fra, eller fravælg alle. Hver skærm bruger en uafhængig "
@@ -1863,7 +2133,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"skærmens opdateringsfrekvens, dog højst 60 billeder i sekundet.\r\n\r\nWindows 7 til Windows 11 understøtter alle funktioner, herunder "
     L"PNG-skærmbilleder og MP4-optagelse. Windows Vista SP2: KB971512, KB2117917. MP4-optagelse fungerer ikke på Vista i den aktuelle version.",
     L"FlyingSolids sýnir upplýsta heila þrívíddarhluti. Rennistikur stilla hraða hluta og myndavélar á 0–1600%, eitt til tíu eintök og stærð á "
-    L"50–200%. Veldu Athugun rýmis eða Flug um rýmið í beinni línu og virkjaðu þá hluti sem óskað er eftir.\r\n\r\nGátreitirnir Aðalljós og "
+    L"50–200%. Veldu Athugun rýmis eða Flug um rýmið í beinni línu og virkjaðu þá hluti sem óskað er eftir.\r\n\r\nHægt er að "
+    L"velja úr 30 rúmhlutum. Ílöng snúningssporvala hefur einn lengri hálfás og tvo jafn langa styttri hálfása. Rúnaður diskur "
+    L"(spheroplatelet) hefur tvo flata hringlaga fleti og samfellt rúnnaðan jaðar; þvermál hans er örlítið stærra en þvermál "
+    L"kúlulags og þykktin helmingur þykktar kúlulags. Holur sívalningur með tórusendum hefur ytri og innri sívalningsfleti "
+    L"tengda með hálfum tórusum, sem mynda nákvæma hálfhringi í áslægum þverskurði.\r\n\r\nGátreitirnir Aðalljós og "
     L"Fylliljós undir rennistikunum hægra megin kveikja eða slökkva á ljósunum tveimur óháð hvort öðru fyrir alla senuna. Sjálfgefið er kveikt "
     L"á Aðalljós og slökkt á Fylliljós. Ljósastillingar eru vistaðar sérstaklega fyrir forritið og skjáhvíluna.\r\n\r\nVelja má marga skjái; "
     L"tvísmellur virkjar eða slekkur á hreyfimynd á skjá og afvelja má alla skjái. Hver skjár notar sjálfstæða senu.\r\n\r\nSkjámynd vistar "
@@ -1876,7 +2150,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"sekúndu.\r\n\r\nWindows 7 til Windows 11 styðja alla eiginleika, þar á meðal PNG-skjámyndir og MP4-upptöku. Windows Vista SP2: KB971512, "
     L"KB2117917. MP4-upptaka virkar ekki í Vista í núverandi útgáfu.",
     L"FlyingSolids aydınlatılmış katı 3B cisimler gösterir. Kaydırıcılar nesne ve kamera hızını %0–1600, kopya sayısını bir ile on ve boyutu "
-    L"%50–200 arasında ayarlar. Uzayı gözlemleme veya doğrusal Uzayda uçuş kipini seçip istenen cisimleri etkinleştirin.\r\n\r\nSağdaki "
+    L"%50–200 arasında ayarlar. Uzayı gözlemleme veya doğrusal Uzayda uçuş kipini seçip istenen cisimleri "
+    L"etkinleştirin.\r\n\r\nSeçilebilen 30 katı cisim vardır. Prolat sferoitin bir uzun ve birbirine eşit iki kısa yarı ekseni "
+    L"vardır. Yuvarlatılmış disk (spheroplatelet), iki düz dairesel yüze ve kesintisiz yuvarlatılmış bir kenara sahiptir; "
+    L"çapı küre tabakasından biraz daha büyük, kalınlığı ise onun yarısıdır. Toroidal uçlu içi boş silindirin dış ve iç "
+    L"silindirik yüzeyleri yarım toruslarla birleştirilir; uçlar eksenel kesitte tam yarım daireler oluşturur.\r\n\r\nSağdaki "
     L"kaydırıcıların altındaki Ana ışık ve Dolgu ışığı onay kutuları, tüm sahne için iki ışığı birbirinden bağımsız olarak açar veya kapatır. "
     L"Varsayılan olarak Ana ışık açık, Dolgu ışığı kapalıdır. Aydınlatma ayarları uygulama ve ekran koruyucu için ayrı ayrı "
     L"kaydedilir.\r\n\r\nListede birden çok monitör seçilebilir; satıra çift tıklamak monitördeki animasyonu açıp kapatır; tüm monitörlerin "
@@ -1893,7 +2171,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Vyberte Pozorování prostoru nebo přímý Průlet prostorem. Jezdci nastavují rychlost objektů a kamery 0–1600 %, jednu až deset kopií "
-    L"každého zapnutého tělesa a velikost 50–200 %.\r\n\r\nZatržítka Hlavní světlo a Doplňkové světlo pod pravými jezdci nezávisle zapínají a "
+    L"každého zapnutého tělesa a velikost 50–200 %.\r\n\r\nNa výběr je 30 těles. Protáhlý rotační elipsoid má "
+    L"jednu delší a dvě shodné kratší poloosy. Zaoblený disk (spheroplatelet) má dvě rovinné kruhové plochy a "
+    L"plynule zaoblený obvod; jeho průměr je mírně větší než u kulové vrstvy a tloušťka poloviční. Dutý válec s "
+    L"toroidálními čely má vnější a vnitřní válcovou plochu spojené půltorovými čely, která v osovém řezu tvoří "
+    L"přesné půlkruhy.\r\n\r\nZatržítka Hlavní světlo a Doplňkové světlo pod pravými jezdci nezávisle zapínají a "
     L"vypínají obě světla pro celou scénu. Výchozí stav: Hlavní světlo zapnuté, Doplňkové světlo vypnuté. Nastavení světel se ukládá zvlášť "
     L"pro aplikaci a spořič obrazovky.\r\n\r\nZapněte požadované druhy těles. Zapnout náhled spustí celoobrazovkový náhled na všech "
     L"monitorech; změny lze zkoušet za otevřeného nastavení. OK nastavení uloží, Storno je zahodí. Celoobrazovkový spořič ukončíte klávesou "
@@ -1901,7 +2183,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"příslušného písmene. Esc v nastavení odpovídá tlačítku Storno; v nápovědě nebo okně O aplikaci zavře pouze toto okno.\r\n\r\nPodporovány "
     L"jsou systémy Windows 7 až Windows 11. Windows Vista SP2: KB971512, KB2117917.",
     L"Choose Space observation or the straight Fly through space mode. The sliders set object and camera speed from 0–1600%, one to ten copies "
-    L"of each enabled object, and size from 50–200%.\r\n\r\nThe Main light and Fill light checkboxes below the right-hand sliders "
+    L"of each enabled object, and size from 50–200%.\r\n\r\nThere are 30 selectable solids. A prolate spheroid has one longer "
+    L"semi-axis and two equal shorter semi-axes. A rounded disc (spheroplatelet) has two flat circular faces and a smoothly "
+    L"rounded rim; its diameter is slightly larger than that of the spherical layer and its thickness is half as large. "
+    L"A hollow cylinder with toroidal ends has outer and inner cylindrical surfaces joined by half-torus ends that form "
+    L"exact semicircles in an axial section.\r\n\r\nThe Main light and Fill light checkboxes below the right-hand sliders "
     L"independently enable or disable the two lights for the entire scene. By default, Main light is on and Fill light is off. Light settings "
     L"are stored separately for the application and screen saver.\r\n\r\nEnable the required object types. Enable preview starts a full-screen "
     L"preview on every display while the settings dialog remains open for live adjustments. OK saves the settings and Cancel discards them. "
@@ -1909,7 +2195,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"letter to activate a command. Esc in the settings dialog is equivalent to Cancel; in Help or About, it closes only that "
     L"window.\r\n\r\nWindows 7 through Windows 11 are supported. Windows Vista SP2: KB971512, KB2117917.",
     L"Wählen Sie Raumbeobachtung oder Flug durch den Raum in gerader Linie. Die Regler bestimmen Objekt- und Kamerageschwindigkeit von 0–1600 "
-    L"%, ein bis zehn Exemplare je aktivem Körper und 50–200 % Größe.\r\n\r\nDie Kontrollkästchen Hauptlicht und Aufhelllicht unter den "
+    L"%, ein bis zehn Exemplare je aktivem Körper und 50–200 % Größe.\r\n\r\nEs stehen 30 Körper zur Auswahl. Ein "
+    L"verlängertes Rotationsellipsoid besitzt eine längere und zwei gleich lange kürzere Halbachsen. Eine abgerundete "
+    L"Scheibe (Spheroplatelet) hat zwei ebene Kreisflächen und einen stetig abgerundeten Rand; ihr Durchmesser "
+    L"ist etwas größer als der einer Kugelschicht und ihre Dicke halb so groß. Ein Hohlzylinder mit toroidalen "
+    L"Enden besitzt eine äußere und eine innere Zylinderfläche, die durch Halbtori verbunden sind; im Axialschnitt "
+    L"bilden die Enden exakte Halbkreise.\r\n\r\nDie Kontrollkästchen Hauptlicht und Aufhelllicht unter den "
     L"rechten Reglern schalten die beiden Lichtquellen für die gesamte Szene unabhängig ein oder aus. Standardmäßig ist Hauptlicht "
     L"eingeschaltet und Aufhelllicht ausgeschaltet. Die Lichteinstellungen werden für Anwendung und Bildschirmschoner getrennt "
     L"gespeichert.\r\n\r\nAktivieren Sie die gewünschten Körper. Vorschau einschalten startet eine Vollbildvorschau auf allen Monitoren. Der "
@@ -1918,7 +2209,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"rufen Sie einen Befehl auf. Esc im Einstellungsdialog entspricht Abbrechen; in der Hilfe oder im Infofenster schließt es nur dieses "
     L"Fenster.\r\n\r\nUnterstützt werden Windows 7 bis Windows 11. Windows Vista SP2: KB971512, KB2117917.",
     L"Choisissez Observation de l’espace ou le Vol dans l’espace rectiligne. Les curseurs règlent la vitesse des objets et de la caméra de 0 à "
-    L"1 600 %, une à dix copies et une taille de 50 à 200 %.\r\n\r\nLes cases Éclairage principal et Éclairage d’appoint sous les curseurs de "
+    L"1 600 %, une à dix copies et une taille de 50 à 200 %.\r\n\r\nVous pouvez choisir parmi 30 solides. Un sphéroïde "
+    L"allongé possède un demi-axe plus long et deux demi-axes plus courts de même longueur. Un disque arrondi (spheroplatelet) "
+    L"possède deux faces circulaires planes et un bord arrondi continu ; son diamètre est légèrement supérieur à celui du "
+    L"segment sphérique à deux bases et son épaisseur est deux fois plus petite. Un cylindre creux à extrémités toriques "
+    L"possède des surfaces cylindriques extérieure et intérieure reliées par des demi-tores, dont la section axiale "
+    L"forme des demi-cercles exacts.\r\n\r\nLes cases Éclairage principal et Éclairage d’appoint sous les curseurs de "
     L"droite activent ou désactivent indépendamment les deux sources lumineuses pour toute la scène. Par défaut, Éclairage principal est "
     L"activé et Éclairage d’appoint est désactivé. Les réglages d’éclairage sont enregistrés séparément pour l’application et l’économiseur "
     L"d’écran.\r\n\r\nActivez les solides voulus. Activer l’aperçu lance un aperçu plein écran sur tous les moniteurs ; la boîte de dialogue "
@@ -1927,7 +2223,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Échap dans les réglages équivaut à Annuler ; dans l’aide ou À propos, cette touche ferme uniquement cette fenêtre.\r\n\r\nWindows 7 à "
     L"Windows 11 sont pris en charge. Windows Vista SP2: KB971512, KB2117917.",
     L"Elija Observación del espacio o Vuelo por el espacio en línea recta. Los controles ajustan la velocidad de objetos y cámara del 0 al "
-    L"1600 %, de una a diez copias y el tamaño del 50 al 200 %.\r\n\r\nLas casillas Luz principal y Luz de relleno bajo los controles "
+    L"1600 %, de una a diez copias y el tamaño del 50 al 200 %.\r\n\r\nHay 30 sólidos disponibles. Un esferoide prolato tiene un "
+    L"semieje más largo y dos semiejes más cortos de igual longitud. Un disco redondeado (spheroplatelet) tiene dos caras circulares "
+    L"planas y un borde redondeado continuo; su diámetro es ligeramente mayor que el del segmento esférico de dos bases y su grosor "
+    L"es la mitad. Un cilindro hueco con extremos toroidales tiene superficies cilíndricas exterior e interior unidas por semitoros, "
+    L"que forman semicírculos exactos en una sección axial.\r\n\r\nLas casillas Luz principal y Luz de relleno bajo los controles "
     L"deslizantes de la derecha activan o desactivan las dos luces de forma independiente para toda la escena. De forma predeterminada, Luz "
     L"principal está activada y Luz de relleno está desactivada. Los ajustes de iluminación se guardan por separado para la aplicación y el "
     L"salvapantallas.\r\n\r\nActive los sólidos deseados. Activar vista previa inicia una vista previa a pantalla completa en todos los "
@@ -1936,7 +2236,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"activan una opción. Esc en la configuración equivale a Cancelar; en Ayuda o Acerca de, cierra únicamente esa ventana.\r\n\r\nSe admiten "
     L"Windows 7 a Windows 11. Windows Vista SP2: KB971512, KB2117917.",
     L"Scegliere Osservazione dello spazio o Volo nello spazio rettilineo. I cursori regolano la velocità di oggetti e camera da 0 a 1600 %, da "
-    L"una a dieci copie e la dimensione da 50 a 200 %.\r\n\r\nLe caselle Luce principale e Luce di riempimento sotto i cursori di destra "
+    L"una a dieci copie e la dimensione da 50 a 200 %.\r\n\r\nSono disponibili 30 solidi. Uno sferoide prolato ha un semiasse più "
+    L"lungo e due semiassi più corti di uguale lunghezza. Un disco arrotondato (spheroplatelet) ha due facce circolari piane e un "
+    L"bordo arrotondato continuo; il suo diametro è leggermente maggiore di quello del segmento sferico a due basi e il suo spessore "
+    L"è la metà. Un cilindro cavo con estremità toroidali ha superfici cilindriche esterna e interna unite da semitori, che formano "
+    L"semicirconferenze esatte in una sezione assiale.\r\n\r\nLe caselle Luce principale e Luce di riempimento sotto i cursori di destra "
     L"attivano o disattivano le due luci in modo indipendente per l’intera scena. Per impostazione predefinita, Luce principale è attiva e "
     L"Luce di riempimento è disattivata. Le impostazioni di illuminazione vengono salvate separatamente per l’applicazione e il "
     L"salvaschermo.\r\n\r\nAttivare i solidi desiderati. Attiva anteprima avvia un’anteprima a schermo intero su tutti i monitor; le "
@@ -1945,7 +2249,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"comando. Esc nelle impostazioni equivale ad Annulla; nella Guida o nelle Informazioni, chiude solo quella finestra.\r\n\r\nSono "
     L"supportati i sistemi da Windows 7 a Windows 11. Windows Vista SP2: KB971512, KB2117917.",
     L"Wybierz Obserwację przestrzeni albo prostoliniowy Przelot przez przestrzeń. Suwaki ustawiają prędkość obiektów i kamery 0–1600%, od "
-    L"jednej do dziesięciu kopii i rozmiar 50–200%.\r\n\r\nPola wyboru Światło główne i Światło wypełniające pod prawymi suwakami niezależnie "
+    L"jednej do dziesięciu kopii i rozmiar 50–200%.\r\n\r\nDo wyboru jest 30 brył. Sferoida wydłużona ma jedną dłuższą półoś i "
+    L"dwie jednakowe krótsze półosie. Zaokrąglony dysk (spheroplatelet) ma dwie płaskie powierzchnie kołowe i gładko zaokrąglony "
+    L"brzeg; jego średnica jest nieco większa niż średnica warstwy kulistej, a grubość jest o połowę mniejsza. Walec pusty z "
+    L"toroidalnymi końcami ma zewnętrzną i wewnętrzną powierzchnię walcową połączone półtorusami, które w przekroju osiowym "
+    L"tworzą dokładne półokręgi.\r\n\r\nPola wyboru Światło główne i Światło wypełniające pod prawymi suwakami niezależnie "
     L"włączają lub wyłączają oba światła dla całej sceny. Domyślnie Światło główne jest włączone, a Światło wypełniające wyłączone. Ustawienia "
     L"oświetlenia są zapisywane osobno dla aplikacji i wygaszacza ekranu.\r\n\r\nWłącz potrzebne bryły. Włącz podgląd uruchamia podgląd "
     L"pełnoekranowy na wszystkich monitorach. Okno ustawień pozostaje otwarte, umożliwiając zmiany na bieżąco. OK zapisuje ustawienia, a "
@@ -1953,7 +2261,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"podkreślona litera wywołują polecenie. Esc w ustawieniach odpowiada przyciskowi Anuluj; w Pomocy lub O programie zamyka tylko to "
     L"okno.\r\n\r\nObsługiwane są systemy od Windows 7 do Windows 11. Windows Vista SP2: KB971512, KB2117917.",
     L"Vyberte Pozorovanie priestoru alebo priamy Prelet priestorom. Jazdce nastavujú rýchlosť objektov a kamery 0–1600 %, jednu až desať kópií "
-    L"a veľkosť 50–200 %.\r\n\r\nZačiarkavacie políčka Hlavné svetlo a Doplnkové svetlo pod pravými jazdcami nezávisle zapínajú alebo vypínajú "
+    L"a veľkosť 50–200 %.\r\n\r\nNa výber je 30 telies. Predĺžený rotačný elipsoid má jednu dlhšiu a dve zhodné kratšie "
+    L"poloosi. Zaoblený disk (spheroplatelet) má dve rovinné kruhové plochy a plynulo zaoblený obvod; jeho priemer je "
+    L"mierne väčší než pri guľovej vrstve a hrúbka polovičná. Dutý valec s toroidálnymi čelami má vonkajšiu a vnútornú "
+    L"valcovú plochu spojené polovicami torusu, ktoré v osovom reze tvoria presné polkruhy.\r\n\r\nZačiarkavacie "
+    L"políčka Hlavné svetlo a Doplnkové svetlo pod pravými jazdcami nezávisle zapínajú alebo vypínajú "
     L"obe svetlá pre celú scénu. Predvolene je Hlavné svetlo zapnuté a Doplnkové svetlo vypnuté. Nastavenia svetiel sa ukladajú zvlášť pre "
     L"aplikáciu a šetrič obrazovky.\r\n\r\nZapnite požadované telesá. Zapnúť náhľad spustí celoobrazovkový náhľad na všetkých monitoroch; "
     L"nastavenia zostávajú otvorené a zmeny sa prejavia ihneď. OK uloží nastavenia a Zrušiť ich zahodí. Celoobrazovkový šetrič ukončí Esc "
@@ -1961,7 +2273,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"príslušného písmena. Esc v nastaveniach zodpovedá tlačidlu Zrušiť; v Pomocníkovi alebo okne O aplikácii zavrie iba toto "
     L"okno.\r\n\r\nPodporované sú systémy Windows 7 až Windows 11. Windows Vista SP2: KB971512, KB2117917.",
     L"Choose Space observation or the straight Fly through space mode. Set object and camera speed from 0–1600%, one to ten copies and size "
-    L"from 50–200%, then enable the required objects.\r\n\r\nThe Main light and Fill light checkboxes below the right-hand sliders "
+    L"from 50–200%, then enable the required objects.\r\n\r\nThere are 30 selectable solids. A prolate spheroid has one "
+    L"longer semi-axis and two equal shorter semi-axes. A rounded disc (spheroplatelet) has two flat circular faces and a "
+    L"smoothly rounded rim; its diameter is slightly larger than that of the spherical layer and its thickness is half as "
+    L"large. A hollow cylinder with toroidal ends has outer and inner cylindrical surfaces joined by half-torus ends that "
+    L"form exact semicircles in an axial section.\r\n\r\nThe Main light and Fill light checkboxes below the right-hand sliders "
     L"independently enable or disable the two lights for the entire scene. By default, Main light is on and Fill light is off. Light settings "
     L"are stored separately for the application and screen saver.\r\n\r\nEnable preview starts a full-screen preview on every display while "
     L"the settings dialog remains open for live adjustments. OK saves the settings and Cancel discards them. Exit the full-screen screen saver "
@@ -1969,7 +2285,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"command. Esc in the settings dialog is equivalent to Cancel; in Help or About, it closes only that window.\r\n\r\nWindows 7 through "
     L"Windows 11 are supported. Windows Vista SP2: KB971512, KB2117917.",
     L"Choose Space observation or the straight Fly through space mode. Set object and camera speed from 0–1600%, one to ten copies and size "
-    L"from 50–200%, then enable the required objects.\r\n\r\nThe Main light and Fill light checkboxes below the right-hand sliders "
+    L"from 50–200%, then enable the required objects.\r\n\r\nThere are 30 selectable solids. A prolate spheroid has one "
+    L"longer semi-axis and two equal shorter semi-axes. A rounded disc (spheroplatelet) has two flat circular faces and a "
+    L"smoothly rounded rim; its diameter is slightly larger than that of the spherical layer and its thickness is half as "
+    L"large. A hollow cylinder with toroidal ends has outer and inner cylindrical surfaces joined by half-torus ends that "
+    L"form exact semicircles in an axial section.\r\n\r\nThe Main light and Fill light checkboxes below the right-hand sliders "
     L"independently enable or disable the two lights for the entire scene. By default, Main light is on and Fill light is off. Light settings "
     L"are stored separately for the application and screen saver.\r\n\r\nEnable preview starts a full-screen preview on every display while "
     L"the settings dialog remains open for live adjustments. OK saves the settings and Cancel discards them. Exit the full-screen screen saver "
@@ -1977,7 +2297,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"command. Esc in the settings dialog is equivalent to Cancel; in Help or About, it closes only that window.\r\n\r\nWindows 7 through "
     L"Windows 11 are supported. Windows Vista SP2: KB971512, KB2117917.",
     L"Escolha Observação do espaço ou Voo pelo espaço em linha reta. Regule a velocidade dos objetos e da câmara de 0 a 1600%, uma a dez "
-    L"cópias e o tamanho de 50 a 200%, e ative os sólidos.\r\n\r\nAs caixas Luz principal e Luz de preenchimento sob os controlos deslizantes "
+    L"cópias e o tamanho de 50 a 200%, e ative os sólidos.\r\n\r\nEstão disponíveis 30 sólidos. Um esferoide prolato tem um semieixo mais "
+    L"longo e dois semieixos mais curtos de igual comprimento. Um disco arredondado (spheroplatelet) tem duas faces circulares planas e "
+    L"um bordo arredondado contínuo; o seu diâmetro é ligeiramente maior do que o do segmento esférico de duas bases e a sua espessura "
+    L"é metade. Um cilindro oco com extremidades toroidais tem superfícies cilíndricas exterior e interior unidas por meios toros, que "
+    L"formam semicírculos exatos numa secção axial.\r\n\r\nAs caixas Luz principal e Luz de preenchimento sob os controlos deslizantes "
     L"da direita ativam ou desativam as duas luzes de forma independente em toda a cena. Por predefinição, Luz principal está ligada e Luz de "
     L"preenchimento está desligada. As definições de iluminação são guardadas separadamente para a aplicação e a proteção de "
     L"ecrã.\r\n\r\nAtivar pré-visualização inicia uma pré-visualização em ecrã inteiro em todos os monitores; o diálogo permanece aberto para "
@@ -1986,7 +2310,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"equivale a Cancelar; na Ajuda ou em Acerca de, fecha apenas essa janela.\r\n\r\nSão suportados os sistemas Windows 7 a Windows 11. "
     L"Windows Vista SP2: KB971512, KB2117917.",
     L"Velg Romobservasjon eller Flyging gjennom rommet i rett linje. Angi objekt- og kamerahastighet 0–1600 %, én til ti kopier og størrelse "
-    L"50–200 %, og aktiver ønskede legemer.\r\n\r\nAvmerkingsboksene Hovedlys og Utfyllingslys under glidebryterne til høyre slår de to lysene "
+    L"50–200 %, og aktiver ønskede legemer.\r\n\r\nDet finnes 30 legemer å velge mellom. En prolat sfæroide har én lengre "
+    L"halvakse og to like lange kortere halvakser. En avrundet skive (spheroplatelet) har to plane sirkelflater og en "
+    L"jevnt avrundet kant; diameteren er litt større enn kulelagets, og tykkelsen er halvparten. En hul sylinder med "
+    L"toroidale ender har ytre og indre sylinderflater forbundet med halve toruser, som danner nøyaktige halvsirkler i "
+    L"et aksialsnitt.\r\n\r\nAvmerkingsboksene Hovedlys og Utfyllingslys under glidebryterne til høyre slår de to lysene "
     L"av eller på uavhengig av hverandre for hele scenen. Som standard er Hovedlys på og Utfyllingslys av. Lysinnstillingene lagres separat "
     L"for programmet og skjermspareren.\r\n\r\nSlå på forhåndsvisning starter en forhåndsvisning i fullskjerm på alle skjermer. Innstillingene "
     L"forblir åpne, og endringene vises fortløpende. OK lagrer innstillingene og Avbryt forkaster dem. Esc eller musebevegelse avslutter "
@@ -1994,7 +2322,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"kommando. Esc i innstillingene tilsvarer Avbryt; i Hjelp eller Om lukker det bare dette vinduet.\r\n\r\nWindows 7 til Windows 11 "
     L"støttes. Windows Vista SP2: KB971512, KB2117917.",
     L"Välj Rymdobservation eller Flygning genom rymden i rak linje. Ställ in objekt- och kamerahastighet 0–1600 %, en till tio kopior och "
-    L"storlek 50–200 %, och aktivera önskade kroppar.\r\n\r\nKryssrutorna Huvudljus och Upplättningsljus under reglagen till höger slår på "
+    L"storlek 50–200 %, och aktivera önskade kroppar.\r\n\r\nDet finns 30 kroppar att välja mellan. En prolat sfäroid har en "
+    L"längre halvaxel och två lika långa kortare halvaxlar. En avrundad skiva (spheroplatelet) har två plana cirkelytor och "
+    L"en jämnt avrundad kant; diametern är något större än hos klotsegmentet med två baser och tjockleken är hälften så stor. "
+    L"En ihålig cylinder med toroidala ändar har yttre och inre cylinderytor förenade med halva torusar, som bildar exakta "
+    L"halvcirklar i ett axiellt snitt.\r\n\r\nKryssrutorna Huvudljus och Upplättningsljus under reglagen till höger slår på "
     L"eller av de två ljusen oberoende av varandra för hela scenen. Som standard är Huvudljus på och Upplättningsljus av. Ljusinställningarna "
     L"sparas separat för programmet och skärmsläckaren.\r\n\r\nAktivera förhandsvisning startar en förhandsvisning i helskärm på alla "
     L"bildskärmar. Inställningarna förblir öppna och ändringarna visas direkt. OK sparar inställningarna och Avbryt förkastar ändringarna. Esc "
@@ -2002,7 +2334,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"bokstaven aktiverar ett kommando. Esc i inställningarna motsvarar Avbryt; i Hjälp eller Om stänger det bara det fönstret.\r\n\r\nWindows "
     L"7 till Windows 11 stöds. Windows Vista SP2: KB971512, KB2117917.",
     L"Valitse Avaruuden tarkkailu tai Lento avaruuden halki suoraan eteenpäin. Aseta kohteiden ja kameran nopeus 0–1600 %, yhdestä kymmeneen "
-    L"kopiota ja koko 50–200 %, ja ota halutut kappaleet käyttöön.\r\n\r\nOikeanpuoleisten liukusäätimien alla olevat Päävalo- ja "
+    L"kopiota ja koko 50–200 %, ja ota halutut kappaleet käyttöön.\r\n\r\nValittavana on 30 kappaletta. Prolaatilla sferoidilla "
+    L"on yksi pidempi puoliakseli ja kaksi yhtä pitkää lyhyempää puoliakselia. Pyöristetyllä kiekolla (spheroplatelet) on kaksi "
+    L"tasaista ympyräpintaa ja tasaisesti pyöristetty reuna; sen halkaisija on hieman suurempi kuin katkaistun pallosegmentin "
+    L"ja paksuus puolet sen paksuudesta. Onton lieriön ulompi ja sisempi lieriöpinta liittyvät toisiinsa toroidisilla päädyillä, "
+    L"jotka muodostavat aksiaalileikkauksessa tarkat puoliympyrät.\r\n\r\nOikeanpuoleisten liukusäätimien alla olevat Päävalo- ja "
     L"Täytevalo-valintaruudut kytkevät koko näkymän kaksi valoa päälle tai pois toisistaan riippumatta. Oletuksena Päävalo on päällä ja "
     L"Täytevalo pois päältä. Valaistusasetukset tallennetaan erikseen sovellukselle ja näytönsäästäjälle.\r\n\r\nOta esikatselu käyttöön "
     L"käynnistää koko näytön esikatselun kaikilla näytöillä. Asetusikkuna pysyy avoinna, ja muutokset näkyvät heti. OK tallentaa asetukset ja "
@@ -2011,7 +2347,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Tietoja-ikkunassa se sulkee vain kyseisen ikkunan.\r\n\r\nTuettuja käyttöjärjestelmiä ovat Windows 7–Windows 11. Windows Vista SP2: "
     L"KB971512, KB2117917.",
     L"Vælg Rumobservation eller Flyvning gennem rummet i en lige linje. Indstil objekt- og kamerahastighed 0–1600 %, en til ti kopier og "
-    L"størrelse 50–200 %, og aktivér de ønskede legemer.\r\n\r\nAfkrydsningsfelterne Hovedlys og Udfyldningslys under skyderne til højre slår "
+    L"størrelse 50–200 %, og aktivér de ønskede legemer.\r\n\r\nDer er 30 legemer at vælge imellem. En prolat sfæroide "
+    L"har én længere halvakse og to lige lange kortere halvakser. En afrundet skive (spheroplatelet) har to plane "
+    L"cirkelflader og en jævnt afrundet kant; diameteren er lidt større end kuglelagets, og tykkelsen er halvt så stor. En "
+    L"hul cylinder med toroidale ender har ydre og indre cylinderflader forbundet med halve torusser, som danner præcise "
+    L"halvcirkler i et aksialsnit.\r\n\r\nAfkrydsningsfelterne Hovedlys og Udfyldningslys under skyderne til højre slår "
     L"de to lys til eller fra uafhængigt af hinanden for hele scenen. Som standard er Hovedlys slået til og Udfyldningslys slået fra. "
     L"Lysindstillingerne gemmes separat for programmet og pauseskærmen.\r\n\r\nAktivér forhåndsvisning starter en forhåndsvisning i fuld skærm "
     L"på alle skærme. Indstillingerne forbliver åbne, og ændringerne vises med det samme. OK gemmer indstillingerne, og Annuller forkaster "
@@ -2019,7 +2359,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"understregede bogstav aktiverer en kommando. Esc i indstillingerne svarer til Annuller; i Hjælp eller Om lukker det kun dette "
     L"vindue.\r\n\r\nWindows 7 til Windows 11 understøttes. Windows Vista SP2: KB971512, KB2117917.",
     L"Veldu Athugun rýmis eða Flug um rýmið í beinni línu. Stilltu hraða hluta og myndavélar á 0–1600%, eitt til tíu eintök og stærð á 50–200% "
-    L"og virkjaðu óskaða hluti.\r\n\r\nGátreitirnir Aðalljós og Fylliljós undir rennistikunum hægra megin kveikja eða slökkva á ljósunum "
+    L"og virkjaðu óskaða hluti.\r\n\r\nHægt er að velja úr 30 rúmhlutum. Ílöng snúningssporvala hefur einn lengri hálfás og "
+    L"tvo jafn langa styttri hálfása. Rúnaður diskur (spheroplatelet) hefur tvo flata hringlaga fleti og samfellt rúnnaðan "
+    L"jaðar; þvermál hans er örlítið stærra en þvermál kúlulags og þykktin helmingur þykktar kúlulags. Holur sívalningur "
+    L"með tórusendum hefur ytri og innri sívalningsfleti tengda með hálfum tórusum, sem mynda nákvæma hálfhringi í áslægum "
+    L"þverskurði.\r\n\r\nGátreitirnir Aðalljós og Fylliljós undir rennistikunum hægra megin kveikja eða slökkva á ljósunum "
     L"tveimur óháð hvort öðru fyrir alla senuna. Sjálfgefið er kveikt á Aðalljós og slökkt á Fylliljós. Ljósastillingar eru vistaðar "
     L"sérstaklega fyrir forritið og skjáhvíluna.\r\n\r\nVirkja forskoðun ræsir forskoðun á öllum skjánum á hverjum skjá. Stillingaglugginn "
     L"helst opinn og breytingar sjást strax. Í lagi vistar stillingar og Hætta við hafnar breytingum. Esc eða músarhreyfing lokar skjáhvílu á "
@@ -2027,7 +2371,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"stillingum jafngildir Hætta við; í Hjálp eða Um lokar það aðeins þeim glugga.\r\n\r\nWindows 7 til Windows 11 eru studd. Windows Vista "
     L"SP2: KB971512, KB2117917.",
     L"Uzayı gözlemleme veya doğrusal Uzayda uçuş kipini seçin. Nesne ve kamera hızını %0–1600, kopya sayısını bir ile on ve boyutu %50–200 "
-    L"arasında ayarlayıp istenen cisimleri etkinleştirin.\r\n\r\nSağdaki kaydırıcıların altındaki Ana ışık ve Dolgu ışığı onay kutuları, tüm "
+    L"arasında ayarlayıp istenen cisimleri etkinleştirin.\r\n\r\nSeçilebilen 30 katı cisim vardır. Prolat sferoitin bir "
+    L"uzun ve birbirine eşit iki kısa yarı ekseni vardır. Yuvarlatılmış disk (spheroplatelet), iki düz dairesel yüze ve "
+    L"kesintisiz yuvarlatılmış bir kenara sahiptir; çapı küre tabakasından biraz daha büyük, kalınlığı ise onun yarısıdır. "
+    L"Toroidal uçlu içi boş silindirin dış ve iç silindirik yüzeyleri yarım toruslarla birleştirilir; uçlar eksenel kesitte "
+    L"tam yarım daireler oluşturur.\r\n\r\nSağdaki kaydırıcıların altındaki Ana ışık ve Dolgu ışığı onay kutuları, tüm "
     L"sahne için iki ışığı birbirinden bağımsız olarak açar veya kapatır. Varsayılan olarak Ana ışık açık, Dolgu ışığı kapalıdır. Aydınlatma "
     L"ayarları uygulama ve ekran koruyucu için ayrı ayrı kaydedilir.\r\n\r\nÖnizlemeyi aç, tüm monitörlerde tam ekran önizleme başlatır. "
     L"Ayarlar penceresi açık kalır ve değişiklikler anında görülür. Tamam ayarları kaydeder, İptal değişiklikleri iptal eder. Tam ekran "
@@ -2157,6 +2505,11 @@ const wchar_t* PausedStatusText(AppLanguage language) {
     return PAUSED_STATUS_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
+/// Returns localized monitor-detail column captions and bit-depth formats.
+const MonitorColumnText& MonitorColumnsText(AppLanguage language) {
+    return MONITOR_COLUMN_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+}
+
 /// Returns the localized option that inhibits the screen saver during visible animation.
 const wchar_t* PreventScreenSaverText(AppLanguage language) {
     return PREVENT_SCREEN_SAVER_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
@@ -2249,6 +2602,11 @@ const wchar_t* HelpBodyText(AppLanguage language, bool appMode) {
 /// Returns the localized one-line product description.
 const wchar_t* AboutDescriptionText(AppLanguage language) {
     return ABOUT_DESCRIPTION_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+}
+
+/// Returns the localized product-version label.
+const wchar_t* AboutVersionLabel(AppLanguage language) {
+    return ABOUT_VERSION_LABELS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the localized target-platform label.

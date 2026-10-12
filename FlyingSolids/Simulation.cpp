@@ -169,21 +169,21 @@ float Simulation::CryptographicRandom(float low, float high) {
 }
 
 /// Reinitializes every body and camera state from system entropy and an optional seed.
-/// A permuted 9 x 6 x 5 lattice spreads even one copy of every solid throughout the flight depth.
+/// A permuted 10 x 6 x 5 lattice spreads even one copy of every solid throughout the flight depth.
 void Simulation::Reset(unsigned initialSeed) {
     randomBufferPosition = randomBuffer.size();
     seed = NextCryptographicRandom() ^ initialSeed * 1009U;
     elapsed = 0.0;
     for (std::size_t i = 0; i < bodies.size(); i++) {
-        const std::size_t slot = i * 103U % 270U;
-        const int column = static_cast<int>(slot % 9U);
-        const int row = static_cast<int>(slot / 9U % 6U);
-        const int layer = static_cast<int>(slot / 54U);
+        const std::size_t slot = i * 103U % 300U;
+        const int column = static_cast<int>(slot % 10U);
+        const int row = static_cast<int>(slot / 10U % 6U);
+        const int layer = static_cast<int>(slot / 60U);
         const std::size_t kind = i % SOLID_COUNT;
         Body& body = bodies[i];
         body.radius = COLLISION_RADII[kind];
         body.position = Vec3{
-            -12.8f + 3.2f * column,
+            -12.8f + 25.6f / 9.0f * column,
             -6.0f + 2.4f * row,
             -14.0f + 7.0f * layer + CryptographicRandom(-2.25f, 2.25f)
         };

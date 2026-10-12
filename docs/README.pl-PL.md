@@ -15,11 +15,15 @@ FlyingSolids to natywna aplikacja Win32/x86 korzystająca z Direct3D oraz wygasz
 - Renderowanie dopasowane do częstotliwości odświeżania monitorów
 - Zrzuty PNG i nagrywanie MP4 w aplikacji samodzielnej
 - Oddzielne ustawienia aplikacji i wygaszacza
-- 27 rodzajów brył oraz interfejs w 17 językach
+- 30 rodzajów brył oraz interfejs w 17 językach
 
 ## Bryły
 
 Katalog obejmuje wielościany, graniastosłupy prawidłowe, ostrosłupy i ich przekroje płaskie, stożki i walce oraz ich przekroje, paraboloidę obrotową zamkniętą płaszczyzną, bryły pochodne kuli, elipsoidy, owoidę, sferocylinder i torus. Interfejs stosuje uznaną polską terminologię geometryczną.
+
+- Sferoida wydłużona ma jedną dłuższą półoś i dwie jednakowe krótsze półosie.
+- Zaokrąglony dysk (spheroplatelet) ma dwie płaskie powierzchnie kołowe i gładko zaokrąglony brzeg; jego średnica jest nieco większa niż średnica warstwy kulistej, a grubość jest o połowę mniejsza.
+- Walec pusty z toroidalnymi końcami ma zewnętrzną i wewnętrzną powierzchnię walcową połączone półtorusami, które w przekroju osiowym tworzą dokładne półokręgi.
 
 ## Oświetlenie
 
@@ -52,7 +56,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 Systemy od Windows 7 do Windows 11 obsługują wszystkie funkcje, w tym zrzuty PNG i nagrywanie MP4.
 
-Windows Vista SP2: KB971512, KB2117917. Nagrywanie MP4 nie działa w Vista w obecnej wersji.
+Do uruchomienia aplikacji w systemie Windows Vista SP2 konieczne jest zainstalowanie aktualizacji KB971512 i KB2117917. Nagrywanie MP4 nie działa w Vista w obecnej wersji.
 
 Wyświetlanie wymaga Direct3D 11, a nie tylko starszego środowiska DirectX. Nagrywanie MP4 wymaga dostępnych składników Media Foundation i kodera H.264.
 

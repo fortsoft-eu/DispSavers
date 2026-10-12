@@ -20,7 +20,11 @@ FlyingSolids je nativní aplikace Win32/x86 a spořič obrazovky pro Windows, kt
 
 ## Geometrická tělesa
 
-Lze zvolit 27 těles: krychli; pravidelný čtyřboký jehlan; komolý čtyřboký jehlan; čtyřboké jehlany se šikmým řezem a s řezem kolmým k podstavě; pravidelné trojboké, pětiboké a šestiboké hranoly; pravidelný osmistěn; pětiboký dvojjehlan; rotační kužel; komolý rotační kužel; rotační kužely se šikmým řezem a s řezem kolmým k podstavě; rotační válec; dutý rotační válec; rotační paraboloid uzavřený rovinou; kouli; polokouli; kulovou úseč; velkou kulovou úseč; kulovou vrstvu; trojosý elipsoid; zploštělý rotační elipsoid; ovoid; kapsli (sferocylindr) a anuloid (torus).
+Lze zvolit 30 těles: krychli; pravidelný čtyřboký jehlan; komolý čtyřboký jehlan; čtyřboké jehlany se šikmým řezem a s řezem kolmým k podstavě; pravidelné trojboké, pětiboké a šestiboké hranoly; pravidelný osmistěn; pětiboký dvojjehlan; rotační kužel; komolý rotační kužel; rotační kužely se šikmým řezem a s řezem kolmým k podstavě; rotační válec; dutý rotační válec; dutý válec s toroidálními čely; rotační paraboloid uzavřený rovinou; kouli; polokouli; kulovou úseč; velkou kulovou úseč; kulovou vrstvu; trojosý elipsoid; protáhlý rotační elipsoid; zploštělý rotační elipsoid; ovoid; kapsli (sferocylindr); zaoblený disk (spheroplatelet) a anuloid (torus).
+
+- Protáhlý rotační elipsoid má jednu delší a dvě shodné kratší poloosy.
+- Zaoblený disk (spheroplatelet) má dvě rovinné kruhové plochy a plynule zaoblený obvod; jeho průměr je mírně větší než u kulové vrstvy a tloušťka poloviční.
+- Dutý válec s toroidálními čely má vnější a vnitřní válcovou plochu spojené půltorovými čely, která v osovém řezu tvoří přesné půlkruhy.
 
 ## Osvětlení
 
@@ -59,7 +63,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 Windows 7 až Windows 11 podporují všechny funkce včetně snímků PNG a záznamu MP4.
 
-Windows Vista SP2: KB971512, KB2117917. Záznam MP4 na Vistě v současné verzi nefunguje.
+Pro spuštění aplikace ve Windows Vista SP2 je nutné nainstalovat aktualizace KB971512 a KB2117917. Záznam MP4 na Vistě v současné verzi nefunguje.
 
 Vykreslování vyžaduje Direct3D 11, nikoli jen starší DirectX runtime. Záznam MP4 vyžaduje dostupné součásti Media Foundation a kodér H.264.
 

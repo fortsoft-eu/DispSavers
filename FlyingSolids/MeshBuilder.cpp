@@ -314,6 +314,38 @@ static void DiscY(MeshData& mesh, unsigned sides, float radius, float y, bool to
     }
 }
 
+/// Closes an existing ring with a flat disc, reusing its exact boundary positions and tangent normals.
+static void CloseDiscRing(MeshData& mesh, unsigned ringBase, unsigned sides, float y, bool top) {
+    const V3 center{
+        0,
+        y,
+        0
+    };
+    V3 normal{
+        0,
+        -1,
+        0
+    };
+    if (top) {
+        normal.y = 1;
+    }
+    const unsigned centerIndex = static_cast<unsigned>(mesh.vertices.size());
+    mesh.vertices.push_back(Make(center, normal));
+    for (unsigned index = 0; index < sides; index++) {
+        unsigned first = ringBase + index;
+        unsigned second = first + 1;
+        if (top) {
+            std::swap(first, second);
+        }
+        const std::initializer_list<unsigned> indices{
+            centerIndex,
+            first,
+            second
+        };
+        mesh.indices.insert(mesh.indices.end(), indices);
+    }
+}
+
 /// Builds a flat annular cap perpendicular to the Y axis.
 static void AnnulusY(MeshData& mesh, unsigned sides, float outer, float inner, float y, bool top) {
     for (unsigned index = 0; index < sides; index++) {
@@ -373,6 +405,12 @@ static void RoundedGeometry(float u, float v, SolidKind kind, V3& position, V3& 
                 0.90f,
                 1.30f,
                 0.65f
+            };
+        } else if (kind == SolidKind::ProlateEllipsoid) {
+            axes = V3{
+                0.62f,
+                1.15f,
+                0.62f
             };
         } else if (kind == SolidKind::OblateEllipsoid) {
             axes = V3{
@@ -989,7 +1027,7 @@ static V3 SphereBand(float u, float v, float firstLatitude, float latitudeRange)
 
 /// Builds a sphere with both poles removed and both openings closed by planes.
 static void ExactSphereWithoutCaps(MeshData& mesh) {
-    constexpr float cut = .55f;
+    constexpr float cut = SPHERICAL_LAYER_HALF_THICKNESS;
     const float firstLatitude = std::acos(cut);
     const float latitudeRange = float(M_PI) - 2.0f * firstLatitude;
     GridWithNormals(mesh, ROUND_SIDES, 48, SphereBand, SphereBand, firstLatitude, latitudeRange);
@@ -1031,6 +1069,56 @@ static void ExactParaboloid(MeshData& mesh) {
     DiscY(mesh, ROUND_SIDES, 1.0f, 1.0f, true);
 }
 
+/// Returns the common longitude used by new rounded surfaces, closing the circular seam exactly.
+static float RoundedSurfaceLongitude(float u) {
+    if (u >= 1.0f) {
+        return 0.0f;
+    }
+    return u * 2.0f * float(M_PI);
+}
+
+/// Samples the circular spheroplatelet's exact outer semicircle, sharing tangent normals with its flat faces.
+static void SpheroplateletGeometry(float u, float v, V3& position, V3& normal) {
+    const float longitude = RoundedSurfaceLongitude(u);
+    const float latitude = (0.5f - v) * float(M_PI);
+    float radialNormal = std::cos(latitude);
+    float verticalNormal = std::sin(latitude);
+    if (v <= 0.0f) {
+        radialNormal = 0.0f;
+        verticalNormal = 1.0f;
+    } else if (v >= 1.0f) {
+        radialNormal = 0.0f;
+        verticalNormal = -1.0f;
+    }
+    const float radius = SPHEROPLATELET_DISC_RADIUS + SPHEROPLATELET_ROUNDING_RADIUS * radialNormal;
+    const float height = SPHEROPLATELET_ROUNDING_RADIUS * verticalNormal;
+    position = Radial(longitude, radius, height);
+    normal = Radial(longitude, radialNormal, verticalNormal);
+}
+
+/// Returns one analytic position on the rounded edge of the circular spheroplatelet.
+static V3 SpheroplateletPosition(float u, float v) {
+    V3 position{}, normal{};
+    SpheroplateletGeometry(u, v, position, normal);
+    return position;
+}
+
+/// Returns one analytic outward normal on the rounded edge of the circular spheroplatelet.
+static V3 SpheroplateletNormal(float u, float v) {
+    V3 position{}, normal{};
+    SpheroplateletGeometry(u, v, position, normal);
+    return normal;
+}
+
+/// Builds the Minkowski sum of a circular disc and a sphere, with two flat faces and a tangent toroidal edge.
+static void ExactSpheroplatelet(MeshData& mesh) {
+    constexpr unsigned rows = 64;
+    const unsigned ringBase = static_cast<unsigned>(mesh.vertices.size());
+    GridWithNormals(mesh, ROUND_SIDES, rows, SpheroplateletPosition, SpheroplateletNormal);
+    CloseDiscRing(mesh, ringBase, ROUND_SIDES, SPHEROPLATELET_ROUNDING_RADIUS, true);
+    CloseDiscRing(mesh, ringBase + rows * (ROUND_SIDES + 1), ROUND_SIDES, -SPHEROPLATELET_ROUNDING_RADIUS, false);
+}
+
 /// Builds conservative rasterization bounds for the analytically rendered spherocylinder.
 static void CapsuleBounds(MeshData& mesh) {
     Box(mesh);
@@ -1065,6 +1153,68 @@ static void ExactHollowCylinder(MeshData& mesh) {
     }
     AnnulusY(mesh, ROUND_SIDES, 1.0f, .6f, -1.0f, false);
     AnnulusY(mesh, ROUND_SIDES, 1.0f, .6f, 1.0f, true);
+}
+
+/// Samples one straight cylindrical wall with the same endpoint coordinates as its adjoining half-torus.
+static V3 RoundedHollowCylinderWallPosition(float u, float v, float radius, float direction) {
+    const float height = direction * ROUNDED_HOLLOW_CYLINDER_HALF_LENGTH * (1.0f - 2.0f * v);
+    return Radial(RoundedSurfaceLongitude(u), radius, height);
+}
+
+/// Returns the outward normal of one straight outer or inner cylindrical wall.
+static V3 RoundedHollowCylinderWallNormal(float u, float, float, float direction) {
+    return Radial(RoundedSurfaceLongitude(u), direction, 0.0f);
+}
+
+/// Samples a precise half-torus, locking its endpoint positions and normals to the two cylindrical walls.
+static void RoundedHollowCylinderCapGeometry(float u, float v, float direction, V3& position, V3& normal) {
+    float latitude = v * float(M_PI);
+    if (direction > 0.0f) {
+        latitude = (1.0f - v) * float(M_PI);
+    }
+    float radialNormal = std::cos(latitude);
+    float verticalNormal = std::sin(latitude);
+    float radius = ROUNDED_HOLLOW_CYLINDER_TORUS_RADIUS + ROUNDED_HOLLOW_CYLINDER_ROUNDING_RADIUS * radialNormal;
+    if (v <= 0.0f || v >= 1.0f) {
+        radialNormal = 1.0f;
+        radius = ROUNDED_HOLLOW_CYLINDER_OUTER_RADIUS;
+        if (v <= 0.0f && direction > 0.0f || v >= 1.0f && direction < 0.0f) {
+            radialNormal = -1.0f;
+            radius = ROUNDED_HOLLOW_CYLINDER_INNER_RADIUS;
+        }
+        verticalNormal = 0.0f;
+    }
+    const float height = direction
+        * (ROUNDED_HOLLOW_CYLINDER_HALF_LENGTH + ROUNDED_HOLLOW_CYLINDER_ROUNDING_RADIUS * verticalNormal);
+    const float longitude = RoundedSurfaceLongitude(u);
+    position = Radial(longitude, radius, height);
+    normal = Radial(longitude, radialNormal, direction * verticalNormal);
+}
+
+/// Returns one analytic position on an upper or lower half-torus of the rounded hollow cylinder.
+static V3 RoundedHollowCylinderCapPosition(float u, float v, float direction) {
+    V3 position{};
+    V3 normal{};
+    RoundedHollowCylinderCapGeometry(u, v, direction, position, normal);
+    return position;
+}
+
+/// Returns one analytic normal on an upper or lower half-torus of the rounded hollow cylinder.
+static V3 RoundedHollowCylinderCapNormal(float u, float v, float direction) {
+    V3 position{};
+    V3 normal{};
+    RoundedHollowCylinderCapGeometry(u, v, direction, position, normal);
+    return normal;
+}
+
+/// Builds two coaxial cylindrical walls joined tangentially by exact semicircular torus sections.
+static void ExactRoundedHollowCylinder(MeshData& mesh) {
+    GridWithNormals(mesh, ROUND_SIDES, 1, RoundedHollowCylinderWallPosition, RoundedHollowCylinderWallNormal,
+        ROUNDED_HOLLOW_CYLINDER_OUTER_RADIUS, 1.0f);
+    GridWithNormals(mesh, ROUND_SIDES, 1, RoundedHollowCylinderWallPosition, RoundedHollowCylinderWallNormal,
+        ROUNDED_HOLLOW_CYLINDER_INNER_RADIUS, -1.0f);
+    GridWithNormals(mesh, ROUND_SIDES, 64, RoundedHollowCylinderCapPosition, RoundedHollowCylinderCapNormal, 1.0f);
+    GridWithNormals(mesh, ROUND_SIDES, 64, RoundedHollowCylinderCapPosition, RoundedHollowCylinderCapNormal, -1.0f);
 }
 
 /// Builds a solid mesh or conservative rasterization bounds for an analytic surface.
@@ -1119,11 +1269,15 @@ MeshData BuildSolidMesh(SolidKind kind) {
         case SolidKind::HollowCylinder:
             ExactHollowCylinder(mesh);
             break;
+        case SolidKind::RoundedHollowCylinder:
+            ExactRoundedHollowCylinder(mesh);
+            break;
         case SolidKind::Paraboloid:
             ExactParaboloid(mesh);
             break;
         case SolidKind::Sphere:
         case SolidKind::Ellipsoid:
+        case SolidKind::ProlateEllipsoid:
         case SolidKind::OblateEllipsoid:
         case SolidKind::Egg:
             RoundedObject(mesh, kind);
@@ -1142,6 +1296,9 @@ MeshData BuildSolidMesh(SolidKind kind) {
             break;
         case SolidKind::Capsule:
             CapsuleBounds(mesh);
+            break;
+        case SolidKind::Spheroplatelet:
+            ExactSpheroplatelet(mesh);
             break;
         case SolidKind::Torus:
             ExactTorus(mesh);

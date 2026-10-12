@@ -37,8 +37,8 @@ cbuffer FrameConstants : register(b0) {
 
 /// Position, scale, rotation and solid kind for every possible instance.
 cbuffer ObjectConstants : register(b1) {
-    float4 objectPositionAndScale[270];
-    float4 objectRotationAndKind[270];
+    float4 objectPositionAndScale[300];
+    float4 objectRotationAndKind[300];
 };
 
 /// Parameters that select the mesh and its instance range for one draw call.
@@ -105,13 +105,14 @@ float3 Rotate(float3 value, float3 rotation) {
 /// Transforms one instanced mesh vertex from object space to clip space.
 PixelInput VSMain(VertexInput input, uint copyInstance : SV_InstanceID) {
     PixelInput output;
-    const uint instance = min(drawKind + copyInstance * 27u, 269u);
-    const uint kind = min(drawKind, 26u);
+    const uint instance = drawKind + copyInstance * 30u;
+    const uint kind = drawKind;
     float4 placement = objectPositionAndScale[instance];
     float3 rotation = objectRotationAndKind[instance].xyz;
     const float3 world = Rotate(input.position * placement.w, rotation) + placement.xyz + float3(0.0, 0.0, drawZOffset);
     const float3 relative = world - cameraPosition.xyz;
-    const float3 view = float3(dot(relative, cameraRight.xyz), dot(relative, cameraUp.xyz), dot(relative, cameraForward.xyz));
+    const float3 view =
+        float3(dot(relative, cameraRight.xyz), dot(relative, cameraUp.xyz), dot(relative, cameraForward.xyz));
     const float nearPlane = 0.08;
     const float farPlane = 180.0;
     const float tangent = 0.64;
@@ -128,7 +129,7 @@ PixelInput VSMain(VertexInput input, uint copyInstance : SV_InstanceID) {
 
 /// Returns the stable sRGB material color assigned to one solid kind.
 float3 ObjectColor(uint kind) {
-    static const float3 colors[27] = {
+    static const float3 colors[30] = {
         float3(0.88, 0.92, 1.00),
         float3(1.00, 0.53, 0.24),
         float3(0.91, 0.48, 1.00),
@@ -145,6 +146,7 @@ float3 ObjectColor(uint kind) {
         float3(0.52, 0.98, 0.45),
         float3(0.28, 0.85, 1.00),
         float3(1.00, 0.70, 0.38),
+        float3(0.82, 0.98, 0.62),
         float3(1.00, 0.48, 0.32),
         float3(0.24, 0.82, 1.00),
         float3(0.30, 1.00, 0.69),
@@ -152,12 +154,14 @@ float3 ObjectColor(uint kind) {
         float3(0.30, 1.00, 0.78),
         float3(0.45, 0.88, 1.00),
         float3(0.42, 1.00, 0.62),
+        float3(0.95, 0.30, 0.85),
         float3(0.78, 0.52, 1.00),
         float3(1.00, 0.78, 0.38),
         float3(0.35, 1.00, 0.92),
+        float3(1.00, 0.92, 0.25),
         float3(0.39, 0.59, 1.00)
     };
-    return colors[min(kind, 26u)];
+    return colors[kind];
 }
 
 /// Converts one sRGB material channel to linear light.
@@ -366,7 +370,8 @@ AnalyticPixelOutput PSCapsuleMain(PixelInput input) {
     const float3 center = placement.xyz + float3(0.0, 0.0, drawZOffset);
     const float3 viewRay = normalize(float3((2.0 * input.position.x / screen.x - 1.0) * 0.64 * screen.z,
         (1.0 - 2.0 * input.position.y / screen.y) * 0.64, 1.0));
-    const float3 worldRay = normalize(viewRay.x * cameraRight.xyz + viewRay.y * cameraUp.xyz + viewRay.z * cameraForward.xyz);
+    const float3 worldRay =
+        normalize(viewRay.x * cameraRight.xyz + viewRay.y * cameraUp.xyz + viewRay.z * cameraForward.xyz);
     const float3 origin = InverseRotate(cameraPosition.xyz - center, rotation) / placement.w;
     const float3 direction = normalize(InverseRotate(worldRay, rotation));
     float distance;
@@ -381,8 +386,8 @@ AnalyticPixelOutput PSCapsuleMain(PixelInput input) {
         discard;
     }
     const float3 worldNormal = Rotate(localNormal, rotation);
-    const float3 viewNormal = float3(dot(worldNormal, cameraRight.xyz), dot(worldNormal, cameraUp.xyz),
-        dot(worldNormal, cameraForward.xyz));
+    const float3 viewNormal =
+        float3(dot(worldNormal, cameraRight.xyz), dot(worldNormal, cameraUp.xyz), dot(worldNormal, cameraForward.xyz));
     AnalyticPixelOutput output;
     output.color = ShadeSolid(viewNormal, viewPosition, input.kind);
     output.depth = farPlane / (farPlane - nearPlane) - nearPlane * farPlane / ((farPlane - nearPlane) * viewPosition.z);

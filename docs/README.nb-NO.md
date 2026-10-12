@@ -15,11 +15,15 @@ FlyingSolids er et integrert Win32/x86 Direct3D-program og en Windows-skjermspar
 - Gjengivelse tilpasset oppdateringsfrekvensen til hver skjerm
 - PNG-skjermbilder og MP4-opptak i det selvstendige programmet
 - Separate innstillinger for programmet og skjermspareren
-- 27 typer legemer og grensesnitt på 17 språk
+- 30 typer legemer og grensesnitt på 17 språk
 
 ## Geometriske legemer
 
 Utvalget omfatter polyedre, regelmessige prismer, pyramider og plansnitt, kjegler og sylindre og deres plansnitt, en rotasjonsparaboloide lukket av et plan, kuleavledede legemer, ellipsoider, ovoide, sfærosylinder og torus. Grensesnittet bruker etablerte norske fagtermer.
+
+- En prolat sfæroide har én lengre halvakse og to like lange kortere halvakser.
+- En avrundet skive (spheroplatelet) har to plane sirkelflater og en jevnt avrundet kant; diameteren er litt større enn kulelagets, og tykkelsen er halvparten.
+- En hul sylinder med toroidale ender har ytre og indre sylinderflater forbundet med halve toruser, som danner nøyaktige halvsirkler i et aksialsnitt.
 
 ## Belysning
 
@@ -52,7 +56,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 Windows 7 til Windows 11 støtter alle funksjoner, inkludert PNG-skjermbilder og MP4-opptak.
 
-Windows Vista SP2: KB971512, KB2117917. MP4-opptak fungerer ikke på Vista i den gjeldende versjonen.
+For å kjøre programmet på Windows Vista SP2 må oppdateringene KB971512 og KB2117917 installeres. MP4-opptak fungerer ikke på Vista i den gjeldende versjonen.
 
 Visningen krever Direct3D 11, ikke bare en eldre DirectX-kjøretid. MP4-opptak krever tilgjengelige Media Foundation-komponenter og en H.264-koder.
 

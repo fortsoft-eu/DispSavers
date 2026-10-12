@@ -15,11 +15,15 @@ FlyingSolids on natiivi Win32/x86 Direct3D -sovellus ja Windowsin näytönsääs
 - Kunkin näytön virkistystaajuuteen mukautuva piirto
 - PNG-kuvat ja MP4-tallennus erillisessä sovelluksessa
 - Erilliset asetukset sovellukselle ja näytönsäästäjälle
-- 27 kappaletyyppiä ja käyttöliittymä 17 kielellä
+- 30 kappaletyyppiä ja käyttöliittymä 17 kielellä
 
 ## Geometriset kappaleet
 
 Valikoimaan kuuluu monitahokkaita, säännöllisiä prismoja, pyramideja ja tasoleikkauksia, kartioita ja lieriöitä leikkauksineen, tasolla suljettu pyörähdysparaboloidi, pallosta johdettuja kappaleita, ellipsoideja, ovoidi, sferosylinteri ja torus. Käyttöliittymä käyttää vakiintunutta suomenkielistä geometrian sanastoa.
+
+- Prolaatilla sferoidilla on yksi pidempi puoliakseli ja kaksi yhtä pitkää lyhyempää puoliakselia.
+- Pyöristetyllä kiekolla (spheroplatelet) on kaksi tasaista ympyräpintaa ja tasaisesti pyöristetty reuna; sen halkaisija on hieman suurempi kuin katkaistun pallosegmentin ja paksuus puolet sen paksuudesta.
+- Onton lieriön ulompi ja sisempi lieriöpinta liittyvät toisiinsa toroidisilla päädyillä, jotka muodostavat aksiaalileikkauksessa tarkat puoliympyrät.
 
 ## Valaistus
 
@@ -52,7 +56,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 Windows 7–Windows 11 tukevat kaikkia toimintoja, myös PNG-tilannekuvia ja MP4-tallennusta.
 
-Windows Vista SP2: KB971512, KB2117917. MP4-tallennus ei toimi Vistassa nykyisessä versiossa.
+Sovelluksen suorittaminen Windows Vista SP2:ssa edellyttää päivitysten KB971512 ja KB2117917 asentamista. MP4-tallennus ei toimi Vistassa nykyisessä versiossa.
 
 Näyttäminen vaatii Direct3D 11:n, ei pelkästään vanhempaa DirectX-ajoympäristöä. MP4-tallennus vaatii käytettävissä olevat Media Foundation -komponentit ja H.264-enkooderin.
 

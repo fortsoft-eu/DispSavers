@@ -15,11 +15,15 @@ FlyingSolids is a native Win32/x86 Direct3D application and Windows screen saver
 - Refresh-aware rendering on displays with different refresh rates
 - PNG snapshots and MP4 recording in the standalone application
 - Separate standalone and screen-saver settings
-- 27 solid types and a user interface in 17 languages
+- 30 solid types and a user interface in 17 languages
 
 ## Objects
 
 The catalogue comprises polyhedra, prisms, pyramids and their planar cuts, cones and cylinders and their planar cuts, a closed paraboloid of revolution, sphere-derived solids, ellipsoids, an ovoid, a spherocylinder and a torus. The names shown by the program use the established geometric terminology of the selected language.
+
+- A prolate spheroid has one longer semi-axis and two equal shorter semi-axes.
+- A rounded disc (spheroplatelet) has two flat circular faces and a smoothly rounded rim; its diameter is slightly larger than that of the spherical layer and its thickness is half as large.
+- A hollow cylinder with toroidal ends has outer and inner cylindrical surfaces joined by half-torus ends that form exact semicircles in an axial section.
 
 ## Lighting
 
@@ -52,7 +56,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 Windows 7 through Windows 11 support all features, including PNG snapshots and MP4 recording.
 
-Windows Vista SP2: KB971512, KB2117917. MP4 recording does not work on Vista in the current version.
+To run the application on Windows Vista SP2, you must install updates KB971512 and KB2117917. MP4 recording does not work on Vista in the current version.
 
 Rendering requires Direct3D 11, not just an older DirectX runtime. MP4 recording requires available Media Foundation components and an H.264 encoder.
 

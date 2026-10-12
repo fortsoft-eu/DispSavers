@@ -15,11 +15,15 @@ FlyingSolids je natívna aplikácia Win32/x86 využívajúca Direct3D a šetrič
 - Vykresľovanie prispôsobené obnovovacej frekvencii monitorov
 - Snímky PNG a záznam MP4 v samostatnej aplikácii
 - Oddelené nastavenia aplikácie a šetriča
-- 27 typov telies a rozhranie v 17 jazykoch
+- 30 typov telies a rozhranie v 17 jazykoch
 
 ## Telesá
 
 Katalóg obsahuje mnohosteny, pravidelné hranoly, ihlany a ich rovinné rezy, kužele a valce a ich rezy, rotačný paraboloid uzavretý rovinou, telesá odvodené od gule, elipsoidy, ovoid, sferocylinder a anuloid. Rozhranie používa zaužívanú slovenskú geometrickú terminológiu.
+
+- Predĺžený rotačný elipsoid má jednu dlhšiu a dve zhodné kratšie poloosi.
+- Zaoblený disk (spheroplatelet) má dve rovinné kruhové plochy a plynulo zaoblený obvod; jeho priemer je mierne väčší než pri guľovej vrstve a hrúbka polovičná.
+- Dutý valec s toroidálnymi čelami má vonkajšiu a vnútornú valcovú plochu spojené polovicami torusu, ktoré v osovom reze tvoria presné polkruhy.
 
 ## Osvetlenie
 
@@ -52,7 +56,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 Windows 7 až Windows 11 podporujú všetky funkcie vrátane snímok PNG a záznamu MP4.
 
-Windows Vista SP2: KB971512, KB2117917. Záznam MP4 na Viste v súčasnej verzii nefunguje.
+Na spustenie aplikácie v systéme Windows Vista SP2 je potrebné nainštalovať aktualizácie KB971512 a KB2117917. Záznam MP4 na Viste v súčasnej verzii nefunguje.
 
 Vykresľovanie vyžaduje Direct3D 11, nie iba starší DirectX runtime. Záznam MP4 vyžaduje dostupné súčasti Media Foundation a kodér H.264.
 

@@ -98,9 +98,9 @@ static Float4 ToFloat4(Vec3 value, float w = 0.0f) {
     };
 }
 
-/// Returns a bounds-checked visual scale for a solid kind.
+/// Returns the visual scale assigned to a valid solid kind.
 static float MeshScale(std::size_t kind) {
-    return SOLID_RENDER_SCALES[std::min(kind, SOLID_COUNT - 1)];
+    return SOLID_RENDER_SCALES[kind];
 }
 
 /// Private Direct3D pipeline and capture state.
