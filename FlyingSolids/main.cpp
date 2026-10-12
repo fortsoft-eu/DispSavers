@@ -3282,10 +3282,10 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
     CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, 18, top, 196, 22, window,
         reinterpret_cast<HMENU>(ID_LANGUAGE_LABEL), nullptr, nullptr);
     HWND languageCombo = CreateWindowExW(0, WC_COMBOBOXW, L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | CBS_DROPDOWNLIST,
-        221, top - 4, data->appMode ? 370 : 394, 400, window, reinterpret_cast<HMENU>(ID_LANGUAGE), nullptr, nullptr);
+        171, top - 4, 274, 400, window, reinterpret_cast<HMENU>(ID_LANGUAGE), nullptr, nullptr);
     if (data->appMode) {
         HWND preventScreenSaver = CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX,
-            columnX[2], top, checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_PREVENT_SCREEN_SAVER), nullptr,
+            rightSliderX, top, checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_PREVENT_SCREEN_SAVER), nullptr,
             nullptr);
         SendMessageW(preventScreenSaver, BM_SETCHECK, data->settings->preventScreenSaver ? BST_CHECKED : BST_UNCHECKED, 0);
         SetTimer(settingsWindow, ID_SCREEN_SAVER_CHECK_TIMER, SCREEN_SAVER_CHECK_INTERVAL, nullptr);
