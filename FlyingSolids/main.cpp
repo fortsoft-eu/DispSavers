@@ -297,6 +297,7 @@ struct SettingsWindowData {
     std::vector<MonitorListEntry> monitorListEntries;
     int monitorSortColumn = -1;
     bool monitorSortAscending = true;
+    bool monitorColumnsInitialized = false;
 
     /// Window resources
     HFONT systemDialogFont = nullptr;
@@ -1685,9 +1686,9 @@ static void UpdateSliderLabels(HWND window, const SettingsWindowData& data) {
     UpdateSliderLabel(window, data, ID_OBJECT_SIZE);
 }
 
-/// Fits monitor columns to their contents and headings using CalClock's current-font calculation.
-static void UpdateMonitorColumnWidths(HWND list) {
-    if (list == nullptr) {
+/// Fits monitor columns once on first display, reserving space for every heading's sort arrow.
+static void InitializeMonitorColumnWidths(HWND list, SettingsWindowData& data) {
+    if (data.monitorColumnsInitialized || list == nullptr) {
         return;
     }
     HWND header = ListView_GetHeader(list);
@@ -1703,7 +1704,7 @@ static void UpdateMonitorColumnWidths(HWND list) {
     for (int column = 0; column < MONITOR_COLUMN_COUNT; column++) {
         wchar_t caption[256]{};
         HDITEMW item{};
-        item.mask = HDI_TEXT | HDI_FORMAT;
+        item.mask = HDI_TEXT;
         item.pszText = caption;
         item.cchTextMax = static_cast<int>(std::size(caption));
         if (!Header_GetItem(header, column, &item)) {
@@ -1711,10 +1712,8 @@ static void UpdateMonitorColumnWidths(HWND list) {
         }
         SIZE extent{};
         GetTextExtentPoint32W(dc, caption, static_cast<int>(wcslen(caption)), &extent);
-        int headerWidth = static_cast<int>(extent.cx) + 2 * GetSystemMetrics(SM_CXEDGE) + 8;
-        if ((item.fmt & (HDF_SORTUP | HDF_SORTDOWN)) != 0) {
-            headerWidth += GetSystemMetrics(SM_CXVSCROLL);
-        }
+        int headerWidth = static_cast<int>(extent.cx) + 2 * GetSystemMetrics(SM_CXEDGE) + 8
+            + GetSystemMetrics(SM_CXVSCROLL);
         ListView_SetColumnWidth(list, column, LVSCW_AUTOSIZE);
         int contentWidth = ListView_GetColumnWidth(list, column);
         ListView_SetColumnWidth(list, column, std::max(headerWidth, contentWidth));
@@ -1723,6 +1722,7 @@ static void UpdateMonitorColumnWidths(HWND list) {
         SelectObject(dc, previousFont);
     }
     ReleaseDC(header, dc);
+    data.monitorColumnsInitialized = true;
 }
 
 /// Compares one numeric monitor value without converting it to displayed text.
@@ -1810,7 +1810,7 @@ static void ApplyMonitorListSort(HWND list, const SettingsWindowData& data) {
     }
 }
 
-/// Selects or reverses monitor sorting after a heading click using CalClock's redraw and width-update sequence.
+/// Selects or reverses monitor sorting after a heading click without changing column widths.
 static void SortMonitorListByColumn(HWND list, SettingsWindowData& data, int column) {
     if (list == nullptr || column < 0 || column >= MONITOR_COLUMN_COUNT) {
         return;
@@ -1825,7 +1825,6 @@ static void SortMonitorListByColumn(HWND list, SettingsWindowData& data, int col
     data.updating = true;
     WindowRedrawScope redraw(list);
     ApplyMonitorListSort(list, data);
-    UpdateMonitorColumnWidths(list);
     data.updating = updating;
 }
 
@@ -1942,7 +1941,6 @@ static void PopulateMonitorList(HWND window, SettingsWindowData& data) {
             LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
     }
     ApplyMonitorListSort(list, data);
-    UpdateMonitorColumnWidths(list);
     const int focusedRow = ListView_GetNextItem(list, -1, LVNI_FOCUSED);
     if (focusedRow >= 0) {
         ListView_EnsureVisible(list, focusedRow, FALSE);
@@ -2293,7 +2291,6 @@ static void UpdateSettingsControlMetrics(HWND window) {
     AlignSettingsButton(GetDlgItem(window, ID_MAIN_LIGHT), GetDlgItem(window, ID_CAMERA_STATIC));
     AlignSettingsButton(GetDlgItem(window, ID_RIM_LIGHT), GetDlgItem(window, ID_CAMERA_FLIGHT));
     AlignSettingsButton(GetDlgItem(window, ID_FILL_LIGHT), GetDlgItem(window, ID_CAMERA_FLIGHT));
-    UpdateMonitorColumnWidths(GetDlgItem(window, ID_MONITOR_LIST));
 }
 
 /// Calculates a scrollable fixed-content window that fits the monitor work area.
@@ -4037,6 +4034,11 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 return CreateSettingsControls(window, data);
             }
             return -1;
+        case WM_SHOWWINDOW:
+            if (wParam && data && data->appMode) {
+                InitializeMonitorColumnWidths(GetDlgItem(controls, ID_MONITOR_LIST), *data);
+            }
+            break;
         case DM_GETDEFID:
             if (data) {
                 if (data->defaultButton && IsWindow(data->defaultButton)) {
