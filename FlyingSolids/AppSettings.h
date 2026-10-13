@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.1.0.0
  */
 
 #pragma once
 
 #include "Effects.h"
+#include "Mp4Recorder.h"
 #include <cstdint>
 #include <limits>
 #include <string>
@@ -53,6 +54,7 @@ struct AppSettings {
 
     /// User-interface state
     bool preventScreenSaver = false;
+    RecordingOptions recording;
     std::wstring animationMonitorDevice;
     int controlWindowX = std::numeric_limits<int>::min();
     int controlWindowY = std::numeric_limits<int>::min();
@@ -60,6 +62,8 @@ struct AppSettings {
     int helpY = std::numeric_limits<int>::min();
     int aboutX = std::numeric_limits<int>::min();
     int aboutY = std::numeric_limits<int>::min();
+    int recordingSettingsX = std::numeric_limits<int>::min();
+    int recordingSettingsY = std::numeric_limits<int>::min();
     int language = -1;
     SettingsProfile profile = SettingsProfile::Standalone;
 

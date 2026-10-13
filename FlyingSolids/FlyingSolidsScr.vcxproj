@@ -137,4 +137,7 @@ if errorlevel 1 exit /b %errorlevel%</Command>
     <None Include="..\license.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\BuildSigning.targets" />
+  </ImportGroup>
 </Project>

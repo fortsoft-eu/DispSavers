@@ -30,11 +30,7 @@ LANGUAGE LANG_CZECH, SUBLANG_DEFAULT
 IDR_LICENSE             RCDATA                  "..\\license.txt"
 
 #ifndef FLYING_SOLIDS_SCR_BUILD
-#ifdef _DEBUG
-IDR_EMBEDDED_SCREEN_SAVER RCDATA                  "..\\Debug\\FlyingSolids.scr"
-#else
-IDR_EMBEDDED_SCREEN_SAVER RCDATA                  "..\\Release\\FlyingSolids.scr"
-#endif
+IDR_EMBEDDED_SCREEN_SAVER RCDATA                  "FlyingSolids.scr"
 #endif
 
 
@@ -47,6 +43,21 @@ IDD_SETTINGS_PANEL DIALOGEX 0, 0, 0, 0
 STYLE DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
 EXSTYLE WS_EX_CONTROLPARENT
 BEGIN
+END
+
+IDD_RECORDING_SETTINGS DIALOGEX 0, 0, 249, 112
+STYLE DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_CAPTION | WS_SYSMENU
+FONT 9, "Segoe UI", 0, 0, 0x1
+BEGIN
+    CONTROL         "",ID_RECORD_VIEWPORT,"Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,10,4,228,12
+    CONTROL         "",ID_RECORD_TV,"Button",BS_AUTORADIOBUTTON | WS_TABSTOP,10,17,228,12
+    LTEXT           "",ID_RECORD_SIZE_LABEL,19,38,73,10
+    COMBOBOX        ID_RECORD_SIZE,95,35,143,90,CBS_DROPDOWNLIST | WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    LTEXT           "",ID_RECORD_RATE_LABEL,19,56,73,10
+    COMBOBOX        ID_RECORD_RATE,95,53,143,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "",ID_RECORD_NOTE,10,70,228,18
+    DEFPUSHBUTTON   "",IDOK,126,94,54,16,WS_GROUP
+    PUSHBUTTON      "",IDCANCEL,184,94,54,16
 END
 
 
@@ -84,8 +95,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,0
- PRODUCTVERSION 1,0,0,0
+ FILEVERSION 1,1,0,0
+ PRODUCTVERSION 1,1,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -101,25 +112,13 @@ BEGIN
         BLOCK "040504b0"
         BEGIN
             VALUE "CompanyName", "FortSoft"
-#ifdef FLYING_SOLIDS_SCR_BUILD
-            VALUE "FileDescription", "FlyingSolids Screen Saver"
-#else
             VALUE "FileDescription", "FlyingSolids"
-#endif
-            VALUE "FileVersion", "1.0.0.0"
-#ifdef FLYING_SOLIDS_SCR_BUILD
-            VALUE "InternalName", "FlyingSolids.scr"
-#else
+            VALUE "FileVersion", "1.1.0.0"
             VALUE "InternalName", "FlyingSolids.exe"
-#endif
             VALUE "LegalCopyright", "Copyright © Petr Červinka — FortSoft 2026"
-#ifdef FLYING_SOLIDS_SCR_BUILD
-            VALUE "OriginalFilename", "FlyingSolids.scr"
-#else
             VALUE "OriginalFilename", "FlyingSolids.exe"
-#endif
             VALUE "ProductName", "FlyingSolids"
-            VALUE "ProductVersion", "1.0.0.0"
+            VALUE "ProductVersion", "1.1.0.0"
         END
     END
     BLOCK "VarFileInfo"

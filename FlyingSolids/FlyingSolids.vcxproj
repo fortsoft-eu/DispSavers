@@ -141,4 +141,7 @@ if errorlevel 1 exit /b %errorlevel%</Command>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\BuildSigning.targets" />
+  </ImportGroup>
 </Project>

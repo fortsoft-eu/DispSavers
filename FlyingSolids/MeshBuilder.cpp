@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.1.0.0
  */
 
 #define _USE_MATH_DEFINES
@@ -1045,17 +1045,17 @@ static void ExactSphereWithoutOneCap(MeshData& mesh) {
     DiscY(mesh, ROUND_SIDES, .83516465f, cut, true);
 }
 
-/// Returns one position on a paraboloid of revolution.
+/// Samples a paraboloid of revolution uniformly in radius to retain its smooth vertex curvature.
 static V3 ParaboloidPosition(float u, float v) {
     const float angle = u * 2.0f * float(M_PI);
-    const float radius = std::sqrt(v);
-    return Radial(angle, radius, -1.2f + 2.2f * v);
+    const float radius = v;
+    return Radial(angle, radius, -1.2f + 2.2f * radius * radius);
 }
 
 /// Returns the analytic normal of a paraboloid of revolution.
 static V3 ParaboloidNormal(float u, float v) {
     const float angle = u * 2.0f * float(M_PI);
-    const float radius = std::sqrt(v);
+    const float radius = v;
     return V3{
         4.4f * radius * std::cos(angle),
         -1.0f,

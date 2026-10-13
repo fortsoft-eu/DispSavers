@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.1.0.0
  */
 
 #pragma once
 
 #include "Simulation.h"
+#include "Mp4Recorder.h"
 #include <windows.h>
 
 /// Owns the Direct3D rendering pipeline and optional frame capture services.
@@ -65,14 +66,20 @@ public:
 
     /// Recording and still-image capture
 
-    /// Starts MP4 recording at the requested frame rate.
-    bool StartRecording(const wchar_t* path, unsigned frameRate);
+    /// Starts MP4 recording using the selected Viewport or TV output format.
+    bool StartRecording(const wchar_t* path, unsigned frameRate, const RecordingOptions& options);
 
     /// Tests MP4 recording of the current render target before a file is selected.
-    bool CheckRecordingSupport(unsigned frameRate) const;
+    bool CheckRecordingSupport(unsigned frameRate, const RecordingOptions& options) const;
 
     /// Finalizes the current recording and releases its resources.
     void StopRecording();
+
+    /// Stops capture while holding the rendering lock, leaving encoder finalization for a separate phase.
+    void PrepareRecordingStop();
+
+    /// Finishes a previously stopped recording without holding the surface rendering lock.
+    void FinishRecordingStop();
 
     /// Reports whether a recording session is active.
     bool IsRecording() const;

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.1.0.0
  */
 
 #pragma once
@@ -102,6 +102,28 @@ struct MonitorColumnText {
     const wchar_t* channelDepth;
     const wchar_t* pixelDepth;
 };
+
+/// Captions and usage note displayed by the recording-settings dialog.
+struct RecordingText {
+    const wchar_t* title;
+    const wchar_t* viewport;
+    const wchar_t* television;
+    const wchar_t* resolution;
+    const wchar_t* frameRate;
+    const wchar_t* note;
+};
+
+/// Returns localized recording-settings captions.
+const RecordingText& RecordingSettingsText(AppLanguage language);
+
+/// Returns the warning displayed before closing an application with an active recording.
+const wchar_t* RecordingCloseWarningText(AppLanguage language);
+
+/// Returns one of Emulators' three TV resolution captions.
+const wchar_t* RecordingResolutionText(unsigned index);
+
+/// Returns one of Emulators' four exact TV frame-rate captions.
+const wchar_t* RecordingRateText(unsigned index);
 
 /// Core language-table access and conversion
 

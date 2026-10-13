@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.1.0.0
  */
 
 #define NOMINMAX
@@ -52,8 +52,13 @@ constexpr wchar_t HELP_X_VALUE_NAME[] = L"HelpX";
 constexpr wchar_t HELP_Y_VALUE_NAME[] = L"HelpY";
 constexpr wchar_t ABOUT_X_VALUE_NAME[] = L"AboutX";
 constexpr wchar_t ABOUT_Y_VALUE_NAME[] = L"AboutY";
+constexpr wchar_t RECORDING_SETTINGS_X_VALUE_NAME[] = L"RecordingSettingsX";
+constexpr wchar_t RECORDING_SETTINGS_Y_VALUE_NAME[] = L"RecordingSettingsY";
 constexpr wchar_t LANGUAGE_VALUE_NAME[] = L"Language";
 constexpr wchar_t PREVENT_SCREEN_SAVER_VALUE_NAME[] = L"PreventScreenSaver";
+constexpr wchar_t RECORDING_TV_VALUE_NAME[] = L"RecordingTV";
+constexpr wchar_t RECORDING_RESOLUTION_VALUE_NAME[] = L"RecordingResolution";
+constexpr wchar_t RECORDING_RATE_VALUE_NAME[] = L"RecordingRate";
 
 /// Returns the registry branch assigned to a settings profile.
 static const wchar_t* RegistryPath(SettingsProfile profile) {
@@ -113,9 +118,14 @@ void AppSettings::Load(SettingsProfile selectedProfile) {
         helpY = ReadValue(key, HELP_Y_VALUE_NAME, helpY);
         aboutX = ReadValue(key, ABOUT_X_VALUE_NAME, aboutX);
         aboutY = ReadValue(key, ABOUT_Y_VALUE_NAME, aboutY);
+        recordingSettingsX = ReadValue(key, RECORDING_SETTINGS_X_VALUE_NAME, recordingSettingsX);
+        recordingSettingsY = ReadValue(key, RECORDING_SETTINGS_Y_VALUE_NAME, recordingSettingsY);
         language = ReadValue(key, LANGUAGE_VALUE_NAME, language);
         if (profile == SettingsProfile::Standalone) {
             preventScreenSaver = ReadValue(key, PREVENT_SCREEN_SAVER_VALUE_NAME, preventScreenSaver ? 1 : 0) != 0;
+            recording.television = ReadValue(key, RECORDING_TV_VALUE_NAME, recording.television ? 1 : 0) != 0;
+            recording.resolution = std::clamp(ReadValue(key, RECORDING_RESOLUTION_VALUE_NAME, recording.resolution), 0, 2);
+            recording.rate = std::clamp(ReadValue(key, RECORDING_RATE_VALUE_NAME, recording.rate), 0, 3);
         }
         RegCloseKey(key);
     }
@@ -125,7 +135,7 @@ void AppSettings::Load(SettingsProfile selectedProfile) {
     objectSizePercent = std::clamp(objectSizePercent, 50, 200);
 }
 
-/// Writes control, Help and About coordinates to an already opened settings key.
+/// Writes control, Help, About and recording-settings coordinates to an already opened settings key.
 static void WriteWindowPositions(HKEY key, const AppSettings& settings) {
     const DWORD windowX = static_cast<DWORD>(settings.controlWindowX);
     const DWORD windowY = static_cast<DWORD>(settings.controlWindowY);
@@ -133,6 +143,8 @@ static void WriteWindowPositions(HKEY key, const AppSettings& settings) {
     const DWORD helpY = static_cast<DWORD>(settings.helpY);
     const DWORD aboutX = static_cast<DWORD>(settings.aboutX);
     const DWORD aboutY = static_cast<DWORD>(settings.aboutY);
+    const DWORD recordingSettingsX = static_cast<DWORD>(settings.recordingSettingsX);
+    const DWORD recordingSettingsY = static_cast<DWORD>(settings.recordingSettingsY);
     RegSetValueExW(key, CONTROL_WINDOW_X_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&windowX), sizeof(windowX));
     RegSetValueExW(key, CONTROL_WINDOW_Y_VALUE_NAME, 0, REG_DWORD,
@@ -145,6 +157,10 @@ static void WriteWindowPositions(HKEY key, const AppSettings& settings) {
         reinterpret_cast<const BYTE*>(&aboutX), sizeof(aboutX));
     RegSetValueExW(key, ABOUT_Y_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&aboutY), sizeof(aboutY));
+    RegSetValueExW(key, RECORDING_SETTINGS_X_VALUE_NAME, 0, REG_DWORD,
+        reinterpret_cast<const BYTE*>(&recordingSettingsX), sizeof(recordingSettingsX));
+    RegSetValueExW(key, RECORDING_SETTINGS_Y_VALUE_NAME, 0, REG_DWORD,
+        reinterpret_cast<const BYTE*>(&recordingSettingsY), sizeof(recordingSettingsY));
 }
 
 /// Saves remembered form coordinates without applying pending animation changes.
@@ -208,6 +224,15 @@ void AppSettings::Save() const {
         const DWORD preventScreenSaverValue = preventScreenSaver ? 1U : 0U;
         RegSetValueExW(key, PREVENT_SCREEN_SAVER_VALUE_NAME, 0, REG_DWORD,
             reinterpret_cast<const BYTE*>(&preventScreenSaverValue), sizeof(preventScreenSaverValue));
+        const DWORD recordingTvValue = recording.television ? 1U : 0U;
+        const DWORD recordingResolutionValue = static_cast<DWORD>(recording.resolution);
+        const DWORD recordingRateValue = static_cast<DWORD>(recording.rate);
+        RegSetValueExW(key, RECORDING_TV_VALUE_NAME, 0, REG_DWORD,
+            reinterpret_cast<const BYTE*>(&recordingTvValue), sizeof(recordingTvValue));
+        RegSetValueExW(key, RECORDING_RESOLUTION_VALUE_NAME, 0, REG_DWORD,
+            reinterpret_cast<const BYTE*>(&recordingResolutionValue), sizeof(recordingResolutionValue));
+        RegSetValueExW(key, RECORDING_RATE_VALUE_NAME, 0, REG_DWORD,
+            reinterpret_cast<const BYTE*>(&recordingRateValue), sizeof(recordingRateValue));
     }
     RegCloseKey(key);
 }

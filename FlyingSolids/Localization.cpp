@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.1.0.0
  */
 
 #define NOMINMAX
@@ -1754,634 +1754,1032 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_SUCCEEDED_TE
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_FAILED_TEXTS = {
-    L"Odinstalace se nezdařila. Pokud je spořič nebo jeho náhled spuštěný, zavřete jej a odinstalaci zopakujte.",
-    L"The screen saver could not be uninstalled. If the screen saver or its preview is running, close it and try again.",
-    L"Der Bildschirmschoner konnte nicht deinstalliert werden. Falls der Bildschirmschoner oder seine Vorschau läuft, schließen Sie ihn und "
-    L"versuchen Sie es erneut.",
-    L"Impossible de désinstaller l’économiseur. S’il est en cours d’exécution ou si son aperçu est ouvert, fermez-le puis réessayez.",
-    L"No se pudo desinstalar el salvapantallas. Si el salvapantallas o su vista previa están en ejecución, ciérrelos e inténtelo de nuevo.",
-    L"Impossibile disinstallare il salvaschermo. Se il salvaschermo o la relativa anteprima sono in esecuzione, chiuderli e riprovare.",
-    L"Nie udało się odinstalować wygaszacza. Jeśli wygaszacz lub jego podgląd jest uruchomiony, zamknij go i spróbuj ponownie.",
-    L"Šetrič sa nepodarilo odinštalovať. Ak je šetrič alebo jeho náhľad spustený, zatvorte ho a skúste to znova.",
-    L"The screen saver could not be uninstalled. If the screen saver or its preview is running, close it and try again.",
-    L"The screen saver could not be uninstalled. If the screen saver or its preview is running, close it and try again.",
-    L"Não foi possível desinstalar a proteção de ecrã. Se a proteção ou a pré-visualização estiver em execução, feche-a e tente novamente.",
-    L"Skjermspareren kunne ikke avinstalleres. Hvis skjermspareren eller forhåndsvisningen kjører, lukk den og prøv på nytt.",
-    L"Skärmsläckaren kunde inte avinstalleras. Om skärmsläckaren eller förhandsvisningen körs, stäng den och försök igen.",
-    L"Näytönsäästäjän poistaminen epäonnistui. Jos näytönsäästäjä tai sen esikatselu on käynnissä, sulje se ja yritä uudelleen.",
-    L"Pauseskærmen kunne ikke afinstalleres. Hvis pauseskærmen eller forhåndsvisningen kører, skal du lukke den og prøve igen.",
-    L"Ekki tókst að fjarlægja skjáhvíluna. Ef skjáhvílan eða forskoðun hennar er í gangi skaltu loka henni og reyna aftur.",
+    L"Odinstalace se nezdařila. Pokud je spořič nebo jeho náhled spuštěný, zavřete jej a odinstalaci "
+    L"zopakujte.",
+    L"The screen saver could not be uninstalled. If the screen saver or its preview is running, close it and "
+    L"try again.",
+    L"Der Bildschirmschoner konnte nicht deinstalliert werden. Falls der Bildschirmschoner oder seine "
+    L"Vorschau läuft, schließen Sie ihn und versuchen Sie es erneut.",
+    L"Impossible de désinstaller l’économiseur. S’il est en cours d’exécution ou si son aperçu est ouvert, "
+    L"fermez-le puis réessayez.",
+    L"No se pudo desinstalar el salvapantallas. Si el salvapantallas o su vista previa están en ejecución, "
+    L"ciérrelos e inténtelo de nuevo.",
+    L"Impossibile disinstallare il salvaschermo. Se il salvaschermo o la relativa anteprima sono in "
+    L"esecuzione, chiuderli e riprovare.",
+    L"Nie udało się odinstalować wygaszacza. Jeśli wygaszacz lub jego podgląd jest uruchomiony, zamknij go i "
+    L"spróbuj ponownie.",
+    L"Šetrič sa nepodarilo odinštalovať. Ak je šetrič alebo jeho náhľad spustený, zatvorte ho a skúste to "
+    L"znova.",
+    L"The screen saver could not be uninstalled. If the screen saver or its preview is running, close it and "
+    L"try again.",
+    L"The screen saver could not be uninstalled. If the screen saver or its preview is running, close it and "
+    L"try again.",
+    L"Não foi possível desinstalar a proteção de ecrã. Se a proteção ou a pré-visualização estiver em "
+    L"execução, feche-a e tente novamente.",
+    L"Skjermspareren kunne ikke avinstalleres. Hvis skjermspareren eller forhåndsvisningen kjører, lukk den "
+    L"og prøv på nytt.",
+    L"Skärmsläckaren kunde inte avinstalleras. Om skärmsläckaren eller förhandsvisningen körs, stäng den och "
+    L"försök igen.",
+    L"Näytönsäästäjän poistaminen epäonnistui. Jos näytönsäästäjä tai sen esikatselu on käynnissä, sulje se "
+    L"ja yritä uudelleen.",
+    L"Pauseskærmen kunne ikke afinstalleres. Hvis pauseskærmen eller forhåndsvisningen kører, skal du lukke "
+    L"den og prøve igen.",
+    L"Ekki tókst að fjarlægja skjáhvíluna. Ef skjáhvílan eða forskoðun hennar er í gangi skaltu loka henni "
+    L"og reyna aftur.",
     L"Ekran koruyucu kaldırılamadı. Ekran koruyucu veya önizlemesi çalışıyorsa kapatıp yeniden deneyin."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_BLOCKED_BY_SETTINGS_TEXTS = {
-    L"Odinstalace se nezdařila, protože je otevřené nastavení FlyingSolids. Zavřete je a odinstalaci zopakujte.",
+    L"Odinstalace se nezdařila, protože je otevřené nastavení FlyingSolids. Zavřete je a odinstalaci "
+    L"zopakujte.",
     L"Uninstallation failed because FlyingSolids settings are open. Close the settings window and try again.",
-    L"Die Deinstallation ist fehlgeschlagen, weil die FlyingSolids-Einstellungen geöffnet sind. Schließen Sie das Fenster und versuchen Sie es "
-    L"erneut.",
-    L"La désinstallation a échoué car les paramètres de FlyingSolids sont ouverts. Fermez cette fenêtre puis réessayez.",
-    L"La desinstalación falló porque la configuración de FlyingSolids está abierta. Cierre esa ventana e inténtelo de nuevo.",
-    L"La disinstallazione non è riuscita perché le impostazioni di FlyingSolids sono aperte. Chiudere la finestra e riprovare.",
-    L"Odinstalowanie nie powiodło się, ponieważ ustawienia FlyingSolids są otwarte. Zamknij okno i spróbuj ponownie.",
+    L"Die Deinstallation ist fehlgeschlagen, weil die FlyingSolids-Einstellungen geöffnet sind. Schließen "
+    L"Sie das Fenster und versuchen Sie es erneut.",
+    L"La désinstallation a échoué car les paramètres de FlyingSolids sont ouverts. Fermez cette fenêtre puis "
+    L"réessayez.",
+    L"La desinstalación falló porque la configuración de FlyingSolids está abierta. Cierre esa ventana e "
+    L"inténtelo de nuevo.",
+    L"La disinstallazione non è riuscita perché le impostazioni di FlyingSolids sono aperte. Chiudere la "
+    L"finestra e riprovare.",
+    L"Odinstalowanie nie powiodło się, ponieważ ustawienia FlyingSolids są otwarte. Zamknij okno i spróbuj "
+    L"ponownie.",
     L"Odinštalovanie zlyhalo, pretože sú otvorené nastavenia FlyingSolids. Zatvorte ich a skúste to znova.",
     L"Uninstallation failed because FlyingSolids settings are open. Close the settings window and try again.",
     L"Uninstallation failed because FlyingSolids settings are open. Close the settings window and try again.",
-    L"A desinstalação falhou porque as definições do FlyingSolids estão abertas. Feche a janela e tente novamente.",
-    L"Avinstalleringen mislyktes fordi innstillingene for FlyingSolids er åpne. Lukk vinduet og prøv på nytt.",
-    L"Avinstallationen misslyckades eftersom inställningarna för FlyingSolids är öppna. Stäng fönstret och försök igen.",
-    L"Asennuksen poisto epäonnistui, koska FlyingSolids-asetukset ovat avoinna. Sulje ikkuna ja yritä uudelleen.",
-    L"Afinstallationen mislykkedes, fordi indstillingerne for FlyingSolids er åbne. Luk vinduet, og prøv igen.",
+    L"A desinstalação falhou porque as definições do FlyingSolids estão abertas. Feche a janela e tente "
+    L"novamente.",
+    L"Avinstalleringen mislyktes fordi innstillingene for FlyingSolids er åpne. Lukk vinduet og prøv på "
+    L"nytt.",
+    L"Avinstallationen misslyckades eftersom inställningarna för FlyingSolids är öppna. Stäng fönstret och "
+    L"försök igen.",
+    L"Asennuksen poisto epäonnistui, koska FlyingSolids-asetukset ovat avoinna. Sulje ikkuna ja yritä "
+    L"uudelleen.",
+    L"Afinstallationen mislykkedes, fordi indstillingerne for FlyingSolids er åbne. Luk vinduet, og prøv "
+    L"igen.",
     L"Fjarlæging mistókst vegna þess að stillingar FlyingSolids eru opnar. Lokaðu glugganum og reyndu aftur.",
-    L"FlyingSolids ayarları açık olduğu için kaldırma başarısız oldu. Ayarlar penceresini kapatıp yeniden deneyin."
+    L"FlyingSolids ayarları açık olduğu için kaldırma başarısız oldu. Ayarlar penceresini kapatıp yeniden "
+    L"deneyin."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_BLOCKED_BY_SYSTEM_PREVIEW_TEXTS = {
-    L"Odinstalace se nezdařila, protože běží systémový náhled. Zavřete okno Nastavení spořiče obrazovky a odinstalaci zopakujte.",
-    L"Uninstallation failed because the system preview is running. Close the Screen Saver Settings window and try again.",
-    L"Die Deinstallation ist fehlgeschlagen, weil die Systemvorschau läuft. Schließen Sie das Fenster Bildschirmschonereinstellungen und "
-    L"versuchen Sie es erneut.",
-    L"La désinstallation a échoué car l’aperçu système est actif. Fermez la fenêtre Paramètres de l’économiseur d’écran puis réessayez.",
-    L"La desinstalación falló porque se está ejecutando la vista previa del sistema. Cierre Configuración del protector de pantalla e "
-    L"inténtelo de nuevo.",
-    L"La disinstallazione non è riuscita perché è attiva l’anteprima di sistema. Chiudere Impostazioni salvaschermo e riprovare.",
-    L"Odinstalowanie nie powiodło się, ponieważ działa podgląd systemowy. Zamknij okno Ustawienia wygaszacza ekranu i spróbuj ponownie.",
-    L"Odinštalovanie zlyhalo, pretože beží systémový náhľad. Zatvorte okno Nastavenie šetriča obrazovky a skúste to znova.",
-    L"Uninstallation failed because the system preview is running. Close the Screen Saver Settings window and try again.",
-    L"Uninstallation failed because the system preview is running. Close the Screen Saver Settings window and try again.",
-    L"A desinstalação falhou porque a pré-visualização do sistema está em execução. Feche as Definições da proteção de ecrã e tente novamente.",
-    L"Avinstalleringen mislyktes fordi systemforhåndsvisningen kjører. Lukk vinduet Skjermsparerinnstillinger og prøv på nytt.",
-    L"Avinstallationen misslyckades eftersom systemförhandsvisningen körs. Stäng fönstret Inställningar för skärmsläckare och försök igen.",
-    L"Asennuksen poisto epäonnistui, koska järjestelmän esikatselu on käynnissä. Sulje Näytönsäästäjän asetukset ja yritä uudelleen.",
-    L"Afinstallationen mislykkedes, fordi systemforhåndsvisningen kører. Luk vinduet Pauseskærmsindstillinger, og prøv igen.",
-    L"Fjarlæging mistókst vegna þess að kerfisforskoðun er í gangi. Lokaðu stillingaglugga skjáhvílu og reyndu aftur.",
-    L"Sistem önizlemesi çalıştığı için kaldırma başarısız oldu. Ekran Koruyucu Ayarları penceresini kapatıp yeniden deneyin."
+    L"Odinstalace se nezdařila, protože běží systémový náhled. Zavřete okno Nastavení spořiče obrazovky a "
+    L"odinstalaci zopakujte.",
+    L"Uninstallation failed because the system preview is running. Close the Screen Saver Settings window "
+    L"and try again.",
+    L"Die Deinstallation ist fehlgeschlagen, weil die Systemvorschau läuft. Schließen Sie das Fenster "
+    L"Bildschirmschonereinstellungen und versuchen Sie es erneut.",
+    L"La désinstallation a échoué car l’aperçu système est actif. Fermez la fenêtre Paramètres de "
+    L"l’économiseur d’écran puis réessayez.",
+    L"La desinstalación falló porque se está ejecutando la vista previa del sistema. Cierre Configuración "
+    L"del protector de pantalla e inténtelo de nuevo.",
+    L"La disinstallazione non è riuscita perché è attiva l’anteprima di sistema. Chiudere Impostazioni "
+    L"salvaschermo e riprovare.",
+    L"Odinstalowanie nie powiodło się, ponieważ działa podgląd systemowy. Zamknij okno Ustawienia wygaszacza "
+    L"ekranu i spróbuj ponownie.",
+    L"Odinštalovanie zlyhalo, pretože beží systémový náhľad. Zatvorte okno Nastavenie šetriča obrazovky a "
+    L"skúste to znova.",
+    L"Uninstallation failed because the system preview is running. Close the Screen Saver Settings window "
+    L"and try again.",
+    L"Uninstallation failed because the system preview is running. Close the Screen Saver Settings window "
+    L"and try again.",
+    L"A desinstalação falhou porque a pré-visualização do sistema está em execução. Feche as Definições da "
+    L"proteção de ecrã e tente novamente.",
+    L"Avinstalleringen mislyktes fordi systemforhåndsvisningen kjører. Lukk vinduet "
+    L"Skjermsparerinnstillinger og prøv på nytt.",
+    L"Avinstallationen misslyckades eftersom systemförhandsvisningen körs. Stäng fönstret Inställningar för "
+    L"skärmsläckare och försök igen.",
+    L"Asennuksen poisto epäonnistui, koska järjestelmän esikatselu on käynnissä. Sulje Näytönsäästäjän "
+    L"asetukset ja yritä uudelleen.",
+    L"Afinstallationen mislykkedes, fordi systemforhåndsvisningen kører. Luk vinduet "
+    L"Pauseskærmsindstillinger, og prøv igen.",
+    L"Fjarlæging mistókst vegna þess að kerfisforskoðun er í gangi. Lokaðu stillingaglugga skjáhvílu og "
+    L"reyndu aftur.",
+    L"Sistem önizlemesi çalıştığı için kaldırma başarısız oldu. Ekran Koruyucu Ayarları penceresini kapatıp "
+    L"yeniden deneyin."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_BLOCKED_BY_RUNNING_SAVER_TEXTS = {
-    L"Odinstalace se nezdařila, protože je spuštěný spořič nebo celoobrazovkový náhled. Ukončete jej klávesou Esc nebo pohybem myši a "
-    L"odinstalaci zopakujte.",
-    L"Uninstallation failed because the screen saver or full-screen preview is running. Exit it with Esc or by moving the mouse, then try "
-    L"again.",
-    L"Die Deinstallation ist fehlgeschlagen, weil der Bildschirmschoner oder die Vollbildvorschau läuft. Beenden Sie ihn mit Esc oder durch "
-    L"Bewegen der Maus und versuchen Sie es erneut.",
-    L"La désinstallation a échoué car l’économiseur ou l’aperçu plein écran est actif. Quittez-le avec Échap ou en déplaçant la souris, puis "
-    L"réessayez.",
-    L"La desinstalación falló porque está activo el salvapantallas o la vista previa a pantalla completa. Salga con Esc o moviendo el ratón e "
-    L"inténtelo de nuevo.",
-    L"La disinstallazione non è riuscita perché è attivo il salvaschermo o l’anteprima a schermo intero. Uscire con Esc o muovendo il mouse e "
-    L"riprovare.",
-    L"Odinstalowanie nie powiodło się, ponieważ działa wygaszacz lub podgląd pełnoekranowy. Zakończ go klawiszem Esc albo ruchem myszy i "
-    L"spróbuj ponownie.",
-    L"Odinštalovanie zlyhalo, pretože beží šetrič alebo celoobrazovkový náhľad. Ukončite ho klávesom Esc alebo pohybom myši a skúste to znova.",
-    L"Uninstallation failed because the screen saver or full-screen preview is running. Exit it with Esc or by moving the mouse, then try "
-    L"again.",
-    L"Uninstallation failed because the screen saver or full-screen preview is running. Exit it with Esc or by moving the mouse, then try "
-    L"again.",
-    L"A desinstalação falhou porque a proteção ou a pré-visualização em ecrã inteiro está em execução. Saia com Esc ou movendo o rato e tente "
-    L"novamente.",
-    L"Avinstalleringen mislyktes fordi skjermspareren eller fullskjermvisningen kjører. Avslutt med Esc eller ved å bevege musen, og prøv på "
-    L"nytt.",
-    L"Avinstallationen misslyckades eftersom skärmsläckaren eller helskärmsförhandsvisningen körs. Avsluta med Esc eller genom att röra musen "
-    L"och försök igen.",
-    L"Asennuksen poisto epäonnistui, koska näytönsäästäjä tai koko näytön esikatselu on käynnissä. Lopeta Esc-näppäimellä tai liikuttamalla "
-    L"hiirtä ja yritä uudelleen.",
-    L"Afinstallationen mislykkedes, fordi pauseskærmen eller forhåndsvisningen i fuld skærm kører. Afslut med Esc eller ved at bevæge musen, "
-    L"og prøv igen.",
-    L"Fjarlæging mistókst vegna þess að skjáhvílan eða forskoðun á öllum skjánum er í gangi. Lokaðu með Esc eða með því að hreyfa músina og "
-    L"reyndu aftur.",
-    L"Ekran koruyucu veya tam ekran önizleme çalıştığı için kaldırma başarısız oldu. Esc ile ya da fareyi hareket ettirerek çıkıp yeniden "
-    L"deneyin."
+    L"Odinstalace se nezdařila, protože je spuštěný spořič nebo celoobrazovkový náhled. Ukončete jej "
+    L"klávesou Esc nebo pohybem myši a odinstalaci zopakujte.",
+    L"Uninstallation failed because the screen saver or full-screen preview is running. Exit it with Esc or "
+    L"by moving the mouse, then try again.",
+    L"Die Deinstallation ist fehlgeschlagen, weil der Bildschirmschoner oder die Vollbildvorschau läuft. "
+    L"Beenden Sie ihn mit Esc oder durch Bewegen der Maus und versuchen Sie es erneut.",
+    L"La désinstallation a échoué car l’économiseur ou l’aperçu plein écran est actif. Quittez-le avec Échap "
+    L"ou en déplaçant la souris, puis réessayez.",
+    L"La desinstalación falló porque está activo el salvapantallas o la vista previa a pantalla completa. "
+    L"Salga con Esc o moviendo el ratón e inténtelo de nuevo.",
+    L"La disinstallazione non è riuscita perché è attivo il salvaschermo o l’anteprima a schermo intero. "
+    L"Uscire con Esc o muovendo il mouse e riprovare.",
+    L"Odinstalowanie nie powiodło się, ponieważ działa wygaszacz lub podgląd pełnoekranowy. Zakończ go "
+    L"klawiszem Esc albo ruchem myszy i spróbuj ponownie.",
+    L"Odinštalovanie zlyhalo, pretože beží šetrič alebo celoobrazovkový náhľad. Ukončite ho klávesom Esc "
+    L"alebo pohybom myši a skúste to znova.",
+    L"Uninstallation failed because the screen saver or full-screen preview is running. Exit it with Esc or "
+    L"by moving the mouse, then try again.",
+    L"Uninstallation failed because the screen saver or full-screen preview is running. Exit it with Esc or "
+    L"by moving the mouse, then try again.",
+    L"A desinstalação falhou porque a proteção ou a pré-visualização em ecrã inteiro está em execução. Saia "
+    L"com Esc ou movendo o rato e tente novamente.",
+    L"Avinstalleringen mislyktes fordi skjermspareren eller fullskjermvisningen kjører. Avslutt med Esc "
+    L"eller ved å bevege musen, og prøv på nytt.",
+    L"Avinstallationen misslyckades eftersom skärmsläckaren eller helskärmsförhandsvisningen körs. Avsluta "
+    L"med Esc eller genom att röra musen och försök igen.",
+    L"Asennuksen poisto epäonnistui, koska näytönsäästäjä tai koko näytön esikatselu on käynnissä. Lopeta "
+    L"Esc-näppäimellä tai liikuttamalla hiirtä ja yritä uudelleen.",
+    L"Afinstallationen mislykkedes, fordi pauseskærmen eller forhåndsvisningen i fuld skærm kører. Afslut "
+    L"med Esc eller ved at bevæge musen, og prøv igen.",
+    L"Fjarlæging mistókst vegna þess að skjáhvílan eða forskoðun á öllum skjánum er í gangi. Lokaðu með Esc "
+    L"eða með því að hreyfa músina og reyndu aftur.",
+    L"Ekran koruyucu veya tam ekran önizleme çalıştığı için kaldırma başarısız oldu. Esc ile ya da fareyi "
+    L"hareket ettirerek çıkıp yeniden deneyin."
+};
+
+/// Warnings shown before closing an application that is currently recording.
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> RECORDING_CLOSE_WARNING_TEXTS = {
+    L"Ukončení aplikace ukončí právě probíhající záznam.",
+    L"Closing the application will stop the recording currently in progress.",
+    L"Beim Beenden der Anwendung wird die laufende Aufnahme beendet.",
+    L"La fermeture de l’application arrêtera l’enregistrement en cours.",
+    L"Al cerrar la aplicación se detendrá la grabación en curso.",
+    L"La chiusura dell’applicazione interromperà la registrazione in corso.",
+    L"Zamknięcie aplikacji zakończy trwające nagrywanie.",
+    L"Ukončenie aplikácie ukončí práve prebiehajúci záznam.",
+    L"Closing the application will stop the recording currently in progress.",
+    L"Closing the application will stop the recording currently in progress.",
+    L"Fechar a aplicação irá terminar a gravação em curso.",
+    L"Hvis du avslutter programmet, avsluttes opptaket som pågår.",
+    L"Om du avslutar programmet stoppas den pågående inspelningen.",
+    L"Sovelluksen sulkeminen lopettaa käynnissä olevan tallennuksen.",
+    L"Hvis du lukker programmet, stoppes den igangværende optagelse.",
+    L"Ef forritinu er lokað stöðvast upptakan sem er í gangi.",
+    L"Uygulamayı kapatmak devam eden kaydı durduracaktır."
+};
+
+/// Recording-settings captions and presets shared with the Emulators interface.
+constexpr std::array<RecordingText, LANGUAGE_COUNT> RECORDING_TEXTS = {
+    RecordingText{
+        L"Nastavení záznamu",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Rozlišení:",
+        L"Snímková frekvence:",
+        L"Změny se použijí při příštím záznamu MP4."
+    }, RecordingText{
+        L"Recording settings",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Resolution:",
+        L"Frame rate:",
+        L"Changes apply to the next MP4 recording."
+    }, RecordingText{
+        L"Aufnahmeeinstellungen",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Auflösung:",
+        L"Bildfrequenz:",
+        L"Änderungen gelten für die nächste MP4-Aufnahme."
+    }, RecordingText{
+        L"Réglages vidéo",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Résolution :",
+        L"Fréquence d’images :",
+        L"Les modifications s’appliquent au prochain enregistrement MP4."
+    }, RecordingText{
+        L"Ajustes de grabación",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Resolución:",
+        L"Frecuencia de imagen:",
+        L"Los cambios se aplican a la próxima grabación MP4."
+    }, RecordingText{
+        L"Impostazioni video",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Risoluzione:",
+        L"Frequenza fotogrammi:",
+        L"Le modifiche si applicano alla prossima registrazione MP4."
+    }, RecordingText{
+        L"Ustawienia nagrywania",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Rozdzielczość:",
+        L"Liczba klatek/s:",
+        L"Zmiany dotyczą następnego nagrania MP4."
+    }, RecordingText{
+        L"Nastavenie záznamu",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Rozlíšenie:",
+        L"Snímková frekvencia:",
+        L"Zmeny sa použijú pri nasledujúcom zázname MP4."
+    }, RecordingText{
+        L"Recording settings",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Resolution:",
+        L"Frame rate:",
+        L"Changes apply to the next MP4 recording."
+    }, RecordingText{
+        L"Recording settings",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Resolution:",
+        L"Frame rate:",
+        L"Changes apply to the next MP4 recording."
+    }, RecordingText{
+        L"Definições de gravação",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Resolução:",
+        L"Frequência de imagens:",
+        L"As alterações aplicam-se à próxima gravação MP4."
+    }, RecordingText{
+        L"Opptaksinnstillinger",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Oppløsning:",
+        L"Bildefrekvens:",
+        L"Endringene gjelder neste MP4-opptak."
+    }, RecordingText{
+        L"Inspelningsinställningar",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Upplösning:",
+        L"Bildfrekvens:",
+        L"Ändringarna gäller nästa MP4-inspelning."
+    }, RecordingText{
+        L"Tallennusasetukset",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Tarkkuus:",
+        L"Kuvataajuus:",
+        L"Muutokset koskevat seuraavaa MP4-tallennusta."
+    }, RecordingText{
+        L"Optagelsesindstillinger",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Opløsning:",
+        L"Billedfrekvens:",
+        L"Ændringerne gælder næste MP4-optagelse."
+    }, RecordingText{
+        L"Upptökustillingar",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Upplausn:",
+        L"Rammatíðni:",
+        L"Breytingarnar gilda fyrir næstu MP4-upptöku."
+    }, RecordingText{
+        L"Kayıt ayarları",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Çözünürlük:",
+        L"Kare hızı:",
+        L"Değişiklikler bir sonraki MP4 kaydına uygulanır."
+    }
+};
+
+constexpr std::array<const wchar_t*, 3> RECORDING_RESOLUTION_TEXTS = {
+    L"1920 × 1080 (16:9)",
+    L"1440 × 1080 (16:9)",
+    L"1280 × 720 (16:9)"
+};
+
+constexpr std::array<const wchar_t*, 4> RECORDING_RATE_TEXTS = {
+    L"50 Hz",
+    L"25 Hz",
+    L"59.94 Hz (60000/1001)",
+    L"29.97 Hz (30000/1001)"
 };
 
 /// Help and About text
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
-    L"FlyingSolids zobrazuje osvětlená plná prostorová tělesa. Jezdci nastavují rychlost objektů a kamery v rozsahu 0–1600 %, jednu až deset "
-    L"kopií každého tělesa a velikost 50–200 %. Vyberte Pozorování prostoru nebo přímý Průlet prostorem a zaškrtněte požadované druhy "
-    L"těles.\r\n\r\nNa výběr je 30 těles. Protáhlý rotační elipsoid má jednu delší a dvě shodné kratší poloosy. "
-    L"Zaoblený disk (spheroplatelet) má dvě rovinné kruhové plochy a plynule zaoblený obvod; jeho průměr je "
-    L"mírně větší než u kulové vrstvy a tloušťka poloviční. Dutý válec s toroidálními čely má vnější a vnitřní "
-    L"válcovou plochu spojené půltorovými čely, která v osovém řezu tvoří přesné půlkruhy.\r\n\r\nZatržítka Hlavní "
-    L"světlo a Doplňkové světlo pod pravými jezdci nezávisle zapínají a vypínají obě světla pro celou scénu. "
-    L"Výchozí stav: Hlavní světlo zapnuté, Doplňkové světlo vypnuté. Nastavení světel se ukládá zvlášť pro aplikaci a spořič "
-    L"obrazovky.\r\n\r\nV seznamu lze označit více monitorů; dvojklikem na řádek monitor zapnete nebo vypnete a lze zrušit i výběr všech "
-    L"monitorů. Každý monitor používá nezávislou scénu.\r\n\r\nSnímek ukládá PNG, tlačítko záznamu spouští a ukončuje MP4. Pozastavení zastaví "
-    L"animaci. Aplikace také instaluje nebo odinstaluje zabalený spořič. Nastavení se ukládá průběžně.\r\n\r\nAplikace běží pouze v jedné "
-    L"instanci. Další spuštění obnoví minimalizované ovládací okno, překreslí je a přenese do popředí.\r\n\r\nMezi ovládacími prvky "
-    L"přecházejte klávesami Tab a Shift+Tab; podtržené volby lze vyvolat pomocí Alt a příslušného písmene. Esc zavře aktivní nápovědu či okno "
-    L"O aplikaci; v ovládacím okně ukončí aplikaci.\r\n\r\nSnímek a záznam zachycují první aktivní animační monitor, nikoli společnou plochu "
-    L"všech monitorů. PNG používá složku Obrázky, MP4 složku Videa; při jejich neexistenci se použijí Dokumenty. Záznam MP4 odpovídá "
-    L"obnovovací frekvenci monitoru, nejvýše však 60 snímkům za sekundu.\r\n\r\nWindows 7 až Windows 11 podporují všechny funkce včetně snímků "
-    L"PNG a záznamu MP4. Windows Vista SP2: KB971512, KB2117917. Záznam MP4 na Vistě v současné verzi nefunguje.",
-    L"FlyingSolids displays illuminated solid 3D objects. The sliders set object and camera speed from 0–1600%, one to ten copies of each "
-    L"object, and size from 50–200%. Choose Space observation or the straight Fly through space mode and enable the required object "
-    L"types.\r\n\r\nThere are 30 selectable solids. A prolate spheroid has one longer semi-axis and two equal shorter semi-axes. "
-    L"A rounded disc (spheroplatelet) has two flat circular faces and a smoothly rounded rim; its diameter is slightly larger "
-    L"than that of the spherical layer and its thickness is half as large. A hollow cylinder with toroidal ends has outer "
-    L"and inner cylindrical surfaces joined by half-torus ends that form exact semicircles in an axial section.\r\n\r\nThe "
-    L"Main light and Fill light checkboxes below the right-hand sliders independently enable or disable the two lights for "
-    L"the entire scene. By default, Main light is on and Fill light is off. Light settings are stored separately for the application and "
-    L"screen saver.\r\n\r\nSelect several displays in the list; double-click a row to toggle it, or clear the selection for all displays. "
-    L"Every display uses an independent scene.\r\n\r\nSnapshot saves a PNG and the recording button starts or stops an MP4. Pause stops the "
-    L"animation. The application also installs or uninstalls its embedded screen saver. Settings are saved continuously.\r\n\r\nOnly one "
-    L"instance of the application runs at a time. Launching it again restores its minimized control window, redraws it, and brings it to the "
-    L"foreground.\r\n\r\nUse Tab and Shift+Tab to move between controls; use Alt and the underlined letter to activate a command. Esc closes "
-    L"the active Help or About window; in the control window, it exits the application.\r\n\r\nSnapshots and recordings capture the first "
-    L"active animation display, not a combined image of all displays. PNG uses Pictures and MP4 uses Videos, with Documents as the fallback if "
-    L"those folders do not exist. MP4 recording follows the display refresh rate, up to 60 frames per second.\r\n\r\nWindows 7 through Windows "
-    L"11 support all features, including PNG snapshots and MP4 recording. Windows Vista SP2: KB971512, KB2117917. MP4 recording does not work "
-    L"on Vista in the current version.",
-    L"FlyingSolids zeigt beleuchtete dreidimensionale Volumenkörper. Die Regler bestimmen Objekt- und Kamerageschwindigkeit von 0–1600 %, ein "
-    L"bis zehn Exemplare je Körper und eine Größe von 50–200 %. Wählen Sie Raumbeobachtung oder Flug durch den Raum in gerader Linie und "
-    L"aktivieren Sie die gewünschten Körper.\r\n\r\nEs stehen 30 Körper zur Auswahl. Ein verlängertes Rotationsellipsoid besitzt eine "
-    L"längere und zwei gleich lange kürzere Halbachsen. Eine abgerundete Scheibe (Spheroplatelet) hat zwei ebene Kreisflächen und einen "
-    L"stetig abgerundeten Rand; ihr Durchmesser ist etwas größer als der einer Kugelschicht und ihre Dicke halb so groß. Ein Hohlzylinder "
-    L"mit toroidalen Enden besitzt eine äußere und eine innere Zylinderfläche, die durch Halbtori verbunden sind; im Axialschnitt "
-    L"bilden die Enden exakte Halbkreise.\r\n\r\nDie Kontrollkästchen Hauptlicht und Aufhelllicht unter den rechten Reglern schalten die "
-    L"beiden Lichtquellen für die gesamte Szene unabhängig ein oder aus. Standardmäßig ist Hauptlicht eingeschaltet und Aufhelllicht "
-    L"ausgeschaltet. Die Lichteinstellungen werden für Anwendung und Bildschirmschoner getrennt gespeichert.\r\n\r\nIn der Liste sind mehrere "
-    L"Monitore wählbar; ein Doppelklick schaltet einen Monitor um, auch alle können abgewählt werden. Jeder Monitor besitzt eine unabhängige "
-    L"Szene.\r\n\r\nSchnappschuss speichert PNG, die Aufnahmetaste startet oder beendet MP4. Pause hält die Animation an. Die Anwendung "
-    L"installiert oder deinstalliert außerdem den eingebetteten Bildschirmschoner. Einstellungen werden laufend gespeichert.\r\n\r\nDie "
-    L"Anwendung läuft nur in einer Instanz. Ein erneuter Start stellt das minimierte Steuerfenster wieder her, zeichnet es neu und bringt es "
-    L"in den Vordergrund.\r\n\r\nMit Tab und Umschalt+Tab wechseln Sie zwischen den Steuerelementen; mit Alt und dem unterstrichenen "
-    L"Buchstaben rufen Sie einen Befehl auf. Esc schließt das aktive Hilfe- oder Infofenster; im Steuerfenster beendet es die "
-    L"Anwendung.\r\n\r\nSchnappschüsse und Aufnahmen erfassen den ersten aktiven Animationsmonitor, nicht die gemeinsame Fläche aller "
-    L"Monitore. PNG verwendet Bilder, MP4 Videos; fehlen diese Ordner, wird Dokumente verwendet. MP4 folgt der Bildwiederholfrequenz des "
-    L"Monitors, höchstens jedoch 60 Bildern pro Sekunde.\r\n\r\nWindows 7 bis Windows 11 unterstützen alle Funktionen einschließlich "
-    L"PNG-Schnappschüssen und MP4-Aufnahmen. Windows Vista SP2: KB971512, KB2117917. MP4-Aufnahmen funktionieren unter Vista in der aktuellen "
-    L"Version nicht.",
-    L"FlyingSolids affiche des solides 3D éclairés. Les curseurs règlent la vitesse des objets et de la caméra de 0 à 1 600 %, une à dix "
-    L"copies de chaque solide et une taille de 50 à 200 %. Choisissez Observation de l’espace ou le Vol dans l’espace rectiligne, puis activez "
-    L"les solides voulus.\r\n\r\nVous pouvez choisir parmi 30 solides. Un sphéroïde allongé possède un demi-axe plus long "
-    L"et deux demi-axes plus courts de même longueur. Un disque arrondi (spheroplatelet) possède deux faces circulaires "
-    L"planes et un bord arrondi continu ; son diamètre est légèrement supérieur à celui du segment sphérique à deux "
-    L"bases et son épaisseur est deux fois plus petite. Un cylindre creux à extrémités toriques possède des surfaces "
-    L"cylindriques extérieure et intérieure reliées par des demi-tores, dont la section axiale forme des demi-cercles "
-    L"exacts.\r\n\r\nLes cases Éclairage principal et Éclairage d’appoint sous les curseurs de droite activent ou désactivent "
-    L"indépendamment les deux sources lumineuses pour toute la scène. Par défaut, Éclairage principal est activé et Éclairage d’appoint est "
-    L"désactivé. Les réglages d’éclairage sont enregistrés séparément pour l’application et l’économiseur d’écran.\r\n\r\nSélectionnez "
-    L"plusieurs moniteurs dans la liste ; un double-clic active ou désactive un moniteur, et vous pouvez tous les désélectionner. Chaque "
-    L"moniteur utilise une scène indépendante.\r\n\r\nCapture enregistre un PNG et le bouton d’enregistrement démarre ou arrête un MP4. Pause "
-    L"arrête l’animation. L’application installe ou désinstalle aussi son économiseur intégré. Les réglages sont enregistrés en "
-    L"continu.\r\n\r\nUne seule instance de l’application peut fonctionner à la fois. Un nouveau lancement restaure la fenêtre de contrôle "
-    L"réduite, la redessine et la place au premier plan.\r\n\r\nUtilisez Tab et Maj+Tab pour passer d’un contrôle à l’autre ; Alt et la lettre "
-    L"soulignée activent une commande. Échap ferme la fenêtre d’aide ou À propos active ; dans la fenêtre de contrôle, cette touche quitte "
-    L"l’application.\r\n\r\nLes captures et les enregistrements utilisent le premier moniteur d’animation actif, et non une image combinant "
-    L"tous les moniteurs. PNG utilise Images, MP4 Vidéos ; Documents sert de repli si ces dossiers n’existent pas. La fréquence MP4 suit celle "
-    L"du moniteur, avec un maximum de 60 images par seconde.\r\n\r\nWindows 7 à Windows 11 prennent en charge toutes les fonctions, y compris "
-    L"les captures PNG et l’enregistrement MP4. Windows Vista SP2: KB971512, KB2117917. L’enregistrement MP4 ne fonctionne pas sous Vista dans "
-    L"la version actuelle.",
-    L"FlyingSolids muestra sólidos 3D iluminados. Los controles ajustan la velocidad de objetos y cámara entre 0 y 1600 %, de una a diez "
-    L"copias y el tamaño entre 50 y 200 %. Elija Observación del espacio o el Vuelo por el espacio en línea recta y active los sólidos "
-    L"deseados.\r\n\r\nHay 30 sólidos disponibles. Un esferoide prolato tiene un semieje más largo y dos semiejes más cortos de "
-    L"igual longitud. Un disco redondeado (spheroplatelet) tiene dos caras circulares planas y un borde redondeado continuo; su "
-    L"diámetro es ligeramente mayor que el del segmento esférico de dos bases y su grosor es la mitad. Un cilindro hueco con extremos "
-    L"toroidales tiene superficies cilíndricas exterior e interior unidas por semitoros, que forman semicírculos exactos en una sección "
-    L"axial.\r\n\r\nLas casillas Luz principal y Luz de relleno bajo los controles deslizantes de la derecha activan o desactivan las dos "
-    L"luces de forma independiente para toda la escena. De forma predeterminada, Luz principal está activada y Luz de relleno está "
-    L"desactivada. Los ajustes de iluminación se guardan por separado para la aplicación y el salvapantallas.\r\n\r\nSeleccione varios "
-    L"monitores en la lista; un doble clic alterna la animación en un monitor y también puede desmarcarlos todos. Cada monitor usa una escena "
-    L"independiente.\r\n\r\nCaptura guarda un PNG y el botón de grabación inicia o detiene un MP4. Pausar detiene la animación. La aplicación "
-    L"instala o desinstala además el salvapantallas incorporado. Los ajustes se guardan continuamente.\r\n\r\nLa aplicación solo permite una "
-    L"instancia. Al volver a iniciarla, restaura la ventana de control minimizada, la redibuja y la trae al primer plano.\r\n\r\nUse Tab y "
-    L"Mayús+Tab para desplazarse entre controles; Alt y la letra subrayada activan una opción. Esc cierra la ventana activa de Ayuda o Acerca "
-    L"de; en la ventana de control, sale de la aplicación.\r\n\r\nLas capturas y grabaciones usan el primer monitor de animación activo, no "
-    L"una imagen conjunta de todos los monitores. PNG usa Imágenes y MP4 Vídeos; si no existen esas carpetas, se usa Documentos. La grabación "
-    L"MP4 sigue la frecuencia del monitor, con un máximo de 60 fotogramas por segundo.\r\n\r\nWindows 7 a Windows 11 admiten todas las "
-    L"funciones, incluidas las capturas PNG y la grabación MP4. Windows Vista SP2: KB971512, KB2117917. La grabación MP4 no funciona en Vista "
-    L"en la versión actual.",
-    L"FlyingSolids mostra solidi 3D illuminati. I cursori regolano la velocità di oggetti e camera tra 0 e 1600 %, da una a dieci copie e la "
-    L"dimensione tra 50 e 200 %. Scegliere Osservazione dello spazio o il Volo nello spazio rettilineo e attivare i solidi "
-    L"desiderati.\r\n\r\nSono disponibili 30 solidi. Uno sferoide prolato ha un semiasse più lungo e due semiassi "
-    L"più corti di uguale lunghezza. Un disco arrotondato (spheroplatelet) ha due facce circolari piane e un "
-    L"bordo arrotondato continuo; il suo diametro è leggermente maggiore di quello del segmento sferico a due basi "
-    L"e il suo spessore è la metà. Un cilindro cavo con estremità toroidali ha superfici cilindriche esterna e "
-    L"interna unite da semitori, che formano semicirconferenze esatte in una sezione assiale.\r\n\r\nLe caselle "
-    L"Luce principale e Luce di riempimento sotto i cursori di destra attivano o disattivano le due luci in modo "
-    L"indipendente per l’intera scena. Per impostazione predefinita, Luce principale è attiva e Luce di riempimento è disattivata. Le "
-    L"impostazioni di illuminazione vengono salvate separatamente per l’applicazione e il salvaschermo.\r\n\r\nNell’elenco si possono "
-    L"selezionare più monitor; un doppio clic attiva o disattiva l’animazione su un monitor, ed è possibile deselezionarli tutti. Ogni monitor "
-    L"usa una scena indipendente.\r\n\r\nIstantanea salva un PNG e il pulsante di registrazione avvia o arresta un MP4. Pausa ferma "
-    L"l’animazione. L’applicazione installa o disinstalla anche il salvaschermo incorporato. Le impostazioni vengono salvate "
-    L"continuamente.\r\n\r\nL’applicazione può essere eseguita in una sola istanza. Un nuovo avvio ripristina la finestra di controllo ridotta "
-    L"a icona, la ridisegna e la porta in primo piano.\r\n\r\nUsare Tab e Maiusc+Tab per passare tra i controlli; Alt e la lettera "
-    L"sottolineata attivano un comando. Esc chiude la finestra attiva di Guida o Informazioni; nella finestra di controllo, termina "
-    L"l’applicazione.\r\n\r\nIstantanee e registrazioni usano il primo monitor di animazione attivo, non un’immagine combinata di tutti i "
-    L"monitor. PNG usa Immagini, MP4 Video; se tali cartelle non esistono, viene usata Documenti. La registrazione MP4 segue la frequenza del "
-    L"monitor, fino a un massimo di 60 fotogrammi al secondo.\r\n\r\nI sistemi da Windows 7 a Windows 11 supportano tutte le funzioni, "
-    L"comprese le istantanee PNG e la registrazione MP4. Windows Vista SP2: KB971512, KB2117917. La registrazione MP4 non funziona in Vista "
-    L"nella versione attuale.",
-    L"FlyingSolids wyświetla oświetlone pełne bryły 3D. Suwaki ustawiają prędkość obiektów i kamery od 0 do 1600%, od jednej do dziesięciu "
-    L"kopii i rozmiar od 50 do 200%. Wybierz Obserwację przestrzeni lub prostoliniowy Przelot przez przestrzeń i włącz potrzebne "
-    L"bryły.\r\n\r\nDo wyboru jest 30 brył. Sferoida wydłużona ma jedną dłuższą półoś i dwie jednakowe krótsze półosie. Zaokrąglony "
-    L"dysk (spheroplatelet) ma dwie płaskie powierzchnie kołowe i gładko zaokrąglony brzeg; jego średnica jest nieco większa "
-    L"niż średnica warstwy kulistej, a grubość jest o połowę mniejsza. Walec pusty z toroidalnymi końcami ma zewnętrzną i "
-    L"wewnętrzną powierzchnię walcową połączone półtorusami, które w przekroju osiowym tworzą dokładne półokręgi.\r\n\r\nPola "
-    L"wyboru Światło główne i Światło wypełniające pod prawymi suwakami niezależnie włączają lub wyłączają oba światła dla "
-    L"całej sceny. Domyślnie Światło główne jest włączone, a Światło wypełniające wyłączone. Ustawienia oświetlenia są zapisywane osobno dla "
-    L"aplikacji i wygaszacza ekranu.\r\n\r\nNa liście można zaznaczyć wiele monitorów; podwójne kliknięcie przełącza animację na monitorze, "
-    L"można też odznaczyć wszystkie. Każdy monitor ma niezależną scenę.\r\n\r\nZrzut zapisuje PNG, a przycisk nagrywania rozpoczyna lub kończy "
-    L"MP4. Wstrzymaj zatrzymuje animację. Aplikacja instaluje i odinstalowuje również wbudowany wygaszacz. Ustawienia są zapisywane na "
-    L"bieżąco.\r\n\r\nAplikacja działa tylko w jednej instancji. Kolejne uruchomienie przywraca zminimalizowane okno sterowania, odświeża je i "
-    L"przenosi na pierwszy plan.\r\n\r\nKlawisze Tab i Shift+Tab przełączają między kontrolkami; Alt i podkreślona litera wywołują polecenie. "
-    L"Esc zamyka aktywne okno Pomocy lub O programie; w oknie sterowania kończy działanie aplikacji.\r\n\r\nZrzuty i nagrania obejmują "
-    L"pierwszy aktywny monitor animacji, a nie wspólny obraz wszystkich monitorów. PNG używa folderu Obrazy, MP4 folderu Wideo; jeśli ich nie "
-    L"ma, używane są Dokumenty. Nagranie MP4 odpowiada częstotliwości monitora, najwyżej jednak 60 klatkom na sekundę.\r\n\r\nSystemy od "
-    L"Windows 7 do Windows 11 obsługują wszystkie funkcje, w tym zrzuty PNG i nagrywanie MP4. Windows Vista SP2: KB971512, KB2117917. "
-    L"Nagrywanie MP4 nie działa w Vista w obecnej wersji.",
-    L"FlyingSolids zobrazuje osvetlené plné 3D telesá. Jazdce nastavujú rýchlosť objektov a kamery 0–1600 %, jednu až desať kópií a veľkosť "
-    L"50–200 %. Vyberte Pozorovanie priestoru alebo priamy Prelet priestorom a zapnite požadované telesá.\r\n\r\nNa "
-    L"výber je 30 telies. Predĺžený rotačný elipsoid má jednu dlhšiu a dve zhodné kratšie poloosi. Zaoblený disk "
-    L"(spheroplatelet) má dve rovinné kruhové plochy a plynulo zaoblený obvod; jeho priemer je mierne väčší než pri "
-    L"guľovej vrstve a hrúbka polovičná. Dutý valec s toroidálnymi čelami má vonkajšiu a vnútornú valcovú plochu "
-    L"spojené polovicami torusu, ktoré v osovom reze tvoria presné polkruhy.\r\n\r\nZačiarkavacie políčka Hlavné "
-    L"svetlo a Doplnkové svetlo pod pravými jazdcami nezávisle zapínajú alebo vypínajú obe svetlá pre celú scénu. Predvolene je Hlavné svetlo "
-    L"zapnuté a Doplnkové svetlo vypnuté. Nastavenia svetiel sa ukladajú zvlášť pre aplikáciu a šetrič obrazovky.\r\n\r\nV zozname možno "
-    L"označiť viac monitorov; dvojklik zapína alebo vypína animáciu na monitore a možno zrušiť aj výber všetkých. Každý monitor používa "
-    L"nezávislú scénu.\r\n\r\nSnímka uloží PNG a tlačidlo záznamu spustí alebo ukončí MP4. Pozastavenie zastaví animáciu. Aplikácia tiež "
-    L"nainštaluje alebo odinštaluje vložený šetrič. Nastavenia sa ukladajú priebežne.\r\n\r\nAplikácia beží iba v jednej inštancii. Ďalšie "
-    L"spustenie obnoví minimalizované ovládacie okno, prekreslí ho a prenesie do popredia.\r\n\r\nMedzi ovládacími prvkami prechádzajte "
-    L"klávesmi Tab a Shift+Tab; podčiarknuté voľby vyvoláte pomocou Alt a príslušného písmena. Esc zavrie aktívne okno Pomocníka alebo O "
-    L"aplikácii; v ovládacom okne ukončí aplikáciu.\r\n\r\nSnímky a záznamy zachytávajú prvý aktívny animačný monitor, nie spoločnú plochu "
-    L"všetkých monitorov. PNG používa Obrázky, MP4 Videá; ak tieto priečinky neexistujú, použijú sa Dokumenty. Záznam MP4 zodpovedá "
-    L"obnovovacej frekvencii monitora, najviac však 60 snímkam za sekundu.\r\n\r\nWindows 7 až Windows 11 podporujú všetky funkcie vrátane "
-    L"snímok PNG a záznamu MP4. Windows Vista SP2: KB971512, KB2117917. Záznam MP4 na Viste v súčasnej verzii nefunguje.",
-    L"FlyingSolids displays illuminated solid 3D objects. The sliders set object and camera speed from 0–1600%, one to ten copies and size "
-    L"from 50–200%. Choose Space observation or the straight Fly through space mode and enable the required objects.\r\n\r\nThere "
-    L"are 30 selectable solids. A prolate spheroid has one longer semi-axis and two equal shorter semi-axes. A rounded disc "
-    L"(spheroplatelet) has two flat circular faces and a smoothly rounded rim; its diameter is slightly larger than that "
-    L"of the spherical layer and its thickness is half as large. A hollow cylinder with toroidal ends has outer and inner "
-    L"cylindrical surfaces joined by half-torus ends that form exact semicircles in an axial section.\r\n\r\nThe Main light and "
-    L"Fill light checkboxes below the right-hand sliders independently enable or disable the two lights for the entire scene. By default, Main "
-    L"light is on and Fill light is off. Light settings are stored separately for the application and screen saver.\r\n\r\nSelect several "
-    L"displays; double-click a row to toggle it, or clear the selection for all displays. Each display uses an independent "
-    L"scene.\r\n\r\nSnapshot saves PNG and the recording button starts or stops MP4. Pause stops the animation. The application also installs "
-    L"or uninstalls its embedded screen saver. Settings are saved continuously.\r\n\r\nOnly one instance of the application runs at a time. "
-    L"Launching it again restores its minimised control window, redraws it and brings it to the foreground.\r\n\r\nUse Tab and Shift+Tab to "
-    L"move between controls; use Alt and the underlined letter to activate a command. Esc closes the active Help or About window; in the "
-    L"control window, it exits the application.\r\n\r\nSnapshots and recordings capture the first active animation display, not a combined "
-    L"image of all displays. PNG uses Pictures and MP4 uses Videos, with Documents as the fallback if those folders do not exist. MP4 "
-    L"recording follows the display refresh rate, up to 60 frames per second.\r\n\r\nWindows 7 through Windows 11 support all features, "
-    L"including PNG snapshots and MP4 recording. Windows Vista SP2: KB971512, KB2117917. MP4 recording does not work on Vista in the current "
-    L"version.",
-    L"FlyingSolids displays illuminated solid 3D objects. The sliders set object and camera speed from 0–1600%, one to ten copies and size "
-    L"from 50–200%. Choose Space observation or the straight Fly through space mode and enable the required objects.\r\n\r\nThere "
-    L"are 30 selectable solids. A prolate spheroid has one longer semi-axis and two equal shorter semi-axes. A rounded disc "
-    L"(spheroplatelet) has two flat circular faces and a smoothly rounded rim; its diameter is slightly larger than that "
-    L"of the spherical layer and its thickness is half as large. A hollow cylinder with toroidal ends has outer and inner "
-    L"cylindrical surfaces joined by half-torus ends that form exact semicircles in an axial section.\r\n\r\nThe Main light and "
-    L"Fill light checkboxes below the right-hand sliders independently enable or disable the two lights for the entire scene. By default, Main "
-    L"light is on and Fill light is off. Light settings are stored separately for the application and screen saver.\r\n\r\nSelect several "
-    L"displays; double-click a row to toggle it, or clear the selection for all displays. Each display uses an independent "
-    L"scene.\r\n\r\nSnapshot saves PNG and the recording button starts or stops MP4. Pause stops the animation. The application also installs "
-    L"or uninstalls its embedded screen saver. Settings are saved continuously.\r\n\r\nOnly one instance of the application runs at a time. "
-    L"Launching it again restores its minimised control window, redraws it and brings it to the foreground.\r\n\r\nUse Tab and Shift+Tab to "
-    L"move between controls; use Alt and the underlined letter to activate a command. Esc closes the active Help or About window; in the "
-    L"control window, it exits the application.\r\n\r\nSnapshots and recordings capture the first active animation display, not a combined "
-    L"image of all displays. PNG uses Pictures and MP4 uses Videos, with Documents as the fallback if those folders do not exist. MP4 "
-    L"recording follows the display refresh rate, up to 60 frames per second.\r\n\r\nWindows 7 through Windows 11 support all features, "
-    L"including PNG snapshots and MP4 recording. Windows Vista SP2: KB971512, KB2117917. MP4 recording does not work on Vista in the current "
-    L"version.",
-    L"O FlyingSolids mostra sólidos 3D iluminados. Os controlos regulam a velocidade dos objetos e da câmara entre 0 e 1600%, uma a dez cópias "
-    L"e o tamanho entre 50 e 200%. Escolha Observação do espaço ou o Voo pelo espaço em linha reta e ative os sólidos "
-    L"pretendidos.\r\n\r\nEstão disponíveis 30 sólidos. Um esferoide prolato tem um semieixo mais longo e dois "
-    L"semieixos mais curtos de igual comprimento. Um disco arredondado (spheroplatelet) tem duas faces circulares "
-    L"planas e um bordo arredondado contínuo; o seu diâmetro é ligeiramente maior do que o do segmento esférico de "
-    L"duas bases e a sua espessura é metade. Um cilindro oco com extremidades toroidais tem superfícies cilíndricas "
-    L"exterior e interior unidas por meios toros, que formam semicírculos exatos numa secção axial.\r\n\r\nAs "
-    L"caixas Luz principal e Luz de preenchimento sob os controlos deslizantes da direita ativam ou desativam as duas luzes de forma "
-    L"independente em toda a cena. Por predefinição, Luz principal está ligada e Luz de preenchimento está desligada. As definições de "
-    L"iluminação são guardadas separadamente para a aplicação e a proteção de ecrã.\r\n\r\nSelecione vários monitores; um duplo clique alterna "
-    L"uma linha e todos podem ser desmarcados. Cada monitor usa uma cena independente.\r\n\r\nCaptura guarda PNG e o botão de gravação inicia "
-    L"ou termina MP4. Pausa para a animação. A aplicação também instala ou desinstala a proteção de ecrã incorporada. As definições são "
-    L"guardadas continuamente.\r\n\r\nA aplicação só pode ter uma instância em execução. Um novo arranque restaura a janela de controlo "
-    L"minimizada, redesenha-a e coloca-a em primeiro plano.\r\n\r\nUse Tab e Shift+Tab para passar entre controlos; Alt e a letra sublinhada "
-    L"ativam um comando. Esc fecha a janela ativa de Ajuda ou Acerca de; na janela de controlo, termina a aplicação.\r\n\r\nAs capturas e "
-    L"gravações usam o primeiro monitor de animação ativo, não uma imagem conjunta de todos os monitores. PNG usa Imagens, MP4 Vídeos; se "
-    L"essas pastas não existirem, usa-se Documentos. A gravação MP4 segue a frequência do monitor, até um máximo de 60 fotogramas por "
-    L"segundo.\r\n\r\nOs sistemas Windows 7 a Windows 11 suportam todas as funcionalidades, incluindo capturas PNG e gravação MP4. Windows "
-    L"Vista SP2: KB971512, KB2117917. A gravação MP4 não funciona no Vista na versão atual.",
-    L"FlyingSolids viser belyste solide 3D-legemer. Glidebryterne angir objekt- og kamerahastighet fra 0–1600 %, én til ti kopier og størrelse "
-    L"fra 50–200 %. Velg Romobservasjon eller Flyging gjennom rommet i rett linje og aktiver ønskede legemer.\r\n\r\nDet "
-    L"finnes 30 legemer å velge mellom. En prolat sfæroide har én lengre halvakse og to like lange kortere halvakser. "
-    L"En avrundet skive (spheroplatelet) har to plane sirkelflater og en jevnt avrundet kant; diameteren er litt større "
-    L"enn kulelagets, og tykkelsen er halvparten. En hul sylinder med toroidale ender har ytre og indre sylinderflater "
-    L"forbundet med halve toruser, som danner nøyaktige halvsirkler i et aksialsnitt.\r\n\r\nAvmerkingsboksene "
-    L"Hovedlys og Utfyllingslys under glidebryterne til høyre slår de to lysene av eller på uavhengig av hverandre for hele scenen. Som "
-    L"standard er Hovedlys på og Utfyllingslys av. Lysinnstillingene lagres separat for programmet og skjermspareren.\r\n\r\nVelg flere "
-    L"skjermer i listen; dobbeltklikk en rad for å slå animasjonen av eller på, eller fjern valget for alle. Hver skjerm bruker en uavhengig "
-    L"scene.\r\n\r\nSkjermbilde lagrer PNG, og opptaksknappen starter eller stopper MP4. Pause stanser animasjonen. Programmet installerer "
-    L"eller avinstallerer også den innebygde skjermspareren. Innstillingene lagres fortløpende.\r\n\r\nBare én instans av programmet kan kjøre "
-    L"om gangen. En ny start gjenoppretter det minimerte kontrollvinduet, tegner det på nytt og bringer det fremst.\r\n\r\nBruk Tab og "
-    L"Shift+Tab for å flytte mellom kontrollene; Alt og den understrekede bokstaven aktiverer en kommando. Esc lukker det aktive Hjelp- eller "
-    L"Om-vinduet; i kontrollvinduet avslutter det programmet.\r\n\r\nSkjermbilder og opptak bruker den første aktive animasjonsskjermen, ikke "
-    L"et samlet bilde av alle skjermene. PNG bruker Bilder, MP4 Videoer; hvis disse mappene ikke finnes, brukes Dokumenter. MP4-opptak følger "
-    L"skjermens oppdateringsfrekvens, opptil 60 bilder per sekund.\r\n\r\nWindows 7 til Windows 11 støtter alle funksjoner, inkludert "
-    L"PNG-skjermbilder og MP4-opptak. Windows Vista SP2: KB971512, KB2117917. MP4-opptak fungerer ikke på Vista i den gjeldende versjonen.",
-    L"FlyingSolids visar belysta solida 3D-kroppar. Reglagen ställer in objekt- och kamerahastighet 0–1600 %, en till tio kopior och storlek "
-    L"50–200 %. Välj Rymdobservation eller Flygning genom rymden i rak linje och aktivera önskade kroppar.\r\n\r\nDet finns "
-    L"30 kroppar att välja mellan. En prolat sfäroid har en längre halvaxel och två lika långa kortare halvaxlar. En avrundad "
-    L"skiva (spheroplatelet) har två plana cirkelytor och en jämnt avrundad kant; diametern är något större än hos klotsegmentet "
-    L"med två baser och tjockleken är hälften så stor. En ihålig cylinder med toroidala ändar har yttre och inre cylinderytor "
-    L"förenade med halva torusar, som bildar exakta halvcirklar i ett axiellt snitt.\r\n\r\nKryssrutorna Huvudljus och "
-    L"Upplättningsljus under reglagen till höger slår på eller av de två ljusen oberoende av varandra för hela scenen. Som standard är "
-    L"Huvudljus på och Upplättningsljus av. Ljusinställningarna sparas separat för programmet och skärmsläckaren.\r\n\r\nVälj flera "
-    L"bildskärmar i listan; dubbelklicka en rad för att slå på eller av animeringen, eller avmarkera alla. Varje bildskärm använder en "
-    L"oberoende scen.\r\n\r\nSkärmbild sparar PNG och inspelningsknappen startar eller stoppar MP4. Paus stannar animeringen. Programmet "
-    L"installerar eller avinstallerar även den inbyggda skärmsläckaren. Inställningarna sparas fortlöpande.\r\n\r\nProgrammet kan bara köras i "
-    L"en instans åt gången. En ny start återställer det minimerade kontrollfönstret, ritar om det och för det längst fram.\r\n\r\nAnvänd Tab "
-    L"och Skift+Tab för att flytta mellan kontrollerna; Alt och den understrukna bokstaven aktiverar ett kommando. Esc stänger det aktiva "
-    L"Hjälp- eller Om-fönstret; i kontrollfönstret avslutar det programmet.\r\n\r\nSkärmbilder och inspelningar använder den första aktiva "
-    L"animeringsskärmen, inte en sammanslagen bild av alla skärmar. PNG använder Bilder, MP4 Videor; om dessa mappar saknas används Dokument. "
-    L"MP4-inspelning följer skärmens uppdateringsfrekvens, upp till 60 bilder per sekund.\r\n\r\nWindows 7 till Windows 11 stöder alla "
-    L"funktioner, inklusive PNG-skärmbilder och MP4-inspelning. Windows Vista SP2: KB971512, KB2117917. MP4-inspelning fungerar inte på Vista "
-    L"i den aktuella versionen.",
-    L"FlyingSolids näyttää valaistuja kiinteitä 3D-kappaleita. Liukusäätimillä asetetaan kohteiden ja kameran nopeus 0–1600 %, yhdestä "
-    L"kymmeneen kopiota ja koko 50–200 %. Valitse Avaruuden tarkkailu tai Lento avaruuden halki suoraan eteenpäin ja ota halutut kappaleet "
-    L"käyttöön.\r\n\r\nValittavana on 30 kappaletta. Prolaatilla sferoidilla on yksi pidempi puoliakseli ja kaksi "
-    L"yhtä pitkää lyhyempää puoliakselia. Pyöristetyllä kiekolla (spheroplatelet) on kaksi tasaista ympyräpintaa "
-    L"ja tasaisesti pyöristetty reuna; sen halkaisija on hieman suurempi kuin katkaistun pallosegmentin "
-    L"ja paksuus puolet sen paksuudesta. Onton lieriön ulompi ja sisempi lieriöpinta liittyvät toisiinsa "
-    L"toroidisilla päädyillä, jotka muodostavat aksiaalileikkauksessa tarkat puoliympyrät.\r\n\r\nOikeanpuoleisten "
-    L"liukusäätimien alla olevat Päävalo- ja Täytevalo-valintaruudut kytkevät koko näkymän kaksi valoa "
-    L"päälle tai pois toisistaan riippumatta. Oletuksena Päävalo on päällä ja Täytevalo pois päältä. Valaistusasetukset tallennetaan erikseen "
-    L"sovellukselle ja näytönsäästäjälle.\r\n\r\nLuettelosta voi valita useita näyttöjä; kaksoisnapsautus vaihtaa rivin tilaa ja kaikkien "
-    L"näyttöjen valinnan voi poistaa. Jokaisella näytöllä on itsenäinen näkymä.\r\n\r\nTilannekuva tallentaa PNG:n ja tallennuspainike "
-    L"käynnistää tai lopettaa MP4:n. Keskeytä pysäyttää animaation. Sovellus asentaa tai poistaa myös sisäisen näytönsäästäjän. Asetukset "
-    L"tallennetaan jatkuvasti.\r\n\r\nSovelluksesta voi olla käynnissä vain yksi instanssi. Uusi käynnistys palauttaa pienennetyn "
-    L"ohjausikkunan, piirtää sen uudelleen ja tuo sen etualalle.\r\n\r\nSiirry säätimien välillä Tab- ja Vaihto+Tab-näppäimillä; Alt ja "
-    L"alleviivattu kirjain aktivoivat komennon. Esc sulkee aktiivisen Ohje- tai Tietoja-ikkunan; ohjausikkunassa se sulkee "
-    L"sovelluksen.\r\n\r\nTilannekuvat ja tallenteet käyttävät ensimmäistä aktiivista animaationäyttöä, eivät kaikkien näyttöjen yhdistettyä "
-    L"kuvaa. PNG käyttää Kuvat-kansiota ja MP4 Videot-kansiota; jos niitä ei ole, käytetään Tiedostot-kansiota. MP4-tallennus seuraa näytön "
-    L"virkistystaajuutta, enintään 60 kuvaa sekunnissa.\r\n\r\nWindows 7–Windows 11 tukevat kaikkia toimintoja, myös PNG-tilannekuvia ja "
-    L"MP4-tallennusta. Windows Vista SP2: KB971512, KB2117917. MP4-tallennus ei toimi Vistassa nykyisessä versiossa.",
-    L"FlyingSolids viser belyste solide 3D-legemer. Skyderne indstiller objekt- og kamerahastighed 0–1600 %, en til ti kopier og størrelse "
-    L"50–200 %. Vælg Rumobservation eller Flyvning gennem rummet i en lige linje og aktivér de ønskede legemer.\r\n\r\nDer "
-    L"er 30 legemer at vælge imellem. En prolat sfæroide har én længere halvakse og to lige lange kortere halvakser. En "
-    L"afrundet skive (spheroplatelet) har to plane cirkelflader og en jævnt afrundet kant; diameteren er lidt større end "
-    L"kuglelagets, og tykkelsen er halvt så stor. En hul cylinder med toroidale ender har ydre og indre cylinderflader "
-    L"forbundet med halve torusser, som danner præcise halvcirkler i et aksialsnit.\r\n\r\nAfkrydsningsfelterne "
-    L"Hovedlys og Udfyldningslys under skyderne til højre slår de to lys til eller fra uafhængigt af hinanden for hele scenen. Som standard er "
-    L"Hovedlys slået til og Udfyldningslys slået fra. Lysindstillingerne gemmes separat for programmet og pauseskærmen.\r\n\r\nVælg flere "
-    L"skærme i listen; dobbeltklik på en række for at slå animationen til eller fra, eller fravælg alle. Hver skærm bruger en uafhængig "
-    L"scene.\r\n\r\nSkærmbillede gemmer PNG, og optageknappen starter eller stopper MP4. Pause standser animationen. Programmet installerer "
-    L"eller afinstallerer også den indbyggede pauseskærm. Indstillinger gemmes løbende.\r\n\r\nProgrammet kan kun køre i én instans ad gangen. "
-    L"En ny start gendanner det minimerede kontrolvindue, tegner det igen og bringer det forrest.\r\n\r\nBrug Tab og Skift+Tab til at flytte "
-    L"mellem kontrollerne; Alt og det understregede bogstav aktiverer en kommando. Esc lukker det aktive Hjælp- eller Om-vindue; i "
-    L"kontrolvinduet afslutter det programmet.\r\n\r\nSkærmbilleder og optagelser bruger den første aktive animationsskærm, ikke et samlet "
-    L"billede af alle skærme. PNG bruger Billeder, MP4 Videoer; hvis disse mapper ikke findes, bruges Dokumenter. MP4-optagelse følger "
-    L"skærmens opdateringsfrekvens, dog højst 60 billeder i sekundet.\r\n\r\nWindows 7 til Windows 11 understøtter alle funktioner, herunder "
-    L"PNG-skærmbilleder og MP4-optagelse. Windows Vista SP2: KB971512, KB2117917. MP4-optagelse fungerer ikke på Vista i den aktuelle version.",
-    L"FlyingSolids sýnir upplýsta heila þrívíddarhluti. Rennistikur stilla hraða hluta og myndavélar á 0–1600%, eitt til tíu eintök og stærð á "
-    L"50–200%. Veldu Athugun rýmis eða Flug um rýmið í beinni línu og virkjaðu þá hluti sem óskað er eftir.\r\n\r\nHægt er að "
-    L"velja úr 30 rúmhlutum. Ílöng snúningssporvala hefur einn lengri hálfás og tvo jafn langa styttri hálfása. Rúnaður diskur "
-    L"(spheroplatelet) hefur tvo flata hringlaga fleti og samfellt rúnnaðan jaðar; þvermál hans er örlítið stærra en þvermál "
-    L"kúlulags og þykktin helmingur þykktar kúlulags. Holur sívalningur með tórusendum hefur ytri og innri sívalningsfleti "
-    L"tengda með hálfum tórusum, sem mynda nákvæma hálfhringi í áslægum þverskurði.\r\n\r\nGátreitirnir Aðalljós og "
-    L"Fylliljós undir rennistikunum hægra megin kveikja eða slökkva á ljósunum tveimur óháð hvort öðru fyrir alla senuna. Sjálfgefið er kveikt "
-    L"á Aðalljós og slökkt á Fylliljós. Ljósastillingar eru vistaðar sérstaklega fyrir forritið og skjáhvíluna.\r\n\r\nVelja má marga skjái; "
-    L"tvísmellur virkjar eða slekkur á hreyfimynd á skjá og afvelja má alla skjái. Hver skjár notar sjálfstæða senu.\r\n\r\nSkjámynd vistar "
-    L"PNG og upptökuhnappurinn ræsir eða stöðvar MP4. Hnappurinn Gera hlé stöðvar hreyfimyndina. Forritið setur einnig upp eða fjarlægir "
-    L"innbyggðu skjáhvíluna. Stillingar vistast jafnóðum.\r\n\r\nAðeins eitt eintak af forritinu getur verið í gangi í einu. Ný ræsing "
-    L"endurheimtir lágmarkaðan stjórngluggann, endurteiknar hann og færir hann fremst.\r\n\r\nNotaðu Tab og Shift+Tab til að færa þig milli "
-    L"stýrieininga; Alt og undirstrikaður stafur virkja skipun. Esc lokar virka Hjálp- eða Um-glugganum; í stjórnglugganum lokar það "
-    L"forritinu.\r\n\r\nSkjámyndir og upptökur nota fyrsta virka hreyfimyndaskjáinn, ekki sameinaða mynd af öllum skjám. PNG notar Myndir, MP4 "
-    L"Myndbönd; ef þær möppur eru ekki til er Skjöl notuð. MP4-upptaka fylgir endurnýjunartíðni skjásins, þó mest 60 römmum á "
-    L"sekúndu.\r\n\r\nWindows 7 til Windows 11 styðja alla eiginleika, þar á meðal PNG-skjámyndir og MP4-upptöku. Windows Vista SP2: KB971512, "
+    L"FlyingSolids zobrazuje osvětlená plná prostorová tělesa. Jezdci nastavují rychlost objektů a kamery v "
+    L"rozsahu 0–1600 %, jednu až deset kopií každého tělesa a velikost 50–200 %. Vyberte Pozorování prostoru "
+    L"nebo přímý Průlet prostorem a zaškrtněte požadované druhy těles. Zatržítka Hlavní světlo, Doplňkové "
+    L"světlo, Základní jas a Přisvětlení obrysů pod jezdci nezávisle ovládají osvětlení celé scény. Základní "
+    L"jas přisvětluje povrch těles, přisvětlení obrysů zvýrazňuje jejich okraje. Výchozí stav: hlavní "
+    L"světlo, základní jas a přisvětlení obrysů zapnuté, doplňkové světlo vypnuté. Nastavení osvětlení se "
+    L"ukládá zvlášť pro aplikaci a spořič obrazovky.\r\n\r\nV seznamu lze označit více monitorů; dvojklikem "
+    L"na řádek monitor zapnete nebo vypnete a lze zrušit i výběr všech monitorů. Každý monitor používá "
+    L"nezávislou scénu. Snímek ukládá PNG, tlačítko záznamu spouští a ukončuje MP4. Pozastavení zastaví "
+    L"animaci. Aplikace také instaluje nebo odinstaluje zabalený spořič. Nastavení se ukládá průběžně. "
+    L"Aplikace běží pouze v jedné instanci. Další spuštění obnoví minimalizované ovládací okno a přenese do "
+    L"popředí. Mezi ovládacími prvky přecházejte klávesami Tab a Shift+Tab; podtržené volby lze vyvolat "
+    L"pomocí Alt a příslušného písmene. Esc zavře aktivní nápovědu či okno O aplikaci; v ovládacím okně "
+    L"ukončí aplikaci. Volba Blokovat spořič při animaci brání spuštění spořiče Windows pouze tehdy, když je "
+    L"animace skutečně viditelná a není pozastavená.\r\n\r\nSnímek a záznam zachycují první aktivní animační "
+    L"monitor, nikoli společnou plochu všech monitorů. PNG používá složku Obrázky, MP4 složku Videa; při "
+    L"jejich neexistenci se použijí Dokumenty. Tlačítko Nastavení záznamu vybírá Viewport nebo TV. Viewport "
+    L"zachovává rozměry animačního monitoru a jeho obnovovací frekvenci, nejvýše 60 snímků za sekundu. TV "
+    L"nabízí rozlišení 1920 × 1080, 1440 × 1080 nebo 1280 × 720 v poměru 16:9 a frekvenci 50, 25, 59.94 "
+    L"(60000/1001) nebo 29.97 (30000/1001) snímků za sekundu. Obraz zachovává poměr stran; TV používá "
+    L"progresivní video BT.709 s omezeným rozsahem a vzorkováním 4:2:0. Rozlišení a snímkovou frekvenci lze "
+    L"vybrat pouze v režimu TV. Okno Nastavení záznamu lze minimalizovat a neblokuje ostatní okna aplikace. "
+    L"OK uloží volby pro příští záznam MP4; Storno nebo Esc nepotvrzené změny zahodí. Nahrávaný monitor "
+    L"nelze během záznamu odepnout; změny ostatních monitorů záznam nezastaví. Ukončení aplikace při "
+    L"probíhajícím záznamu vyžaduje potvrzení, protože současně ukončí záznam.\r\n\r\nWindows 7 až Windows "
+    L"11 podporují všechny funkce včetně snímků PNG a záznamu MP4. Pro spuštění aplikace ve Windows Vista "
+    L"SP2 je nutné nainstalovat aktualizace KB971512 a KB2117917. Záznam MP4 na Vistě v současné verzi "
+    L"nefunguje.",
+    L"FlyingSolids displays illuminated solid 3D objects. The sliders set object and camera speed from "
+    L"0–1600%, one to ten copies of each object, and size from 50–200%. Choose Space observation or the "
+    L"straight Fly through space mode and enable the required object types. The Main light, Fill light, "
+    L"Ambient light, and Rim light checkboxes below the sliders independently control lighting for the whole "
+    L"scene. Ambient light provides base illumination of object surfaces; rim light highlights their edges. "
+    L"By default, main, ambient, and rim light are on, and fill light is off. Lighting settings are stored "
+    L"separately for the application and screen saver.\r\n\r\nSelect several displays in the list; "
+    L"double-click a row to toggle it, or clear the selection for all displays. Every display uses an "
+    L"independent scene. Snapshot saves a PNG and the recording button starts or stops an MP4. Pause stops "
+    L"the animation. The application also installs or uninstalls its embedded screen saver. Settings are "
+    L"saved continuously. Only one instance of the application runs at a time. Launching it again restores "
+    L"its minimized control window and brings it to the foreground. Use Tab and Shift+Tab to move between "
+    L"controls; use Alt and the underlined letter to activate a command. Esc closes the active Help or About "
+    L"window; in the control window, it exits the application. Prevent screen saver during animation blocks "
+    L"the Windows screen saver only while the animation is actually visible and not paused.\r\n\r\nSnapshots "
+    L"and recordings capture the first active animation display, not a combined image of all displays. PNG "
+    L"uses Pictures and MP4 uses Videos, with Documents as the fallback if those folders do not exist. The "
+    L"Recording settings button selects Viewport or TV. Viewport preserves the animation display’s "
+    L"dimensions and refresh rate, up to 60 frames per second. TV offers 1920 × 1080, 1440 × 1080 or 1280 × "
+    L"720 output in 16:9, with 50, 25, 59.94 (60000/1001) or 29.97 (30000/1001) frames per second. The image "
+    L"keeps its aspect ratio; TV uses progressive BT.709 limited-range 4:2:0 video. Resolution and frame "
+    L"rate are available only in TV mode. The Recording settings window can be minimized and does not block "
+    L"the other application windows. OK saves choices for the next MP4 recording; Cancel or Esc discards "
+    L"unconfirmed changes. The recorded display cannot be detached during recording; changes to other "
+    L"displays do not stop the recording. Closing the application while recording requires confirmation "
+    L"because it also stops the recording.\r\n\r\nWindows 7 through Windows 11 support all features, "
+    L"including PNG snapshots and MP4 recording. To run the application on Windows Vista SP2, you must "
+    L"install updates KB971512 and KB2117917. MP4 recording does not work on Vista in the current version.",
+    L"FlyingSolids zeigt beleuchtete dreidimensionale Volumenkörper. Die Regler bestimmen Objekt- und "
+    L"Kamerageschwindigkeit von 0–1600 %, ein bis zehn Exemplare je Körper und eine Größe von 50–200 %. "
+    L"Wählen Sie Raumbeobachtung oder Flug durch den Raum in gerader Linie und aktivieren Sie die "
+    L"gewünschten Körper. Die Kontrollkästchen Hauptlicht, Aufhelllicht, Umgebungslicht und Konturlicht "
+    L"unter den Reglern steuern die Beleuchtung der gesamten Szene unabhängig voneinander. Umgebungslicht "
+    L"sorgt für eine Grundhelligkeit der Körperoberflächen, Konturlicht betont ihre Ränder. Standardmäßig "
+    L"sind Hauptlicht, Umgebungslicht und Konturlicht eingeschaltet und Aufhelllicht ausgeschaltet. Die "
+    L"Beleuchtungseinstellungen werden für Anwendung und Bildschirmschoner getrennt gespeichert.\r\n\r\nIn "
+    L"der Liste sind mehrere Monitore wählbar; ein Doppelklick schaltet einen Monitor um, auch alle können "
+    L"abgewählt werden. Jeder Monitor besitzt eine unabhängige Szene. Schnappschuss speichert PNG, die "
+    L"Aufnahmetaste startet oder beendet MP4. Pause hält die Animation an. Die Anwendung installiert oder "
+    L"deinstalliert außerdem den eingebetteten Bildschirmschoner. Einstellungen werden laufend gespeichert. "
+    L"Die Anwendung läuft nur in einer Instanz. Ein erneuter Start stellt das minimierte Steuerfenster "
+    L"wieder her und bringt es in den Vordergrund. Mit Tab und Umschalt+Tab wechseln Sie zwischen den "
+    L"Steuerelementen; mit Alt und dem unterstrichenen Buchstaben rufen Sie einen Befehl auf. Esc schließt "
+    L"das aktive Hilfe- oder Infofenster; im Steuerfenster beendet es die Anwendung. Bildschirmschoner bei "
+    L"Animation sperren verhindert den Start des Windows-Bildschirmschoners nur, solange die Animation "
+    L"tatsächlich sichtbar und nicht angehalten ist.\r\n\r\nSchnappschüsse und Aufnahmen erfassen den ersten "
+    L"aktiven Animationsmonitor, nicht die gemeinsame Fläche aller Monitore. PNG verwendet Bilder, MP4 "
+    L"Videos; fehlen diese Ordner, wird Dokumente verwendet. Die Schaltfläche Aufnahmeeinstellungen wählt "
+    L"Viewport oder TV. Viewport erhält die Abmessungen und Bildwiederholfrequenz des Animationsmonitors bis "
+    L"höchstens 60 Bilder pro Sekunde. TV bietet 1920 × 1080, 1440 × 1080 oder 1280 × 720 im Format 16:9 mit "
+    L"50, 25, 59.94 (60000/1001) oder 29.97 (30000/1001) Bildern pro Sekunde. Das Seitenverhältnis bleibt "
+    L"erhalten; TV verwendet progressives BT.709-Video mit begrenztem Wertebereich und 4:2:0-Abtastung. "
+    L"Auflösung und Bildfrequenz sind nur im TV-Modus wählbar. Das Fenster Aufnahmeeinstellungen lässt sich "
+    L"minimieren und blockiert die anderen Anwendungsfenster nicht. OK speichert die Auswahl für die nächste "
+    L"MP4-Aufnahme; Abbrechen oder Esc verwirft unbestätigte Änderungen. Der aufgezeichnete Monitor kann "
+    L"während der Aufnahme nicht abgewählt werden; Änderungen an anderen Monitoren beenden die Aufnahme "
+    L"nicht. Das Beenden der Anwendung während einer Aufnahme muss bestätigt werden, da es auch die Aufnahme "
+    L"beendet.\r\n\r\nWindows 7 bis Windows 11 unterstützen alle Funktionen einschließlich "
+    L"PNG-Schnappschüssen und MP4-Aufnahmen. Zum Ausführen der Anwendung unter Windows Vista SP2 müssen die "
+    L"Updates KB971512 und KB2117917 installiert werden. MP4-Aufnahmen funktionieren unter Vista in der "
+    L"aktuellen Version nicht.",
+    L"FlyingSolids affiche des solides 3D éclairés. Les curseurs règlent la vitesse des objets et de la "
+    L"caméra de 0 à 1 600 %, une à dix copies de chaque solide et une taille de 50 à 200 %. Choisissez "
+    L"Observation de l’espace ou le Vol dans l’espace rectiligne, puis activez les solides voulus. Les cases "
+    L"Éclairage principal, Éclairage d’appoint, Éclairage ambiant et Éclairage des contours sous les "
+    L"curseurs contrôlent indépendamment l’éclairage de toute la scène. L’éclairage ambiant fournit une "
+    L"luminosité de base aux surfaces, et l’éclairage des contours souligne leurs bords. Par défaut, les "
+    L"éclairages principal, ambiant et des contours sont activés, et l’éclairage d’appoint est désactivé. "
+    L"Les réglages sont enregistrés séparément pour l’application et l’économiseur "
+    L"d’écran.\r\n\r\nSélectionnez plusieurs moniteurs dans la liste ; un double-clic active ou désactive un "
+    L"moniteur, et vous pouvez tous les désélectionner. Chaque moniteur utilise une scène indépendante. "
+    L"Capture enregistre un PNG et le bouton d’enregistrement démarre ou arrête un MP4. Pause arrête "
+    L"l’animation. L’application installe ou désinstalle aussi son économiseur intégré. Les réglages sont "
+    L"enregistrés en continu. Une seule instance de l’application peut fonctionner à la fois. Un nouveau "
+    L"lancement restaure la fenêtre de contrôle réduite et la place au premier plan. Utilisez Tab et Maj+Tab "
+    L"pour passer d’un contrôle à l’autre ; Alt et la lettre soulignée activent une commande. Échap ferme la "
+    L"fenêtre d’aide ou À propos active ; dans la fenêtre de contrôle, cette touche quitte l’application. "
+    L"Bloquer l’écran de veille pendant l’animation empêche le lancement de l’économiseur d’écran Windows "
+    L"uniquement lorsque l’animation est réellement visible et n’est pas en pause.\r\n\r\nLes captures et "
+    L"les enregistrements utilisent le premier moniteur d’animation actif, et non une image combinant tous "
+    L"les moniteurs. PNG utilise Images, MP4 Vidéos ; Documents sert de repli si ces dossiers n’existent "
+    L"pas. Le bouton Réglages vidéo permet de choisir Viewport ou TV. Viewport conserve les dimensions et la "
+    L"fréquence de rafraîchissement du moniteur d’animation, jusqu’à 60 images par seconde. TV propose 1920 "
+    L"× 1080, 1440 × 1080 ou 1280 × 720 au format 16:9, à 50, 25, 59.94 (60000/1001) ou 29.97 (30000/1001) "
+    L"images par seconde. Le rapport d’aspect est conservé ; TV utilise une vidéo progressive BT.709 à plage "
+    L"limitée et sous-échantillonnage 4:2:0. La résolution et la fréquence d’images ne sont disponibles "
+    L"qu’en mode TV. La fenêtre Réglages vidéo peut être réduite et ne bloque pas les autres fenêtres de "
+    L"l’application. OK enregistre les choix pour le prochain enregistrement MP4 ; Annuler ou Échap "
+    L"abandonne les modifications non confirmées. Le moniteur enregistré ne peut pas être désélectionné "
+    L"pendant l’enregistrement ; les changements concernant les autres moniteurs ne l’arrêtent pas. Fermer "
+    L"l’application pendant un enregistrement nécessite une confirmation, car cela arrête aussi "
+    L"l’enregistrement.\r\n\r\nWindows 7 à Windows 11 prennent en charge toutes les fonctions, y compris les "
+    L"captures PNG et l’enregistrement MP4. Pour exécuter l’application sous Windows Vista SP2, il est "
+    L"nécessaire d’installer les mises à jour KB971512 et KB2117917. L’enregistrement MP4 ne fonctionne pas "
+    L"sous Vista dans la version actuelle.",
+    L"FlyingSolids muestra sólidos 3D iluminados. Los controles ajustan la velocidad de objetos y cámara "
+    L"entre 0 y 1600 %, de una a diez copias y el tamaño entre 50 y 200 %. Elija Observación del espacio o "
+    L"el Vuelo por el espacio en línea recta y active los sólidos deseados. Las casillas Luz principal, Luz "
+    L"de relleno, Luz ambiental e Iluminación de contornos bajo los controles deslizantes controlan de forma "
+    L"independiente la iluminación de toda la escena. La luz ambiental aporta iluminación básica a las "
+    L"superficies y la iluminación de contornos resalta sus bordes. De forma predeterminada, las luces "
+    L"principal, ambiental y de contornos están activadas, y la luz de relleno está desactivada. Los ajustes "
+    L"se guardan por separado para la aplicación y el salvapantallas.\r\n\r\nSeleccione varios monitores en "
+    L"la lista; un doble clic alterna la animación en un monitor y también puede desmarcarlos todos. Cada "
+    L"monitor usa una escena independiente. Captura guarda un PNG y el botón de grabación inicia o detiene "
+    L"un MP4. Pausar detiene la animación. La aplicación instala o desinstala además el salvapantallas "
+    L"incorporado. Los ajustes se guardan continuamente. La aplicación solo permite una instancia. Al volver "
+    L"a iniciarla, restaura la ventana de control minimizada y la trae al primer plano. Use Tab y Mayús+Tab "
+    L"para desplazarse entre controles; Alt y la letra subrayada activan una opción. Esc cierra la ventana "
+    L"activa de Ayuda o Acerca de; en la ventana de control, sale de la aplicación. Bloquear salvapantallas "
+    L"durante la animación impide que se inicie el salvapantallas de Windows solo mientras la animación está "
+    L"realmente visible y no está en pausa.\r\n\r\nLas capturas y grabaciones usan el primer monitor de "
+    L"animación activo, no una imagen conjunta de todos los monitores. PNG usa Imágenes y MP4 Vídeos; si no "
+    L"existen esas carpetas, se usa Documentos. El botón Ajustes de grabación permite elegir Viewport o TV. "
+    L"Viewport conserva las dimensiones y la frecuencia de actualización del monitor de animación, hasta 60 "
+    L"fotogramas por segundo. TV ofrece 1920 × 1080, 1440 × 1080 o 1280 × 720 en formato 16:9, a 50, 25, "
+    L"59.94 (60000/1001) o 29.97 (30000/1001) fotogramas por segundo. Se conserva la relación de aspecto; TV "
+    L"usa vídeo progresivo BT.709 de rango limitado y submuestreo 4:2:0. La resolución y la frecuencia solo "
+    L"están disponibles en modo TV. La ventana Ajustes de grabación se puede minimizar y no bloquea las "
+    L"demás ventanas de la aplicación. Aceptar guarda las opciones para la próxima grabación MP4; Cancelar o "
+    L"Esc descarta los cambios sin confirmar. El monitor grabado no se puede desmarcar durante la grabación; "
+    L"cambiar otros monitores no la detiene. Cerrar la aplicación durante una grabación requiere "
+    L"confirmación porque también detiene la grabación.\r\n\r\nWindows 7 a Windows 11 admiten todas las "
+    L"funciones, incluidas las capturas PNG y la grabación MP4. Para ejecutar la aplicación en Windows Vista "
+    L"SP2, es necesario instalar las actualizaciones KB971512 y KB2117917. La grabación MP4 no funciona en "
+    L"Vista en la versión actual.",
+    L"FlyingSolids mostra solidi 3D illuminati. I cursori regolano la velocità di oggetti e camera tra 0 e "
+    L"1600 %, da una a dieci copie e la dimensione tra 50 e 200 %. Scegliere Osservazione dello spazio o il "
+    L"Volo nello spazio rettilineo e attivare i solidi desiderati. Le caselle Luce principale, Luce di "
+    L"riempimento, Luce ambientale e Illuminazione dei contorni sotto i cursori controllano "
+    L"indipendentemente l’illuminazione dell’intera scena. La luce ambientale fornisce un’illuminazione di "
+    L"base alle superfici, mentre quella dei contorni ne evidenzia i bordi. Per impostazione predefinita, le "
+    L"luci principale, ambientale e dei contorni sono attive e la luce di riempimento è disattivata. Le "
+    L"impostazioni vengono salvate separatamente per l’applicazione e il salvaschermo.\r\n\r\nNell’elenco si "
+    L"possono selezionare più monitor; un doppio clic attiva o disattiva l’animazione su un monitor, ed è "
+    L"possibile deselezionarli tutti. Ogni monitor usa una scena indipendente. Istantanea salva un PNG e il "
+    L"pulsante di registrazione avvia o arresta un MP4. Pausa ferma l’animazione. L’applicazione installa o "
+    L"disinstalla anche il salvaschermo incorporato. Le impostazioni vengono salvate continuamente. "
+    L"L’applicazione può essere eseguita in una sola istanza. Un nuovo avvio ripristina la finestra di "
+    L"controllo ridotta a icona e la porta in primo piano. Usare Tab e Maiusc+Tab per passare tra i "
+    L"controlli; Alt e la lettera sottolineata attivano un comando. Esc chiude la finestra attiva di Guida o "
+    L"Informazioni; nella finestra di controllo, termina l’applicazione. Blocca salvaschermo durante "
+    L"l’animazione impedisce l’avvio del salvaschermo di Windows solo quando l’animazione è realmente "
+    L"visibile e non è in pausa.\r\n\r\nIstantanee e registrazioni usano il primo monitor di animazione "
+    L"attivo, non un’immagine combinata di tutti i monitor. PNG usa Immagini, MP4 Video; se tali cartelle "
+    L"non esistono, viene usata Documenti. Il pulsante Impostazioni video permette di scegliere Viewport o "
+    L"TV. Viewport mantiene le dimensioni e la frequenza di aggiornamento del monitor di animazione, fino a "
+    L"60 fotogrammi al secondo. TV offre 1920 × 1080, 1440 × 1080 o 1280 × 720 in formato 16:9, a 50, 25, "
+    L"59.94 (60000/1001) o 29.97 (30000/1001) fotogrammi al secondo. Le proporzioni sono mantenute; TV usa "
+    L"video progressivo BT.709 con intervallo limitato e campionamento 4:2:0. Risoluzione e frequenza sono "
+    L"disponibili solo in modalità TV. La finestra Impostazioni video può essere ridotta a icona e non "
+    L"blocca le altre finestre dell’applicazione. OK salva le opzioni per la prossima registrazione MP4; "
+    L"Annulla o Esc scarta le modifiche non confermate. Il monitor registrato non può essere deselezionato "
+    L"durante la registrazione; le modifiche agli altri monitor non la interrompono. Chiudere l’applicazione "
+    L"durante una registrazione richiede conferma, perché interrompe anche la registrazione.\r\n\r\nI "
+    L"sistemi da Windows 7 a Windows 11 supportano tutte le funzioni, comprese le istantanee PNG e la "
+    L"registrazione MP4. Per eseguire l’applicazione su Windows Vista SP2, è necessario installare gli "
+    L"aggiornamenti KB971512 e KB2117917. La registrazione MP4 non funziona in Vista nella versione attuale.",
+    L"FlyingSolids wyświetla oświetlone pełne bryły 3D. Suwaki ustawiają prędkość obiektów i kamery od 0 do "
+    L"1600%, od jednej do dziesięciu kopii i rozmiar od 50 do 200%. Wybierz Obserwację przestrzeni lub "
+    L"prostoliniowy Przelot przez przestrzeń i włącz potrzebne bryły. Pola wyboru Światło główne, Światło "
+    L"wypełniające, Światło otoczenia i Oświetlenie konturów pod suwakami niezależnie sterują oświetleniem "
+    L"całej sceny. Światło otoczenia zapewnia podstawową jasność powierzchni, a oświetlenie konturów "
+    L"podkreśla krawędzie. Domyślnie światło główne, światło otoczenia i oświetlenie konturów są włączone, a "
+    L"światło wypełniające jest wyłączone. Ustawienia są zapisywane osobno dla aplikacji i wygaszacza "
+    L"ekranu.\r\n\r\nNa liście można zaznaczyć wiele monitorów; podwójne kliknięcie przełącza animację na "
+    L"monitorze, można też odznaczyć wszystkie. Każdy monitor ma niezależną scenę. Zrzut zapisuje PNG, a "
+    L"przycisk nagrywania rozpoczyna lub kończy MP4. Wstrzymaj zatrzymuje animację. Aplikacja instaluje i "
+    L"odinstalowuje również wbudowany wygaszacz. Ustawienia są zapisywane na bieżąco. Aplikacja działa tylko "
+    L"w jednej instancji. Kolejne uruchomienie przywraca zminimalizowane okno sterowania i przenosi na "
+    L"pierwszy plan. Klawisze Tab i Shift+Tab przełączają między kontrolkami; Alt i podkreślona litera "
+    L"wywołują polecenie. Esc zamyka aktywne okno Pomocy lub O programie; w oknie sterowania kończy "
+    L"działanie aplikacji. Blokuj wygaszacz podczas animacji zapobiega uruchomieniu wygaszacza Windows tylko "
+    L"wtedy, gdy animacja jest rzeczywiście widoczna i nie jest wstrzymana.\r\n\r\nZrzuty i nagrania "
+    L"obejmują pierwszy aktywny monitor animacji, a nie wspólny obraz wszystkich monitorów. PNG używa "
+    L"folderu Obrazy, MP4 folderu Wideo; jeśli ich nie ma, używane są Dokumenty. Przycisk Ustawienia "
+    L"nagrywania pozwala wybrać Viewport lub TV. Viewport zachowuje rozmiar i częstotliwość odświeżania "
+    L"monitora animacji, do 60 klatek na sekundę. TV oferuje 1920 × 1080, 1440 × 1080 lub 1280 × 720 w "
+    L"formacie 16:9, z 50, 25, 59.94 (60000/1001) lub 29.97 (30000/1001) klatkami na sekundę. Proporcje "
+    L"obrazu są zachowane; TV używa progresywnego obrazu BT.709 z ograniczonym zakresem i próbkowaniem "
+    L"4:2:0. Rozdzielczość i liczba klatek są dostępne tylko w trybie TV. Okno Ustawienia nagrywania można "
+    L"zminimalizować i nie blokuje ono innych okien aplikacji. OK zapisuje wybór dla następnego nagrania "
+    L"MP4; Anuluj lub Esc odrzuca niepotwierdzone zmiany. Podczas nagrywania nie można odznaczyć nagrywanego "
+    L"monitora; zmiany pozostałych monitorów nie przerywają nagrania. Zamknięcie aplikacji podczas "
+    L"nagrywania wymaga potwierdzenia, ponieważ kończy również nagranie.\r\n\r\nSystemy od Windows 7 do "
+    L"Windows 11 obsługują wszystkie funkcje, w tym zrzuty PNG i nagrywanie MP4. Do uruchomienia aplikacji w "
+    L"systemie Windows Vista SP2 konieczne jest zainstalowanie aktualizacji KB971512 i KB2117917. Nagrywanie "
+    L"MP4 nie działa w Vista w obecnej wersji.",
+    L"FlyingSolids zobrazuje osvetlené plné 3D telesá. Jazdce nastavujú rýchlosť objektov a kamery 0–1600 %, "
+    L"jednu až desať kópií a veľkosť 50–200 %. Vyberte Pozorovanie priestoru alebo priamy Prelet priestorom "
+    L"a zapnite požadované telesá. Začiarkavacie políčka Hlavné svetlo, Doplnkové svetlo, Základný jas a "
+    L"Prisvetlenie obrysov pod jazdcami nezávisle ovládajú osvetlenie celej scény. Základný jas prisvetľuje "
+    L"povrchy telies a prisvetlenie obrysov zvýrazňuje ich okraje. Predvolene sú hlavné svetlo, základný jas "
+    L"a prisvetlenie obrysov zapnuté a doplnkové svetlo vypnuté. Nastavenia osvetlenia sa ukladajú zvlášť "
+    L"pre aplikáciu a šetrič obrazovky.\r\n\r\nV zozname možno označiť viac monitorov; dvojklik zapína alebo "
+    L"vypína animáciu na monitore a možno zrušiť aj výber všetkých. Každý monitor používa nezávislú scénu. "
+    L"Snímka uloží PNG a tlačidlo záznamu spustí alebo ukončí MP4. Pozastavenie zastaví animáciu. Aplikácia "
+    L"tiež nainštaluje alebo odinštaluje vložený šetrič. Nastavenia sa ukladajú priebežne. Aplikácia beží "
+    L"iba v jednej inštancii. Ďalšie spustenie obnoví minimalizované ovládacie okno a prenesie do popredia. "
+    L"Medzi ovládacími prvkami prechádzajte klávesmi Tab a Shift+Tab; podčiarknuté voľby vyvoláte pomocou "
+    L"Alt a príslušného písmena. Esc zavrie aktívne okno Pomocníka alebo O aplikácii; v ovládacom okne "
+    L"ukončí aplikáciu. Voľba Blokovať šetrič pri animácii bráni spusteniu šetriča Windows iba vtedy, keď je "
+    L"animácia skutočne viditeľná a nie je pozastavená.\r\n\r\nSnímky a záznamy zachytávajú prvý aktívny "
+    L"animačný monitor, nie spoločnú plochu všetkých monitorov. PNG používa Obrázky, MP4 Videá; ak tieto "
+    L"priečinky neexistujú, použijú sa Dokumenty. Tlačidlo Nastavenie záznamu vyberá Viewport alebo TV. "
+    L"Viewport zachováva rozmery animačného monitora a jeho obnovovaciu frekvenciu, najviac 60 snímok za "
+    L"sekundu. TV ponúka rozlíšenie 1920 × 1080, 1440 × 1080 alebo 1280 × 720 v pomere 16:9 a frekvenciu 50, "
+    L"25, 59.94 (60000/1001) alebo 29.97 (30000/1001) snímok za sekundu. Obraz zachováva pomer strán; TV "
+    L"používa progresívne video BT.709 s obmedzeným rozsahom a vzorkovaním 4:2:0. Rozlíšenie a snímkovú "
+    L"frekvenciu možno vybrať iba v režime TV. Okno Nastavenie záznamu možno minimalizovať a neblokuje "
+    L"ostatné okná aplikácie. OK uloží voľby pre nasledujúci záznam MP4; Zrušiť alebo Esc zahodí nepotvrdené "
+    L"zmeny. Nahrávaný monitor nemožno počas záznamu odpojiť; zmeny ostatných monitorov záznam nezastavia. "
+    L"Ukončenie aplikácie počas záznamu vyžaduje potvrdenie, pretože ukončí aj záznam.\r\n\r\nWindows 7 až "
+    L"Windows 11 podporujú všetky funkcie vrátane snímok PNG a záznamu MP4. Na spustenie aplikácie v systéme "
+    L"Windows Vista SP2 je potrebné nainštalovať aktualizácie KB971512 a KB2117917. Záznam MP4 na Viste v "
+    L"súčasnej verzii nefunguje.",
+    L"FlyingSolids displays illuminated solid 3D objects. The sliders set object and camera speed from "
+    L"0–1600%, one to ten copies and size from 50–200%. Choose Space observation or the straight Fly through "
+    L"space mode and enable the required objects. The Main light, Fill light, Ambient light, and Rim light "
+    L"checkboxes below the sliders independently control lighting for the whole scene. Ambient light "
+    L"provides base illumination of object surfaces; rim light highlights their edges. By default, main, "
+    L"ambient, and rim light are on, and fill light is off. Lighting settings are stored separately for the "
+    L"application and screen saver.\r\n\r\nSelect several displays; double-click a row to toggle it, or "
+    L"clear the selection for all displays. Each display uses an independent scene. Snapshot saves PNG and "
+    L"the recording button starts or stops MP4. Pause stops the animation. The application also installs or "
+    L"uninstalls its embedded screen saver. Settings are saved continuously. Only one instance of the "
+    L"application runs at a time. Launching it again restores its minimised control window and brings it to "
+    L"the foreground. Use Tab and Shift+Tab to move between controls; use Alt and the underlined letter to "
+    L"activate a command. Esc closes the active Help or About window; in the control window, it exits the "
+    L"application. Prevent screen saver during animation blocks the Windows screen saver only while the "
+    L"animation is actually visible and not paused.\r\n\r\nSnapshots and recordings capture the first active "
+    L"animation display, not a combined image of all displays. PNG uses Pictures and MP4 uses Videos, with "
+    L"Documents as the fallback if those folders do not exist. The Recording settings button selects "
+    L"Viewport or TV. Viewport preserves the animation display’s dimensions and refresh rate, up to 60 "
+    L"frames per second. TV offers 1920 × 1080, 1440 × 1080 or 1280 × 720 output in 16:9, with 50, 25, 59.94 "
+    L"(60000/1001) or 29.97 (30000/1001) frames per second. The image keeps its aspect ratio; TV uses "
+    L"progressive BT.709 limited-range 4:2:0 video. Resolution and frame rate are available only in TV mode. "
+    L"The Recording settings window can be minimised and does not block the other application windows. OK "
+    L"saves choices for the next MP4 recording; Cancel or Esc discards unconfirmed changes. The recorded "
+    L"display cannot be detached during recording; changes to other displays do not stop the recording. "
+    L"Closing the application while recording requires confirmation because it also stops the "
+    L"recording.\r\n\r\nWindows 7 through Windows 11 support all features, including PNG snapshots and MP4 "
+    L"recording. To run the application on Windows Vista SP2, you must install updates KB971512 and "
+    L"KB2117917. MP4 recording does not work on Vista in the current version.",
+    L"FlyingSolids displays illuminated solid 3D objects. The sliders set object and camera speed from "
+    L"0–1600%, one to ten copies and size from 50–200%. Choose Space observation or the straight Fly through "
+    L"space mode and enable the required objects. The Main light, Fill light, Ambient light, and Rim light "
+    L"checkboxes below the sliders independently control lighting for the whole scene. Ambient light "
+    L"provides base illumination of object surfaces; rim light highlights their edges. By default, main, "
+    L"ambient, and rim light are on, and fill light is off. Lighting settings are stored separately for the "
+    L"application and screen saver.\r\n\r\nSelect several displays; double-click a row to toggle it, or "
+    L"clear the selection for all displays. Each display uses an independent scene. Snapshot saves PNG and "
+    L"the recording button starts or stops MP4. Pause stops the animation. The application also installs or "
+    L"uninstalls its embedded screen saver. Settings are saved continuously. Only one instance of the "
+    L"application runs at a time. Launching it again restores its minimised control window and brings it to "
+    L"the foreground. Use Tab and Shift+Tab to move between controls; use Alt and the underlined letter to "
+    L"activate a command. Esc closes the active Help or About window; in the control window, it exits the "
+    L"application. Prevent screen saver during animation blocks the Windows screen saver only while the "
+    L"animation is actually visible and not paused.\r\n\r\nSnapshots and recordings capture the first active "
+    L"animation display, not a combined image of all displays. PNG uses Pictures and MP4 uses Videos, with "
+    L"Documents as the fallback if those folders do not exist. The Recording settings button selects "
+    L"Viewport or TV. Viewport preserves the animation display’s dimensions and refresh rate, up to 60 "
+    L"frames per second. TV offers 1920 × 1080, 1440 × 1080 or 1280 × 720 output in 16:9, with 50, 25, 59.94 "
+    L"(60000/1001) or 29.97 (30000/1001) frames per second. The image keeps its aspect ratio; TV uses "
+    L"progressive BT.709 limited-range 4:2:0 video. Resolution and frame rate are available only in TV mode. "
+    L"The Recording settings window can be minimised and does not block the other application windows. OK "
+    L"saves choices for the next MP4 recording; Cancel or Esc discards unconfirmed changes. The recorded "
+    L"display cannot be detached during recording; changes to other displays do not stop the recording. "
+    L"Closing the application while recording requires confirmation because it also stops the "
+    L"recording.\r\n\r\nWindows 7 through Windows 11 support all features, including PNG snapshots and MP4 "
+    L"recording. To run the application on Windows Vista SP2, you must install updates KB971512 and "
+    L"KB2117917. MP4 recording does not work on Vista in the current version.",
+    L"O FlyingSolids mostra sólidos 3D iluminados. Os controlos regulam a velocidade dos objetos e da câmara "
+    L"entre 0 e 1600%, uma a dez cópias e o tamanho entre 50 e 200%. Escolha Observação do espaço ou o Voo "
+    L"pelo espaço em linha reta e ative os sólidos pretendidos. As caixas Luz principal, Luz de "
+    L"preenchimento, Luz ambiente e Iluminação dos contornos sob os controlos deslizantes controlam a "
+    L"iluminação de toda a cena de forma independente. A luz ambiente fornece iluminação de base às "
+    L"superfícies e a iluminação dos contornos realça os seus limites. Por predefinição, as luzes principal, "
+    L"ambiente e dos contornos estão ligadas e a luz de preenchimento está desligada. As definições são "
+    L"guardadas separadamente para a aplicação e a proteção de ecrã.\r\n\r\nSelecione vários monitores; um "
+    L"duplo clique alterna uma linha e todos podem ser desmarcados. Cada monitor usa uma cena independente. "
+    L"Captura guarda PNG e o botão de gravação inicia ou termina MP4. Pausa para a animação. A aplicação "
+    L"também instala ou desinstala a proteção de ecrã incorporada. As definições são guardadas "
+    L"continuamente. A aplicação só pode ter uma instância em execução. Um novo arranque restaura a janela "
+    L"de controlo minimizada e coloca-a em primeiro plano. Use Tab e Shift+Tab para passar entre controlos; "
+    L"Alt e a letra sublinhada ativam um comando. Esc fecha a janela ativa de Ajuda ou Acerca de; na janela "
+    L"de controlo, termina a aplicação. Bloquear proteção de ecrã durante a animação impede o início da "
+    L"proteção de ecrã do Windows apenas enquanto a animação está efetivamente visível e não está em "
+    L"pausa.\r\n\r\nAs capturas e gravações usam o primeiro monitor de animação ativo, não uma imagem "
+    L"conjunta de todos os monitores. PNG usa Imagens, MP4 Vídeos; se essas pastas não existirem, usa-se "
+    L"Documentos. O botão Definições de gravação permite escolher Viewport ou TV. Viewport conserva as "
+    L"dimensões e a frequência de atualização do monitor de animação, até 60 fotogramas por segundo. TV "
+    L"oferece 1920 × 1080, 1440 × 1080 ou 1280 × 720 no formato 16:9, a 50, 25, 59.94 (60000/1001) ou 29.97 "
+    L"(30000/1001) fotogramas por segundo. A proporção da imagem é mantida; TV usa vídeo progressivo BT.709 "
+    L"com intervalo limitado e amostragem 4:2:0. A resolução e a frequência só estão disponíveis no modo TV. "
+    L"A janela Definições de gravação pode ser minimizada e não bloqueia as outras janelas da aplicação. OK "
+    L"guarda as escolhas para a próxima gravação MP4; Cancelar ou Esc descarta as alterações não "
+    L"confirmadas. O monitor gravado não pode ser desmarcado durante a gravação; as alterações aos outros "
+    L"monitores não a interrompem. Fechar a aplicação durante uma gravação exige confirmação, pois também "
+    L"termina a gravação.\r\n\r\nOs sistemas Windows 7 a Windows 11 suportam todas as funcionalidades, "
+    L"incluindo capturas PNG e gravação MP4. Para executar a aplicação no Windows Vista SP2, é necessário "
+    L"instalar as atualizações KB971512 e KB2117917. A gravação MP4 não funciona no Vista na versão atual.",
+    L"FlyingSolids viser belyste solide 3D-legemer. Glidebryterne angir objekt- og kamerahastighet fra "
+    L"0–1600 %, én til ti kopier og størrelse fra 50–200 %. Velg Romobservasjon eller Flyging gjennom rommet "
+    L"i rett linje og aktiver ønskede legemer. Avmerkingsboksene Hovedlys, Utfyllingslys, Omgivelseslys og "
+    L"Konturlys under glidebryterne styrer belysningen i hele scenen uavhengig av hverandre. Omgivelseslys "
+    L"gir grunnbelysning på overflatene, og konturlys fremhever kantene. Som standard er hovedlys, "
+    L"omgivelseslys og konturlys på, og utfyllingslys av. Innstillingene lagres separat for programmet og "
+    L"skjermspareren.\r\n\r\nVelg flere skjermer i listen; dobbeltklikk en rad for å slå animasjonen av "
+    L"eller på, eller fjern valget for alle. Hver skjerm bruker en uavhengig scene. Skjermbilde lagrer PNG, "
+    L"og opptaksknappen starter eller stopper MP4. Pause stanser animasjonen. Programmet installerer eller "
+    L"avinstallerer også den innebygde skjermspareren. Innstillingene lagres fortløpende. Bare én instans av "
+    L"programmet kan kjøre om gangen. En ny start gjenoppretter det minimerte kontrollvinduet og bringer det "
+    L"fremst. Bruk Tab og Shift+Tab for å flytte mellom kontrollene; Alt og den understrekede bokstaven "
+    L"aktiverer en kommando. Esc lukker det aktive Hjelp- eller Om-vinduet; i kontrollvinduet avslutter det "
+    L"programmet. Hindre skjermsparer under animasjon hindrer Windows-skjermspareren i å starte bare når "
+    L"animasjonen faktisk er synlig og ikke er satt på pause.\r\n\r\nSkjermbilder og opptak bruker den "
+    L"første aktive animasjonsskjermen, ikke et samlet bilde av alle skjermene. PNG bruker Bilder, MP4 "
+    L"Videoer; hvis disse mappene ikke finnes, brukes Dokumenter. Knappen Opptaksinnstillinger velger "
+    L"Viewport eller TV. Viewport beholder animasjonsskjermens størrelse og oppdateringsfrekvens, opptil 60 "
+    L"bilder per sekund. TV tilbyr 1920 × 1080, 1440 × 1080 eller 1280 × 720 i formatet 16:9, med 50, 25, "
+    L"59.94 (60000/1001) eller 29.97 (30000/1001) bilder per sekund. Bildets proporsjoner beholdes; TV "
+    L"bruker progressiv BT.709-video med begrenset område og 4:2:0-sampling. Oppløsning og bildefrekvens er "
+    L"bare tilgjengelige i TV-modus. Vinduet Opptaksinnstillinger kan minimeres og blokkerer ikke de andre "
+    L"programvinduene. OK lagrer valgene for neste MP4-opptak; Avbryt eller Esc forkaster ubekreftede "
+    L"endringer. Skjermen som tas opp, kan ikke velges bort under opptaket; endringer på andre skjermer "
+    L"stopper ikke opptaket. Å avslutte programmet under et opptak krever bekreftelse, fordi det også "
+    L"avslutter opptaket.\r\n\r\nWindows 7 til Windows 11 støtter alle funksjoner, inkludert "
+    L"PNG-skjermbilder og MP4-opptak. For å kjøre programmet på Windows Vista SP2 må oppdateringene KB971512 "
+    L"og KB2117917 installeres. MP4-opptak fungerer ikke på Vista i den gjeldende versjonen.",
+    L"FlyingSolids visar belysta solida 3D-kroppar. Reglagen ställer in objekt- och kamerahastighet 0–1600 "
+    L"%, en till tio kopior och storlek 50–200 %. Välj Rymdobservation eller Flygning genom rymden i rak "
+    L"linje och aktivera önskade kroppar. Kryssrutorna Huvudljus, Upplättningsljus, Omgivningsljus och "
+    L"Konturljus under reglagen styr belysningen i hela scenen oberoende av varandra. Omgivningsljus ger "
+    L"grundbelysning på ytorna och konturljus framhäver kanterna. Som standard är huvudljus, omgivningsljus "
+    L"och konturljus på och upplättningsljus av. Inställningarna sparas separat för programmet och "
+    L"skärmsläckaren.\r\n\r\nVälj flera bildskärmar i listan; dubbelklicka en rad för att slå på eller av "
+    L"animeringen, eller avmarkera alla. Varje bildskärm använder en oberoende scen. Skärmbild sparar PNG "
+    L"och inspelningsknappen startar eller stoppar MP4. Paus stannar animeringen. Programmet installerar "
+    L"eller avinstallerar även den inbyggda skärmsläckaren. Inställningarna sparas fortlöpande. Programmet "
+    L"kan bara köras i en instans åt gången. En ny start återställer det minimerade kontrollfönstret och för "
+    L"det längst fram. Använd Tab och Skift+Tab för att flytta mellan kontrollerna; Alt och den understrukna "
+    L"bokstaven aktiverar ett kommando. Esc stänger det aktiva Hjälp- eller Om-fönstret; i kontrollfönstret "
+    L"avslutar det programmet. Blockera skärmsläckare under animering hindrar Windows-skärmsläckaren från "
+    L"att starta endast när animeringen faktiskt är synlig och inte är pausad.\r\n\r\nSkärmbilder och "
+    L"inspelningar använder den första aktiva animeringsskärmen, inte en sammanslagen bild av alla skärmar. "
+    L"PNG använder Bilder, MP4 Videor; om dessa mappar saknas används Dokument. Knappen "
+    L"Inspelningsinställningar väljer Viewport eller TV. Viewport behåller animeringsskärmens storlek och "
+    L"uppdateringsfrekvens, upp till 60 bilder per sekund. TV erbjuder 1920 × 1080, 1440 × 1080 eller 1280 × "
+    L"720 i formatet 16:9, med 50, 25, 59.94 (60000/1001) eller 29.97 (30000/1001) bilder per sekund. "
+    L"Bildens proportioner bevaras; TV använder progressiv BT.709-video med begränsat omfång och "
+    L"4:2:0-sampling. Upplösning och bildfrekvens kan bara väljas i TV-läge. Fönstret "
+    L"Inspelningsinställningar kan minimeras och blockerar inte de andra programfönstren. OK sparar valen "
+    L"för nästa MP4-inspelning; Avbryt eller Esc ignorerar obekräftade ändringar. Den inspelade skärmen kan "
+    L"inte väljas bort under inspelningen; ändringar av andra skärmar stoppar inte inspelningen. Att avsluta "
+    L"programmet under en inspelning kräver bekräftelse eftersom det också avslutar "
+    L"inspelningen.\r\n\r\nWindows 7 till Windows 11 stöder alla funktioner, inklusive PNG-skärmbilder och "
+    L"MP4-inspelning. För att köra programmet på Windows Vista SP2 måste uppdateringarna KB971512 och "
+    L"KB2117917 installeras. MP4-inspelning fungerar inte på Vista i den aktuella versionen.",
+    L"FlyingSolids näyttää valaistuja kiinteitä 3D-kappaleita. Liukusäätimillä asetetaan kohteiden ja "
+    L"kameran nopeus 0–1600 %, yhdestä kymmeneen kopiota ja koko 50–200 %. Valitse Avaruuden tarkkailu tai "
+    L"Lento avaruuden halki suoraan eteenpäin ja ota halutut kappaleet käyttöön. Liukusäätimien alla olevat "
+    L"Päävalo-, Täytevalo-, Ympäristövalo- ja Reunavalo-valintaruudut ohjaavat koko näkymän valaistusta "
+    L"toisistaan riippumatta. Ympäristövalo antaa pinnoille perusvalaistuksen ja reunavalo korostaa reunoja. "
+    L"Oletuksena päävalo, ympäristövalo ja reunavalo ovat päällä ja täytevalo pois päältä. Asetukset "
+    L"tallennetaan erikseen sovellukselle ja näytönsäästäjälle.\r\n\r\nLuettelosta voi valita useita "
+    L"näyttöjä; kaksoisnapsautus vaihtaa rivin tilaa ja kaikkien näyttöjen valinnan voi poistaa. Jokaisella "
+    L"näytöllä on itsenäinen näkymä. Tilannekuva tallentaa PNG:n ja tallennuspainike käynnistää tai lopettaa "
+    L"MP4:n. Keskeytä pysäyttää animaation. Sovellus asentaa tai poistaa myös sisäisen näytönsäästäjän. "
+    L"Asetukset tallennetaan jatkuvasti. Sovelluksesta voi olla käynnissä vain yksi instanssi. Uusi "
+    L"käynnistys palauttaa pienennetyn ohjausikkunan ja tuo sen etualalle. Siirry säätimien välillä Tab- ja "
+    L"Vaihto+Tab-näppäimillä; Alt ja alleviivattu kirjain aktivoivat komennon. Esc sulkee aktiivisen Ohje- "
+    L"tai Tietoja-ikkunan; ohjausikkunassa se sulkee sovelluksen. Estä näytönsäästäjä animaation aikana "
+    L"estää Windowsin näytönsäästäjän käynnistymisen vain silloin, kun animaatio on todella näkyvissä eikä "
+    L"sitä ole keskeytetty.\r\n\r\nTilannekuvat ja tallenteet käyttävät ensimmäistä aktiivista "
+    L"animaationäyttöä, eivät kaikkien näyttöjen yhdistettyä kuvaa. PNG käyttää Kuvat-kansiota ja MP4 "
+    L"Videot-kansiota; jos niitä ei ole, käytetään Tiedostot-kansiota. Tallennusasetukset-painikkeella "
+    L"valitaan Viewport tai TV. Viewport säilyttää animaationäytön koon ja virkistystaajuuden, enintään 60 "
+    L"kuvaa sekunnissa. TV tarjoaa tarkkuudet 1920 × 1080, 1440 × 1080 ja 1280 × 720 kuvasuhteella 16:9 sekä "
+    L"taajuudet 50, 25, 59.94 (60000/1001) ja 29.97 (30000/1001) kuvaa sekunnissa. Kuvasuhde säilyy; TV "
+    L"käyttää progressiivista BT.709-videota rajatulla alueella ja 4:2:0-näytteistyksellä. Tarkkuus ja "
+    L"kuvataajuus ovat valittavissa vain TV-tilassa. Tallennusasetukset-ikkunan voi pienentää, eikä se estä "
+    L"muiden sovellusikkunoiden käyttöä. OK tallentaa valinnat seuraavaa MP4-tallennusta varten; Peruuta tai "
+    L"Esc hylkää vahvistamattomat muutokset. Tallennettavan näytön valintaa ei voi poistaa tallennuksen "
+    L"aikana; muiden näyttöjen muutokset eivät pysäytä tallennusta. Sovelluksen sulkeminen tallennuksen "
+    L"aikana vaatii vahvistuksen, sillä myös tallennus päättyy.\r\n\r\nWindows 7–Windows 11 tukevat kaikkia "
+    L"toimintoja, myös PNG-tilannekuvia ja MP4-tallennusta. Sovelluksen suorittaminen Windows Vista SP2:ssa "
+    L"edellyttää päivitysten KB971512 ja KB2117917 asentamista. MP4-tallennus ei toimi Vistassa nykyisessä "
+    L"versiossa.",
+    L"FlyingSolids viser belyste solide 3D-legemer. Skyderne indstiller objekt- og kamerahastighed 0–1600 %, "
+    L"en til ti kopier og størrelse 50–200 %. Vælg Rumobservation eller Flyvning gennem rummet i en lige "
+    L"linje og aktivér de ønskede legemer. Afkrydsningsfelterne Hovedlys, Udfyldningslys, Omgivende lys og "
+    L"Konturlys under skyderne styrer belysningen af hele scenen uafhængigt af hinanden. Omgivende lys giver "
+    L"overfladerne en grundbelysning, og konturlys fremhæver kanterne. Som standard er hovedlys, omgivende "
+    L"lys og konturlys slået til og udfyldningslys slået fra. Indstillingerne gemmes separat for programmet "
+    L"og pauseskærmen.\r\n\r\nVælg flere skærme i listen; dobbeltklik på en række for at slå animationen til "
+    L"eller fra, eller fravælg alle. Hver skærm bruger en uafhængig scene. Skærmbillede gemmer PNG, og "
+    L"optageknappen starter eller stopper MP4. Pause standser animationen. Programmet installerer eller "
+    L"afinstallerer også den indbyggede pauseskærm. Indstillinger gemmes løbende. Programmet kan kun køre i "
+    L"én instans ad gangen. En ny start gendanner det minimerede kontrolvindue og bringer det forrest. Brug "
+    L"Tab og Skift+Tab til at flytte mellem kontrollerne; Alt og det understregede bogstav aktiverer en "
+    L"kommando. Esc lukker det aktive Hjælp- eller Om-vindue; i kontrolvinduet afslutter det programmet. "
+    L"Blokér pauseskærm under animation forhindrer Windows-pauseskærmen i at starte, men kun når animationen "
+    L"faktisk er synlig og ikke er sat på pause.\r\n\r\nSkærmbilleder og optagelser bruger den første aktive "
+    L"animationsskærm, ikke et samlet billede af alle skærme. PNG bruger Billeder, MP4 Videoer; hvis disse "
+    L"mapper ikke findes, bruges Dokumenter. Knappen Optagelsesindstillinger vælger Viewport eller TV. "
+    L"Viewport bevarer animationsskærmens størrelse og opdateringsfrekvens, højst 60 billeder i sekundet. TV "
+    L"tilbyder 1920 × 1080, 1440 × 1080 eller 1280 × 720 i formatet 16:9 med 50, 25, 59.94 (60000/1001) "
+    L"eller 29.97 (30000/1001) billeder i sekundet. Billedets proportioner bevares; TV bruger progressiv "
+    L"BT.709-video med begrænset område og 4:2:0-sampling. Opløsning og billedfrekvens kan kun vælges i "
+    L"TV-tilstand. Vinduet Optagelsesindstillinger kan minimeres og blokerer ikke de andre programvinduer. "
+    L"OK gemmer valgene til den næste MP4-optagelse; Annuller eller Esc kasserer ubekræftede ændringer. Den "
+    L"skærm, der optages, kan ikke fravælges under optagelsen; ændringer af andre skærme stopper ikke "
+    L"optagelsen. Hvis programmet lukkes under en optagelse, kræves en bekræftelse, fordi optagelsen også "
+    L"afsluttes.\r\n\r\nWindows 7 til Windows 11 understøtter alle funktioner, herunder PNG-skærmbilleder og "
+    L"MP4-optagelse. For at køre programmet på Windows Vista SP2 skal opdateringerne KB971512 og KB2117917 "
+    L"installeres. MP4-optagelse fungerer ikke på Vista i den aktuelle version.",
+    L"FlyingSolids sýnir upplýsta heila þrívíddarhluti. Rennistikur stilla hraða hluta og myndavélar á "
+    L"0–1600%, eitt til tíu eintök og stærð á 50–200%. Veldu Athugun rýmis eða Flug um rýmið í beinni línu "
+    L"og virkjaðu þá hluti sem óskað er eftir. Gátreitirnir Aðalljós, Fylliljós, Umhverfislýsing og "
+    L"Útlínulýsing undir rennistikunum stýra lýsingu allrar senunnar óháð hver öðrum. Umhverfislýsing gefur "
+    L"yfirborðunum grunnbirtu og útlínulýsing dregur fram jaðrana. Sjálfgefið er kveikt á aðalljósi, "
+    L"umhverfislýsingu og útlínulýsingu en slökkt á fylliljósi. Stillingarnar eru vistaðar sérstaklega fyrir "
+    L"forritið og skjáhvíluna.\r\n\r\nVelja má marga skjái; tvísmellur virkjar eða slekkur á hreyfimynd á "
+    L"skjá og afvelja má alla skjái. Hver skjár notar sjálfstæða senu. Skjámynd vistar PNG og "
+    L"upptökuhnappurinn ræsir eða stöðvar MP4. Hnappurinn Gera hlé stöðvar hreyfimyndina. Forritið setur "
+    L"einnig upp eða fjarlægir innbyggðu skjáhvíluna. Stillingar vistast jafnóðum. Aðeins eitt eintak af "
+    L"forritinu getur verið í gangi í einu. Ný ræsing endurheimtir lágmarkaðan stjórngluggann og færir hann "
+    L"fremst. Notaðu Tab og Shift+Tab til að færa þig milli stýrieininga; Alt og undirstrikaður stafur "
+    L"virkja skipun. Esc lokar virka Hjálp- eða Um-glugganum; í stjórnglugganum lokar það forritinu. Hindra "
+    L"skjáhvílu meðan hreyfimynd er í gangi kemur aðeins í veg fyrir að skjáhvíla Windows fari í gang meðan "
+    L"hreyfimyndin er í raun sýnileg og ekki í pásu.\r\n\r\nSkjámyndir og upptökur nota fyrsta virka "
+    L"hreyfimyndaskjáinn, ekki sameinaða mynd af öllum skjám. PNG notar Myndir, MP4 Myndbönd; ef þær möppur "
+    L"eru ekki til er Skjöl notuð. Hnappurinn Upptökustillingar velur Viewport eða TV. Viewport varðveitir "
+    L"stærð og endurnýjunartíðni hreyfimyndaskjásins, þó mest 60 ramma á sekúndu. TV býður upp á 1920 × "
+    L"1080, 1440 × 1080 eða 1280 × 720 í hlutfallinu 16:9 með 50, 25, 59.94 (60000/1001) eða 29.97 "
+    L"(30000/1001) römmum á sekúndu. Hlutföll myndarinnar haldast; TV notar stigvaxandi BT.709-myndband með "
+    L"takmörkuðu sviði og 4:2:0-sýnatöku. Upplausn og rammatíðni eru aðeins valanleg í TV-ham. Hægt er að "
+    L"lágmarka gluggann Upptökustillingar og hann hindrar ekki notkun annarra glugga forritsins. Í lagi "
+    L"vistar valið fyrir næstu MP4-upptöku; Hætta við eða Esc hendir óstaðfestum breytingum. Ekki er hægt að "
+    L"afvelja skjáinn sem er tekinn upp meðan upptaka stendur yfir; breytingar á öðrum skjám stöðva ekki "
+    L"upptökuna. Staðfesta þarf lokun forritsins meðan upptaka stendur yfir, því hún stöðvar líka "
+    L"upptökuna.\r\n\r\nWindows 7 til Windows 11 styðja alla eiginleika, þar á meðal PNG-skjámyndir og "
+    L"MP4-upptöku. Til að keyra forritið á Windows Vista SP2 þarf að setja upp uppfærslurnar KB971512 og "
     L"KB2117917. MP4-upptaka virkar ekki í Vista í núverandi útgáfu.",
-    L"FlyingSolids aydınlatılmış katı 3B cisimler gösterir. Kaydırıcılar nesne ve kamera hızını %0–1600, kopya sayısını bir ile on ve boyutu "
-    L"%50–200 arasında ayarlar. Uzayı gözlemleme veya doğrusal Uzayda uçuş kipini seçip istenen cisimleri "
-    L"etkinleştirin.\r\n\r\nSeçilebilen 30 katı cisim vardır. Prolat sferoitin bir uzun ve birbirine eşit iki kısa yarı ekseni "
-    L"vardır. Yuvarlatılmış disk (spheroplatelet), iki düz dairesel yüze ve kesintisiz yuvarlatılmış bir kenara sahiptir; "
-    L"çapı küre tabakasından biraz daha büyük, kalınlığı ise onun yarısıdır. Toroidal uçlu içi boş silindirin dış ve iç "
-    L"silindirik yüzeyleri yarım toruslarla birleştirilir; uçlar eksenel kesitte tam yarım daireler oluşturur.\r\n\r\nSağdaki "
-    L"kaydırıcıların altındaki Ana ışık ve Dolgu ışığı onay kutuları, tüm sahne için iki ışığı birbirinden bağımsız olarak açar veya kapatır. "
-    L"Varsayılan olarak Ana ışık açık, Dolgu ışığı kapalıdır. Aydınlatma ayarları uygulama ve ekran koruyucu için ayrı ayrı "
-    L"kaydedilir.\r\n\r\nListede birden çok monitör seçilebilir; satıra çift tıklamak monitördeki animasyonu açıp kapatır; tüm monitörlerin "
-    L"seçimi de kaldırılabilir. Her monitör bağımsız sahne kullanır.\r\n\r\nAnlık görüntü PNG kaydeder; kayıt düğmesi MP4 kaydını başlatır "
-    L"veya bitirir. Duraklat animasyonu durdurur. Uygulama gömülü ekran koruyucuyu da kurar veya kaldırır. Ayarlar sürekli "
-    L"kaydedilir.\r\n\r\nUygulamanın aynı anda yalnızca bir örneği çalışabilir. Yeniden başlatılması, simge durumuna küçültülmüş denetim "
-    L"penceresini geri yükler, yeniden çizer ve ön plana getirir.\r\n\r\nDenetimler arasında Tab ve Shift+Tab ile ilerleyin; Alt ve altı "
-    L"çizili harf bir komutu etkinleştirir. Esc, etkin Yardım veya Hakkında penceresini kapatır; denetim penceresinde uygulamadan "
-    L"çıkar.\r\n\r\nAnlık görüntüler ve kayıtlar, tüm monitörlerin birleşik görüntüsünü değil, ilk etkin animasyon monitörünü kullanır. PNG "
-    L"Resimler, MP4 Videolar klasörünü kullanır; bu klasörler yoksa Belgeler kullanılır. MP4 kaydı monitörün yenileme hızını izler, ancak "
-    L"saniyede en fazla 60 karedir.\r\n\r\nWindows 7 ile Windows 11 arasındaki sürümler, PNG anlık görüntüler ve MP4 kaydı dâhil tüm "
-    L"özellikleri destekler. Windows Vista SP2: KB971512, KB2117917. Geçerli sürümde MP4 kaydı Vista'da çalışmaz."
+    L"FlyingSolids aydınlatılmış katı 3B cisimler gösterir. Kaydırıcılar nesne ve kamera hızını %0–1600, "
+    L"kopya sayısını bir ile on ve boyutu %50–200 arasında ayarlar. Uzayı gözlemleme veya doğrusal Uzayda "
+    L"uçuş kipini seçip istenen cisimleri etkinleştirin. Kaydırıcıların altındaki Ana ışık, Dolgu ışığı, "
+    L"Ortam ışığı ve Kenar aydınlatması onay kutuları tüm sahnenin aydınlatmasını birbirinden bağımsız "
+    L"olarak kontrol eder. Ortam ışığı yüzeylere temel aydınlatma sağlar, kenar aydınlatması ise kenarları "
+    L"vurgular. Varsayılan olarak ana ışık, ortam ışığı ve kenar aydınlatması açık, dolgu ışığı kapalıdır. "
+    L"Ayarlar uygulama ve ekran koruyucu için ayrı ayrı kaydedilir.\r\n\r\nListede birden çok monitör "
+    L"seçilebilir; satıra çift tıklamak monitördeki animasyonu açıp kapatır; tüm monitörlerin seçimi de "
+    L"kaldırılabilir. Her monitör bağımsız sahne kullanır. Anlık görüntü PNG kaydeder; kayıt düğmesi MP4 "
+    L"kaydını başlatır veya bitirir. Duraklat animasyonu durdurur. Uygulama gömülü ekran koruyucuyu da kurar "
+    L"veya kaldırır. Ayarlar sürekli kaydedilir. Uygulamanın aynı anda yalnızca bir örneği çalışabilir. "
+    L"Yeniden başlatılması, simge durumuna küçültülmüş denetim penceresini geri yükler ve ön plana getirir. "
+    L"Denetimler arasında Tab ve Shift+Tab ile ilerleyin; Alt ve altı çizili harf bir komutu etkinleştirir. "
+    L"Esc, etkin Yardım veya Hakkında penceresini kapatır; denetim penceresinde uygulamadan çıkar. Animasyon "
+    L"sırasında ekran koruyucuyu engelle seçeneği, Windows ekran koruyucusunun yalnızca animasyon gerçekten "
+    L"görünürken ve duraklatılmamışken başlamasını engeller.\r\n\r\nAnlık görüntüler ve kayıtlar, tüm "
+    L"monitörlerin birleşik görüntüsünü değil, ilk etkin animasyon monitörünü kullanır. PNG Resimler, MP4 "
+    L"Videolar klasörünü kullanır; bu klasörler yoksa Belgeler kullanılır. Kayıt ayarları düğmesi Viewport "
+    L"veya TV seçimini açar. Viewport, animasyon monitörünün boyutlarını ve yenileme hızını saniyede en "
+    L"fazla 60 kareyle korur. TV, 16:9 oranında 1920 × 1080, 1440 × 1080 veya 1280 × 720 çözünürlük ile "
+    L"saniyede 50, 25, 59.94 (60000/1001) veya 29.97 (30000/1001) kare sunar. Görüntünün en boy oranı "
+    L"korunur; TV, sınırlı aralıklı, 4:2:0 örneklemeli ilerlemeli BT.709 video kullanır. Çözünürlük ve kare "
+    L"hızı yalnızca TV modunda seçilebilir. Kayıt ayarları penceresi simge durumuna küçültülebilir ve "
+    L"uygulamanın diğer pencerelerini engellemez. Tamam, seçenekleri bir sonraki MP4 kaydı için kaydeder; "
+    L"İptal veya Esc onaylanmamış değişiklikleri iptal eder. Kayıt sırasında kaydedilen ekranın seçimi "
+    L"kaldırılamaz; diğer ekranlardaki değişiklikler kaydı durdurmaz. Kayıt sırasında uygulamayı kapatmak "
+    L"kaydı da durduracağı için onay gerektirir.\r\n\r\nWindows 7 ile Windows 11 arasındaki sürümler, PNG "
+    L"anlık görüntüler ve MP4 kaydı dâhil tüm özellikleri destekler. Uygulamayı Windows Vista SP2'de "
+    L"çalıştırmak için KB971512 ve KB2117917 güncellemelerini yüklemeniz gerekir. Geçerli sürümde MP4 kaydı "
+    L"Vista'da çalışmaz."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
-    L"Vyberte Pozorování prostoru nebo přímý Průlet prostorem. Jezdci nastavují rychlost objektů a kamery 0–1600 %, jednu až deset kopií "
-    L"každého zapnutého tělesa a velikost 50–200 %.\r\n\r\nNa výběr je 30 těles. Protáhlý rotační elipsoid má "
-    L"jednu delší a dvě shodné kratší poloosy. Zaoblený disk (spheroplatelet) má dvě rovinné kruhové plochy a "
-    L"plynule zaoblený obvod; jeho průměr je mírně větší než u kulové vrstvy a tloušťka poloviční. Dutý válec s "
-    L"toroidálními čely má vnější a vnitřní válcovou plochu spojené půltorovými čely, která v osovém řezu tvoří "
-    L"přesné půlkruhy.\r\n\r\nZatržítka Hlavní světlo a Doplňkové světlo pod pravými jezdci nezávisle zapínají a "
-    L"vypínají obě světla pro celou scénu. Výchozí stav: Hlavní světlo zapnuté, Doplňkové světlo vypnuté. Nastavení světel se ukládá zvlášť "
-    L"pro aplikaci a spořič obrazovky.\r\n\r\nZapněte požadované druhy těles. Zapnout náhled spustí celoobrazovkový náhled na všech "
-    L"monitorech; změny lze zkoušet za otevřeného nastavení. OK nastavení uloží, Storno je zahodí. Celoobrazovkový spořič ukončíte klávesou "
-    L"Esc nebo pohybem myši.\r\n\r\nMezi ovládacími prvky přecházejte klávesami Tab a Shift+Tab; podtržené volby lze vyvolat pomocí Alt a "
-    L"příslušného písmene. Esc v nastavení odpovídá tlačítku Storno; v nápovědě nebo okně O aplikaci zavře pouze toto okno.\r\n\r\nPodporovány "
-    L"jsou systémy Windows 7 až Windows 11. Windows Vista SP2: KB971512, KB2117917.",
-    L"Choose Space observation or the straight Fly through space mode. The sliders set object and camera speed from 0–1600%, one to ten copies "
-    L"of each enabled object, and size from 50–200%.\r\n\r\nThere are 30 selectable solids. A prolate spheroid has one longer "
-    L"semi-axis and two equal shorter semi-axes. A rounded disc (spheroplatelet) has two flat circular faces and a smoothly "
-    L"rounded rim; its diameter is slightly larger than that of the spherical layer and its thickness is half as large. "
-    L"A hollow cylinder with toroidal ends has outer and inner cylindrical surfaces joined by half-torus ends that form "
-    L"exact semicircles in an axial section.\r\n\r\nThe Main light and Fill light checkboxes below the right-hand sliders "
-    L"independently enable or disable the two lights for the entire scene. By default, Main light is on and Fill light is off. Light settings "
-    L"are stored separately for the application and screen saver.\r\n\r\nEnable the required object types. Enable preview starts a full-screen "
-    L"preview on every display while the settings dialog remains open for live adjustments. OK saves the settings and Cancel discards them. "
-    L"Exit the full-screen saver with Esc or mouse movement.\r\n\r\nUse Tab and Shift+Tab to move between controls; use Alt and the underlined "
-    L"letter to activate a command. Esc in the settings dialog is equivalent to Cancel; in Help or About, it closes only that "
-    L"window.\r\n\r\nWindows 7 through Windows 11 are supported. Windows Vista SP2: KB971512, KB2117917.",
-    L"Wählen Sie Raumbeobachtung oder Flug durch den Raum in gerader Linie. Die Regler bestimmen Objekt- und Kamerageschwindigkeit von 0–1600 "
-    L"%, ein bis zehn Exemplare je aktivem Körper und 50–200 % Größe.\r\n\r\nEs stehen 30 Körper zur Auswahl. Ein "
-    L"verlängertes Rotationsellipsoid besitzt eine längere und zwei gleich lange kürzere Halbachsen. Eine abgerundete "
-    L"Scheibe (Spheroplatelet) hat zwei ebene Kreisflächen und einen stetig abgerundeten Rand; ihr Durchmesser "
-    L"ist etwas größer als der einer Kugelschicht und ihre Dicke halb so groß. Ein Hohlzylinder mit toroidalen "
-    L"Enden besitzt eine äußere und eine innere Zylinderfläche, die durch Halbtori verbunden sind; im Axialschnitt "
-    L"bilden die Enden exakte Halbkreise.\r\n\r\nDie Kontrollkästchen Hauptlicht und Aufhelllicht unter den "
-    L"rechten Reglern schalten die beiden Lichtquellen für die gesamte Szene unabhängig ein oder aus. Standardmäßig ist Hauptlicht "
-    L"eingeschaltet und Aufhelllicht ausgeschaltet. Die Lichteinstellungen werden für Anwendung und Bildschirmschoner getrennt "
-    L"gespeichert.\r\n\r\nAktivieren Sie die gewünschten Körper. Vorschau einschalten startet eine Vollbildvorschau auf allen Monitoren. Der "
-    L"Einstellungsdialog bleibt für Änderungen geöffnet. OK speichert, Abbrechen verwirft. Esc oder eine Mausbewegung beendet den "
-    L"Vollbildschoner.\r\n\r\nMit Tab und Umschalt+Tab wechseln Sie zwischen den Steuerelementen; mit Alt und dem unterstrichenen Buchstaben "
-    L"rufen Sie einen Befehl auf. Esc im Einstellungsdialog entspricht Abbrechen; in der Hilfe oder im Infofenster schließt es nur dieses "
-    L"Fenster.\r\n\r\nUnterstützt werden Windows 7 bis Windows 11. Windows Vista SP2: KB971512, KB2117917.",
-    L"Choisissez Observation de l’espace ou le Vol dans l’espace rectiligne. Les curseurs règlent la vitesse des objets et de la caméra de 0 à "
-    L"1 600 %, une à dix copies et une taille de 50 à 200 %.\r\n\r\nVous pouvez choisir parmi 30 solides. Un sphéroïde "
-    L"allongé possède un demi-axe plus long et deux demi-axes plus courts de même longueur. Un disque arrondi (spheroplatelet) "
-    L"possède deux faces circulaires planes et un bord arrondi continu ; son diamètre est légèrement supérieur à celui du "
-    L"segment sphérique à deux bases et son épaisseur est deux fois plus petite. Un cylindre creux à extrémités toriques "
-    L"possède des surfaces cylindriques extérieure et intérieure reliées par des demi-tores, dont la section axiale "
-    L"forme des demi-cercles exacts.\r\n\r\nLes cases Éclairage principal et Éclairage d’appoint sous les curseurs de "
-    L"droite activent ou désactivent indépendamment les deux sources lumineuses pour toute la scène. Par défaut, Éclairage principal est "
-    L"activé et Éclairage d’appoint est désactivé. Les réglages d’éclairage sont enregistrés séparément pour l’application et l’économiseur "
-    L"d’écran.\r\n\r\nActivez les solides voulus. Activer l’aperçu lance un aperçu plein écran sur tous les moniteurs ; la boîte de dialogue "
-    L"reste ouverte pour les réglages en direct. OK enregistre les réglages, Annuler les abandonne. Échap ou un mouvement de souris quitte le "
-    L"plein écran.\r\n\r\nUtilisez Tab et Maj+Tab pour passer d’un contrôle à l’autre ; Alt et la lettre soulignée activent une commande. "
-    L"Échap dans les réglages équivaut à Annuler ; dans l’aide ou À propos, cette touche ferme uniquement cette fenêtre.\r\n\r\nWindows 7 à "
-    L"Windows 11 sont pris en charge. Windows Vista SP2: KB971512, KB2117917.",
-    L"Elija Observación del espacio o Vuelo por el espacio en línea recta. Los controles ajustan la velocidad de objetos y cámara del 0 al "
-    L"1600 %, de una a diez copias y el tamaño del 50 al 200 %.\r\n\r\nHay 30 sólidos disponibles. Un esferoide prolato tiene un "
-    L"semieje más largo y dos semiejes más cortos de igual longitud. Un disco redondeado (spheroplatelet) tiene dos caras circulares "
-    L"planas y un borde redondeado continuo; su diámetro es ligeramente mayor que el del segmento esférico de dos bases y su grosor "
-    L"es la mitad. Un cilindro hueco con extremos toroidales tiene superficies cilíndricas exterior e interior unidas por semitoros, "
-    L"que forman semicírculos exactos en una sección axial.\r\n\r\nLas casillas Luz principal y Luz de relleno bajo los controles "
-    L"deslizantes de la derecha activan o desactivan las dos luces de forma independiente para toda la escena. De forma predeterminada, Luz "
-    L"principal está activada y Luz de relleno está desactivada. Los ajustes de iluminación se guardan por separado para la aplicación y el "
-    L"salvapantallas.\r\n\r\nActive los sólidos deseados. Activar vista previa inicia una vista previa a pantalla completa en todos los "
-    L"monitores; el cuadro de configuración permanece abierto para realizar ajustes en tiempo real. Aceptar guarda y Cancelar descarta. Esc o "
-    L"mover el ratón cierra el salvapantallas completo.\r\n\r\nUse Tab y Mayús+Tab para desplazarse entre controles; Alt y la letra subrayada "
-    L"activan una opción. Esc en la configuración equivale a Cancelar; en Ayuda o Acerca de, cierra únicamente esa ventana.\r\n\r\nSe admiten "
-    L"Windows 7 a Windows 11. Windows Vista SP2: KB971512, KB2117917.",
-    L"Scegliere Osservazione dello spazio o Volo nello spazio rettilineo. I cursori regolano la velocità di oggetti e camera da 0 a 1600 %, da "
-    L"una a dieci copie e la dimensione da 50 a 200 %.\r\n\r\nSono disponibili 30 solidi. Uno sferoide prolato ha un semiasse più "
-    L"lungo e due semiassi più corti di uguale lunghezza. Un disco arrotondato (spheroplatelet) ha due facce circolari piane e un "
-    L"bordo arrotondato continuo; il suo diametro è leggermente maggiore di quello del segmento sferico a due basi e il suo spessore "
-    L"è la metà. Un cilindro cavo con estremità toroidali ha superfici cilindriche esterna e interna unite da semitori, che formano "
-    L"semicirconferenze esatte in una sezione assiale.\r\n\r\nLe caselle Luce principale e Luce di riempimento sotto i cursori di destra "
-    L"attivano o disattivano le due luci in modo indipendente per l’intera scena. Per impostazione predefinita, Luce principale è attiva e "
-    L"Luce di riempimento è disattivata. Le impostazioni di illuminazione vengono salvate separatamente per l’applicazione e il "
-    L"salvaschermo.\r\n\r\nAttivare i solidi desiderati. Attiva anteprima avvia un’anteprima a schermo intero su tutti i monitor; le "
-    L"impostazioni rimangono aperte per le modifiche in tempo reale. OK salva e Annulla scarta. Esc o il movimento del mouse chiude il "
-    L"salvaschermo a schermo intero.\r\n\r\nUsare Tab e Maiusc+Tab per passare tra i controlli; Alt e la lettera sottolineata attivano un "
-    L"comando. Esc nelle impostazioni equivale ad Annulla; nella Guida o nelle Informazioni, chiude solo quella finestra.\r\n\r\nSono "
-    L"supportati i sistemi da Windows 7 a Windows 11. Windows Vista SP2: KB971512, KB2117917.",
-    L"Wybierz Obserwację przestrzeni albo prostoliniowy Przelot przez przestrzeń. Suwaki ustawiają prędkość obiektów i kamery 0–1600%, od "
-    L"jednej do dziesięciu kopii i rozmiar 50–200%.\r\n\r\nDo wyboru jest 30 brył. Sferoida wydłużona ma jedną dłuższą półoś i "
-    L"dwie jednakowe krótsze półosie. Zaokrąglony dysk (spheroplatelet) ma dwie płaskie powierzchnie kołowe i gładko zaokrąglony "
-    L"brzeg; jego średnica jest nieco większa niż średnica warstwy kulistej, a grubość jest o połowę mniejsza. Walec pusty z "
-    L"toroidalnymi końcami ma zewnętrzną i wewnętrzną powierzchnię walcową połączone półtorusami, które w przekroju osiowym "
-    L"tworzą dokładne półokręgi.\r\n\r\nPola wyboru Światło główne i Światło wypełniające pod prawymi suwakami niezależnie "
-    L"włączają lub wyłączają oba światła dla całej sceny. Domyślnie Światło główne jest włączone, a Światło wypełniające wyłączone. Ustawienia "
-    L"oświetlenia są zapisywane osobno dla aplikacji i wygaszacza ekranu.\r\n\r\nWłącz potrzebne bryły. Włącz podgląd uruchamia podgląd "
-    L"pełnoekranowy na wszystkich monitorach. Okno ustawień pozostaje otwarte, umożliwiając zmiany na bieżąco. OK zapisuje ustawienia, a "
-    L"Anuluj je odrzuca. Esc lub ruch myszy kończy tryb pełnoekranowy.\r\n\r\nKlawisze Tab i Shift+Tab przełączają między kontrolkami; Alt i "
-    L"podkreślona litera wywołują polecenie. Esc w ustawieniach odpowiada przyciskowi Anuluj; w Pomocy lub O programie zamyka tylko to "
-    L"okno.\r\n\r\nObsługiwane są systemy od Windows 7 do Windows 11. Windows Vista SP2: KB971512, KB2117917.",
-    L"Vyberte Pozorovanie priestoru alebo priamy Prelet priestorom. Jazdce nastavujú rýchlosť objektov a kamery 0–1600 %, jednu až desať kópií "
-    L"a veľkosť 50–200 %.\r\n\r\nNa výber je 30 telies. Predĺžený rotačný elipsoid má jednu dlhšiu a dve zhodné kratšie "
-    L"poloosi. Zaoblený disk (spheroplatelet) má dve rovinné kruhové plochy a plynulo zaoblený obvod; jeho priemer je "
-    L"mierne väčší než pri guľovej vrstve a hrúbka polovičná. Dutý valec s toroidálnymi čelami má vonkajšiu a vnútornú "
-    L"valcovú plochu spojené polovicami torusu, ktoré v osovom reze tvoria presné polkruhy.\r\n\r\nZačiarkavacie "
-    L"políčka Hlavné svetlo a Doplnkové svetlo pod pravými jazdcami nezávisle zapínajú alebo vypínajú "
-    L"obe svetlá pre celú scénu. Predvolene je Hlavné svetlo zapnuté a Doplnkové svetlo vypnuté. Nastavenia svetiel sa ukladajú zvlášť pre "
-    L"aplikáciu a šetrič obrazovky.\r\n\r\nZapnite požadované telesá. Zapnúť náhľad spustí celoobrazovkový náhľad na všetkých monitoroch; "
-    L"nastavenia zostávajú otvorené a zmeny sa prejavia ihneď. OK uloží nastavenia a Zrušiť ich zahodí. Celoobrazovkový šetrič ukončí Esc "
-    L"alebo pohyb myši.\r\n\r\nMedzi ovládacími prvkami prechádzajte klávesmi Tab a Shift+Tab; podčiarknuté voľby vyvoláte pomocou Alt a "
-    L"príslušného písmena. Esc v nastaveniach zodpovedá tlačidlu Zrušiť; v Pomocníkovi alebo okne O aplikácii zavrie iba toto "
-    L"okno.\r\n\r\nPodporované sú systémy Windows 7 až Windows 11. Windows Vista SP2: KB971512, KB2117917.",
-    L"Choose Space observation or the straight Fly through space mode. Set object and camera speed from 0–1600%, one to ten copies and size "
-    L"from 50–200%, then enable the required objects.\r\n\r\nThere are 30 selectable solids. A prolate spheroid has one "
-    L"longer semi-axis and two equal shorter semi-axes. A rounded disc (spheroplatelet) has two flat circular faces and a "
-    L"smoothly rounded rim; its diameter is slightly larger than that of the spherical layer and its thickness is half as "
-    L"large. A hollow cylinder with toroidal ends has outer and inner cylindrical surfaces joined by half-torus ends that "
-    L"form exact semicircles in an axial section.\r\n\r\nThe Main light and Fill light checkboxes below the right-hand sliders "
-    L"independently enable or disable the two lights for the entire scene. By default, Main light is on and Fill light is off. Light settings "
-    L"are stored separately for the application and screen saver.\r\n\r\nEnable preview starts a full-screen preview on every display while "
-    L"the settings dialog remains open for live adjustments. OK saves the settings and Cancel discards them. Exit the full-screen screen saver "
-    L"with Esc or mouse movement.\r\n\r\nUse Tab and Shift+Tab to move between controls; use Alt and the underlined letter to activate a "
-    L"command. Esc in the settings dialog is equivalent to Cancel; in Help or About, it closes only that window.\r\n\r\nWindows 7 through "
-    L"Windows 11 are supported. Windows Vista SP2: KB971512, KB2117917.",
-    L"Choose Space observation or the straight Fly through space mode. Set object and camera speed from 0–1600%, one to ten copies and size "
-    L"from 50–200%, then enable the required objects.\r\n\r\nThere are 30 selectable solids. A prolate spheroid has one "
-    L"longer semi-axis and two equal shorter semi-axes. A rounded disc (spheroplatelet) has two flat circular faces and a "
-    L"smoothly rounded rim; its diameter is slightly larger than that of the spherical layer and its thickness is half as "
-    L"large. A hollow cylinder with toroidal ends has outer and inner cylindrical surfaces joined by half-torus ends that "
-    L"form exact semicircles in an axial section.\r\n\r\nThe Main light and Fill light checkboxes below the right-hand sliders "
-    L"independently enable or disable the two lights for the entire scene. By default, Main light is on and Fill light is off. Light settings "
-    L"are stored separately for the application and screen saver.\r\n\r\nEnable preview starts a full-screen preview on every display while "
-    L"the settings dialog remains open for live adjustments. OK saves the settings and Cancel discards them. Exit the full-screen screen saver "
-    L"with Esc or mouse movement.\r\n\r\nUse Tab and Shift+Tab to move between controls; use Alt and the underlined letter to activate a "
-    L"command. Esc in the settings dialog is equivalent to Cancel; in Help or About, it closes only that window.\r\n\r\nWindows 7 through "
-    L"Windows 11 are supported. Windows Vista SP2: KB971512, KB2117917.",
-    L"Escolha Observação do espaço ou Voo pelo espaço em linha reta. Regule a velocidade dos objetos e da câmara de 0 a 1600%, uma a dez "
-    L"cópias e o tamanho de 50 a 200%, e ative os sólidos.\r\n\r\nEstão disponíveis 30 sólidos. Um esferoide prolato tem um semieixo mais "
-    L"longo e dois semieixos mais curtos de igual comprimento. Um disco arredondado (spheroplatelet) tem duas faces circulares planas e "
-    L"um bordo arredondado contínuo; o seu diâmetro é ligeiramente maior do que o do segmento esférico de duas bases e a sua espessura "
-    L"é metade. Um cilindro oco com extremidades toroidais tem superfícies cilíndricas exterior e interior unidas por meios toros, que "
-    L"formam semicírculos exatos numa secção axial.\r\n\r\nAs caixas Luz principal e Luz de preenchimento sob os controlos deslizantes "
-    L"da direita ativam ou desativam as duas luzes de forma independente em toda a cena. Por predefinição, Luz principal está ligada e Luz de "
-    L"preenchimento está desligada. As definições de iluminação são guardadas separadamente para a aplicação e a proteção de "
-    L"ecrã.\r\n\r\nAtivar pré-visualização inicia uma pré-visualização em ecrã inteiro em todos os monitores; o diálogo permanece aberto para "
-    L"ajustar as definições em tempo real. OK guarda as definições e Cancelar descarta-as. Esc ou o movimento do rato termina a proteção em "
-    L"ecrã inteiro.\r\n\r\nUse Tab e Shift+Tab para passar entre controlos; Alt e a letra sublinhada ativam um comando. Esc nas definições "
-    L"equivale a Cancelar; na Ajuda ou em Acerca de, fecha apenas essa janela.\r\n\r\nSão suportados os sistemas Windows 7 a Windows 11. "
-    L"Windows Vista SP2: KB971512, KB2117917.",
-    L"Velg Romobservasjon eller Flyging gjennom rommet i rett linje. Angi objekt- og kamerahastighet 0–1600 %, én til ti kopier og størrelse "
-    L"50–200 %, og aktiver ønskede legemer.\r\n\r\nDet finnes 30 legemer å velge mellom. En prolat sfæroide har én lengre "
-    L"halvakse og to like lange kortere halvakser. En avrundet skive (spheroplatelet) har to plane sirkelflater og en "
-    L"jevnt avrundet kant; diameteren er litt større enn kulelagets, og tykkelsen er halvparten. En hul sylinder med "
-    L"toroidale ender har ytre og indre sylinderflater forbundet med halve toruser, som danner nøyaktige halvsirkler i "
-    L"et aksialsnitt.\r\n\r\nAvmerkingsboksene Hovedlys og Utfyllingslys under glidebryterne til høyre slår de to lysene "
-    L"av eller på uavhengig av hverandre for hele scenen. Som standard er Hovedlys på og Utfyllingslys av. Lysinnstillingene lagres separat "
-    L"for programmet og skjermspareren.\r\n\r\nSlå på forhåndsvisning starter en forhåndsvisning i fullskjerm på alle skjermer. Innstillingene "
-    L"forblir åpne, og endringene vises fortløpende. OK lagrer innstillingene og Avbryt forkaster dem. Esc eller musebevegelse avslutter "
-    L"fullskjermsvisningen.\r\n\r\nBruk Tab og Shift+Tab for å flytte mellom kontrollene; Alt og den understrekede bokstaven aktiverer en "
-    L"kommando. Esc i innstillingene tilsvarer Avbryt; i Hjelp eller Om lukker det bare dette vinduet.\r\n\r\nWindows 7 til Windows 11 "
-    L"støttes. Windows Vista SP2: KB971512, KB2117917.",
-    L"Välj Rymdobservation eller Flygning genom rymden i rak linje. Ställ in objekt- och kamerahastighet 0–1600 %, en till tio kopior och "
-    L"storlek 50–200 %, och aktivera önskade kroppar.\r\n\r\nDet finns 30 kroppar att välja mellan. En prolat sfäroid har en "
-    L"längre halvaxel och två lika långa kortare halvaxlar. En avrundad skiva (spheroplatelet) har två plana cirkelytor och "
-    L"en jämnt avrundad kant; diametern är något större än hos klotsegmentet med två baser och tjockleken är hälften så stor. "
-    L"En ihålig cylinder med toroidala ändar har yttre och inre cylinderytor förenade med halva torusar, som bildar exakta "
-    L"halvcirklar i ett axiellt snitt.\r\n\r\nKryssrutorna Huvudljus och Upplättningsljus under reglagen till höger slår på "
-    L"eller av de två ljusen oberoende av varandra för hela scenen. Som standard är Huvudljus på och Upplättningsljus av. Ljusinställningarna "
-    L"sparas separat för programmet och skärmsläckaren.\r\n\r\nAktivera förhandsvisning startar en förhandsvisning i helskärm på alla "
-    L"bildskärmar. Inställningarna förblir öppna och ändringarna visas direkt. OK sparar inställningarna och Avbryt förkastar ändringarna. Esc "
-    L"eller musrörelse avslutar helskärmsläget.\r\n\r\nAnvänd Tab och Skift+Tab för att flytta mellan kontrollerna; Alt och den understrukna "
-    L"bokstaven aktiverar ett kommando. Esc i inställningarna motsvarar Avbryt; i Hjälp eller Om stänger det bara det fönstret.\r\n\r\nWindows "
-    L"7 till Windows 11 stöds. Windows Vista SP2: KB971512, KB2117917.",
-    L"Valitse Avaruuden tarkkailu tai Lento avaruuden halki suoraan eteenpäin. Aseta kohteiden ja kameran nopeus 0–1600 %, yhdestä kymmeneen "
-    L"kopiota ja koko 50–200 %, ja ota halutut kappaleet käyttöön.\r\n\r\nValittavana on 30 kappaletta. Prolaatilla sferoidilla "
-    L"on yksi pidempi puoliakseli ja kaksi yhtä pitkää lyhyempää puoliakselia. Pyöristetyllä kiekolla (spheroplatelet) on kaksi "
-    L"tasaista ympyräpintaa ja tasaisesti pyöristetty reuna; sen halkaisija on hieman suurempi kuin katkaistun pallosegmentin "
-    L"ja paksuus puolet sen paksuudesta. Onton lieriön ulompi ja sisempi lieriöpinta liittyvät toisiinsa toroidisilla päädyillä, "
-    L"jotka muodostavat aksiaalileikkauksessa tarkat puoliympyrät.\r\n\r\nOikeanpuoleisten liukusäätimien alla olevat Päävalo- ja "
-    L"Täytevalo-valintaruudut kytkevät koko näkymän kaksi valoa päälle tai pois toisistaan riippumatta. Oletuksena Päävalo on päällä ja "
-    L"Täytevalo pois päältä. Valaistusasetukset tallennetaan erikseen sovellukselle ja näytönsäästäjälle.\r\n\r\nOta esikatselu käyttöön "
-    L"käynnistää koko näytön esikatselun kaikilla näytöillä. Asetusikkuna pysyy avoinna, ja muutokset näkyvät heti. OK tallentaa asetukset ja "
-    L"Peruuta hylkää muutokset. Esc tai hiiren liike lopettaa koko näytön säästäjän.\r\n\r\nSiirry säätimien välillä Tab- ja "
-    L"Vaihto+Tab-näppäimillä; Alt ja alleviivattu kirjain aktivoivat komennon. Esc asetuksissa vastaa Peruuta-painiketta; Ohje- tai "
-    L"Tietoja-ikkunassa se sulkee vain kyseisen ikkunan.\r\n\r\nTuettuja käyttöjärjestelmiä ovat Windows 7–Windows 11. Windows Vista SP2: "
-    L"KB971512, KB2117917.",
-    L"Vælg Rumobservation eller Flyvning gennem rummet i en lige linje. Indstil objekt- og kamerahastighed 0–1600 %, en til ti kopier og "
-    L"størrelse 50–200 %, og aktivér de ønskede legemer.\r\n\r\nDer er 30 legemer at vælge imellem. En prolat sfæroide "
-    L"har én længere halvakse og to lige lange kortere halvakser. En afrundet skive (spheroplatelet) har to plane "
-    L"cirkelflader og en jævnt afrundet kant; diameteren er lidt større end kuglelagets, og tykkelsen er halvt så stor. En "
-    L"hul cylinder med toroidale ender har ydre og indre cylinderflader forbundet med halve torusser, som danner præcise "
-    L"halvcirkler i et aksialsnit.\r\n\r\nAfkrydsningsfelterne Hovedlys og Udfyldningslys under skyderne til højre slår "
-    L"de to lys til eller fra uafhængigt af hinanden for hele scenen. Som standard er Hovedlys slået til og Udfyldningslys slået fra. "
-    L"Lysindstillingerne gemmes separat for programmet og pauseskærmen.\r\n\r\nAktivér forhåndsvisning starter en forhåndsvisning i fuld skærm "
-    L"på alle skærme. Indstillingerne forbliver åbne, og ændringerne vises med det samme. OK gemmer indstillingerne, og Annuller forkaster "
-    L"ændringerne. Esc eller musebevægelse afslutter fuldskærmen.\r\n\r\nBrug Tab og Skift+Tab til at flytte mellem kontrollerne; Alt og det "
-    L"understregede bogstav aktiverer en kommando. Esc i indstillingerne svarer til Annuller; i Hjælp eller Om lukker det kun dette "
-    L"vindue.\r\n\r\nWindows 7 til Windows 11 understøttes. Windows Vista SP2: KB971512, KB2117917.",
-    L"Veldu Athugun rýmis eða Flug um rýmið í beinni línu. Stilltu hraða hluta og myndavélar á 0–1600%, eitt til tíu eintök og stærð á 50–200% "
-    L"og virkjaðu óskaða hluti.\r\n\r\nHægt er að velja úr 30 rúmhlutum. Ílöng snúningssporvala hefur einn lengri hálfás og "
-    L"tvo jafn langa styttri hálfása. Rúnaður diskur (spheroplatelet) hefur tvo flata hringlaga fleti og samfellt rúnnaðan "
-    L"jaðar; þvermál hans er örlítið stærra en þvermál kúlulags og þykktin helmingur þykktar kúlulags. Holur sívalningur "
-    L"með tórusendum hefur ytri og innri sívalningsfleti tengda með hálfum tórusum, sem mynda nákvæma hálfhringi í áslægum "
-    L"þverskurði.\r\n\r\nGátreitirnir Aðalljós og Fylliljós undir rennistikunum hægra megin kveikja eða slökkva á ljósunum "
-    L"tveimur óháð hvort öðru fyrir alla senuna. Sjálfgefið er kveikt á Aðalljós og slökkt á Fylliljós. Ljósastillingar eru vistaðar "
-    L"sérstaklega fyrir forritið og skjáhvíluna.\r\n\r\nVirkja forskoðun ræsir forskoðun á öllum skjánum á hverjum skjá. Stillingaglugginn "
-    L"helst opinn og breytingar sjást strax. Í lagi vistar stillingar og Hætta við hafnar breytingum. Esc eða músarhreyfing lokar skjáhvílu á "
-    L"öllum skjánum.\r\n\r\nNotaðu Tab og Shift+Tab til að færa þig milli stýrieininga; Alt og undirstrikaður stafur virkja skipun. Esc í "
-    L"stillingum jafngildir Hætta við; í Hjálp eða Um lokar það aðeins þeim glugga.\r\n\r\nWindows 7 til Windows 11 eru studd. Windows Vista "
-    L"SP2: KB971512, KB2117917.",
-    L"Uzayı gözlemleme veya doğrusal Uzayda uçuş kipini seçin. Nesne ve kamera hızını %0–1600, kopya sayısını bir ile on ve boyutu %50–200 "
-    L"arasında ayarlayıp istenen cisimleri etkinleştirin.\r\n\r\nSeçilebilen 30 katı cisim vardır. Prolat sferoitin bir "
-    L"uzun ve birbirine eşit iki kısa yarı ekseni vardır. Yuvarlatılmış disk (spheroplatelet), iki düz dairesel yüze ve "
-    L"kesintisiz yuvarlatılmış bir kenara sahiptir; çapı küre tabakasından biraz daha büyük, kalınlığı ise onun yarısıdır. "
-    L"Toroidal uçlu içi boş silindirin dış ve iç silindirik yüzeyleri yarım toruslarla birleştirilir; uçlar eksenel kesitte "
-    L"tam yarım daireler oluşturur.\r\n\r\nSağdaki kaydırıcıların altındaki Ana ışık ve Dolgu ışığı onay kutuları, tüm "
-    L"sahne için iki ışığı birbirinden bağımsız olarak açar veya kapatır. Varsayılan olarak Ana ışık açık, Dolgu ışığı kapalıdır. Aydınlatma "
-    L"ayarları uygulama ve ekran koruyucu için ayrı ayrı kaydedilir.\r\n\r\nÖnizlemeyi aç, tüm monitörlerde tam ekran önizleme başlatır. "
-    L"Ayarlar penceresi açık kalır ve değişiklikler anında görülür. Tamam ayarları kaydeder, İptal değişiklikleri iptal eder. Tam ekran "
-    L"koruyucudan Esc veya fare hareketiyle çıkılır.\r\n\r\nDenetimler arasında Tab ve Shift+Tab ile ilerleyin; Alt ve altı çizili harf bir "
-    L"komutu etkinleştirir. Ayarlarda Esc, İptal ile aynı işlevi görür; Yardım veya Hakkında penceresinde yalnızca o pencereyi "
-    L"kapatır.\r\n\r\nWindows 7 ile Windows 11 arasındaki sürümler desteklenir. Windows Vista SP2: KB971512, KB2117917."
+    L"Vyberte Pozorování prostoru nebo přímý Průlet prostorem. Jezdci nastavují rychlost objektů a kamery "
+    L"0–1600 %, jednu až deset kopií každého zapnutého tělesa a velikost 50–200 %. Zatržítka Hlavní světlo, "
+    L"Doplňkové světlo, Základní jas a Přisvětlení obrysů pod jezdci nezávisle ovládají osvětlení celé "
+    L"scény. Základní jas přisvětluje povrch těles, přisvětlení obrysů zvýrazňuje jejich okraje. Výchozí "
+    L"stav: hlavní světlo, základní jas a přisvětlení obrysů zapnuté, doplňkové světlo vypnuté. Nastavení "
+    L"osvětlení se ukládá zvlášť pro aplikaci a spořič obrazovky.\r\n\r\nZapněte požadované druhy těles. "
+    L"Zapnout náhled spustí celoobrazovkový náhled na všech monitorech; změny lze zkoušet za otevřeného "
+    L"nastavení. OK nastavení uloží, Storno je zahodí. Celoobrazovkový spořič ukončíte klávesou Esc nebo "
+    L"pohybem myši. Mezi ovládacími prvky přecházejte klávesami Tab a Shift+Tab; podtržené volby lze vyvolat "
+    L"pomocí Alt a příslušného písmene. Esc v nastavení odpovídá tlačítku Storno; v nápovědě nebo okně O "
+    L"aplikaci zavře pouze toto okno.\r\n\r\nPodporovány jsou systémy Windows 7 až Windows 11. Pro spuštění "
+    L"aplikace ve Windows Vista SP2 je nutné nainstalovat aktualizace KB971512 a KB2117917.",
+    L"Choose Space observation or the straight Fly through space mode. The sliders set object and camera "
+    L"speed from 0–1600%, one to ten copies of each enabled object, and size from 50–200%. The Main light, "
+    L"Fill light, Ambient light, and Rim light checkboxes below the sliders independently control lighting "
+    L"for the whole scene. Ambient light provides base illumination of object surfaces; rim light highlights "
+    L"their edges. By default, main, ambient, and rim light are on, and fill light is off. Lighting settings "
+    L"are stored separately for the application and screen saver.\r\n\r\nEnable the required object types. "
+    L"Enable preview starts a full-screen preview on every display while the settings dialog remains open "
+    L"for live adjustments. OK saves the settings and Cancel discards them. Exit the full-screen saver with "
+    L"Esc or mouse movement. Use Tab and Shift+Tab to move between controls; use Alt and the underlined "
+    L"letter to activate a command. Esc in the settings dialog is equivalent to Cancel; in Help or About, it "
+    L"closes only that window.\r\n\r\nWindows 7 through Windows 11 are supported. To run the application on "
+    L"Windows Vista SP2, you must install updates KB971512 and KB2117917.",
+    L"Wählen Sie Raumbeobachtung oder Flug durch den Raum in gerader Linie. Die Regler bestimmen Objekt- und "
+    L"Kamerageschwindigkeit von 0–1600 %, ein bis zehn Exemplare je aktivem Körper und 50–200 % Größe. Die "
+    L"Kontrollkästchen Hauptlicht, Aufhelllicht, Umgebungslicht und Konturlicht unter den Reglern steuern "
+    L"die Beleuchtung der gesamten Szene unabhängig voneinander. Umgebungslicht sorgt für eine "
+    L"Grundhelligkeit der Körperoberflächen, Konturlicht betont ihre Ränder. Standardmäßig sind Hauptlicht, "
+    L"Umgebungslicht und Konturlicht eingeschaltet und Aufhelllicht ausgeschaltet. Die "
+    L"Beleuchtungseinstellungen werden für Anwendung und Bildschirmschoner getrennt "
+    L"gespeichert.\r\n\r\nAktivieren Sie die gewünschten Körper. Vorschau einschalten startet eine "
+    L"Vollbildvorschau auf allen Monitoren. Der Einstellungsdialog bleibt für Änderungen geöffnet. OK "
+    L"speichert, Abbrechen verwirft. Esc oder eine Mausbewegung beendet den Vollbildschoner. Mit Tab und "
+    L"Umschalt+Tab wechseln Sie zwischen den Steuerelementen; mit Alt und dem unterstrichenen Buchstaben "
+    L"rufen Sie einen Befehl auf. Esc im Einstellungsdialog entspricht Abbrechen; in der Hilfe oder im "
+    L"Infofenster schließt es nur dieses Fenster.\r\n\r\nUnterstützt werden Windows 7 bis Windows 11. Zum "
+    L"Ausführen der Anwendung unter Windows Vista SP2 müssen die Updates KB971512 und KB2117917 installiert "
+    L"werden.",
+    L"Choisissez Observation de l’espace ou le Vol dans l’espace rectiligne. Les curseurs règlent la vitesse "
+    L"des objets et de la caméra de 0 à 1 600 %, une à dix copies et une taille de 50 à 200 %. Les cases "
+    L"Éclairage principal, Éclairage d’appoint, Éclairage ambiant et Éclairage des contours sous les "
+    L"curseurs contrôlent indépendamment l’éclairage de toute la scène. L’éclairage ambiant fournit une "
+    L"luminosité de base aux surfaces, et l’éclairage des contours souligne leurs bords. Par défaut, les "
+    L"éclairages principal, ambiant et des contours sont activés, et l’éclairage d’appoint est désactivé. "
+    L"Les réglages sont enregistrés séparément pour l’application et l’économiseur d’écran.\r\n\r\nActivez "
+    L"les solides voulus. Activer l’aperçu lance un aperçu plein écran sur tous les moniteurs ; la boîte de "
+    L"dialogue reste ouverte pour les réglages en direct. OK enregistre les réglages, Annuler les abandonne. "
+    L"Échap ou un mouvement de souris quitte le plein écran. Utilisez Tab et Maj+Tab pour passer d’un "
+    L"contrôle à l’autre ; Alt et la lettre soulignée activent une commande. Échap dans les réglages "
+    L"équivaut à Annuler ; dans l’aide ou À propos, cette touche ferme uniquement cette "
+    L"fenêtre.\r\n\r\nWindows 7 à Windows 11 sont pris en charge. Pour exécuter l’application sous Windows "
+    L"Vista SP2, il est nécessaire d’installer les mises à jour KB971512 et KB2117917.",
+    L"Elija Observación del espacio o Vuelo por el espacio en línea recta. Los controles ajustan la "
+    L"velocidad de objetos y cámara del 0 al 1600 %, de una a diez copias y el tamaño del 50 al 200 %. Las "
+    L"casillas Luz principal, Luz de relleno, Luz ambiental e Iluminación de contornos bajo los controles "
+    L"deslizantes controlan de forma independiente la iluminación de toda la escena. La luz ambiental aporta "
+    L"iluminación básica a las superficies y la iluminación de contornos resalta sus bordes. De forma "
+    L"predeterminada, las luces principal, ambiental y de contornos están activadas, y la luz de relleno "
+    L"está desactivada. Los ajustes se guardan por separado para la aplicación y el "
+    L"salvapantallas.\r\n\r\nActive los sólidos deseados. Activar vista previa inicia una vista previa a "
+    L"pantalla completa en todos los monitores; el cuadro de configuración permanece abierto para realizar "
+    L"ajustes en tiempo real. Aceptar guarda y Cancelar descarta. Esc o mover el ratón cierra el "
+    L"salvapantallas completo. Use Tab y Mayús+Tab para desplazarse entre controles; Alt y la letra "
+    L"subrayada activan una opción. Esc en la configuración equivale a Cancelar; en Ayuda o Acerca de, "
+    L"cierra únicamente esa ventana.\r\n\r\nSe admiten Windows 7 a Windows 11. Para ejecutar la aplicación "
+    L"en Windows Vista SP2, es necesario instalar las actualizaciones KB971512 y KB2117917.",
+    L"Scegliere Osservazione dello spazio o Volo nello spazio rettilineo. I cursori regolano la velocità di "
+    L"oggetti e camera da 0 a 1600 %, da una a dieci copie e la dimensione da 50 a 200 %. Le caselle Luce "
+    L"principale, Luce di riempimento, Luce ambientale e Illuminazione dei contorni sotto i cursori "
+    L"controllano indipendentemente l’illuminazione dell’intera scena. La luce ambientale fornisce "
+    L"un’illuminazione di base alle superfici, mentre quella dei contorni ne evidenzia i bordi. Per "
+    L"impostazione predefinita, le luci principale, ambientale e dei contorni sono attive e la luce di "
+    L"riempimento è disattivata. Le impostazioni vengono salvate separatamente per l’applicazione e il "
+    L"salvaschermo.\r\n\r\nAttivare i solidi desiderati. Attiva anteprima avvia un’anteprima a schermo "
+    L"intero su tutti i monitor; le impostazioni rimangono aperte per le modifiche in tempo reale. OK salva "
+    L"e Annulla scarta. Esc o il movimento del mouse chiude il salvaschermo a schermo intero. Usare Tab e "
+    L"Maiusc+Tab per passare tra i controlli; Alt e la lettera sottolineata attivano un comando. Esc nelle "
+    L"impostazioni equivale ad Annulla; nella Guida o nelle Informazioni, chiude solo quella "
+    L"finestra.\r\n\r\nSono supportati i sistemi da Windows 7 a Windows 11. Per eseguire l’applicazione su "
+    L"Windows Vista SP2, è necessario installare gli aggiornamenti KB971512 e KB2117917.",
+    L"Wybierz Obserwację przestrzeni albo prostoliniowy Przelot przez przestrzeń. Suwaki ustawiają prędkość "
+    L"obiektów i kamery 0–1600%, od jednej do dziesięciu kopii i rozmiar 50–200%. Pola wyboru Światło "
+    L"główne, Światło wypełniające, Światło otoczenia i Oświetlenie konturów pod suwakami niezależnie "
+    L"sterują oświetleniem całej sceny. Światło otoczenia zapewnia podstawową jasność powierzchni, a "
+    L"oświetlenie konturów podkreśla krawędzie. Domyślnie światło główne, światło otoczenia i oświetlenie "
+    L"konturów są włączone, a światło wypełniające jest wyłączone. Ustawienia są zapisywane osobno dla "
+    L"aplikacji i wygaszacza ekranu.\r\n\r\nWłącz potrzebne bryły. Włącz podgląd uruchamia podgląd "
+    L"pełnoekranowy na wszystkich monitorach. Okno ustawień pozostaje otwarte, umożliwiając zmiany na "
+    L"bieżąco. OK zapisuje ustawienia, a Anuluj je odrzuca. Esc lub ruch myszy kończy tryb pełnoekranowy. "
+    L"Klawisze Tab i Shift+Tab przełączają między kontrolkami; Alt i podkreślona litera wywołują polecenie. "
+    L"Esc w ustawieniach odpowiada przyciskowi Anuluj; w Pomocy lub O programie zamyka tylko to "
+    L"okno.\r\n\r\nObsługiwane są systemy od Windows 7 do Windows 11. Do uruchomienia aplikacji w systemie "
+    L"Windows Vista SP2 konieczne jest zainstalowanie aktualizacji KB971512 i KB2117917.",
+    L"Vyberte Pozorovanie priestoru alebo priamy Prelet priestorom. Jazdce nastavujú rýchlosť objektov a "
+    L"kamery 0–1600 %, jednu až desať kópií a veľkosť 50–200 %. Začiarkavacie políčka Hlavné svetlo, "
+    L"Doplnkové svetlo, Základný jas a Prisvetlenie obrysov pod jazdcami nezávisle ovládajú osvetlenie celej "
+    L"scény. Základný jas prisvetľuje povrchy telies a prisvetlenie obrysov zvýrazňuje ich okraje. "
+    L"Predvolene sú hlavné svetlo, základný jas a prisvetlenie obrysov zapnuté a doplnkové svetlo vypnuté. "
+    L"Nastavenia osvetlenia sa ukladajú zvlášť pre aplikáciu a šetrič obrazovky.\r\n\r\nZapnite požadované "
+    L"telesá. Zapnúť náhľad spustí celoobrazovkový náhľad na všetkých monitoroch; nastavenia zostávajú "
+    L"otvorené a zmeny sa prejavia ihneď. OK uloží nastavenia a Zrušiť ich zahodí. Celoobrazovkový šetrič "
+    L"ukončí Esc alebo pohyb myši. Medzi ovládacími prvkami prechádzajte klávesmi Tab a Shift+Tab; "
+    L"podčiarknuté voľby vyvoláte pomocou Alt a príslušného písmena. Esc v nastaveniach zodpovedá tlačidlu "
+    L"Zrušiť; v Pomocníkovi alebo okne O aplikácii zavrie iba toto okno.\r\n\r\nPodporované sú systémy "
+    L"Windows 7 až Windows 11. Na spustenie aplikácie v systéme Windows Vista SP2 je potrebné nainštalovať "
+    L"aktualizácie KB971512 a KB2117917.",
+    L"Choose Space observation or the straight Fly through space mode. Set object and camera speed from "
+    L"0–1600%, one to ten copies and size from 50–200%, then enable the required objects. The Main light, "
+    L"Fill light, Ambient light, and Rim light checkboxes below the sliders independently control lighting "
+    L"for the whole scene. Ambient light provides base illumination of object surfaces; rim light highlights "
+    L"their edges. By default, main, ambient, and rim light are on, and fill light is off. Lighting settings "
+    L"are stored separately for the application and screen saver.\r\n\r\nEnable preview starts a full-screen "
+    L"preview on every display while the settings dialog remains open for live adjustments. OK saves the "
+    L"settings and Cancel discards them. Exit the full-screen screen saver with Esc or mouse movement. Use "
+    L"Tab and Shift+Tab to move between controls; use Alt and the underlined letter to activate a command. "
+    L"Esc in the settings dialog is equivalent to Cancel; in Help or About, it closes only that "
+    L"window.\r\n\r\nWindows 7 through Windows 11 are supported. To run the application on Windows Vista "
+    L"SP2, you must install updates KB971512 and KB2117917.",
+    L"Choose Space observation or the straight Fly through space mode. Set object and camera speed from "
+    L"0–1600%, one to ten copies and size from 50–200%, then enable the required objects. The Main light, "
+    L"Fill light, Ambient light, and Rim light checkboxes below the sliders independently control lighting "
+    L"for the whole scene. Ambient light provides base illumination of object surfaces; rim light highlights "
+    L"their edges. By default, main, ambient, and rim light are on, and fill light is off. Lighting settings "
+    L"are stored separately for the application and screen saver.\r\n\r\nEnable preview starts a full-screen "
+    L"preview on every display while the settings dialog remains open for live adjustments. OK saves the "
+    L"settings and Cancel discards them. Exit the full-screen screen saver with Esc or mouse movement. Use "
+    L"Tab and Shift+Tab to move between controls; use Alt and the underlined letter to activate a command. "
+    L"Esc in the settings dialog is equivalent to Cancel; in Help or About, it closes only that "
+    L"window.\r\n\r\nWindows 7 through Windows 11 are supported. To run the application on Windows Vista "
+    L"SP2, you must install updates KB971512 and KB2117917.",
+    L"Escolha Observação do espaço ou Voo pelo espaço em linha reta. Regule a velocidade dos objetos e da "
+    L"câmara de 0 a 1600%, uma a dez cópias e o tamanho de 50 a 200%, e ative os sólidos. As caixas Luz "
+    L"principal, Luz de preenchimento, Luz ambiente e Iluminação dos contornos sob os controlos deslizantes "
+    L"controlam a iluminação de toda a cena de forma independente. A luz ambiente fornece iluminação de base "
+    L"às superfícies e a iluminação dos contornos realça os seus limites. Por predefinição, as luzes "
+    L"principal, ambiente e dos contornos estão ligadas e a luz de preenchimento está desligada. As "
+    L"definições são guardadas separadamente para a aplicação e a proteção de ecrã.\r\n\r\nAtivar "
+    L"pré-visualização inicia uma pré-visualização em ecrã inteiro em todos os monitores; o diálogo "
+    L"permanece aberto para ajustar as definições em tempo real. OK guarda as definições e Cancelar "
+    L"descarta-as. Esc ou o movimento do rato termina a proteção em ecrã inteiro. Use Tab e Shift+Tab para "
+    L"passar entre controlos; Alt e a letra sublinhada ativam um comando. Esc nas definições equivale a "
+    L"Cancelar; na Ajuda ou em Acerca de, fecha apenas essa janela.\r\n\r\nSão suportados os sistemas "
+    L"Windows 7 a Windows 11. Para executar a aplicação no Windows Vista SP2, é necessário instalar as "
+    L"atualizações KB971512 e KB2117917.",
+    L"Velg Romobservasjon eller Flyging gjennom rommet i rett linje. Angi objekt- og kamerahastighet 0–1600 "
+    L"%, én til ti kopier og størrelse 50–200 %, og aktiver ønskede legemer. Avmerkingsboksene Hovedlys, "
+    L"Utfyllingslys, Omgivelseslys og Konturlys under glidebryterne styrer belysningen i hele scenen "
+    L"uavhengig av hverandre. Omgivelseslys gir grunnbelysning på overflatene, og konturlys fremhever "
+    L"kantene. Som standard er hovedlys, omgivelseslys og konturlys på, og utfyllingslys av. Innstillingene "
+    L"lagres separat for programmet og skjermspareren.\r\n\r\nSlå på forhåndsvisning starter en "
+    L"forhåndsvisning i fullskjerm på alle skjermer. Innstillingene forblir åpne, og endringene vises "
+    L"fortløpende. OK lagrer innstillingene og Avbryt forkaster dem. Esc eller musebevegelse avslutter "
+    L"fullskjermsvisningen. Bruk Tab og Shift+Tab for å flytte mellom kontrollene; Alt og den understrekede "
+    L"bokstaven aktiverer en kommando. Esc i innstillingene tilsvarer Avbryt; i Hjelp eller Om lukker det "
+    L"bare dette vinduet.\r\n\r\nWindows 7 til Windows 11 støttes. For å kjøre programmet på Windows Vista "
+    L"SP2 må oppdateringene KB971512 og KB2117917 installeres.",
+    L"Välj Rymdobservation eller Flygning genom rymden i rak linje. Ställ in objekt- och kamerahastighet "
+    L"0–1600 %, en till tio kopior och storlek 50–200 %, och aktivera önskade kroppar. Kryssrutorna "
+    L"Huvudljus, Upplättningsljus, Omgivningsljus och Konturljus under reglagen styr belysningen i hela "
+    L"scenen oberoende av varandra. Omgivningsljus ger grundbelysning på ytorna och konturljus framhäver "
+    L"kanterna. Som standard är huvudljus, omgivningsljus och konturljus på och upplättningsljus av. "
+    L"Inställningarna sparas separat för programmet och skärmsläckaren.\r\n\r\nAktivera förhandsvisning "
+    L"startar en förhandsvisning i helskärm på alla bildskärmar. Inställningarna förblir öppna och "
+    L"ändringarna visas direkt. OK sparar inställningarna och Avbryt förkastar ändringarna. Esc eller "
+    L"musrörelse avslutar helskärmsläget. Använd Tab och Skift+Tab för att flytta mellan kontrollerna; Alt "
+    L"och den understrukna bokstaven aktiverar ett kommando. Esc i inställningarna motsvarar Avbryt; i Hjälp "
+    L"eller Om stänger det bara det fönstret.\r\n\r\nWindows 7 till Windows 11 stöds. För att köra "
+    L"programmet på Windows Vista SP2 måste uppdateringarna KB971512 och KB2117917 installeras.",
+    L"Valitse Avaruuden tarkkailu tai Lento avaruuden halki suoraan eteenpäin. Aseta kohteiden ja kameran "
+    L"nopeus 0–1600 %, yhdestä kymmeneen kopiota ja koko 50–200 %, ja ota halutut kappaleet käyttöön. "
+    L"Liukusäätimien alla olevat Päävalo-, Täytevalo-, Ympäristövalo- ja Reunavalo-valintaruudut ohjaavat "
+    L"koko näkymän valaistusta toisistaan riippumatta. Ympäristövalo antaa pinnoille perusvalaistuksen ja "
+    L"reunavalo korostaa reunoja. Oletuksena päävalo, ympäristövalo ja reunavalo ovat päällä ja täytevalo "
+    L"pois päältä. Asetukset tallennetaan erikseen sovellukselle ja näytönsäästäjälle.\r\n\r\nOta esikatselu "
+    L"käyttöön käynnistää koko näytön esikatselun kaikilla näytöillä. Asetusikkuna pysyy avoinna, ja "
+    L"muutokset näkyvät heti. OK tallentaa asetukset ja Peruuta hylkää muutokset. Esc tai hiiren liike "
+    L"lopettaa koko näytön säästäjän. Siirry säätimien välillä Tab- ja Vaihto+Tab-näppäimillä; Alt ja "
+    L"alleviivattu kirjain aktivoivat komennon. Esc asetuksissa vastaa Peruuta-painiketta; Ohje- tai "
+    L"Tietoja-ikkunassa se sulkee vain kyseisen ikkunan.\r\n\r\nTuettuja käyttöjärjestelmiä ovat Windows "
+    L"7–Windows 11. Sovelluksen suorittaminen Windows Vista SP2:ssa edellyttää päivitysten KB971512 ja "
+    L"KB2117917 asentamista.",
+    L"Vælg Rumobservation eller Flyvning gennem rummet i en lige linje. Indstil objekt- og kamerahastighed "
+    L"0–1600 %, en til ti kopier og størrelse 50–200 %, og aktivér de ønskede legemer. Afkrydsningsfelterne "
+    L"Hovedlys, Udfyldningslys, Omgivende lys og Konturlys under skyderne styrer belysningen af hele scenen "
+    L"uafhængigt af hinanden. Omgivende lys giver overfladerne en grundbelysning, og konturlys fremhæver "
+    L"kanterne. Som standard er hovedlys, omgivende lys og konturlys slået til og udfyldningslys slået fra. "
+    L"Indstillingerne gemmes separat for programmet og pauseskærmen.\r\n\r\nAktivér forhåndsvisning starter "
+    L"en forhåndsvisning i fuld skærm på alle skærme. Indstillingerne forbliver åbne, og ændringerne vises "
+    L"med det samme. OK gemmer indstillingerne, og Annuller forkaster ændringerne. Esc eller musebevægelse "
+    L"afslutter fuldskærmen. Brug Tab og Skift+Tab til at flytte mellem kontrollerne; Alt og det "
+    L"understregede bogstav aktiverer en kommando. Esc i indstillingerne svarer til Annuller; i Hjælp eller "
+    L"Om lukker det kun dette vindue.\r\n\r\nWindows 7 til Windows 11 understøttes. For at køre programmet "
+    L"på Windows Vista SP2 skal opdateringerne KB971512 og KB2117917 installeres.",
+    L"Veldu Athugun rýmis eða Flug um rýmið í beinni línu. Stilltu hraða hluta og myndavélar á 0–1600%, eitt "
+    L"til tíu eintök og stærð á 50–200% og virkjaðu óskaða hluti. Gátreitirnir Aðalljós, Fylliljós, "
+    L"Umhverfislýsing og Útlínulýsing undir rennistikunum stýra lýsingu allrar senunnar óháð hver öðrum. "
+    L"Umhverfislýsing gefur yfirborðunum grunnbirtu og útlínulýsing dregur fram jaðrana. Sjálfgefið er "
+    L"kveikt á aðalljósi, umhverfislýsingu og útlínulýsingu en slökkt á fylliljósi. Stillingarnar eru "
+    L"vistaðar sérstaklega fyrir forritið og skjáhvíluna.\r\n\r\nVirkja forskoðun ræsir forskoðun á öllum "
+    L"skjánum á hverjum skjá. Stillingaglugginn helst opinn og breytingar sjást strax. Í lagi vistar "
+    L"stillingar og Hætta við hafnar breytingum. Esc eða músarhreyfing lokar skjáhvílu á öllum skjánum. "
+    L"Notaðu Tab og Shift+Tab til að færa þig milli stýrieininga; Alt og undirstrikaður stafur virkja "
+    L"skipun. Esc í stillingum jafngildir Hætta við; í Hjálp eða Um lokar það aðeins þeim "
+    L"glugga.\r\n\r\nWindows 7 til Windows 11 eru studd. Til að keyra forritið á Windows Vista SP2 þarf að "
+    L"setja upp uppfærslurnar KB971512 og KB2117917.",
+    L"Uzayı gözlemleme veya doğrusal Uzayda uçuş kipini seçin. Nesne ve kamera hızını %0–1600, kopya "
+    L"sayısını bir ile on ve boyutu %50–200 arasında ayarlayıp istenen cisimleri etkinleştirin. "
+    L"Kaydırıcıların altındaki Ana ışık, Dolgu ışığı, Ortam ışığı ve Kenar aydınlatması onay kutuları tüm "
+    L"sahnenin aydınlatmasını birbirinden bağımsız olarak kontrol eder. Ortam ışığı yüzeylere temel "
+    L"aydınlatma sağlar, kenar aydınlatması ise kenarları vurgular. Varsayılan olarak ana ışık, ortam ışığı "
+    L"ve kenar aydınlatması açık, dolgu ışığı kapalıdır. Ayarlar uygulama ve ekran koruyucu için ayrı ayrı "
+    L"kaydedilir.\r\n\r\nÖnizlemeyi aç, tüm monitörlerde tam ekran önizleme başlatır. Ayarlar penceresi açık "
+    L"kalır ve değişiklikler anında görülür. Tamam ayarları kaydeder, İptal değişiklikleri iptal eder. Tam "
+    L"ekran koruyucudan Esc veya fare hareketiyle çıkılır. Denetimler arasında Tab ve Shift+Tab ile "
+    L"ilerleyin; Alt ve altı çizili harf bir komutu etkinleştirir. Ayarlarda Esc, İptal ile aynı işlevi "
+    L"görür; Yardım veya Hakkında penceresinde yalnızca o pencereyi kapatır.\r\n\r\nWindows 7 ile Windows 11 "
+    L"arasındaki sürümler desteklenir. Uygulamayı Windows Vista SP2'de çalıştırmak için KB971512 ve "
+    L"KB2117917 güncellemelerini yüklemeniz gerekir."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_DESCRIPTION_TEXTS = {
@@ -2403,6 +2801,27 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_DESCRIPTION_TEXTS = {
     L"Vélbúnaðarhröðuð hreyfimynd heilla þrívíddarhluta.",
     L"Katı 3B nesnelerin donanım hızlandırmalı animasyonu."
 };
+
+/// Returns localized recording-settings captions for a validated language.
+const RecordingText& RecordingSettingsText(AppLanguage language) {
+    return RECORDING_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+}
+
+/// Returns the close warning for a validated application language.
+const wchar_t* RecordingCloseWarningText(AppLanguage language) {
+    return RECORDING_CLOSE_WARNING_TEXTS[
+        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+}
+
+/// Returns a TV resolution caption at the supplied preset index.
+const wchar_t* RecordingResolutionText(unsigned index) {
+    return RECORDING_RESOLUTION_TEXTS[index];
+}
+
+/// Returns an exact TV frame-rate caption at the supplied preset index.
+const wchar_t* RecordingRateText(unsigned index) {
+    return RECORDING_RATE_TEXTS[index];
+}
 
 /// Returns the core text record for a validated application language.
 const LocalizedText& Text(AppLanguage language) {
@@ -2512,7 +2931,8 @@ const MonitorColumnText& MonitorColumnsText(AppLanguage language) {
 
 /// Returns the localized option that inhibits the screen saver during visible animation.
 const wchar_t* PreventScreenSaverText(AppLanguage language) {
-    return PREVENT_SCREEN_SAVER_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return PREVENT_SCREEN_SAVER_TEXTS[
+        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the localized ambient-light checkbox caption.
@@ -2562,17 +2982,20 @@ const wchar_t* SnapshotFailedText(AppLanguage language) {
 
 /// Returns the localized uninstall command caption.
 const wchar_t* UninstallScreenSaverText(AppLanguage language) {
-    return UNINSTALL_SCREEN_SAVER_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return UNINSTALL_SCREEN_SAVER_TEXTS[
+        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the localized successful-uninstallation status text.
 const wchar_t* UninstallationSucceededText(AppLanguage language) {
-    return UNINSTALLATION_SUCCEEDED_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return UNINSTALLATION_SUCCEEDED_TEXTS[
+        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the generic localized uninstallation failure text.
 const wchar_t* UninstallationFailedText(AppLanguage language) {
-    return UNINSTALLATION_FAILED_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return UNINSTALLATION_FAILED_TEXTS[
+        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the recovery instruction for an open saver settings window.

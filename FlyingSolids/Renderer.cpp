@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.1.0.0
  */
 
 #define NOMINMAX
@@ -324,7 +324,7 @@ struct Renderer::Impl {
             return;
         }
         if (recorder.IsRecording()) {
-            recorder.Stop();
+            recorder.Stop(context.Get());
         }
         context->OMSetRenderTargets(0, nullptr, nullptr);
         renderTarget.Reset();
@@ -440,8 +440,8 @@ struct Renderer::Impl {
                 context->RSSetState(rasterizerState.Get());
             }
         }
-        if (presentFrame && recorder.IsRecording() && !recorder.CaptureFrame(context.Get(), backBuffer.Get())) {
-            recorder.Stop();
+        if (presentFrame && recorder.IsRecording()) {
+            recorder.CaptureFrame(context.Get(), backBuffer.Get());
         }
         if (inspectPixels) {
             InspectPixels();
@@ -657,20 +657,32 @@ unsigned Renderer::LastVisiblePixelCount() const {
 }
 
 /// Starts MP4 capture of the current render target.
-bool Renderer::StartRecording(const wchar_t* path, unsigned frameRate) {
-    return impl->recorder.Start(impl->device.Get(), path, impl->width, impl->height, frameRate);
+bool Renderer::StartRecording(const wchar_t* path, unsigned frameRate, const RecordingOptions& options) {
+    const RecordingFormat format = options.Format(impl->width, impl->height, frameRate);
+    return impl->recorder.Start(impl->device.Get(), path, impl->width, impl->height, format);
 }
 
 /// Tests the current GPU target and recording format without changing the active recorder.
-bool Renderer::CheckRecordingSupport(unsigned frameRate) const {
+bool Renderer::CheckRecordingSupport(unsigned frameRate, const RecordingOptions& options) const {
+    const RecordingFormat format = options.Format(impl->width, impl->height, frameRate);
     const HRESULT result = Mp4Recorder::CheckSupport(impl->device.Get(), impl->context.Get(), impl->backBuffer.Get(),
-        impl->width, impl->height, frameRate);
+        impl->width, impl->height, format);
     return SUCCEEDED(result);
 }
 
 /// Finalizes active MP4 capture.
 void Renderer::StopRecording() {
-    impl->recorder.Stop();
+    impl->recorder.Stop(impl->context.Get());
+}
+
+/// Drains capture resources before releasing the rendering lock, without waiting for the encoder worker.
+void Renderer::PrepareRecordingStop() {
+    impl->recorder.PrepareStop(impl->context.Get());
+}
+
+/// Joins the recording worker after capture is disabled, allowing animation to continue during finalization.
+void Renderer::FinishRecordingStop() {
+    impl->recorder.FinishStop();
 }
 
 /// Reports whether the renderer currently records frames.

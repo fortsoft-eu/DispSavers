@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This is open-source software licensed under the terms of the MIT License.
+
+Copyright (c) 2026 Petr Červinka - FortSoft <cervinka@fortsoft.eu>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Last modified for version 1.1.0.0
+-->
+<Rule Name="BuildSigning" DisplayName="Signing" PageTemplate="generic" Description="Authenticode signing of the EXE and its embedded SCR." xmlns="http://schemas.microsoft.com/build/2009/properties">
+	<Rule.DataSource>
+		<DataSource Persistence="UserFile" HasConfigurationCondition="false"/>
+	</Rule.DataSource>
+	<BoolProperty Name="BuildSigningEnabled" DisplayName="Sign binaries during build" Default="true" Description="Sign SCR before embedding it in EXE, then sign EXE. These settings apply to both projects and all configurations."/>
+	<StringProperty Name="BuildSignerName" DisplayName="Signer name" Description="Exact certificate common name in Current User > Personal. Specify this name or a certificate thumbprint."/>
+	<StringProperty Name="BuildCertificateThumbprint" DisplayName="Certificate thumbprint" Description="Optional certificate thumbprint. If both selectors are filled in, the certificate must match both."/>
+	<StringProperty Name="BuildTimestampServer" DisplayName="Timestamp server" Description="Required RFC 3161 timestamp server URL. Saved locally in FlyingSolids.vcxproj.user. A timestamp is always required."/>
+	<StringProperty Name="BuildSignToolPath" DisplayName="SignTool path" Subtype="file" Description="Optional signtool.exe path. Leave empty to search PATH and installed Windows SDK versions."/>
+</Rule>
