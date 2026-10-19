@@ -1,8 +1,10 @@
 # FlyingSolids
 
-[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · **English (UK)** · [English (Australia)](README.en-AU.md) · [Português](README.pt-PT.md) · [Norsk](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Suomi](README.fi-FI.md) · [Dansk](README.da-DK.md) · [Íslenska](README.is-IS.md) · [Türkçe](README.tr-TR.md)
+[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · **English (UK)** · [English (Australia)](README.en-AU.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Português](README.pt-PT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [Dansk](README.da-DK.md) · [Suomi](README.fi-FI.md) · [Íslenska](README.is-IS.md) · [Norsk (bokmål)](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Türkçe](README.tr-TR.md) · [Eesti](README.et-EE.md) · [Gaeilge](README.ga-IE.md) · [Lietuvių](README.lt-LT.md) · [Latviešu](README.lv-LV.md) · [Magyar](README.hu-HU.md) · [Malti](README.mt-MT.md) · [Nederlands](README.nl-NL.md) · [Română](README.ro-RO.md) · [Ελληνικά](README.el-GR.md) · [Bosanski](README.bs-Latn-BA.md) · [Hrvatski](README.hr-HR.md) · [Slovenščina](README.sl-SI.md) · [Crnogorski](README.cnr-Latn-ME.md) · [Беларуская](README.be-BY.md) · [Български](README.bg-BG.md) · [Македонски](README.mk-MK.md) · [Српски](README.sr-Cyrl-RS.md) · [Українська](README.uk-UA.md) · [Русский](README.ru-RU.md)
 
 FlyingSolids is a native Win32/x86 Direct3D application and Windows screen saver that displays illuminated solid three-dimensional geometric objects. The objects move independently, rotate and collide without passing through one another.
+
+Row selection determines which displays you are editing; it is separate from the checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the selection. All animation options and sliders apply to the selected displays. The selection is remembered separately for EXE and SCR. If all displays were selected, newly connected displays join the selection.
 
 ## Features
 
@@ -15,15 +17,15 @@ FlyingSolids is a native Win32/x86 Direct3D application and Windows screen saver
 - Refresh-aware rendering on displays with different refresh rates
 - PNG snapshots and MP4 recording in the standalone application
 - Separate standalone and screen-saver settings
-- 30 solid types and a user interface in 17 languages
+- 30 solid types and a user interface in 36 languages
 
 ## Objects
 
-The catalogue comprises polyhedra, prisms, pyramids and their planar cuts, cones and cylinders and their planar cuts, a closed paraboloid of revolution, sphere-derived solids, ellipsoids, an ovoid, a spherocylinder and a torus. The names shown by the program use the established geometric terminology of the selected language.
+Cube; Regular square pyramid; Square pyramidal frustum; Obliquely truncated square pyramid; Square pyramid cut perpendicular to base; Regular triangular prism; Regular pentagonal prism; Regular hexagonal prism; Regular octahedron; Pentagonal bipyramid; Right circular cone; Conical frustum; Obliquely truncated cone; Cone cut perpendicular to base; Right circular cylinder; Hollow right circular cylinder; Hollow cylinder with toroidal ends; Paraboloid of revolution closed by a plane; Sphere; Hemisphere; Spherical cap; Major spherical cap; Spherical segment (two bases); Triaxial ellipsoid; Prolate spheroid; Oblate spheroid; Ovoid; Spherocylinder; Rounded disc (spheroplatelet); Torus.
 
 ## Lighting
 
-The `Main light`, `Fill light`, `Ambient light`, and `Rim light` checkboxes below the sliders independently control lighting for the whole scene. Ambient light provides base illumination of object surfaces; rim light highlights their edges. By default, main, ambient, and rim light are on, and fill light is off. Lighting settings are stored separately for the application and screen saver.
+The `Main light`, `Fill light`, `Ambient light`, and `Rim light` checkboxes below the sliders independently control lighting for the whole scene. Ambient light provides base illumination of object surfaces; rim light highlights their edges. Lighting settings are stored separately for the application and screen saver.
 
 ## Standalone application and screen saver
 
@@ -42,7 +44,7 @@ Windows 7 through Windows 11 support all features, including PNG snapshots and M
 
 ## Building and packaging
 
-Open `DispSavers.slnx` in Visual Studio with MSVC v145 and a Windows SDK. Select `Release | x86` and rebuild the solution to produce `Release\FlyingSolids.exe` and `Release\FlyingSolids.scr`. No x64 configuration is provided. Signing is enabled by default for both Release and Debug. In the `FlyingSolids` project properties, on the `Signing` page, enter the name or thumbprint of a valid code-signing certificate with a private key in the current user's `Personal (My)` store. The settings apply to both EXE and SCR and are saved in the Git-ignored `FlyingSolids.vcxproj.user` file. SignTool is located automatically in PATH or the Windows SDK. If you use SimplySign, sign in to SimplySign Desktop before building. The build first signs SCR and adds a mandatory RFC 3161 SHA-256 timestamp from the configured timestamp server, then embeds it in EXE, which is also signed and timestamped. Enter the RFC 3161 timestamp server URL in the `Timestamp server` field. Signing, timestamping, or verification failure stops the build; binaries with existing valid timestamped signatures are not signed again.
+Open `DispSavers.slnx` in Visual Studio with MSVC v145 and a Windows SDK. Select `Release | x86` and rebuild the solution to produce `Release\FlyingSolids.exe` and `Release\FlyingSolids.scr`. No x64 configuration is provided. In the `FlyingSolids` project properties, on the `Signing` page, enter the name or thumbprint of a valid code-signing certificate with a private key in the current user's `Personal (My)` store. The settings apply to both EXE and SCR and are saved in the Git-ignored `FlyingSolids.vcxproj.user` file. SignTool is located automatically in PATH or the Windows SDK. If you use SimplySign, sign in to SimplySign Desktop before building. The build first signs SCR and adds a mandatory RFC 3161 SHA-256 timestamp from the configured timestamp server, then embeds it in EXE, which is also signed and timestamped. Enter the RFC 3161 timestamp server URL in the `Timestamp server` field. Signing, timestamping, or verification failure stops the build; binaries with existing valid timestamped signatures are not signed again.
 
 Package these build outputs by running `PackageRelease.ps1` without signing parameters. The script uses temporary copies, leaves files in `Release` unchanged, and only verifies existing valid signatures. It creates the single `DispSavers-<version>-win32.zip` archive containing `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr`, and `SpaceFlight\license.txt`. The previous ZIP is removed at the start of a run; verification failure prevents creation of a new archive.
 
@@ -50,15 +52,14 @@ Package these build outputs by running `PackageRelease.ps1` without signing para
 
 FlyingSolids is available under the [MIT Licence](../license.txt). Copyright © Petr Červinka — FortSoft 2026
 
-
 ## FlightCorridor
 
-FlightCorridor offers Flight between four morphing surfaces and Flight through a morphing funnel. Assign exactly one flight to each display: select its row in the list and choose the corresponding radio button. The first animation is selected on every display by default.
+FlightCorridor offers Flight between four morphing surfaces and Flight through a morphing funnel. Assign exactly one flight to each display: select its row in the list and choose the corresponding radio button.
 
 `Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](../FlightCorridor/README.en-GB.md)
 
 ## SpaceFlight
 
-SpaceFlight offers „Infinite undulating surface“ and „Long-distance flight — morphing surface“. Assign exactly one flight to each display: select its row in the list and choose the corresponding radio button. The first animation is selected on every display by default.
+SpaceFlight offers "Infinite undulating surface" and "Long-distance flight — morphing surface". Assign exactly one flight to each display: select its row in the list and choose the corresponding radio button.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.en-GB.md)

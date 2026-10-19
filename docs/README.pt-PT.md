@@ -1,8 +1,10 @@
 # FlyingSolids
 
-[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · **Português** · [Norsk](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Suomi](README.fi-FI.md) · [Dansk](README.da-DK.md) · [Íslenska](README.is-IS.md) · [Türkçe](README.tr-TR.md)
+[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · **Português** · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [Dansk](README.da-DK.md) · [Suomi](README.fi-FI.md) · [Íslenska](README.is-IS.md) · [Norsk (bokmål)](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Türkçe](README.tr-TR.md) · [Eesti](README.et-EE.md) · [Gaeilge](README.ga-IE.md) · [Lietuvių](README.lt-LT.md) · [Latviešu](README.lv-LV.md) · [Magyar](README.hu-HU.md) · [Malti](README.mt-MT.md) · [Nederlands](README.nl-NL.md) · [Română](README.ro-RO.md) · [Ελληνικά](README.el-GR.md) · [Bosanski](README.bs-Latn-BA.md) · [Hrvatski](README.hr-HR.md) · [Slovenščina](README.sl-SI.md) · [Crnogorski](README.cnr-Latn-ME.md) · [Беларуская](README.be-BY.md) · [Български](README.bg-BG.md) · [Македонски](README.mk-MK.md) · [Српски](README.sr-Cyrl-RS.md) · [Українська](README.uk-UA.md) · [Русский](README.ru-RU.md)
 
 O FlyingSolids é uma aplicação nativa Win32/x86 com Direct3D e uma proteção de ecrã do Windows que apresenta sólidos geométricos tridimensionais iluminados. Os sólidos movem-se e rodam de forma independente e ressaltam sem se atravessarem.
+
+A seleção das linhas determina os ecrãs a configurar e é independente das caixas que ativam as saídas de animação. Ctrl+A seleciona todos os ecrãs; Ctrl e Shift alteram a seleção. Todas as opções e controlos deslizantes da animação aplicam-se aos ecrãs selecionados. A seleção é guardada separadamente para EXE e SCR. Se todos estavam selecionados, os novos ecrãs também são incluídos.
 
 ## Funcionalidades
 
@@ -15,15 +17,15 @@ O FlyingSolids é uma aplicação nativa Win32/x86 com Direct3D e uma proteção
 - Renderização ajustada à frequência de atualização de cada monitor
 - Capturas PNG e gravação MP4 na aplicação autónoma
 - Definições separadas para aplicação e proteção de ecrã
-- 30 tipos de sólidos e interface em 17 idiomas
+- 30 tipos de sólidos e interface em 36 idiomas
 
 ## Sólidos
 
-O catálogo inclui poliedros, prismas regulares, pirâmides e cortes planos, cones e cilindros e respetivos cortes, um paraboloide de revolução fechado por um plano, sólidos derivados da esfera, elipsoides, um ovoide, um esferocilindro e um toro. A interface usa a terminologia geométrica consagrada em português europeu.
+Cubo; Pirâmide quadrangular regular; Tronco de pirâmide quadrangular; Pirâmide quadrangular, corte oblíquo; Pirâmide quadrada, corte normal à base; Prisma triangular regular; Prisma pentagonal regular; Prisma hexagonal regular; Octaedro regular; Bipirâmide pentagonal; Cone circular reto; Tronco de cone; Cone truncado por um plano oblíquo; Cone, corte perpendicular à base; Cilindro circular reto; Cilindro oco; Cilindro oco com extremidades toroidais; Paraboloide de revolução fechado por plano; Esfera; Hemisfério; Segmento esférico; Segmento esférico maior; Segmento esférico de duas bases; Elipsoide triaxial; Esferoide prolato; Esferoide oblato; Ovoide; Esferocilindro; Disco arredondado (spheroplatelet); Toro.
 
 ## Iluminação
 
-As caixas `Luz principal`, `Luz de preenchimento`, `Luz ambiente` e `Iluminação dos contornos` sob os controlos deslizantes controlam a iluminação de toda a cena de forma independente. A luz ambiente fornece iluminação de base às superfícies e a iluminação dos contornos realça os seus limites. Por predefinição, as luzes principal, ambiente e dos contornos estão ligadas e a luz de preenchimento está desligada. As definições são guardadas separadamente para a aplicação e a proteção de ecrã.
+As caixas `Luz principal`, `Luz de preenchimento`, `Luz ambiente` e `Iluminação dos contornos` sob os controlos deslizantes controlam a iluminação de toda a cena de forma independente. A luz ambiente fornece iluminação de base às superfícies e a iluminação dos contornos realça os seus limites. As definições são guardadas separadamente para a aplicação e a proteção de ecrã.
 
 ## Aplicação e proteção de ecrã
 
@@ -42,7 +44,7 @@ Os sistemas Windows 7 a Windows 11 suportam todas as funcionalidades, incluindo 
 
 ## Compilação
 
-Abra `DispSavers.slnx` no Visual Studio com MSVC v145 e um Windows SDK. Selecione `Release | x86` e recompile a solução para criar `Release\FlyingSolids.exe` e `Release\FlyingSolids.scr`. Não existe configuração x64. A assinatura está ativada por predefinição para Release e Debug. Nas propriedades do projeto `FlyingSolids`, página `Signing`, indique o nome ou a impressão digital de um certificado válido de assinatura de código com chave privada no arquivo `Personal (My)` do utilizador atual. As definições aplicam-se ao EXE e ao SCR e são guardadas em `FlyingSolids.vcxproj.user`, ignorado pelo Git. O SignTool é encontrado automaticamente no PATH ou no Windows SDK. Se utilizar SimplySign, inicie sessão no SimplySign Desktop antes da compilação. Primeiro, o SCR é assinado e recebe um carimbo temporal RFC 3161 SHA-256 obrigatório do servidor de carimbos temporais configurado; depois é incorporado no EXE, que também é assinado e carimbado temporalmente. Indique o URL do servidor de carimbos temporais RFC 3161 no campo `Timestamp server`. Uma falha de assinatura, carimbo temporal ou verificação interrompe a compilação; os ficheiros com assinaturas válidas e carimbo temporal não são novamente assinados.
+Abra `DispSavers.slnx` no Visual Studio com MSVC v145 e um Windows SDK. Selecione `Release | x86` e recompile a solução para criar `Release\FlyingSolids.exe` e `Release\FlyingSolids.scr`. Não existe configuração x64. Nas propriedades do projeto `FlyingSolids`, página `Signing`, indique o nome ou a impressão digital de um certificado válido de assinatura de código com chave privada no arquivo `Personal (My)` do utilizador atual. As definições aplicam-se ao EXE e ao SCR e são guardadas em `FlyingSolids.vcxproj.user`, ignorado pelo Git. O SignTool é encontrado automaticamente no PATH ou no Windows SDK. Se utilizar SimplySign, inicie sessão no SimplySign Desktop antes da compilação. Primeiro, o SCR é assinado e recebe um carimbo temporal RFC 3161 SHA-256 obrigatório do servidor de carimbos temporais configurado; depois é incorporado no EXE, que também é assinado e carimbado temporalmente. Indique o URL do servidor de carimbos temporais RFC 3161 no campo `Timestamp server`. Uma falha de assinatura, carimbo temporal ou verificação interrompe a compilação; os ficheiros com assinaturas válidas e carimbo temporal não são novamente assinados.
 
 Execute `PackageRelease.ps1` sem parâmetros de assinatura para empacotar estes ficheiros compilados. O script utiliza cópias temporárias, não altera os ficheiros em `Release` e apenas verifica as assinaturas válidas existentes. Cria o único arquivo `DispSavers-<version>-win32.zip`, contendo `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr` e `SpaceFlight\license.txt`. O ZIP anterior é removido no início da execução; uma falha de verificação impede a criação de um novo arquivo.
 
@@ -50,15 +52,14 @@ Execute `PackageRelease.ps1` sem parâmetros de assinatura para empacotar estes 
 
 O FlyingSolids é disponibilizado sob a [licença MIT](../license.txt). Copyright © Petr Červinka — FortSoft 2026
 
-
 ## FlightCorridor
 
-O FlightCorridor oferece Voo entre quatro superfícies deformáveis e Voo através de um funil deformável. Atribua um único voo a cada monitor: selecione a respetiva linha e o botão de opção correspondente. Por predefinição, a primeira animação está selecionada em todos os monitores.
+O FlightCorridor oferece Voo entre quatro superfícies deformáveis e Voo através de um funil deformável. Atribua um único voo a cada monitor: selecione a respetiva linha e o botão de opção correspondente.
 
 `Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](../FlightCorridor/README.pt-PT.md)
 
 ## SpaceFlight
 
-O SpaceFlight oferece „Superfície ondulante infinita“ e „Voo de longa distância — superfície deformável“. Atribua um único voo a cada monitor: selecione a respetiva linha e o botão de opção correspondente. Por predefinição, a primeira animação está selecionada em todos os monitores.
+O SpaceFlight oferece „Superfície ondulante infinita“ e „Voo de longa distância — superfície deformável“. Atribua um único voo a cada monitor: selecione a respetiva linha e o botão de opção correspondente.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.pt-PT.md)

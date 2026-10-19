@@ -109,6 +109,101 @@ constexpr EffectTextArray TURKISH_EFFECTS = {
     L"Uzun mesafeli uçuş — biçim değiştiren yüzey"
 };
 
+constexpr EffectTextArray ESTONIAN_EFFECTS = {
+    L"Lõputu lainetav pind",
+    L"Kauglend — muutuv pind"
+};
+
+constexpr EffectTextArray IRISH_EFFECTS = {
+    L"Dromchla tonnúil gan teorainn",
+    L"Eitilt fhada — dromchla athraitheach"
+};
+
+constexpr EffectTextArray LITHUANIAN_EFFECTS = {
+    L"Begalinė banguojanti plokštuma",
+    L"Tolimas skrydis — kintantis paviršius"
+};
+
+constexpr EffectTextArray LATVIAN_EFFECTS = {
+    L"Bezgalīga viļņojoša virsma",
+    L"Tāls lidojums — mainīga virsma"
+};
+
+constexpr EffectTextArray HUNGARIAN_EFFECTS = {
+    L"Végtelen hullámzó felület",
+    L"Távolsági repülés — változó felület"
+};
+
+constexpr EffectTextArray MALTESE_EFFECTS = {
+    L"Wiċċ infinit li jimmewweġ",
+    L"Titjira fit-tul — wiċċ li jinbidel"
+};
+
+constexpr EffectTextArray DUTCH_EFFECTS = {
+    L"Oneindig golvend oppervlak",
+    L"Langeafstandsvlucht — veranderend oppervlak"
+};
+
+constexpr EffectTextArray ROMANIAN_EFFECTS = {
+    L"Suprafață ondulată infinită",
+    L"Zbor la distanță — suprafață variabilă"
+};
+
+constexpr EffectTextArray GREEK_EFFECTS = {
+    L"Απέραντη κυματοειδής επιφάνεια",
+    L"Μακρινή πτήση — μεταβαλλόμενη επιφάνεια"
+};
+
+constexpr EffectTextArray BOSNIAN_EFFECTS = {
+    L"Beskonačna valovita površina",
+    L"Daleki let — promjenjiva površina"
+};
+
+constexpr EffectTextArray CROATIAN_EFFECTS = {
+    L"Beskonačna valovita ploha",
+    L"Daleki let — promjenjiva ploha"
+};
+
+constexpr EffectTextArray SLOVENIAN_EFFECTS = {
+    L"Neskončna valovita ploskev",
+    L"Oddaljeni let — spreminjajoča se ploskev"
+};
+
+constexpr EffectTextArray MONTENEGRIN_EFFECTS = {
+    L"Beskonačna talasasta površina",
+    L"Daleki let — promjenljiva površina"
+};
+
+constexpr EffectTextArray BELARUSIAN_EFFECTS = {
+    L"Бясконцая хвалістая паверхня",
+    L"Далёкі палёт — зменлівая паверхня"
+};
+
+constexpr EffectTextArray BULGARIAN_EFFECTS = {
+    L"Безкрайна вълнообразна повърхнина",
+    L"Далечен полет — променяща се повърхнина"
+};
+
+constexpr EffectTextArray MACEDONIAN_EFFECTS = {
+    L"Бесконечна брановидна површина",
+    L"Далечен лет — променлива површина"
+};
+
+constexpr EffectTextArray SERBIAN_EFFECTS = {
+    L"Бесконачна таласаста површ",
+    L"Далеки лет — променљива површ"
+};
+
+constexpr EffectTextArray UKRAINIAN_EFFECTS = {
+    L"Нескінченна хвиляста поверхня",
+    L"Далекий політ — мінлива поверхня"
+};
+
+constexpr EffectTextArray RUSSIAN_EFFECTS = {
+    L"Бесконечная волнообразная поверхность",
+    L"Дальний полёт — меняющаяся поверхность"
+};
+
 /// Core settings-window text records
 const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
     LocalizedText{
@@ -141,8 +236,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Spořič byl nainstalován.",
         L"Direct3D renderer se nepodařilo inicializovat.",
         CZECH_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"English (US)",
         L"SpaceFlight — Controls",
         L"SpaceFlight Settings",
@@ -172,8 +266,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"The screen saver was installed.",
         L"Could not initialize the Direct3D renderer.",
         ENGLISH_US_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"English (UK)",
         L"SpaceFlight — Controls",
         L"SpaceFlight Settings",
@@ -203,8 +296,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"The screen saver was installed.",
         L"Could not initialise the Direct3D renderer.",
         ENGLISH_UK_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"English (Australia)",
         L"SpaceFlight — Controls",
         L"SpaceFlight Settings",
@@ -234,8 +326,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"The screen saver was installed.",
         L"Could not initialise the Direct3D renderer.",
         ENGLISH_AU_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"Deutsch",
         L"SpaceFlight — Steuerung",
         L"SpaceFlight-Einstellungen",
@@ -265,8 +356,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Der Bildschirmschoner wurde installiert.",
         L"Direct3D-Renderer konnte nicht initialisiert werden.",
         GERMAN_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"Français",
         L"SpaceFlight — Commandes",
         L"Paramètres de SpaceFlight",
@@ -296,8 +386,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"L’économiseur a été installé.",
         L"Impossible d’initialiser le moteur Direct3D.",
         FRENCH_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"Español",
         L"SpaceFlight — Control",
         L"Configuración de SpaceFlight",
@@ -327,8 +416,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"El salvapantallas se instaló.",
         L"No se pudo inicializar Direct3D.",
         SPANISH_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"Italiano",
         L"SpaceFlight — Controlli",
         L"Impostazioni di SpaceFlight",
@@ -358,8 +446,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Il salvaschermo è stato installato.",
         L"Impossibile inizializzare Direct3D.",
         ITALIAN_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"Português",
         L"SpaceFlight — Controlo",
         L"Definições do SpaceFlight",
@@ -389,8 +476,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"A proteção de ecrã foi instalada.",
         L"Não foi possível inicializar o Direct3D.",
         PORTUGUESE_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"Polski",
         L"SpaceFlight — Sterowanie",
         L"Ustawienia SpaceFlight",
@@ -420,8 +506,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Wygaszacz został zainstalowany.",
         L"Nie udało się uruchomić renderera Direct3D.",
         POLISH_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"Slovenčina",
         L"SpaceFlight — Ovládanie",
         L"Nastavenia SpaceFlight",
@@ -451,8 +536,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Šetrič bol nainštalovaný.",
         L"Renderer Direct3D sa nepodarilo inicializovať.",
         SLOVAK_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"Dansk",
         L"SpaceFlight — Styring",
         L"Indstillinger for SpaceFlight",
@@ -482,8 +566,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Pauseskærmen blev installeret.",
         L"Direct3D kunne ikke initialiseres.",
         DANISH_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"Suomi",
         L"SpaceFlight — Ohjaus",
         L"SpaceFlight-asetukset",
@@ -513,8 +596,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Näytönsäästäjä asennettiin.",
         L"Direct3D-renderöintiä ei voitu alustaa.",
         FINNISH_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"Íslenska",
         L"SpaceFlight — Stjórnun",
         L"Stillingar SpaceFlight",
@@ -544,9 +626,8 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Skjáhvílan var sett upp.",
         L"Ekki tókst að ræsa Direct3D.",
         ICELANDIC_EFFECTS
-},
-    LocalizedText{
-        L"Norsk",
+    }, LocalizedText{
+        L"Norsk (bokmål)",
         L"SpaceFlight — Kontroll",
         L"Innstillinger for SpaceFlight",
         L"Språk:",
@@ -575,8 +656,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Skjermspareren ble installert.",
         L"Kunne ikke initialisere Direct3D.",
         NORWEGIAN_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"Svenska",
         L"SpaceFlight — Styrning",
         L"Inställningar för SpaceFlight",
@@ -606,8 +686,7 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Skärmsläckaren installerades.",
         L"Det gick inte att initiera Direct3D.",
         SWEDISH_EFFECTS
-},
-    LocalizedText{
+    }, LocalizedText{
         L"Türkçe",
         L"SpaceFlight — Denetim",
         L"SpaceFlight Ayarları",
@@ -637,7 +716,577 @@ const std::array<LocalizedText, LANGUAGE_COUNT> TEXTS = {
         L"Ekran koruyucu yüklendi.",
         L"Direct3D başlatılamadı.",
         TURKISH_EFFECTS
-}
+    }, LocalizedText{
+        L"Eesti",
+        L"SpaceFlight — juhtimine",
+        L"SpaceFlight sätted",
+        L"Keel:",
+        L"Animatsiooni kiirus: %d %%",
+        L"Valitud kuvarite lennurežiim",
+        L"Luba kõik",
+        L"Keela kõik",
+        L"Animatsioonikuvar",
+        L"Kuvar",
+        L"Eraldusvõime",
+        L"Asukoht",
+        L"peamine",
+        L"OK",
+        L"Loobu",
+        L"Alusta salvestamist…",
+        L"Peata salvestamine",
+        L"Peata",
+        L"Jätka",
+        L"Paigalda ekraanisäästja",
+        L"Välju",
+        L"Animatsioon töötab…",
+        L"MP4 salvestamine…",
+        L"Salvestis on salvestatud.",
+        L"MP4 salvestamist ei saanud alustada.",
+        L"Ekraanisäästjat ei paigaldatud.",
+        L"Ekraanisäästja on paigaldatud.",
+        L"Direct3D renderdajat ei saanud käivitada.",
+        ESTONIAN_EFFECTS
+    }, LocalizedText{
+        L"Gaeilge",
+        L"SpaceFlight — rialuithe",
+        L"Socruithe SpaceFlight",
+        L"Teanga:",
+        L"Luas na beochana: %d %%",
+        L"Eitilt na monatóirí roghnaithe",
+        L"Cumasaigh uile",
+        L"Díchumasaigh uile",
+        L"Monatóir beochana",
+        L"Monatóir",
+        L"Taifeach",
+        L"Suíomh",
+        L"príomhúil",
+        L"OK",
+        L"Cealaigh",
+        L"Tosaigh taifeadadh…",
+        L"Stop taifeadadh",
+        L"Cuir ar sos",
+        L"Lean ar aghaidh",
+        L"Suiteáil spárálaí scáileáin",
+        L"Scoir",
+        L"Tá an bheochan ar siúl…",
+        L"Tá taifeadadh MP4 ar siúl…",
+        L"Sábháladh an taifeadadh.",
+        L"Níorbh fhéidir taifeadadh MP4 a thosú.",
+        L"Níor suiteáladh an spárálaí scáileáin.",
+        L"Suiteáladh an spárálaí scáileáin.",
+        L"Níorbh fhéidir an rindreálaí Direct3D a thúsú.",
+        IRISH_EFFECTS
+    }, LocalizedText{
+        L"Lietuvių",
+        L"SpaceFlight — valdymas",
+        L"SpaceFlight nuostatos",
+        L"Kalba:",
+        L"Animacijos greitis: %d %%",
+        L"Pasirinktų monitorių skrydis",
+        L"Įjungti visus",
+        L"Išjungti visus",
+        L"Animacijos monitorius",
+        L"Monitorius",
+        L"Skiriamoji geba",
+        L"Padėtis",
+        L"pagrindinis",
+        L"OK",
+        L"Atšaukti",
+        L"Pradėti įrašymą…",
+        L"Baigti įrašymą",
+        L"Pristabdyti",
+        L"Tęsti",
+        L"Įdiegti ekrano užsklandą",
+        L"Išeiti",
+        L"Animacija vyksta…",
+        L"Vyksta MP4 įrašymas…",
+        L"Įrašas išsaugotas.",
+        L"Nepavyko pradėti MP4 įrašymo.",
+        L"Ekrano užsklanda neįdiegta.",
+        L"Ekrano užsklanda įdiegta.",
+        L"Nepavyko inicijuoti Direct3D atvaizdavimo modulio.",
+        LITHUANIAN_EFFECTS
+    }, LocalizedText{
+        L"Latviešu",
+        L"SpaceFlight — vadība",
+        L"SpaceFlight iestatījumi",
+        L"Valoda:",
+        L"Animācijas ātrums: %d %%",
+        L"Atlasīto monitoru lidojums",
+        L"Ieslēgt visu",
+        L"Izslēgt visu",
+        L"Animācijas monitors",
+        L"Monitors",
+        L"Izšķirtspēja",
+        L"Pozīcija",
+        L"galvenais",
+        L"OK",
+        L"Atcelt",
+        L"Sākt ierakstīšanu…",
+        L"Beigt ierakstīšanu",
+        L"Pauzēt",
+        L"Turpināt",
+        L"Instalēt ekrānsaudzētāju",
+        L"Iziet",
+        L"Animācija darbojas…",
+        L"Notiek MP4 ierakstīšana…",
+        L"Ieraksts ir saglabāts.",
+        L"Neizdevās sākt MP4 ierakstīšanu.",
+        L"Ekrānsaudzētājs netika instalēts.",
+        L"Ekrānsaudzētājs ir instalēts.",
+        L"Neizdevās inicializēt Direct3D renderētāju.",
+        LATVIAN_EFFECTS
+    }, LocalizedText{
+        L"Magyar",
+        L"SpaceFlight — vezérlés",
+        L"SpaceFlight beállításai",
+        L"Nyelv:",
+        L"Animáció sebessége: %d %%",
+        L"Kijelölt monitorok repülési módja",
+        L"Mind bekapcsolása",
+        L"Mind kikapcsolása",
+        L"Animációs monitor",
+        L"Monitor",
+        L"Felbontás",
+        L"Pozíció",
+        L"elsődleges",
+        L"OK",
+        L"Mégse",
+        L"Felvétel indítása…",
+        L"Felvétel leállítása",
+        L"Szünet",
+        L"Folytatás",
+        L"Képernyőkímélő telepítése",
+        L"Kilépés",
+        L"Az animáció fut…",
+        L"MP4-felvétel folyamatban…",
+        L"A felvétel mentve.",
+        L"Az MP4-felvétel nem indítható.",
+        L"A képernyőkímélő nem lett telepítve.",
+        L"A képernyőkímélő telepítve.",
+        L"A Direct3D megjelenítő inicializálása sikertelen.",
+        HUNGARIAN_EFFECTS
+    }, LocalizedText{
+        L"Malti",
+        L"SpaceFlight — kontrolli",
+        L"Settings ta’ SpaceFlight",
+        L"Lingwa:",
+        L"Veloċità tal-animazzjoni: %d %%",
+        L"Titjira tal-moniters magħżula",
+        L"Attiva kollox",
+        L"Iddiżattiva kollox",
+        L"Moniter tal-animazzjoni",
+        L"Moniter",
+        L"Riżoluzzjoni",
+        L"Pożizzjoni",
+        L"primarju",
+        L"OK",
+        L"Ikkanċella",
+        L"Ibda r-reġistrazzjoni…",
+        L"Waqqaf ir-reġistrazzjoni",
+        L"Issospendi",
+        L"Kompli",
+        L"Installa l-iscreen saver",
+        L"Oħroġ",
+        L"L-animazzjoni għaddejja…",
+        L"Reġistrazzjoni MP4 għaddejja…",
+        L"Ir-reġistrazzjoni ġiet issejvjata.",
+        L"Ma setgħetx tinbeda r-reġistrazzjoni MP4.",
+        L"L-iscreen saver ma ġiex installat.",
+        L"L-iscreen saver ġie installat.",
+        L"Ma setax jiġi inizjalizzat ir-renderer Direct3D.",
+        MALTESE_EFFECTS
+    }, LocalizedText{
+        L"Nederlands",
+        L"SpaceFlight — bediening",
+        L"Instellingen van SpaceFlight",
+        L"Taal:",
+        L"Animatiesnelheid: %d %%",
+        L"Vlucht op geselecteerde beeldschermen",
+        L"Alles inschakelen",
+        L"Alles uitschakelen",
+        L"Animatiebeeldscherm",
+        L"Beeldscherm",
+        L"Resolutie",
+        L"Positie",
+        L"primair",
+        L"OK",
+        L"Annuleren",
+        L"Opname starten…",
+        L"Opname stoppen",
+        L"Pauzeren",
+        L"Hervatten",
+        L"Schermbeveiliging installeren",
+        L"Afsluiten",
+        L"Animatie wordt uitgevoerd…",
+        L"MP4-opname wordt gemaakt…",
+        L"De opname is opgeslagen.",
+        L"De MP4-opname kon niet worden gestart.",
+        L"De schermbeveiliging is niet geïnstalleerd.",
+        L"De schermbeveiliging is geïnstalleerd.",
+        L"De Direct3D-renderer kon niet worden geïnitialiseerd.",
+        DUTCH_EFFECTS
+    }, LocalizedText{
+        L"Română",
+        L"SpaceFlight — comenzi",
+        L"Setări SpaceFlight",
+        L"Limbă:",
+        L"Viteza animației: %d %%",
+        L"Zbor pe monitoarele selectate",
+        L"Activare toate",
+        L"Dezactivare toate",
+        L"Monitor de animație",
+        L"Monitor",
+        L"Rezoluție",
+        L"Poziție",
+        L"principal",
+        L"OK",
+        L"Anulare",
+        L"Pornire înregistrare…",
+        L"Oprire înregistrare",
+        L"Pauză",
+        L"Reluare",
+        L"Instalare economizor de ecran",
+        L"Ieșire",
+        L"Animația rulează…",
+        L"Înregistrare MP4 în curs…",
+        L"Înregistrarea a fost salvată.",
+        L"Înregistrarea MP4 nu a putut fi pornită.",
+        L"Economizorul de ecran nu a fost instalat.",
+        L"Economizorul de ecran a fost instalat.",
+        L"Modulul de randare Direct3D nu a putut fi inițializat.",
+        ROMANIAN_EFFECTS
+    }, LocalizedText{
+        L"Ελληνικά",
+        L"SpaceFlight — χειρισμός",
+        L"Ρυθμίσεις SpaceFlight",
+        L"Γλώσσα:",
+        L"Ταχύτητα κίνησης: %d %%",
+        L"Πτήση στις επιλεγμένες οθόνες",
+        L"Ενεργοποίηση όλων",
+        L"Απενεργοποίηση όλων",
+        L"Οθόνη κίνησης",
+        L"Οθόνη",
+        L"Ανάλυση",
+        L"Θέση",
+        L"κύρια",
+        L"OK",
+        L"Άκυρο",
+        L"Έναρξη εγγραφής…",
+        L"Διακοπή εγγραφής",
+        L"Παύση",
+        L"Συνέχιση",
+        L"Εγκατάσταση προφύλαξης οθόνης",
+        L"Έξοδος",
+        L"Η κίνηση εκτελείται…",
+        L"Εγγραφή MP4 σε εξέλιξη…",
+        L"Η εγγραφή αποθηκεύτηκε.",
+        L"Δεν ήταν δυνατή η έναρξη εγγραφής MP4.",
+        L"Η προφύλαξη οθόνης δεν εγκαταστάθηκε.",
+        L"Η προφύλαξη οθόνης εγκαταστάθηκε.",
+        L"Δεν ήταν δυνατή η αρχικοποίηση του αποδότη Direct3D.",
+        GREEK_EFFECTS
+    }, LocalizedText{
+        L"Bosanski",
+        L"SpaceFlight — kontrole",
+        L"Postavke programa SpaceFlight",
+        L"Jezik:",
+        L"Brzina animacije: %d %%",
+        L"Let na odabranim monitorima",
+        L"Uključi sve",
+        L"Isključi sve",
+        L"Monitor animacije",
+        L"Monitor",
+        L"Rezolucija",
+        L"Položaj",
+        L"primarni",
+        L"OK",
+        L"Otkaži",
+        L"Pokreni snimanje…",
+        L"Zaustavi snimanje",
+        L"Pauziraj",
+        L"Nastavi",
+        L"Instaliraj čuvar ekrana",
+        L"Izlaz",
+        L"Animacija je pokrenuta…",
+        L"MP4 snimanje je u toku…",
+        L"Snimak je sačuvan.",
+        L"Nije moguće pokrenuti MP4 snimanje.",
+        L"Čuvar ekrana nije instaliran.",
+        L"Čuvar ekrana je instaliran.",
+        L"Nije moguće inicijalizirati Direct3D prikazivač.",
+        BOSNIAN_EFFECTS
+    }, LocalizedText{
+        L"Hrvatski",
+        L"SpaceFlight — upravljanje",
+        L"Postavke programa SpaceFlight",
+        L"Jezik:",
+        L"Brzina animacije: %d %%",
+        L"Let na odabranim zaslonima",
+        L"Uključi sve",
+        L"Isključi sve",
+        L"Zaslon animacije",
+        L"Zaslon",
+        L"Razlučivost",
+        L"Položaj",
+        L"primarni",
+        L"OK",
+        L"Odustani",
+        L"Pokreni snimanje…",
+        L"Zaustavi snimanje",
+        L"Pauziraj",
+        L"Nastavi",
+        L"Instaliraj čuvar zaslona",
+        L"Izlaz",
+        L"Animacija je pokrenuta…",
+        L"MP4 snimanje je u tijeku…",
+        L"Snimka je spremljena.",
+        L"Nije moguće pokrenuti MP4 snimanje.",
+        L"Čuvar zaslona nije instaliran.",
+        L"Čuvar zaslona je instaliran.",
+        L"Nije moguće inicijalizirati Direct3D prikazivač.",
+        CROATIAN_EFFECTS
+    }, LocalizedText{
+        L"Slovenščina",
+        L"SpaceFlight — upravljanje",
+        L"Nastavitve SpaceFlight",
+        L"Jezik:",
+        L"Hitrost animacije: %d %%",
+        L"Let na izbranih zaslonih",
+        L"Vklopi vse",
+        L"Izklopi vse",
+        L"Zaslon animacije",
+        L"Zaslon",
+        L"Ločljivost",
+        L"Položaj",
+        L"glavni",
+        L"OK",
+        L"Prekliči",
+        L"Začni snemanje…",
+        L"Ustavi snemanje",
+        L"Premor",
+        L"Nadaljuj",
+        L"Namesti ohranjevalnik zaslona",
+        L"Izhod",
+        L"Animacija se izvaja…",
+        L"Snemanje MP4 poteka…",
+        L"Posnetek je shranjen.",
+        L"Snemanja MP4 ni bilo mogoče začeti.",
+        L"Ohranjevalnik zaslona ni nameščen.",
+        L"Ohranjevalnik zaslona je nameščen.",
+        L"Upodabljalnika Direct3D ni bilo mogoče inicializirati.",
+        SLOVENIAN_EFFECTS
+    }, LocalizedText{
+        L"Crnogorski",
+        L"SpaceFlight — kontrole",
+        L"Podešavanja programa SpaceFlight",
+        L"Jezik:",
+        L"Brzina animacije: %d %%",
+        L"Let na izabranim monitorima",
+        L"Uključi sve",
+        L"Isključi sve",
+        L"Monitor animacije",
+        L"Monitor",
+        L"Rezolucija",
+        L"Položaj",
+        L"primarni",
+        L"OK",
+        L"Otkaži",
+        L"Pokreni snimanje…",
+        L"Zaustavi snimanje",
+        L"Pauziraj",
+        L"Nastavi",
+        L"Instaliraj čuvar ekrana",
+        L"Izlaz",
+        L"Animacija je pokrenuta…",
+        L"MP4 snimanje je u toku…",
+        L"Snimak je sačuvan.",
+        L"Nije moguće pokrenuti MP4 snimanje.",
+        L"Čuvar ekrana nije instaliran.",
+        L"Čuvar ekrana je instaliran.",
+        L"Nije moguće inicijalizovati Direct3D prikazivač.",
+        MONTENEGRIN_EFFECTS
+    }, LocalizedText{
+        L"Беларуская",
+        L"SpaceFlight — кіраванне",
+        L"Налады SpaceFlight",
+        L"Мова:",
+        L"Хуткасць анімацыі: %d %%",
+        L"Палёт на выбраных маніторах",
+        L"Уключыць усё",
+        L"Выключыць усё",
+        L"Манітор анімацыі",
+        L"Манітор",
+        L"Раздзяляльнасць",
+        L"Пазіцыя",
+        L"асноўны",
+        L"OK",
+        L"Скасаваць",
+        L"Пачаць запіс…",
+        L"Спыніць запіс",
+        L"Прыпыніць",
+        L"Працягнуць",
+        L"Усталяваць застаўку",
+        L"Выйсці",
+        L"Анімацыя працуе…",
+        L"Ідзе запіс MP4…",
+        L"Запіс захаваны.",
+        L"Не ўдалося пачаць запіс MP4.",
+        L"Застаўка не ўсталявана.",
+        L"Застаўка ўсталявана.",
+        L"Не ўдалося ініцыялізаваць візуалізатар Direct3D.",
+        BELARUSIAN_EFFECTS
+    }, LocalizedText{
+        L"Български",
+        L"SpaceFlight — управление",
+        L"Настройки на SpaceFlight",
+        L"Език:",
+        L"Скорост на анимацията: %d %%",
+        L"Полет на избраните монитори",
+        L"Включване на всички",
+        L"Изключване на всички",
+        L"Монитор за анимацията",
+        L"Монитор",
+        L"Разделителна способност",
+        L"Позиция",
+        L"основен",
+        L"OK",
+        L"Отказ",
+        L"Начало на запис…",
+        L"Спиране на записа",
+        L"Пауза",
+        L"Продължаване",
+        L"Инсталиране на скрийнсейвъра",
+        L"Изход",
+        L"Анимацията се изпълнява…",
+        L"Извършва се MP4 запис…",
+        L"Записът е запазен.",
+        L"Неуспешно стартиране на MP4 запис.",
+        L"Скрийнсейвърът не е инсталиран.",
+        L"Скрийнсейвърът е инсталиран.",
+        L"Неуспешно инициализиране на Direct3D визуализатора.",
+        BULGARIAN_EFFECTS
+    }, LocalizedText{
+        L"Македонски",
+        L"SpaceFlight — контроли",
+        L"Поставки за SpaceFlight",
+        L"Јазик:",
+        L"Брзина на анимацијата: %d %%",
+        L"Лет на избраните монитори",
+        L"Вклучи ги сите",
+        L"Исклучи ги сите",
+        L"Монитор за анимација",
+        L"Монитор",
+        L"Резолуција",
+        L"Положба",
+        L"примарен",
+        L"OK",
+        L"Откажи",
+        L"Започни снимање…",
+        L"Запри снимање",
+        L"Паузирај",
+        L"Продолжи",
+        L"Инсталирај чувар на екранот",
+        L"Излез",
+        L"Анимацијата се извршува…",
+        L"MP4 снимање е во тек…",
+        L"Снимката е зачувана.",
+        L"Не може да започне MP4 снимање.",
+        L"Чуварот на екранот не е инсталиран.",
+        L"Чуварот на екранот е инсталиран.",
+        L"Не може да се иницијализира Direct3D прикажувачот.",
+        MACEDONIAN_EFFECTS
+    }, LocalizedText{
+        L"Српски",
+        L"SpaceFlight — контроле",
+        L"Подешавања програма SpaceFlight",
+        L"Језик:",
+        L"Брзина анимације: %d %%",
+        L"Лет на изабраним мониторима",
+        L"Укључи све",
+        L"Искључи све",
+        L"Монитор анимације",
+        L"Монитор",
+        L"Резолуција",
+        L"Положај",
+        L"примарни",
+        L"OK",
+        L"Откажи",
+        L"Покрени снимање…",
+        L"Заустави снимање",
+        L"Паузирај",
+        L"Настави",
+        L"Инсталирај чувар екрана",
+        L"Излаз",
+        L"Анимација је покренута…",
+        L"MP4 снимање је у току…",
+        L"Снимак је сачуван.",
+        L"Није могуће покренути MP4 снимање.",
+        L"Чувар екрана није инсталиран.",
+        L"Чувар екрана је инсталиран.",
+        L"Није могуће иницијализовати Direct3D приказивач.",
+        SERBIAN_EFFECTS
+    }, LocalizedText{
+        L"Українська",
+        L"SpaceFlight — керування",
+        L"Налаштування SpaceFlight",
+        L"Мова:",
+        L"Швидкість анімації: %d %%",
+        L"Політ на вибраних моніторах",
+        L"Увімкнути все",
+        L"Вимкнути все",
+        L"Монітор анімації",
+        L"Монітор",
+        L"Роздільна здатність",
+        L"Розташування",
+        L"основний",
+        L"OK",
+        L"Скасувати",
+        L"Почати запис…",
+        L"Зупинити запис",
+        L"Призупинити",
+        L"Продовжити",
+        L"Установити заставку",
+        L"Вийти",
+        L"Анімація працює…",
+        L"Триває запис MP4…",
+        L"Запис збережено.",
+        L"Не вдалося почати запис MP4.",
+        L"Заставку не встановлено.",
+        L"Заставку встановлено.",
+        L"Не вдалося ініціалізувати візуалізатор Direct3D.",
+        UKRAINIAN_EFFECTS
+    }, LocalizedText{
+        L"Русский",
+        L"SpaceFlight — управление",
+        L"Настройки SpaceFlight",
+        L"Язык:",
+        L"Скорость анимации: %d %%",
+        L"Полёт на выбранных мониторах",
+        L"Включить всё",
+        L"Выключить всё",
+        L"Монитор анимации",
+        L"Монитор",
+        L"Разрешение",
+        L"Расположение",
+        L"основной",
+        L"OK",
+        L"Отмена",
+        L"Начать запись…",
+        L"Остановить запись",
+        L"Приостановить",
+        L"Продолжить",
+        L"Установить заставку",
+        L"Выход",
+        L"Анимация работает…",
+        L"Идёт запись MP4…",
+        L"Запись сохранена.",
+        L"Не удалось начать запись MP4.",
+        L"Заставка не установлена.",
+        L"Заставка установлена.",
+        L"Не удалось инициализировать визуализатор Direct3D.",
+        RUSSIAN_EFFECTS
+    }
 };
 
 /// Monitor-detail column captions and explicit bit-depth units.
@@ -650,8 +1299,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Barevný prostor",
         L"%u bitů/kanál",
         L"%u bitů/pixel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Monitor model",
         L"Refresh rate",
         L"Bit depth",
@@ -659,8 +1307,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Color space",
         L"%u bits/channel",
         L"%u bits/pixel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Monitor model",
         L"Refresh rate",
         L"Bit depth",
@@ -668,8 +1315,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Colour space",
         L"%u bits/channel",
         L"%u bits/pixel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Monitor model",
         L"Refresh rate",
         L"Bit depth",
@@ -677,8 +1323,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Colour space",
         L"%u bits/channel",
         L"%u bits/pixel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Monitormodell",
         L"Bildwiederholfrequenz",
         L"Bittiefe",
@@ -686,8 +1331,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Farbraum",
         L"%u Bit/Kanal",
         L"%u Bit/Pixel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Modèle du moniteur",
         L"Fréquence de rafraîchissement",
         L"Profondeur de bits",
@@ -695,8 +1339,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Espace colorimétrique",
         L"%u bits/canal",
         L"%u bits/pixel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Modelo del monitor",
         L"Frecuencia de actualización",
         L"Profundidad de bits",
@@ -704,8 +1347,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Espacio de color",
         L"%u bits/canal",
         L"%u bits/píxel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Modello del monitor",
         L"Frequenza di aggiornamento",
         L"Profondità di bit",
@@ -713,8 +1355,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Spazio colore",
         L"%u bit/canale",
         L"%u bit/pixel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Modelo do monitor",
         L"Taxa de atualização",
         L"Profundidade de bits",
@@ -722,8 +1363,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Espaço de cor",
         L"%u bits/canal",
         L"%u bits/píxel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Model monitora",
         L"Częstotliwość odświeżania",
         L"Głębia bitowa",
@@ -731,8 +1371,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Przestrzeń barw",
         L"%u bitów/kanał",
         L"%u bitów/piksel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Model monitora",
         L"Obnovovacia frekvencia",
         L"Bitová hĺbka",
@@ -740,8 +1379,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Farebný priestor",
         L"%u bitov/kanál",
         L"%u bitov/pixel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Skærmmodel",
         L"Opdateringsfrekvens",
         L"Bitdybde",
@@ -749,8 +1387,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Farverum",
         L"%u bit/kanal",
         L"%u bit/pixel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Näytön malli",
         L"Virkistystaajuus",
         L"Bittisyvyys",
@@ -758,8 +1395,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Väriavaruus",
         L"%u bittiä/kanava",
         L"%u bittiä/pikseli"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Gerð skjás",
         L"Endurnýjunartíðni",
         L"Bitadýpt",
@@ -767,8 +1403,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Litarými",
         L"%u bitar/rás",
         L"%u bitar/myndpunktur"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Skjermmodell",
         L"Oppdateringsfrekvens",
         L"Bitdybde",
@@ -776,8 +1411,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Fargerom",
         L"%u bit/kanal",
         L"%u bit/piksel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Skärmmodell",
         L"Uppdateringsfrekvens",
         L"Bitdjup",
@@ -785,8 +1419,7 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Färgrymd",
         L"%u bitar/kanal",
         L"%u bitar/pixel"
-},
-    MonitorColumnText{
+    }, MonitorColumnText{
         L"Monitör modeli",
         L"Yenileme hızı",
         L"Bit derinliği",
@@ -794,10 +1427,160 @@ constexpr std::array<MonitorColumnText, LANGUAGE_COUNT> MONITOR_COLUMN_TEXTS = {
         L"Renk alanı",
         L"%u bit/kanal",
         L"%u bit/piksel"
-}
+    }, MonitorColumnText{
+        L"Kuvari mudel",
+        L"Värskendussagedus",
+        L"Bitisügavus",
+        L"Värvivorming",
+        L"Värviruum",
+        L"%u bitti/kanal",
+        L"%u bitti/piksel"
+    }, MonitorColumnText{
+        L"Samhail an mhonatóra",
+        L"Ráta athnuachana",
+        L"Doimhneacht ghiotán",
+        L"Formáid datha",
+        L"Spás datha",
+        L"%u giotán/cainéal",
+        L"%u giotán/picteilín"
+    }, MonitorColumnText{
+        L"Monitoriaus modelis",
+        L"Atnaujinimo dažnis",
+        L"Bitų gylis",
+        L"Spalvų formatas",
+        L"Spalvų erdvė",
+        L"%u bitų/kanalą",
+        L"%u bitų/pikselį"
+    }, MonitorColumnText{
+        L"Monitora modelis",
+        L"Atsvaidzināšanas frekvence",
+        L"Bitu dziļums",
+        L"Krāsu formāts",
+        L"Krāstelpa",
+        L"%u biti/kanālā",
+        L"%u biti/pikselī"
+    }, MonitorColumnText{
+        L"Monitor típusa",
+        L"Frissítési gyakoriság",
+        L"Bitmélység",
+        L"Színformátum",
+        L"Színtér",
+        L"%u bit/csatorna",
+        L"%u bit/képpont"
+    }, MonitorColumnText{
+        L"Mudell tal-moniter",
+        L"Rata ta’ aġġornament",
+        L"Fond tal-bits",
+        L"Format tal-kulur",
+        L"Spazju tal-kulur",
+        L"%u bits/kanal",
+        L"%u bits/pixel"
+    }, MonitorColumnText{
+        L"Beeldschermmodel",
+        L"Vernieuwingsfrequentie",
+        L"Bitdiepte",
+        L"Kleurindeling",
+        L"Kleurruimte",
+        L"%u bits/kanaal",
+        L"%u bits/pixel"
+    }, MonitorColumnText{
+        L"Model monitor",
+        L"Rată de reîmprospătare",
+        L"Adâncime de biți",
+        L"Format de culoare",
+        L"Spațiu de culoare",
+        L"%u biți/canal",
+        L"%u biți/pixel"
+    }, MonitorColumnText{
+        L"Μοντέλο οθόνης",
+        L"Ρυθμός ανανέωσης",
+        L"Βάθος bit",
+        L"Μορφή χρώματος",
+        L"Χρωματικός χώρος",
+        L"%u bit/κανάλι",
+        L"%u bit/pixel"
+    }, MonitorColumnText{
+        L"Model monitora",
+        L"Frekvencija osvježavanja",
+        L"Dubina bita",
+        L"Format boje",
+        L"Prostor boja",
+        L"%u bita/kanal",
+        L"%u bita/piksel"
+    }, MonitorColumnText{
+        L"Model zaslona",
+        L"Frekvencija osvježavanja",
+        L"Dubina bita",
+        L"Oblik boje",
+        L"Prostor boja",
+        L"%u bita/kanal",
+        L"%u bita/piksel"
+    }, MonitorColumnText{
+        L"Model zaslona",
+        L"Hitrost osveževanja",
+        L"Bitna globina",
+        L"Oblika barv",
+        L"Barvni prostor",
+        L"%u bitov/kanal",
+        L"%u bitov/slikovno piko"
+    }, MonitorColumnText{
+        L"Model monitora",
+        L"Frekvencija osvježavanja",
+        L"Dubina bita",
+        L"Format boje",
+        L"Prostor boja",
+        L"%u bita/kanal",
+        L"%u bita/piksel"
+    }, MonitorColumnText{
+        L"Мадэль манітора",
+        L"Частата абнаўлення",
+        L"Бітавая глыбіня",
+        L"Фармат колеру",
+        L"Каляровая прастора",
+        L"%u біт/канал",
+        L"%u біт/піксель"
+    }, MonitorColumnText{
+        L"Модел на монитора",
+        L"Честота на опресняване",
+        L"Битова дълбочина",
+        L"Формат на цветовете",
+        L"Цветово пространство",
+        L"%u бита/канал",
+        L"%u бита/пиксел"
+    }, MonitorColumnText{
+        L"Модел на мониторот",
+        L"Стапка на освежување",
+        L"Битна длабочина",
+        L"Формат на боја",
+        L"Простор на бои",
+        L"%u бита/канал",
+        L"%u бита/пиксел"
+    }, MonitorColumnText{
+        L"Модел монитора",
+        L"Учестаност освежавања",
+        L"Дубина бита",
+        L"Формат боје",
+        L"Простор боја",
+        L"%u бита/канал",
+        L"%u бита/пиксел"
+    }, MonitorColumnText{
+        L"Модель монітора",
+        L"Частота оновлення",
+        L"Бітова глибина",
+        L"Формат кольору",
+        L"Колірний простір",
+        L"%u біт/канал",
+        L"%u біт/піксель"
+    }, MonitorColumnText{
+        L"Модель монитора",
+        L"Частота обновления",
+        L"Глубина цвета",
+        L"Формат цвета",
+        L"Цветовое пространство",
+        L"%u бит/канал",
+        L"%u бит/пиксель"
+    }
 };
-
-
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ENABLE_PREVIEW_TEXTS = {
     L"Zapnout náhled",
@@ -816,7 +1599,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ENABLE_PREVIEW_TEXTS = {
     L"Virkja forskoðun",
     L"Slå på forhåndsvisning",
     L"Aktivera förhandsvisning",
-    L"Önizlemeyi aç"
+    L"Önizlemeyi aç",
+    L"Luba eelvaade",
+    L"Cumasaigh réamhamharc",
+    L"Įjungti peržiūrą",
+    L"Ieslēgt priekšskatījumu",
+    L"Előnézet bekapcsolása",
+    L"Attiva l-previżjoni",
+    L"Voorbeeld inschakelen",
+    L"Activare previzualizare",
+    L"Ενεργοποίηση προεπισκόπησης",
+    L"Uključi pregled",
+    L"Uključi pretpregled",
+    L"Vklopi predogled",
+    L"Uključi pregled",
+    L"Уключыць перадпрагляд",
+    L"Включване на прегледа",
+    L"Вклучи преглед",
+    L"Укључи преглед",
+    L"Увімкнути попередній перегляд",
+    L"Включить предпросмотр"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> DISABLE_PREVIEW_TEXTS = {
@@ -836,7 +1638,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> DISABLE_PREVIEW_TEXTS = {
     L"Slökkva á forskoðun",
     L"Slå av forhåndsvisning",
     L"Inaktivera förhandsvisning",
-    L"Önizlemeyi kapat"
+    L"Önizlemeyi kapat",
+    L"Keela eelvaade",
+    L"Díchumasaigh réamhamharc",
+    L"Išjungti peržiūrą",
+    L"Izslēgt priekšskatījumu",
+    L"Előnézet kikapcsolása",
+    L"Iddiżattiva l-previżjoni",
+    L"Voorbeeld uitschakelen",
+    L"Dezactivare previzualizare",
+    L"Απενεργοποίηση προεπισκόπησης",
+    L"Isključi pregled",
+    L"Isključi pretpregled",
+    L"Izklopi predogled",
+    L"Isključi pregled",
+    L"Выключыць перадпрагляд",
+    L"Изключване на прегледа",
+    L"Исклучи преглед",
+    L"Искључи преглед",
+    L"Вимкнути попередній перегляд",
+    L"Выключить предпросмотр"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> PREVENT_SCREEN_SAVER_TEXTS = {
@@ -856,7 +1677,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> PREVENT_SCREEN_SAVER_TEXTS 
     L"Hindra skjáhvílu meðan hreyfimynd er í gangi",
     L"Hindre skjermsparer under animasjon",
     L"Blockera skärmsläckare under animering",
-    L"Animasyon sırasında ekran koruyucuyu engelle"
+    L"Animasyon sırasında ekran koruyucuyu engelle",
+    L"Tõkesta animatsiooni ajal ekraanisäästja",
+    L"Cosc ar spárálaí scáileáin le linn beochana",
+    L"Animacijos metu neleisti ekrano užsklandos",
+    L"Animācijas laikā bloķēt ekrānsaudzētāju",
+    L"Képernyőkímélő tiltása animáció közben",
+    L"Imblokka l-iscreen saver waqt l-animazzjoni",
+    L"Schermbeveiliging blokkeren tijdens animatie",
+    L"Blocare economizor în timpul animației",
+    L"Αναστολή προφύλαξης οθόνης κατά την κίνηση",
+    L"Spriječi čuvar ekrana tokom animacije",
+    L"Spriječi čuvar zaslona tijekom animacije",
+    L"Prepreči ohranjevalnik med animacijo",
+    L"Spriječi čuvar ekrana tokom animacije",
+    L"Блакаваць застаўку падчас анімацыі",
+    L"Блокиране на скрийнсейвъра при анимация",
+    L"Блокирај го чуварот за време на анимацијата",
+    L"Спречи чувар екрана током анимације",
+    L"Блокувати заставку під час анімації",
+    L"Блокировать заставку во время анимации"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> READY_STATUS_TEXTS = {
@@ -876,7 +1716,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> READY_STATUS_TEXTS = {
     L"Tilbúið.",
     L"Klar.",
     L"Redo.",
-    L"Hazır."
+    L"Hazır.",
+    L"Valmis.",
+    L"Réidh.",
+    L"Parengta.",
+    L"Gatavs.",
+    L"Kész.",
+    L"Lest.",
+    L"Gereed.",
+    L"Pregătit.",
+    L"Έτοιμο.",
+    L"Spreman.",
+    L"Spreman.",
+    L"Pripravljen.",
+    L"Spreman.",
+    L"Гатовы.",
+    L"Готов.",
+    L"Подготвен.",
+    L"Спреман.",
+    L"Готовий.",
+    L"Готов."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> PAUSED_STATUS_TEXTS = {
@@ -896,7 +1755,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> PAUSED_STATUS_TEXTS = {
     L"Hlé hefur verið gert á hreyfimyndinni.",
     L"Animasjonen er satt på pause.",
     L"Animeringen är pausad.",
-    L"Animasyon duraklatıldı."
+    L"Animasyon duraklatıldı.",
+    L"Animatsioon on peatatud.",
+    L"Tá an bheochan ar sos.",
+    L"Animacija pristabdyta.",
+    L"Animācija ir pauzēta.",
+    L"Az animáció szünetel.",
+    L"L-animazzjoni tinsab sospiża.",
+    L"Animatie is gepauzeerd.",
+    L"Animația este în pauză.",
+    L"Η κίνηση έχει παύσει.",
+    L"Animacija je pauzirana.",
+    L"Animacija je pauzirana.",
+    L"Animacija je začasno ustavljena.",
+    L"Animacija je pauzirana.",
+    L"Анімацыя прыпынена.",
+    L"Анимацията е на пауза.",
+    L"Анимацијата е паузирана.",
+    L"Анимација је паузирана.",
+    L"Анімацію призупинено.",
+    L"Анимация приостановлена."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> HELP_BUTTON_TEXTS = {
@@ -916,7 +1794,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> HELP_BUTTON_TEXTS = {
     L"Hjálp",
     L"Hjelp",
     L"Hjälp",
-    L"Yardım"
+    L"Yardım",
+    L"Spikker",
+    L"Cabhair",
+    L"Žinynas",
+    L"Palīdzība",
+    L"Súgó",
+    L"Għajnuna",
+    L"Help",
+    L"Ajutor",
+    L"Βοήθεια",
+    L"Pomoć",
+    L"Pomoć",
+    L"Pomoč",
+    L"Pomoć",
+    L"Даведка",
+    L"Помощ",
+    L"Помош",
+    L"Помоћ",
+    L"Довідка",
+    L"Справка"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_BUTTON_TEXTS = {
@@ -936,7 +1833,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_BUTTON_TEXTS = {
     L"Um",
     L"Om",
     L"Om",
-    L"Hakkında"
+    L"Hakkında",
+    L"Teave",
+    L"Maidir leis",
+    L"Apie",
+    L"Par programmu",
+    L"Névjegy",
+    L"Dwar",
+    L"Info",
+    L"Despre",
+    L"Πληροφορίες",
+    L"O programu",
+    L"O programu",
+    L"O programu",
+    L"O programu",
+    L"Пра праграму",
+    L"За програмата",
+    L"За програмата",
+    L"О програму",
+    L"Про програму",
+    L"О программе"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_VERSION_LABELS = {
@@ -956,7 +1872,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_VERSION_LABELS = {
     L"Útgáfa:",
     L"Versjon:",
     L"Version:",
-    L"Sürüm:"
+    L"Sürüm:",
+    L"Versioon:",
+    L"Leagan:",
+    L"Versija:",
+    L"Versija:",
+    L"Verzió:",
+    L"Verżjoni:",
+    L"Versie:",
+    L"Versiune:",
+    L"Έκδοση:",
+    L"Verzija:",
+    L"Verzija:",
+    L"Različica:",
+    L"Verzija:",
+    L"Версія:",
+    L"Версия:",
+    L"Верзија:",
+    L"Верзија:",
+    L"Версія:",
+    L"Версия:"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_PLATFORM_LABELS = {
@@ -976,7 +1911,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_PLATFORM_LABELS = {
     L"Markvettvangur:",
     L"Målplattform:",
     L"Målplattform:",
-    L"Hedef platform:"
+    L"Hedef platform:",
+    L"Sihtplatvorm:",
+    L"Sprioc-ardán:",
+    L"Tikslinė platforma:",
+    L"Mērķa platforma:",
+    L"Célplatform:",
+    L"Pjattaforma fil-mira:",
+    L"Doelplatform:",
+    L"Platformă țintă:",
+    L"Πλατφόρμα προορισμού:",
+    L"Ciljna platforma:",
+    L"Ciljna platforma:",
+    L"Ciljna platforma:",
+    L"Ciljna platforma:",
+    L"Мэтавая платформа:",
+    L"Целева платформа:",
+    L"Целна платформа:",
+    L"Циљна платформа:",
+    L"Цільова платформа:",
+    L"Целевая платформа:"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_WEBSITE_LABELS = {
@@ -996,7 +1950,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_WEBSITE_LABELS = {
     L"Vefsvæði:",
     L"Nettsted:",
     L"Webbplats:",
-    L"Web sitesi:"
+    L"Web sitesi:",
+    L"Veebisait:",
+    L"Suíomh gréasáin:",
+    L"Svetainė:",
+    L"Tīmekļa vietne:",
+    L"Webhely:",
+    L"Sit web:",
+    L"Website:",
+    L"Site web:",
+    L"Τοποθεσία web:",
+    L"Web-mjesto:",
+    L"Web-mjesto:",
+    L"Spletno mesto:",
+    L"Veb-sajt:",
+    L"Вэб-сайт:",
+    L"Уебсайт:",
+    L"Веб-страница:",
+    L"Веб-сајт:",
+    L"Вебсайт:",
+    L"Веб-сайт:"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> OPEN_IN_BROWSER_TEXTS = {
@@ -1016,7 +1989,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> OPEN_IN_BROWSER_TEXTS = {
     L"&Opna í sjálfgefnum vafra",
     L"&Åpne i standardnettleseren",
     L"&Öppna i standardwebbläsaren",
-    L"Varsayılan tarayıcıda &aç"
+    L"Varsayılan tarayıcıda &aç",
+    L"&Ava vaikebrauseris",
+    L"&Oscail sa bhrabhsálaí réamhshocraithe",
+    L"&Atidaryti numatytojoje naršyklėje",
+    L"&Atvērt noklusējuma pārlūkprogrammā",
+    L"&Megnyitás az alapértelmezett böngészőben",
+    L"&Iftaħ fil-brawżer default",
+    L"&Openen in standaardbrowser",
+    L"&Deschidere în browserul implicit",
+    L"&Άνοιγμα στο προεπιλεγμένο πρόγραμμα περιήγησης",
+    L"&Otvori u podrazumijevanom pregledniku",
+    L"&Otvori u zadanom pregledniku",
+    L"&Odpri v privzetem brskalniku",
+    L"&Otvori u podrazumijevanom pregledaču",
+    L"&Адкрыць у прадвызначаным браўзеры",
+    L"&Отвори в браузъра по подразбиране",
+    L"&Отвори во стандардниот прелистувач",
+    L"&Отвори у подразумеваном прегледачу",
+    L"&Відкрити в типовому браузері",
+    L"&Открыть в браузере по умолчанию"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> COPY_URL_TEXTS = {
@@ -1036,7 +2028,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> COPY_URL_TEXTS = {
     L"Afrita &vefslóð",
     L"Kopier &URL",
     L"Kopiera &URL",
-    L"&URL'yi kopyala"
+    L"&URL'yi kopyala",
+    L"Kopeeri &aadress",
+    L"Cóipeáil an &seoladh",
+    L"Kopijuoti &adresą",
+    L"Kopēt &adresi",
+    L"&Cím másolása",
+    L"Ikkopja l-&indirizz",
+    L"&Adres kopiëren",
+    L"Copiere &adresă",
+    L"Αντιγραφή &διεύθυνσης",
+    L"Kopiraj &adresu",
+    L"Kopiraj &adresu",
+    L"Kopiraj &naslov",
+    L"Kopiraj &adresu",
+    L"Капіяваць &адрас",
+    L"Копирай &адреса",
+    L"Копирај ја &адресата",
+    L"Копирај &адресу",
+    L"Копіювати &адресу",
+    L"Копировать &адрес"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> COPY_INFORMATION_TEXTS = {
@@ -1056,7 +2067,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> COPY_INFORMATION_TEXTS = {
     L"Afrita &upplýsingar",
     L"Kopier &informasjon",
     L"Kopiera &information",
-    L"&Bilgileri kopyala"
+    L"&Bilgileri kopyala",
+    L"Kopeeri &teave",
+    L"Cóipeáil an &fhaisnéis",
+    L"Kopijuoti &informaciją",
+    L"Kopēt &informāciju",
+    L"&Információ másolása",
+    L"Ikkopja l-&informazzjoni",
+    L"&Informatie kopiëren",
+    L"Copiere &informații",
+    L"Αντιγραφή &πληροφοριών",
+    L"Kopiraj &informacije",
+    L"Kopiraj &informacije",
+    L"Kopiraj &podatke",
+    L"Kopiraj &podatke",
+    L"Капіяваць &звесткі",
+    L"Копирай &информацията",
+    L"Копирај ги &информациите",
+    L"Копирај &податке",
+    L"Копіювати &відомості",
+    L"Копировать &сведения"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> CLOSE_BUTTON_TEXTS = {
@@ -1076,7 +2106,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> CLOSE_BUTTON_TEXTS = {
     L"Loka",
     L"Lukk",
     L"Stäng",
-    L"Kapat"
+    L"Kapat",
+    L"Sule",
+    L"Dún",
+    L"Uždaryti",
+    L"Aizvērt",
+    L"Bezárás",
+    L"Agħlaq",
+    L"Sluiten",
+    L"Închidere",
+    L"Κλείσιμο",
+    L"Zatvori",
+    L"Zatvori",
+    L"Zapri",
+    L"Zatvori",
+    L"Закрыць",
+    L"Затвори",
+    L"Затвори",
+    L"Затвори",
+    L"Закрити",
+    L"Закрыть"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SNAPSHOT_BUTTON_TEXTS = {
@@ -1096,7 +2145,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SNAPSHOT_BUTTON_TEXTS = {
     L"Skjámynd…",
     L"Skjermbilde…",
     L"Skärmbild…",
-    L"Anlık görüntü…"
+    L"Anlık görüntü…",
+    L"Salvesta PNG…",
+    L"Sábháil PNG…",
+    L"Išsaugoti PNG…",
+    L"Saglabāt PNG…",
+    L"PNG mentése…",
+    L"Issejvja PNG…",
+    L"PNG opslaan…",
+    L"Salvare PNG…",
+    L"Αποθήκευση PNG…",
+    L"Sačuvaj PNG…",
+    L"Spremi PNG…",
+    L"Shrani PNG…",
+    L"Sačuvaj PNG…",
+    L"Захаваць PNG…",
+    L"Запис на PNG…",
+    L"Зачувај PNG…",
+    L"Сачувај PNG…",
+    L"Зберегти PNG…",
+    L"Сохранить PNG…"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SNAPSHOT_SAVED_TEXTS = {
@@ -1116,7 +2184,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SNAPSHOT_SAVED_TEXTS = {
     L"Skjámyndin var vistuð.",
     L"Skjermbildet ble lagret.",
     L"Skärmbilden sparades.",
-    L"Anlık görüntü kaydedildi."
+    L"Anlık görüntü kaydedildi.",
+    L"PNG-pilt on salvestatud.",
+    L"Sábháladh an íomhá PNG.",
+    L"PNG vaizdas išsaugotas.",
+    L"PNG attēls ir saglabāts.",
+    L"A PNG-kép mentve.",
+    L"L-immaġni PNG ġiet issejvjata.",
+    L"De PNG-afbeelding is opgeslagen.",
+    L"Imaginea PNG a fost salvată.",
+    L"Η εικόνα PNG αποθηκεύτηκε.",
+    L"PNG slika je sačuvana.",
+    L"PNG slika je spremljena.",
+    L"Slika PNG je shranjena.",
+    L"PNG slika je sačuvana.",
+    L"Відарыс PNG захаваны.",
+    L"PNG изображението е запазено.",
+    L"PNG сликата е зачувана.",
+    L"PNG слика је сачувана.",
+    L"Зображення PNG збережено.",
+    L"Изображение PNG сохранено."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SNAPSHOT_FAILED_TEXTS = {
@@ -1136,7 +2223,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SNAPSHOT_FAILED_TEXTS = {
     L"Ekki tókst að vista skjámyndina.",
     L"Kunne ikke lagre skjermbildet.",
     L"Det gick inte att spara skärmbilden.",
-    L"Anlık görüntü kaydedilemedi."
+    L"Anlık görüntü kaydedilemedi.",
+    L"PNG-pilti ei saanud salvestada.",
+    L"Níorbh fhéidir an íomhá PNG a shábháil.",
+    L"Nepavyko išsaugoti PNG vaizdo.",
+    L"Neizdevās saglabāt PNG attēlu.",
+    L"A PNG-kép mentése sikertelen.",
+    L"Ma setgħetx tiġi ssejvjata l-immaġni PNG.",
+    L"De PNG-afbeelding kon niet worden opgeslagen.",
+    L"Imaginea PNG nu a putut fi salvată.",
+    L"Δεν ήταν δυνατή η αποθήκευση της εικόνας PNG.",
+    L"Nije moguće sačuvati PNG sliku.",
+    L"Nije moguće spremiti PNG sliku.",
+    L"Slike PNG ni bilo mogoče shraniti.",
+    L"Nije moguće sačuvati PNG sliku.",
+    L"Не ўдалося захаваць відарыс PNG.",
+    L"PNG изображението не може да се запази.",
+    L"PNG сликата не може да се зачува.",
+    L"Није могуће сачувати PNG слику.",
+    L"Не вдалося зберегти зображення PNG.",
+    L"Не удалось сохранить изображение PNG."
 };
 
 /// Screen-saver installation text
@@ -1157,7 +2263,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALL_SCREEN_SAVER_TEXT
     L"Fjarlægja skjáhvílu",
     L"Avinstaller skjermsparer",
     L"Avinstallera skärmsläckare",
-    L"Ekran koruyucuyu kaldır"
+    L"Ekran koruyucuyu kaldır",
+    L"Eemalda ekraanisäästja",
+    L"Díshuiteáil spárálaí scáileáin",
+    L"Pašalinti ekrano užsklandą",
+    L"Atinstalēt ekrānsaudzētāju",
+    L"Képernyőkímélő eltávolítása",
+    L"Neħħi l-iscreen saver",
+    L"Schermbeveiliging verwijderen",
+    L"Dezinstalare economizor de ecran",
+    L"Κατάργηση προφύλαξης οθόνης",
+    L"Deinstaliraj čuvar ekrana",
+    L"Deinstaliraj čuvar zaslona",
+    L"Odstrani ohranjevalnik zaslona",
+    L"Deinstaliraj čuvar ekrana",
+    L"Выдаліць застаўку",
+    L"Деинсталиране на скрийнсейвъра",
+    L"Деинсталирај чувар на екранот",
+    L"Деинсталирај чувар екрана",
+    L"Видалити заставку",
+    L"Удалить заставку"
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_SUCCEEDED_TEXTS = {
@@ -1177,7 +2302,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_SUCCEEDED_TE
     L"Skjáhvílan var fjarlægð.",
     L"Skjermspareren ble avinstallert.",
     L"Skärmsläckaren avinstallerades.",
-    L"Ekran koruyucu kaldırıldı."
+    L"Ekran koruyucu kaldırıldı.",
+    L"Ekraanisäästja on eemaldatud.",
+    L"Díshuiteáladh an spárálaí scáileáin.",
+    L"Ekrano užsklanda pašalinta.",
+    L"Ekrānsaudzētājs ir atinstalēts.",
+    L"A képernyőkímélő eltávolítva.",
+    L"L-iscreen saver tneħħa.",
+    L"De schermbeveiliging is verwijderd.",
+    L"Economizorul de ecran a fost dezinstalat.",
+    L"Η προφύλαξη οθόνης καταργήθηκε.",
+    L"Čuvar ekrana je deinstaliran.",
+    L"Čuvar zaslona je deinstaliran.",
+    L"Ohranjevalnik zaslona je odstranjen.",
+    L"Čuvar ekrana je deinstaliran.",
+    L"Застаўка выдалена.",
+    L"Скрийнсейвърът е деинсталиран.",
+    L"Чуварот на екранот е деинсталиран.",
+    L"Чувар екрана је деинсталиран.",
+    L"Заставку видалено.",
+    L"Заставка удалена."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_FAILED_TEXTS = {
@@ -1203,17 +2347,41 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_FAILED_TEXTS
     L"i spróbuj ponownie.",
     L"Šetrič sa nepodarilo odinštalovať. Ak je šetrič alebo jeho náhľad spustený, zatvorte ho a skúste to "
     L"znova.",
-    L"Pauseskærmen kunne ikke afinstalleres. Hvis pauseskærmen eller forhåndsvisningen kører, skal du lukke"
-    L" den og prøve igen.",
-    L"Näytönsäästäjän poistaminen epäonnistui. Jos näytönsäästäjä tai sen esikatselu on käynnissä, sulje se"
-    L" ja yritä uudelleen.",
+    L"Pauseskærmen kunne ikke afinstalleres. Hvis pauseskærmen eller forhåndsvisningen kører, skal du lukke "
+    L"den og prøve igen.",
+    L"Näytönsäästäjän poistaminen epäonnistui. Jos näytönsäästäjä tai sen esikatselu on käynnissä, sulje se "
+    L"ja yritä uudelleen.",
     L"Ekki tókst að fjarlægja skjáhvíluna. Ef skjáhvílan eða forskoðun hennar er í gangi skaltu loka henni "
     L"og reyna aftur.",
-    L"Skjermspareren kunne ikke avinstalleres. Hvis skjermspareren eller forhåndsvisningen kjører, lukk den"
-    L" og prøv på nytt.",
+    L"Skjermspareren kunne ikke avinstalleres. Hvis skjermspareren eller forhåndsvisningen kjører, lukk den "
+    L"og prøv på nytt.",
     L"Skärmsläckaren kunde inte avinstalleras. Om skärmsläckaren eller förhandsvisningen körs, stäng den "
     L"och försök igen.",
-    L"Ekran koruyucu kaldırılamadı. Ekran koruyucu veya önizlemesi çalışıyorsa kapatıp yeniden deneyin."
+    L"Ekran koruyucu kaldırılamadı. Ekran koruyucu veya önizlemesi çalışıyorsa kapatıp yeniden deneyin.",
+    L"Ekraanisäästjat ei saanud eemaldada. Sulgege ekraanisäästja ja selle eelvaade ning proovige uuesti.",
+    L"Níorbh fhéidir an spárálaí scáileáin a dhíshuiteáil. Dún é agus a réamhamharc agus bain triail eile "
+    L"as.",
+    L"Nepavyko pašalinti ekrano užsklandos. Uždarykite ją bei jos peržiūrą ir bandykite dar kartą.",
+    L"Neizdevās atinstalēt ekrānsaudzētāju. Aizveriet to un tā priekšskatījumu un mēģiniet vēlreiz.",
+    L"A képernyőkímélő nem távolítható el. Zárja be a képernyőkímélőt és az előnézetét, majd próbálja újra.",
+    L"Ma setax jitneħħa l-iscreen saver. Agħlaq l-iscreen saver u l-previżjoni tiegħu u erġa’ pprova.",
+    L"De schermbeveiliging kon niet worden verwijderd. Sluit de schermbeveiliging en het voorbeeld en "
+    L"probeer het opnieuw.",
+    L"Economizorul de ecran nu a putut fi dezinstalat. Închideți-l împreună cu previzualizarea și încercați "
+    L"din nou.",
+    L"Δεν ήταν δυνατή η κατάργηση της προφύλαξης οθόνης. Κλείστε την και την προεπισκόπησή της και "
+    L"δοκιμάστε ξανά.",
+    L"Nije moguće deinstalirati čuvar ekrana. Zatvorite čuvar i njegov pregled pa pokušajte ponovo.",
+    L"Nije moguće deinstalirati čuvar zaslona. Zatvorite čuvar i njegov pretpregled pa pokušajte ponovno.",
+    L"Ohranjevalnika zaslona ni bilo mogoče odstraniti. Zaprite ga in njegov predogled ter poskusite znova.",
+    L"Nije moguće deinstalirati čuvar ekrana. Zatvorite čuvar i njegov pregled pa pokušajte ponovo.",
+    L"Не ўдалося выдаліць застаўку. Закрыйце яе і перадпрагляд ды паўтарыце спробу.",
+    L"Скрийнсейвърът не може да се деинсталира. Затворете го и неговия преглед и опитайте отново.",
+    L"Чуварот на екранот не може да се деинсталира. Затворете го него и неговиот преглед и обидете се "
+    L"повторно.",
+    L"Није могуће деинсталирати чувар екрана. Затворите чувар и његов преглед па покушајте поново.",
+    L"Не вдалося видалити заставку. Закрийте заставку та її попередній перегляд і спробуйте ще раз.",
+    L"Не удалось удалить заставку. Закройте заставку и её предпросмотр и повторите попытку."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_BLOCKED_BY_SETTINGS_TEXTS = {
@@ -1224,8 +2392,8 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_BLOCKED_BY_S
     L"Uninstallation failed because SpaceFlight settings are open. Close the settings window and try again.",
     L"Die Deinstallation ist fehlgeschlagen, weil die SpaceFlight-Einstellungen geöffnet sind. Schließen "
     L"Sie das Fenster und versuchen Sie es erneut.",
-    L"La désinstallation a échoué car les paramètres de SpaceFlight sont ouverts. Fermez cette fenêtre puis"
-    L" réessayez.",
+    L"La désinstallation a échoué car les paramètres de SpaceFlight sont ouverts. Fermez cette fenêtre puis "
+    L"réessayez.",
     L"La desinstalación falló porque la configuración de SpaceFlight está abierta. Cierre esa ventana e "
     L"inténtelo de nuevo.",
     L"La disinstallazione non è riuscita perché le impostazioni di SpaceFlight sono aperte. Chiudere la "
@@ -1240,12 +2408,30 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_BLOCKED_BY_S
     L"Asennuksen poisto epäonnistui, koska SpaceFlight-asetukset ovat avoinna. Sulje ikkuna ja yritä "
     L"uudelleen.",
     L"Fjarlæging mistókst vegna þess að stillingar SpaceFlight eru opnar. Lokaðu glugganum og reyndu aftur.",
-    L"Avinstalleringen mislyktes fordi innstillingene for SpaceFlight er åpne. Lukk vinduet og prøv på "
-    L"nytt.",
+    L"Avinstalleringen mislyktes fordi innstillingene for SpaceFlight er åpne. Lukk vinduet og prøv på nytt.",
     L"Avinstallationen misslyckades eftersom inställningarna för SpaceFlight är öppna. Stäng fönstret och "
     L"försök igen.",
     L"SpaceFlight ayarları açık olduğu için kaldırma başarısız oldu. Ayarlar penceresini kapatıp yeniden "
-    L"deneyin."
+    L"deneyin.",
+    L"Sulgege SpaceFlight sätete aken ja proovige eemaldamist uuesti.",
+    L"Dún fuinneog socruithe SpaceFlight agus bain triail eile as an díshuiteáil.",
+    L"Uždarykite SpaceFlight nuostatų langą ir bandykite pašalinti dar kartą.",
+    L"Aizveriet SpaceFlight iestatījumu logu un atkārtojiet atinstalēšanu.",
+    L"Zárja be a SpaceFlight beállítási ablakát, majd próbálja újra az eltávolítást.",
+    L"Agħlaq it-tieqa tas-settings ta’ SpaceFlight u erġa’ pprova tneħħih.",
+    L"Sluit de instellingen van SpaceFlight en probeer het verwijderen opnieuw.",
+    L"Închideți fereastra de setări SpaceFlight și încercați din nou dezinstalarea.",
+    L"Κλείστε το παράθυρο ρυθμίσεων του SpaceFlight και δοκιμάστε ξανά την κατάργηση.",
+    L"Zatvorite postavke programa SpaceFlight pa ponovite deinstalaciju.",
+    L"Zatvorite postavke programa SpaceFlight pa ponovite deinstalaciju.",
+    L"Zaprite nastavitve SpaceFlight in znova poskusite odstranitev.",
+    L"Zatvorite podešavanja programa SpaceFlight pa ponovite deinstalaciju.",
+    L"Закрыйце налады SpaceFlight ды паўтарыце выдаленне.",
+    L"Затворете настройките на SpaceFlight и опитайте деинсталирането отново.",
+    L"Затворете ги поставките за SpaceFlight и обидете се повторно да деинсталирате.",
+    L"Затворите подешавања програма SpaceFlight па поновите деинсталацију.",
+    L"Закрийте налаштування SpaceFlight та повторіть видалення.",
+    L"Закройте настройки SpaceFlight и повторите удаление."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_BLOCKED_BY_SYSTEM_PREVIEW_TEXTS = {
@@ -1279,21 +2465,40 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_BLOCKED_BY_S
     L"reyndu aftur.",
     L"Avinstalleringen mislyktes fordi systemforhåndsvisningen kjører. Lukk vinduet "
     L"Skjermsparerinnstillinger og prøv på nytt.",
-    L"Avinstallationen misslyckades eftersom systemförhandsvisningen körs. Stäng fönstret Inställningar för"
-    L" skärmsläckare och försök igen.",
-    L"Sistem önizlemesi çalıştığı için kaldırma başarısız oldu. Ekran Koruyucu Ayarları penceresini kapatıp"
-    L" yeniden deneyin."
+    L"Avinstallationen misslyckades eftersom systemförhandsvisningen körs. Stäng fönstret Inställningar för "
+    L"skärmsläckare och försök igen.",
+    L"Sistem önizlemesi çalıştığı için kaldırma başarısız oldu. Ekran Koruyucu Ayarları penceresini kapatıp "
+    L"yeniden deneyin.",
+    L"Sulgege Windowsi ekraanisäästja sätete aken ja proovige eemaldamist uuesti.",
+    L"Dún fuinneog socruithe spárálaí scáileáin Windows agus bain triail eile as an díshuiteáil.",
+    L"Uždarykite Windows ekrano užsklandos nuostatų langą ir bandykite pašalinti dar kartą.",
+    L"Aizveriet Windows ekrānsaudzētāja iestatījumu logu un atkārtojiet atinstalēšanu.",
+    L"Zárja be a Windows képernyőkímélő-beállításait, majd próbálja újra az eltávolítást.",
+    L"Agħlaq it-tieqa tas-settings tal-iscreen saver ta’ Windows u erġa’ pprova tneħħih.",
+    L"Sluit de instellingen voor schermbeveiliging van Windows en probeer het verwijderen opnieuw.",
+    L"Închideți setările economizorului de ecran Windows și încercați din nou dezinstalarea.",
+    L"Κλείστε τις ρυθμίσεις προφύλαξης οθόνης των Windows και δοκιμάστε ξανά την κατάργηση.",
+    L"Zatvorite Windows postavke čuvara ekrana pa ponovite deinstalaciju.",
+    L"Zatvorite Windows postavke čuvara zaslona pa ponovite deinstalaciju.",
+    L"Zaprite nastavitve ohranjevalnika zaslona Windows in znova poskusite odstranitev.",
+    L"Zatvorite Windows podešavanja čuvara ekrana pa ponovite deinstalaciju.",
+    L"Закрыйце акно налад застаўкі Windows ды паўтарыце выдаленне.",
+    L"Затворете настройките на скрийнсейвъра на Windows и опитайте деинсталирането отново.",
+    L"Затворете ги поставките за чуварот на екранот на Windows и обидете се повторно.",
+    L"Затворите Windows подешавања чувара екрана па поновите деинсталацију.",
+    L"Закрийте налаштування заставки Windows та повторіть видалення.",
+    L"Закройте настройки заставки Windows и повторите удаление."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_BLOCKED_BY_RUNNING_SAVER_TEXTS = {
     L"Odinstalace se nezdařila, protože je spuštěný spořič nebo celoobrazovkový náhled. Ukončete jej "
     L"klávesou Esc nebo pohybem myši a odinstalaci zopakujte.",
-    L"Uninstallation failed because the screen saver or full-screen preview is running. Exit it with Esc or"
-    L" by moving the mouse, then try again.",
-    L"Uninstallation failed because the screen saver or full-screen preview is running. Exit it with Esc or"
-    L" by moving the mouse, then try again.",
-    L"Uninstallation failed because the screen saver or full-screen preview is running. Exit it with Esc or"
-    L" by moving the mouse, then try again.",
+    L"Uninstallation failed because the screen saver or full-screen preview is running. Exit it with Esc or "
+    L"by moving the mouse, then try again.",
+    L"Uninstallation failed because the screen saver or full-screen preview is running. Exit it with Esc or "
+    L"by moving the mouse, then try again.",
+    L"Uninstallation failed because the screen saver or full-screen preview is running. Exit it with Esc or "
+    L"by moving the mouse, then try again.",
     L"Die Deinstallation ist fehlgeschlagen, weil der Bildschirmschoner oder die Vollbildvorschau läuft. "
     L"Beenden Sie ihn mit Esc oder durch Bewegen der Maus und versuchen Sie es erneut.",
     L"La désinstallation a échoué car l’économiseur ou l’aperçu plein écran est actif. Quittez-le avec "
@@ -1302,8 +2507,8 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_BLOCKED_BY_R
     L"Salga con Esc o moviendo el ratón e inténtelo de nuevo.",
     L"La disinstallazione non è riuscita perché è attivo il salvaschermo o l’anteprima a schermo intero. "
     L"Uscire con Esc o muovendo il mouse e riprovare.",
-    L"A desinstalação falhou porque a proteção ou a pré-visualização em ecrã inteiro está em execução. Saia"
-    L" com Esc ou movendo o rato e tente novamente.",
+    L"A desinstalação falhou porque a proteção ou a pré-visualização em ecrã inteiro está em execução. Saia "
+    L"com Esc ou movendo o rato e tente novamente.",
     L"Odinstalowanie nie powiodło się, ponieważ działa wygaszacz lub podgląd pełnoekranowy. Zakończ go "
     L"klawiszem Esc albo ruchem myszy i spróbuj ponownie.",
     L"Odinštalovanie zlyhalo, pretože beží šetrič alebo celoobrazovkový náhľad. Ukončite ho klávesom Esc "
@@ -1312,14 +2517,50 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> UNINSTALLATION_BLOCKED_BY_R
     L"med Esc eller ved at bevæge musen, og prøv igen.",
     L"Asennuksen poisto epäonnistui, koska näytönsäästäjä tai koko näytön esikatselu on käynnissä. Lopeta "
     L"Esc-näppäimellä tai liikuttamalla hiirtä ja yritä uudelleen.",
-    L"Fjarlæging mistókst vegna þess að skjáhvílan eða forskoðun á öllum skjánum er í gangi. Lokaðu með Esc"
-    L" eða með því að hreyfa músina og reyndu aftur.",
+    L"Fjarlæging mistókst vegna þess að skjáhvílan eða forskoðun á öllum skjánum er í gangi. Lokaðu með Esc "
+    L"eða með því að hreyfa músina og reyndu aftur.",
     L"Avinstalleringen mislyktes fordi skjermspareren eller fullskjermvisningen kjører. Avslutt med Esc "
     L"eller ved å bevege musen, og prøv på nytt.",
     L"Avinstallationen misslyckades eftersom skärmsläckaren eller helskärmsförhandsvisningen körs. Avsluta "
     L"med Esc eller genom att röra musen och försök igen.",
     L"Ekran koruyucu veya tam ekran önizleme çalıştığı için kaldırma başarısız oldu. Esc ile ya da fareyi "
-    L"hareket ettirerek çıkıp yeniden deneyin."
+    L"hareket ettirerek çıkıp yeniden deneyin.",
+    L"Sulgege ekraanisäästja või täisekraanieelvaade klahviga Esc või hiire liigutamisega ja proovige "
+    L"eemaldamist uuesti.",
+    L"Dún an spárálaí scáileáin nó an réamhamharc lánscáileáin le Esc nó trí an luch a bhogadh agus bain "
+    L"triail eile as.",
+    L"Užbaikite užsklandą arba viso ekrano peržiūrą klavišu Esc ar pajudindami pelę ir bandykite pašalinti "
+    L"dar kartą.",
+    L"Aizveriet ekrānsaudzētāju vai pilnekrāna priekšskatījumu ar Esc vai peles kustību un atkārtojiet "
+    L"atinstalēšanu.",
+    L"Lépjen ki a képernyőkímélőből vagy a teljes képernyős előnézetből az Esc billentyűvel vagy az egér "
+    L"mozgatásával, majd próbálja újra.",
+    L"Agħlaq l-iscreen saver jew il-previżjoni fuq skrin sħiħ b’Esc jew billi ċċaqlaq il-maws u erġa’ "
+    L"pprova.",
+    L"Sluit de schermbeveiliging of het schermvullende voorbeeld met Esc of door de muis te bewegen en "
+    L"probeer het opnieuw.",
+    L"Închideți economizorul sau previzualizarea pe tot ecranul cu Esc ori mișcând mouse-ul și încercați "
+    L"din nou.",
+    L"Κλείστε την προφύλαξη ή την προεπισκόπηση πλήρους οθόνης με Esc ή κίνηση του ποντικιού και δοκιμάστε "
+    L"ξανά.",
+    L"Zatvorite čuvar ili pregled preko cijelog ekrana tipkom Esc ili pomjeranjem miša pa ponovite "
+    L"deinstalaciju.",
+    L"Zatvorite čuvar ili pretpregled preko cijelog zaslona tipkom Esc ili pomicanjem miša pa ponovite "
+    L"deinstalaciju.",
+    L"Zaprite ohranjevalnik ali celozaslonski predogled s tipko Esc ali premikom miške in znova poskusite "
+    L"odstranitev.",
+    L"Zatvorite čuvar ili pregled preko cijelog ekrana tasterom Esc ili pomjeranjem miša pa ponovite "
+    L"deinstalaciju.",
+    L"Завяршыце застаўку або поўнаэкранны перадпрагляд клавішай Esc ці рухам мышы ды паўтарыце выдаленне.",
+    L"Спрете скрийнсейвъра или прегледа на цял екран с Esc или движение на мишката и опитайте отново.",
+    L"Затворете го чуварот или прегледот на цел екран со Esc или со движење на глувчето и обидете се "
+    L"повторно.",
+    L"Затворите чувар или преглед преко целог екрана тастером Esc или померањем миша па поновите "
+    L"деинсталацију.",
+    L"Завершіть заставку або повноекранний попередній перегляд клавішею Esc чи рухом миші та повторіть "
+    L"видалення.",
+    L"Завершите заставку или полноэкранный предпросмотр клавишей Esc либо движением мыши и повторите "
+    L"удаление."
 };
 
 /// Warnings shown before closing an application that is currently recording.
@@ -1340,7 +2581,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> RECORDING_CLOSE_WARNING_TEX
     L"Ef forritinu er lokað stöðvast upptakan sem er í gangi.",
     L"Hvis du avslutter programmet, avsluttes opptaket som pågår.",
     L"Om du avslutar programmet stoppas den pågående inspelningen.",
-    L"Uygulamayı kapatmak devam eden kaydı durduracaktır."
+    L"Uygulamayı kapatmak devam eden kaydı durduracaktır.",
+    L"Rakenduse sulgemine lõpetab käimasoleva salvestamise.",
+    L"Stopfar an taifeadadh atá ar siúl má dhúntar an feidhmchlár.",
+    L"Uždarius programą bus sustabdytas vykstantis įrašymas.",
+    L"Aizverot lietotni, tiks pārtraukts pašreizējais ieraksts.",
+    L"Az alkalmazás bezárítása leállítja a folyamatban lévő felvételt.",
+    L"L-għeluq tal-applikazzjoni jwaqqaf ir-reġistrazzjoni li tkun għaddejja.",
+    L"Als u de toepassing sluit, wordt de huidige opname gestopt.",
+    L"Închiderea aplicației va opri înregistrarea în curs.",
+    L"Το κλείσιμο της εφαρμογής θα διακόψει την εγγραφή που βρίσκεται σε εξέλιξη.",
+    L"Zatvaranje aplikacije zaustavit će snimanje koje je u toku.",
+    L"Zatvaranje aplikacije zaustavit će snimanje koje je u tijeku.",
+    L"Zapiranje programa bo ustavilo trenutno snemanje.",
+    L"Zatvaranje aplikacije zaustaviće snimanje koje je u toku.",
+    L"Закрыццё праграмы спыніць бягучы запіс.",
+    L"Затварянето на приложението ще спре текущия запис.",
+    L"Затворањето на апликацијата ќе го запре снимањето што е во тек.",
+    L"Затварање апликације зауставиће снимање које је у току.",
+    L"Закриття програми зупинить поточний запис.",
+    L"Закрытие приложения остановит текущую запись."
 };
 
 /// Recording-settings captions and presets shared with the Emulators interface.
@@ -1352,135 +2612,252 @@ constexpr std::array<RecordingText, LANGUAGE_COUNT> RECORDING_TEXTS = {
         L"Rozlišení:",
         L"Snímková frekvence:",
         L"Změny se použijí při příštím záznamu MP4."
-},
-    RecordingText{
+    }, RecordingText{
         L"Recording settings",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Resolution:",
         L"Frame rate:",
         L"Changes apply to the next MP4 recording."
-},
-    RecordingText{
+    }, RecordingText{
         L"Recording settings",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Resolution:",
         L"Frame rate:",
         L"Changes apply to the next MP4 recording."
-},
-    RecordingText{
+    }, RecordingText{
         L"Recording settings",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Resolution:",
         L"Frame rate:",
         L"Changes apply to the next MP4 recording."
-},
-    RecordingText{
+    }, RecordingText{
         L"Aufnahmeeinstellungen",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Auflösung:",
         L"Bildfrequenz:",
         L"Änderungen gelten für die nächste MP4-Aufnahme."
-},
-    RecordingText{
+    }, RecordingText{
         L"Réglages vidéo",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Résolution :",
         L"Fréquence d’images :",
         L"Les modifications s’appliquent au prochain enregistrement MP4."
-},
-    RecordingText{
+    }, RecordingText{
         L"Ajustes de grabación",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Resolución:",
         L"Frecuencia de imagen:",
         L"Los cambios se aplican a la próxima grabación MP4."
-},
-    RecordingText{
+    }, RecordingText{
         L"Impostazioni video",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Risoluzione:",
         L"Frequenza fotogrammi:",
         L"Le modifiche si applicano alla prossima registrazione MP4."
-},
-    RecordingText{
+    }, RecordingText{
         L"Definições de gravação",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Resolução:",
         L"Frequência de imagens:",
         L"As alterações aplicam-se à próxima gravação MP4."
-},
-    RecordingText{
+    }, RecordingText{
         L"Ustawienia nagrywania",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Rozdzielczość:",
         L"Liczba klatek/s:",
         L"Zmiany dotyczą następnego nagrania MP4."
-},
-    RecordingText{
+    }, RecordingText{
         L"Nastavenie záznamu",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Rozlíšenie:",
         L"Snímková frekvencia:",
         L"Zmeny sa použijú pri nasledujúcom zázname MP4."
-},
-    RecordingText{
+    }, RecordingText{
         L"Optagelsesindstillinger",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Opløsning:",
         L"Billedfrekvens:",
         L"Ændringerne gælder næste MP4-optagelse."
-},
-    RecordingText{
+    }, RecordingText{
         L"Tallennusasetukset",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Tarkkuus:",
         L"Kuvataajuus:",
         L"Muutokset koskevat seuraavaa MP4-tallennusta."
-},
-    RecordingText{
+    }, RecordingText{
         L"Upptökustillingar",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Upplausn:",
         L"Rammatíðni:",
         L"Breytingarnar gilda fyrir næstu MP4-upptöku."
-},
-    RecordingText{
+    }, RecordingText{
         L"Opptaksinnstillinger",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Oppløsning:",
         L"Bildefrekvens:",
         L"Endringene gjelder neste MP4-opptak."
-},
-    RecordingText{
+    }, RecordingText{
         L"Inspelningsinställningar",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Upplösning:",
         L"Bildfrekvens:",
         L"Ändringarna gäller nästa MP4-inspelning."
-},
-    RecordingText{
+    }, RecordingText{
         L"Kayıt ayarları",
         L"Viewport",
         L"TV (BT.709, 4:2:0)",
         L"Çözünürlük:",
         L"Kare hızı:",
         L"Değişiklikler bir sonraki MP4 kaydına uygulanır."
-}
+    }, RecordingText{
+        L"Salvestussätted",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Eraldusvõime:",
+        L"Kaadrisagedus:",
+        L"Muudatused rakenduvad järgmisele MP4 salvestusele."
+    }, RecordingText{
+        L"Socruithe taifeadta",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Taifeach:",
+        L"Ráta frámaí:",
+        L"Cuirfear na hathruithe i bhfeidhm ar an gcéad taifeadadh MP4 eile."
+    }, RecordingText{
+        L"Įrašymo nuostatos",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Skiriamoji geba:",
+        L"Kadrų dažnis:",
+        L"Pakeitimai bus taikomi kitam MP4 įrašui."
+    }, RecordingText{
+        L"Ieraksta iestatījumi",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Izšķirtspēja:",
+        L"Kadru ātrums:",
+        L"Izmaiņas attieksies uz nākamo MP4 ierakstu."
+    }, RecordingText{
+        L"Felvételi beállítások",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Felbontás:",
+        L"Képkockasebesség:",
+        L"A módosítások a következő MP4-felvételre érvényesek."
+    }, RecordingText{
+        L"Settings tar-reġistrazzjoni",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Riżoluzzjoni:",
+        L"Rata tal-frejms:",
+        L"Il-bidliet japplikaw għar-reġistrazzjoni MP4 li jmiss."
+    }, RecordingText{
+        L"Opname-instellingen",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Resolutie:",
+        L"Framesnelheid:",
+        L"Wijzigingen gelden voor de volgende MP4-opname."
+    }, RecordingText{
+        L"Setări de înregistrare",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Rezoluție:",
+        L"Frecvența cadrelor:",
+        L"Modificările se aplică următoarei înregistrări MP4."
+    }, RecordingText{
+        L"Ρυθμίσεις εγγραφής",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Ανάλυση:",
+        L"Ρυθμός καρέ:",
+        L"Οι αλλαγές ισχύουν για την επόμενη εγγραφή MP4."
+    }, RecordingText{
+        L"Postavke snimanja",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Rezolucija:",
+        L"Broj kadrova u sekundi:",
+        L"Promjene se primjenjuju na sljedeće MP4 snimanje."
+    }, RecordingText{
+        L"Postavke snimanja",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Razlučivost:",
+        L"Broj sličica u sekundi:",
+        L"Promjene se primjenjuju na sljedeće MP4 snimanje."
+    }, RecordingText{
+        L"Nastavitve snemanja",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Ločljivost:",
+        L"Hitrost sličic:",
+        L"Spremembe veljajo za naslednje snemanje MP4."
+    }, RecordingText{
+        L"Podešavanja snimanja",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Rezolucija:",
+        L"Broj kadrova u sekundi:",
+        L"Promjene se primjenjuju na sljedeće MP4 snimanje."
+    }, RecordingText{
+        L"Налады запісу",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Раздзяляльнасць:",
+        L"Частата кадраў:",
+        L"Змены будуць ужытыя да наступнага запісу MP4."
+    }, RecordingText{
+        L"Настройки на записа",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Разделителна способност:",
+        L"Кадрова честота:",
+        L"Промените се прилагат към следващия MP4 запис."
+    }, RecordingText{
+        L"Поставки за снимање",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Резолуција:",
+        L"Број кадри во секунда:",
+        L"Промените важат за следното MP4 снимање."
+    }, RecordingText{
+        L"Подешавања снимања",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Резолуција:",
+        L"Број кадрова у секунди:",
+        L"Промене се примењују на следеће MP4 снимање."
+    }, RecordingText{
+        L"Налаштування запису",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Роздільна здатність:",
+        L"Частота кадрів:",
+        L"Зміни буде застосовано до наступного запису MP4."
+    }, RecordingText{
+        L"Настройки записи",
+        L"Viewport",
+        L"TV (BT.709, 4:2:0)",
+        L"Разрешение:",
+        L"Частота кадров:",
+        L"Изменения применяются к следующей записи MP4."
+    }
 };
 
 constexpr std::array<const wchar_t*, 3> RECORDING_RESOLUTION_TEXTS = {
@@ -1498,84 +2875,79 @@ constexpr std::array<const wchar_t*, 4> RECORDING_RATE_TEXTS = {
 
 /// Help and About text
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
-    L"SpaceFlight nabízí „Nekonečná vlnící se plocha“ a „Dálkový let — proměnlivá plocha“. Každému "
-    L"monitoru přiřadíte právě jeden průlet: označte jeho řádek v seznamu a zvolte příslušný přepínač. "
-    L"Ve výchozím stavu je na všech monitorech zvolena první animace. Výchozí je zobrazení s texturou; "
-    L"zrušením volby Textura přepnete vybrané monitory na drátěný model. Při označení více řádků se "
-    L"volba použije pro všechny označené monitory. Jezdec nastavuje rychlost animace v rozsahu 0–1600 "
-    L"%. EXE výchozím spuštěním zapne pouze primární animační monitor, spořič všechny monitory. Každý "
-    L"monitor se vykresluje podle vlastní obnovovací frekvence. Nastavení se ukládá zvlášť pro aplikaci "
-    L"a spořič obrazovky. Volba Převalování kamery zapne na označených monitorech plynulé otáčení "
-    L"pohledu do všech směrů; ve výchozím stavu je vypnutá. Volba Zastavování a změny směru přidá v "
-    L"náhodných intervalech plynulé brzdění převalování kamery, krátké zastavení a rozběh opačným "
-    L"směrem. Je dostupná při zapnutém převalování a ve výchozím stavu je vypnutá; samotný průlet "
-    L"pokračuje.\r\n\r\nV seznamu lze označit více monitorů; dvojklikem na řádek monitor zapnete nebo "
-    L"vypnete a lze zrušit i výběr všech monitorů. Každý monitor používá nezávislou scénu. Snímek "
-    L"ukládá PNG, tlačítko záznamu spouští a ukončuje MP4. Pozastavení zastaví animaci. Aplikace také "
-    L"instaluje nebo odinstaluje zabalený spořič. Nastavení se ukládá průběžně. Aplikace běží pouze v jedné "
-    L"instanci. Další spuštění obnoví minimalizované ovládací okno a přenese do popředí. Mezi ovládacími "
-    L"prvky přecházejte klávesami Tab a Shift+Tab; podtržené volby lze vyvolat pomocí Alt a příslušného "
-    L"písmene. Esc zavře aktivní nápovědu či okno O aplikaci; v ovládacím okně ukončí aplikaci. Volba "
-    L"Blokovat spořič při animaci brání spuštění spořiče Windows pouze tehdy, když je animace skutečně "
-    L"viditelná a není pozastavená.\r\n\r\nSnímek a záznam zachycují první aktivní animační monitor, nikoli "
-    L"společnou plochu všech monitorů. PNG používá složku Obrázky, MP4 složku Videa; při jejich neexistenci "
-    L"se použijí Dokumenty. Tlačítko Nastavení záznamu vybírá Viewport nebo TV. Viewport zachovává rozměry "
-    L"animačního monitoru a jeho obnovovací frekvenci, nejvýše 60 snímků za sekundu. TV nabízí rozlišení "
-    L"1920 × 1080, 1440 × 1080 nebo 1280 × 720 v poměru 16:9 a frekvenci 50, 25, 59.94 (60000/1001) nebo "
-    L"29.97 (30000/1001) snímků za sekundu. Obraz zachovává poměr stran; TV používá progresivní video "
-    L"BT.709 s omezeným rozsahem a vzorkováním 4:2:0. Rozlišení a snímkovou frekvenci lze vybrat pouze v "
-    L"režimu TV. Okno Nastavení záznamu lze minimalizovat a neblokuje ostatní okna aplikace. OK uloží volby "
-    L"pro příští záznam MP4; Storno nebo Esc nepotvrzené změny zahodí. Nahrávaný monitor nelze během "
-    L"záznamu odepnout; změny ostatních monitorů záznam nezastaví. Ukončení aplikace při probíhajícím "
-    L"záznamu vyžaduje potvrzení, protože současně ukončí záznam.\r\n\r\nWindows 7 až Windows 11 podporují "
-    L"všechny funkce včetně snímků PNG a záznamu MP4. Pro spuštění aplikace ve Windows Vista SP2 je nutné "
-    L"nainstalovat aktualizace KB971512 a KB2117917. Záznam MP4 na Vistě v současné verzi nefunguje.",
-    L"SpaceFlight offers „Infinite undulating surface“ and „Long-distance flight — morphing surface“. "
-    L"Assign exactly one flight to each display: select its row in the list and choose the corresponding "
-    L"radio button. The first animation is selected on every display by default. Textured rendering is the "
-    L"default; clear Texture to switch the selected displays to wireframe. With several rows selected, the "
-    L"choice applies to every selected display. The slider sets animation speed from 0–1600%. On default "
-    L"startup, EXE enables only the primary animation display; the screen saver enables all displays. Each "
-    L"display renders at its own refresh rate. Settings are stored separately for the application and "
-    L"screen saver. Camera tumbling enables smooth rotation of the view in all directions on the selected "
-    L"displays; it is off by default. Stops and reversals adds gradual braking, brief pauses and reversal "
-    L"of camera tumbling at random intervals. It is available when Camera tumbling is enabled and is off by "
-    L"default; forward flight continues.\r\n\r\nSelect several displays in the list; double-click a row to "
-    L"toggle it, or clear the selection for all displays. Every display uses an independent scene. Snapshot "
-    L"saves a PNG and the recording button starts or stops an MP4. Pause stops the animation. The "
-    L"application also installs or uninstalls its embedded screen saver. Settings are saved continuously. "
-    L"Only one instance of the application runs at a time. Launching it again restores its minimized "
-    L"control window and brings it to the foreground. Use Tab and Shift+Tab to move between controls; use "
-    L"Alt and the underlined letter to activate a command. Esc closes the active Help or About window; in "
-    L"the control window, it exits the application. Prevent screen saver during animation blocks the "
-    L"Windows screen saver only while the animation is actually visible and not paused.\r\n\r\nSnapshots "
-    L"and recordings capture the first active animation display, not a combined image of all displays. PNG "
-    L"uses Pictures and MP4 uses Videos, with Documents as the fallback if those folders do not exist. The "
-    L"Recording settings button selects Viewport or TV. Viewport preserves the animation display’s "
-    L"dimensions and refresh rate, up to 60 frames per second. TV offers 1920 × 1080, 1440 × 1080 or 1280 × "
-    L"720 output in 16:9, with 50, 25, 59.94 (60000/1001) or 29.97 (30000/1001) frames per second. The "
-    L"image keeps its aspect ratio; TV uses progressive BT.709 limited-range 4:2:0 video. Resolution and "
-    L"frame rate are available only in TV mode. The Recording settings window can be minimized and does not "
-    L"block the other application windows. OK saves choices for the next MP4 recording; Cancel or Esc "
-    L"discards unconfirmed changes. The recorded display cannot be detached during recording; changes to "
-    L"other displays do not stop the recording. Closing the application while recording requires "
-    L"confirmation because it also stops the recording.\r\n\r\nWindows 7 through Windows 11 support all "
-    L"features, including PNG snapshots and MP4 recording. To run the application on Windows Vista SP2, you "
-    L"must install updates KB971512 and KB2117917. MP4 recording does not work on Vista in the current "
-    L"version.",
-    L"SpaceFlight offers „Infinite undulating surface“ and „Long-distance flight — morphing surface“. "
-    L"Assign exactly one flight to each display: select its row in the list and choose the corresponding "
-    L"radio button. The first animation is selected on every display by default. Textured rendering is the "
-    L"default; clear Texture to switch the selected displays to wireframe. With several rows selected, the "
-    L"choice applies to every selected display. The slider sets animation speed from 0–1600%. On default "
-    L"startup, EXE enables only the primary animation display; the screen saver enables all displays. Each "
-    L"display renders at its own refresh rate. Settings are stored separately for the application and "
-    L"screen saver. Camera tumbling enables smooth rotation of the view in all directions on the selected "
-    L"displays; it is off by default. Stops and reversals adds gradual braking, brief pauses and reversal "
-    L"of camera tumbling at random intervals. It is available when Camera tumbling is enabled and is off by "
-    L"default; forward flight continues.\r\n\r\nSelect several displays; double-click a row to toggle it, or "
-    L"clear the selection for all displays. Each display uses an independent scene. Snapshot saves PNG and "
-    L"the recording button starts or stops MP4. Pause stops the animation. The application also installs or "
+    L"SpaceFlight: Nekonečná vlnící se plocha; Dálkový let — proměnlivá plocha. Každému monitoru přiřaďte "
+    L"právě jednu animaci. Textura přepíná mezi texturovanými plochami a drátěným modelem. Převalování "
+    L"kamery pomalu mění směr pohledu ve všech třech rozměrech. Zastavování a změny směru přidává náhodné "
+    L"zpomalování, pauzy a změny směru otáčení; dopředný pohyb pokračuje. Rychlost animace je 0–1600 %. "
+    L"Každý monitor má nezávislou náhodnou scénu a vykreslování podle své obnovovací "
+    L"frekvence.\r\n\r\nOznačení řádků určuje, které monitory právě nastavujete; není totožné se zatržítky "
+    L"zapínajícími animační výstupy. Ctrl+A označí všechny monitory, Ctrl a Shift umožňují upravit "
+    L"označení. Všechny animační volby a jezdce platí pro označené monitory. Označení se pamatuje zvlášť "
+    L"pro EXE a SCR. Pokud byly označené všechny monitory, označí se i nově připojené.\r\n\r\nV seznamu lze "
+    L"označit více monitorů; dvojklikem na řádek monitor zapnete nebo vypnete a lze zrušit i výběr všech "
+    L"monitorů. Každý monitor používá nezávislou scénu. Snímek ukládá PNG, tlačítko záznamu spouští a "
+    L"ukončuje MP4. Pozastavení zastaví animaci. Aplikace také instaluje nebo odinstaluje zabalený spořič. "
+    L"Nastavení se ukládá průběžně. Aplikace běží pouze v jedné instanci. Další spuštění obnoví "
+    L"minimalizované ovládací okno a přenese do popředí. Mezi ovládacími prvky přecházejte klávesami Tab a "
+    L"Shift+Tab; podtržené volby lze vyvolat pomocí Alt a příslušného písmene. Esc zavře aktivní nápovědu "
+    L"či okno O aplikaci; v ovládacím okně ukončí aplikaci. Volba Blokovat spořič při animaci brání "
+    L"spuštění spořiče Windows pouze tehdy, když je animace skutečně viditelná a není "
+    L"pozastavená.\r\n\r\nSnímek a záznam zachycují první aktivní animační monitor, nikoli společnou plochu "
+    L"všech monitorů. PNG používá složku Obrázky, MP4 složku Videa; při jejich neexistenci se použijí "
+    L"Dokumenty. Tlačítko Nastavení záznamu vybírá Viewport nebo TV. Viewport zachovává rozměry animačního "
+    L"monitoru a jeho obnovovací frekvenci, nejvýše 60 snímků za sekundu. TV nabízí rozlišení 1920 × 1080, "
+    L"1440 × 1080 nebo 1280 × 720 v poměru 16:9 a frekvenci 50, 25, 59.94 (60000/1001) nebo 29.97 "
+    L"(30000/1001) snímků za sekundu. Obraz zachovává poměr stran; TV používá progresivní video BT.709 s "
+    L"omezeným rozsahem a vzorkováním 4:2:0. Rozlišení a snímkovou frekvenci lze vybrat pouze v režimu TV. "
+    L"Okno Nastavení záznamu lze minimalizovat a neblokuje ostatní okna aplikace. OK uloží volby pro příští "
+    L"záznam MP4; Storno nebo Esc nepotvrzené změny zahodí. Nahrávaný monitor nelze během záznamu odepnout; "
+    L"změny ostatních monitorů záznam nezastaví. Ukončení aplikace při probíhajícím záznamu vyžaduje "
+    L"potvrzení, protože současně ukončí záznam.\r\n\r\nWindows 7 až Windows 11 podporují všechny funkce "
+    L"včetně snímků PNG a záznamu MP4. Pro spuštění aplikace ve Windows Vista SP2 je nutné nainstalovat "
+    L"aktualizace KB971512 a KB2117917. Záznam MP4 na Vistě v současné verzi nefunguje.",
+    L"SpaceFlight: Infinite undulating surface; Long-distance flight — morphing surface. Assign exactly one "
+    L"animation to each display. Texture switches between textured surfaces and wireframe. Camera tumbling "
+    L"slowly changes the viewing direction in all three dimensions. Stops and reversals adds randomized "
+    L"braking, pauses, and reversals of the rotation; forward flight continues. Animation speed ranges from "
+    L"0–1600%. Every display has an independent randomized scene rendered at its own refresh "
+    L"rate.\r\n\r\nRow selection determines which displays you are editing; it is separate from the "
+    L"checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the "
+    L"selection. All animation options and sliders apply to the selected displays. The selection is "
+    L"remembered separately for EXE and SCR. If all displays were selected, newly connected displays join "
+    L"the selection.\r\n\r\nSelect several displays in the list; double-click a row to toggle it, or clear "
+    L"the selection for all displays. Every display uses an independent scene. Snapshot saves a PNG and the "
+    L"recording button starts or stops an MP4. Pause stops the animation. The application also installs or "
+    L"uninstalls its embedded screen saver. Settings are saved continuously. Only one instance of the "
+    L"application runs at a time. Launching it again restores its minimized control window and brings it to "
+    L"the foreground. Use Tab and Shift+Tab to move between controls; use Alt and the underlined letter to "
+    L"activate a command. Esc closes the active Help or About window; in the control window, it exits the "
+    L"application. Prevent screen saver during animation blocks the Windows screen saver only while the "
+    L"animation is actually visible and not paused.\r\n\r\nSnapshots and recordings capture the first "
+    L"active animation display, not a combined image of all displays. PNG uses Pictures and MP4 uses "
+    L"Videos, with Documents as the fallback if those folders do not exist. The Recording settings button "
+    L"selects Viewport or TV. Viewport preserves the animation display’s dimensions and refresh rate, up to "
+    L"60 frames per second. TV offers 1920 × 1080, 1440 × 1080 or 1280 × 720 output in 16:9, with 50, 25, "
+    L"59.94 (60000/1001) or 29.97 (30000/1001) frames per second. The image keeps its aspect ratio; TV uses "
+    L"progressive BT.709 limited-range 4:2:0 video. Resolution and frame rate are available only in TV "
+    L"mode. The Recording settings window can be minimized and does not block the other application "
+    L"windows. OK saves choices for the next MP4 recording; Cancel or Esc discards unconfirmed changes. The "
+    L"recorded display cannot be detached during recording; changes to other displays do not stop the "
+    L"recording. Closing the application while recording requires confirmation because it also stops the "
+    L"recording.\r\n\r\nWindows 7 through Windows 11 support all features, including PNG snapshots and MP4 "
+    L"recording. To run the application on Windows Vista SP2, you must install updates KB971512 and "
+    L"KB2117917. MP4 recording does not work on Vista in the current version.",
+    L"SpaceFlight: Infinite undulating surface; Long-distance flight — morphing surface. Assign exactly one "
+    L"animation to each display. Texture switches between textured surfaces and wireframe. Camera tumbling "
+    L"slowly changes the viewing direction in all three dimensions. Stops and reversals adds randomised "
+    L"braking, pauses and reversals of the rotation; forward flight continues. Animation speed ranges from "
+    L"0–1600%. Every display has an independent randomised scene rendered at its own refresh "
+    L"rate.\r\n\r\nRow selection determines which displays you are editing; it is separate from the "
+    L"checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the "
+    L"selection. All animation options and sliders apply to the selected displays. The selection is "
+    L"remembered separately for EXE and SCR. If all displays were selected, newly connected displays join "
+    L"the selection.\r\n\r\nSelect several displays; double-click a row to toggle it, or clear the "
+    L"selection for all displays. Each display uses an independent scene. Snapshot saves PNG and the "
+    L"recording button starts or stops MP4. Pause stops the animation. The application also installs or "
     L"uninstalls its embedded screen saver. Settings are saved continuously. Only one instance of the "
     L"application runs at a time. Launching it again restores its minimised control window and brings it to "
     L"the foreground. Use Tab and Shift+Tab to move between controls; use Alt and the underlined letter to "
@@ -1595,19 +2967,18 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"recording.\r\n\r\nWindows 7 through Windows 11 support all features, including PNG snapshots and MP4 "
     L"recording. To run the application on Windows Vista SP2, you must install updates KB971512 and "
     L"KB2117917. MP4 recording does not work on Vista in the current version.",
-    L"SpaceFlight offers „Infinite undulating surface“ and „Long-distance flight — morphing surface“. "
-    L"Assign exactly one flight to each display: select its row in the list and choose the corresponding "
-    L"radio button. The first animation is selected on every display by default. Textured rendering is the "
-    L"default; clear Texture to switch the selected displays to wireframe. With several rows selected, the "
-    L"choice applies to every selected display. The slider sets animation speed from 0–1600%. On default "
-    L"startup, EXE enables only the primary animation display; the screen saver enables all displays. Each "
-    L"display renders at its own refresh rate. Settings are stored separately for the application and "
-    L"screen saver. Camera tumbling enables smooth rotation of the view in all directions on the selected "
-    L"displays; it is off by default. Stops and reversals adds gradual braking, brief pauses and reversal "
-    L"of camera tumbling at random intervals. It is available when Camera tumbling is enabled and is off by "
-    L"default; forward flight continues.\r\n\r\nSelect several displays; double-click a row to toggle it, or "
-    L"clear the selection for all displays. Each display uses an independent scene. Snapshot saves PNG and "
-    L"the recording button starts or stops MP4. Pause stops the animation. The application also installs or "
+    L"SpaceFlight: Infinite undulating surface; Long-distance flight — morphing surface. Assign exactly one "
+    L"animation to each display. Texture switches between textured surfaces and wireframe. Camera tumbling "
+    L"slowly changes the viewing direction in all three dimensions. Stops and reversals adds randomised "
+    L"braking, pauses and reversals of the rotation; forward flight continues. Animation speed ranges from "
+    L"0–1600%. Every display has an independent randomised scene rendered at its own refresh "
+    L"rate.\r\n\r\nRow selection determines which displays you are editing; it is separate from the "
+    L"checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the "
+    L"selection. All animation options and sliders apply to the selected displays. The selection is "
+    L"remembered separately for EXE and SCR. If all displays were selected, newly connected displays join "
+    L"the selection.\r\n\r\nSelect several displays; double-click a row to toggle it, or clear the "
+    L"selection for all displays. Each display uses an independent scene. Snapshot saves PNG and the "
+    L"recording button starts or stops MP4. Pause stops the animation. The application also installs or "
     L"uninstalls its embedded screen saver. Settings are saved continuously. Only one instance of the "
     L"application runs at a time. Launching it again restores its minimised control window and brings it to "
     L"the foreground. Use Tab and Shift+Tab to move between controls; use Alt and the underlined letter to "
@@ -1627,58 +2998,53 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"recording.\r\n\r\nWindows 7 through Windows 11 support all features, including PNG snapshots and MP4 "
     L"recording. To run the application on Windows Vista SP2, you must install updates KB971512 and "
     L"KB2117917. MP4 recording does not work on Vista in the current version.",
-    L"SpaceFlight bietet „Unendliche wellenförmige Fläche“ und „Fernflug — veränderliche Fläche“. Weisen "
-    L"Sie jedem Monitor genau einen Flug zu: Markieren Sie seine Zeile und wählen Sie den entsprechenden "
-    L"Optionsschalter. Standardmäßig ist auf allen Monitoren die erste Animation ausgewählt. Die Textur ist "
-    L"standardmäßig aktiviert; deaktivieren Sie Textur, um die ausgewählten Monitore auf Drahtgittermodelle "
-    L"umzuschalten. Bei mehreren markierten Zeilen gilt die Auswahl für alle markierten Monitore. Der "
-    L"Regler bestimmt die Animationsgeschwindigkeit von 0–1600 %. Beim Standardstart aktiviert EXE "
-    L"nur den primären Animationsmonitor, der Bildschirmschoner alle Monitore. Jeder Monitor wird "
-    L"mit seiner eigenen Bildwiederholfrequenz gerendert. Die Einstellungen werden für Anwendung und "
-    L"Bildschirmschoner getrennt gespeichert. Taumelnde Kamera aktiviert auf den markierten Monitoren "
-    L"eine gleichmäßige Drehung des Blicks in alle Richtungen; standardmäßig ist die Option deaktiviert. "
-    L"Stopps und Richtungswechsel bremst die Kameradrehung in zufälligen Abständen sanft ab, hält sie kurz "
-    L"an und setzt sie in umgekehrter Richtung fort. Die Option ist bei aktivierter taumelnder Kamera "
-    L"verfügbar und standardmäßig deaktiviert; der Vorwärtsflug geht weiter.\r\n\r\nIn der Liste sind "
-    L"mehrere Monitore wählbar; ein Doppelklick schaltet einen Monitor um, auch alle können abgewählt "
-    L"werden. Jeder Monitor besitzt eine unabhängige Szene. Schnappschuss speichert PNG, die Aufnahmetaste "
-    L"startet oder beendet MP4. Pause hält die Animation an. Die Anwendung installiert oder deinstalliert "
-    L"außerdem den eingebetteten Bildschirmschoner. Einstellungen werden laufend gespeichert. Die Anwendung "
-    L"läuft nur in einer Instanz. Ein erneuter Start stellt das minimierte Steuerfenster wieder her und "
-    L"bringt es in den Vordergrund. Mit Tab und Umschalt+Tab wechseln Sie zwischen den Steuerelementen; mit "
-    L"Alt und dem unterstrichenen Buchstaben rufen Sie einen Befehl auf. Esc schließt das aktive Hilfe- "
-    L"oder Infofenster; im Steuerfenster beendet es die Anwendung. Bildschirmschoner bei Animation sperren "
-    L"verhindert den Start des Windows-Bildschirmschoners nur, solange die Animation tatsächlich sichtbar "
-    L"und nicht angehalten ist.\r\n\r\nSchnappschüsse und Aufnahmen erfassen den ersten aktiven "
-    L"Animationsmonitor, nicht die gemeinsame Fläche aller Monitore. PNG verwendet Bilder, MP4 Videos; "
-    L"fehlen diese Ordner, wird Dokumente verwendet. Die Schaltfläche Aufnahmeeinstellungen wählt Viewport "
-    L"oder TV. Viewport erhält die Abmessungen und Bildwiederholfrequenz des Animationsmonitors bis "
-    L"höchstens 60 Bilder pro Sekunde. TV bietet 1920 × 1080, 1440 × 1080 oder 1280 × 720 im Format 16:9 "
-    L"mit 50, 25, 59.94 (60000/1001) oder 29.97 (30000/1001) Bildern pro Sekunde. Das Seitenverhältnis "
-    L"bleibt erhalten; TV verwendet progressives BT.709-Video mit begrenztem Wertebereich und "
-    L"4:2:0-Abtastung. Auflösung und Bildfrequenz sind nur im TV-Modus wählbar. Das Fenster "
-    L"Aufnahmeeinstellungen lässt sich minimieren und blockiert die anderen Anwendungsfenster nicht. OK "
-    L"speichert die Auswahl für die nächste MP4-Aufnahme; Abbrechen oder Esc verwirft unbestätigte "
-    L"Änderungen. Der aufgezeichnete Monitor kann während der Aufnahme nicht abgewählt werden; Änderungen "
-    L"an anderen Monitoren beenden die Aufnahme nicht. Das Beenden der Anwendung während einer Aufnahme "
-    L"muss bestätigt werden, da es auch die Aufnahme beendet.\r\n\r\nWindows 7 bis Windows 11 unterstützen "
-    L"alle Funktionen einschließlich PNG-Schnappschüssen und MP4-Aufnahmen. Zum Ausführen der Anwendung "
-    L"unter Windows Vista SP2 müssen die Updates KB971512 und KB2117917 installiert werden. MP4-Aufnahmen "
-    L"funktionieren unter Vista in der aktuellen Version nicht.",
-    L"SpaceFlight propose „Surface ondulante infinie“ et „Vol longue distance — surface déformable“. "
-    L"Attribuez un seul vol à chaque moniteur : sélectionnez sa ligne, puis le bouton radio correspondant. "
-    L"Par défaut, la première animation est sélectionnée sur tous les moniteurs. La texture est activée "
-    L"par défaut ; décochez Texture pour afficher les moniteurs sélectionnés en mode filaire. Si "
-    L"plusieurs lignes sont sélectionnées, le choix s’applique à tous ces moniteurs. Le curseur règle la "
-    L"vitesse de l’animation de 0 à 1 600 %. Au démarrage par défaut, EXE active uniquement le moniteur "
-    L"d’animation principal, tandis que l’économiseur active tous les moniteurs. Chaque moniteur est "
-    L"rendu à sa propre fréquence de rafraîchissement. Les réglages sont enregistrés séparément pour "
-    L"l’application et l’économiseur d’écran. Rotation libre de la caméra active une rotation fluide du "
-    L"regard dans toutes les directions sur les moniteurs sélectionnés ; cette option est désactivée "
-    L"par défaut. Arrêts et changements de sens ralentit progressivement la rotation de la caméra à "
-    L"intervalles aléatoires, la suspend brièvement, puis la relance en sens inverse. Cette option est "
-    L"disponible lorsque la rotation libre de la caméra est activée et est désactivée par défaut ; le vol "
-    L"continue.\r\n\r\nSélectionnez plusieurs moniteurs dans la liste ; un double-clic active ou désactive "
+    L"SpaceFlight: Unendliche wellenförmige Fläche; Fernflug — veränderliche Fläche. Weisen Sie jedem "
+    L"Monitor genau eine Animation zu. Textur wechselt zwischen texturierten Flächen und Drahtgittermodell. "
+    L"Die taumelnde Kamera verändert die Blickrichtung langsam in allen drei Dimensionen. Stopps und "
+    L"Richtungswechsel ergänzt zufälliges Abbremsen, Pausen und Wechsel der Drehrichtung; der Vorwärtsflug "
+    L"läuft weiter. Die Animationsgeschwindigkeit beträgt 0–1600 %. Jeder Monitor besitzt eine unabhängige "
+    L"zufällige Szene und wird mit seiner eigenen Bildwiederholrate angesteuert.\r\n\r\nDie Zeilenauswahl "
+    L"bestimmt, welche Monitore Sie bearbeiten; sie ist von den Kontrollkästchen zum Einschalten der "
+    L"Animationsausgabe getrennt. Strg+A wählt alle Monitore, Strg und Umschalt ändern die Auswahl. Alle "
+    L"Animationsoptionen und Regler gelten für die ausgewählten Monitore. Die Auswahl wird für EXE und SCR "
+    L"getrennt gespeichert. Waren alle Monitore ausgewählt, werden auch neu angeschlossene "
+    L"ausgewählt.\r\n\r\nIn der Liste sind mehrere Monitore wählbar; ein Doppelklick schaltet einen Monitor "
+    L"um, auch alle können abgewählt werden. Jeder Monitor besitzt eine unabhängige Szene. Schnappschuss "
+    L"speichert PNG, die Aufnahmetaste startet oder beendet MP4. Pause hält die Animation an. Die Anwendung "
+    L"installiert oder deinstalliert außerdem den eingebetteten Bildschirmschoner. Einstellungen werden "
+    L"laufend gespeichert. Die Anwendung läuft nur in einer Instanz. Ein erneuter Start stellt das "
+    L"minimierte Steuerfenster wieder her und bringt es in den Vordergrund. Mit Tab und Umschalt+Tab "
+    L"wechseln Sie zwischen den Steuerelementen; mit Alt und dem unterstrichenen Buchstaben rufen Sie einen "
+    L"Befehl auf. Esc schließt das aktive Hilfe- oder Infofenster; im Steuerfenster beendet es die "
+    L"Anwendung. Bildschirmschoner bei Animation sperren verhindert den Start des "
+    L"Windows-Bildschirmschoners nur, solange die Animation tatsächlich sichtbar und nicht angehalten "
+    L"ist.\r\n\r\nSchnappschüsse und Aufnahmen erfassen den ersten aktiven Animationsmonitor, nicht die "
+    L"gemeinsame Fläche aller Monitore. PNG verwendet Bilder, MP4 Videos; fehlen diese Ordner, wird "
+    L"Dokumente verwendet. Die Schaltfläche Aufnahmeeinstellungen wählt Viewport oder TV. Viewport erhält "
+    L"die Abmessungen und Bildwiederholfrequenz des Animationsmonitors bis höchstens 60 Bilder pro Sekunde. "
+    L"TV bietet 1920 × 1080, 1440 × 1080 oder 1280 × 720 im Format 16:9 mit 50, 25, 59.94 (60000/1001) oder "
+    L"29.97 (30000/1001) Bildern pro Sekunde. Das Seitenverhältnis bleibt erhalten; TV verwendet "
+    L"progressives BT.709-Video mit begrenztem Wertebereich und 4:2:0-Abtastung. Auflösung und Bildfrequenz "
+    L"sind nur im TV-Modus wählbar. Das Fenster Aufnahmeeinstellungen lässt sich minimieren und blockiert "
+    L"die anderen Anwendungsfenster nicht. OK speichert die Auswahl für die nächste MP4-Aufnahme; Abbrechen "
+    L"oder Esc verwirft unbestätigte Änderungen. Der aufgezeichnete Monitor kann während der Aufnahme nicht "
+    L"abgewählt werden; Änderungen an anderen Monitoren beenden die Aufnahme nicht. Das Beenden der "
+    L"Anwendung während einer Aufnahme muss bestätigt werden, da es auch die Aufnahme "
+    L"beendet.\r\n\r\nWindows 7 bis Windows 11 unterstützen alle Funktionen einschließlich "
+    L"PNG-Schnappschüssen und MP4-Aufnahmen. Zum Ausführen der Anwendung unter Windows Vista SP2 müssen die "
+    L"Updates KB971512 und KB2117917 installiert werden. MP4-Aufnahmen funktionieren unter Vista in der "
+    L"aktuellen Version nicht.",
+    L"SpaceFlight: Surface ondulante infinie; Vol longue distance — surface déformable. Attribuez une seule "
+    L"animation à chaque écran. Texture alterne entre surfaces texturées et modèle filaire. La rotation "
+    L"libre de la caméra change lentement la direction du regard dans les trois dimensions. Arrêts et "
+    L"changements de sens ajoute des ralentissements, pauses et inversions aléatoires de la rotation ; le "
+    L"vol vers l’avant continue. La vitesse va de 0 à 1600 %. Chaque écran possède une scène aléatoire "
+    L"indépendante, rendue à sa propre fréquence de rafraîchissement.\r\n\r\nLa sélection des lignes "
+    L"détermine les écrans à configurer ; elle est distincte des cases qui activent les sorties "
+    L"d’animation. Ctrl+A sélectionne tous les écrans ; Ctrl et Maj modifient la sélection. Toutes les "
+    L"options et tous les curseurs d’animation concernent les écrans sélectionnés. La sélection est "
+    L"mémorisée séparément pour EXE et SCR. Si tous les écrans étaient sélectionnés, les nouveaux le sont "
+    L"également.\r\n\r\nSélectionnez plusieurs moniteurs dans la liste ; un double-clic active ou désactive "
     L"un moniteur, et vous pouvez tous les désélectionner. Chaque moniteur utilise une scène indépendante. "
     L"Capture enregistre un PNG et le bouton d’enregistrement démarre ou arrête un MP4. Pause arrête "
     L"l’animation. L’application installe ou désinstalle aussi son économiseur intégré. Les réglages sont "
@@ -1704,25 +3070,22 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"charge toutes les fonctions, y compris les captures PNG et l’enregistrement MP4. Pour exécuter "
     L"l’application sous Windows Vista SP2, il est nécessaire d’installer les mises à jour KB971512 et "
     L"KB2117917. L’enregistrement MP4 ne fonctionne pas sous Vista dans la version actuelle.",
-    L"SpaceFlight ofrece „Superficie ondulante infinita“ y „Vuelo de larga distancia — superficie "
-    L"deformable“. Asigne exactamente un vuelo a cada monitor: seleccione su fila y el botón de opción "
-    L"correspondiente. La primera animación está seleccionada de forma predeterminada en todos los "
-    L"monitores. La textura está activada de forma predeterminada; desmarque Textura para mostrar los "
-    L"monitores seleccionados en modo de alambre. Si selecciona varias filas, la opción se aplica a "
-    L"todos esos monitores. El deslizador ajusta la velocidad de animación entre 0 y 1600 %. En el "
-    L"inicio predeterminado, EXE activa solo el monitor de animación principal; el protector activa "
-    L"todos los monitores. Cada monitor se dibuja a su propia frecuencia de actualización. Los ajustes "
-    L"se guardan por separado para la aplicación y el protector de pantalla. Giro libre de la cámara "
-    L"activa una rotación suave de la vista en todas las direcciones en los monitores seleccionados; está "
-    L"desactivado de forma predeterminada. Paradas y cambios de sentido frena gradualmente el giro de la "
-    L"cámara a intervalos aleatorios, lo detiene brevemente y lo reanuda en sentido contrario. La opción "
-    L"está disponible con el giro libre de la cámara activado y está desactivada por defecto; el vuelo "
-    L"continúa.\r\n\r\nSeleccione varios monitores en la lista; un doble clic alterna la animación en "
-    L"un monitor y también puede desmarcarlos todos. Cada monitor usa una escena independiente. Captura "
-    L"guarda un PNG y el botón de grabación inicia o detiene un MP4. Pausar detiene la animación. La "
-    L"aplicación instala o desinstala además el salvapantallas incorporado. Los ajustes se guardan "
-    L"continuamente. La aplicación solo permite una instancia. Al volver a iniciarla, restaura la ventana "
-    L"de control minimizada y la trae al primer plano. Use Tab y Mayús+Tab para desplazarse entre "
+    L"SpaceFlight: Superficie ondulante infinita; Vuelo de larga distancia — superficie deformable. Asigne "
+    L"una sola animación a cada pantalla. Textura alterna entre superficies texturizadas y modelo de "
+    L"alambre. El giro libre de la cámara cambia lentamente la dirección de la vista en las tres "
+    L"dimensiones. Paradas y cambios de sentido añade frenadas, pausas e inversiones aleatorias del giro; "
+    L"el vuelo hacia delante continúa. La velocidad va del 0 al 1600 %. Cada pantalla tiene una escena "
+    L"aleatoria independiente y se renderiza a su propia frecuencia de actualización.\r\n\r\nLa selección "
+    L"de filas determina qué pantallas se están configurando; es independiente de las casillas que activan "
+    L"las salidas de animación. Ctrl+A selecciona todas; Ctrl y Mayús modifican la selección. Todas las "
+    L"opciones y los controles deslizantes de animación se aplican a las pantallas seleccionadas. La "
+    L"selección se recuerda por separado para EXE y SCR. Si estaban seleccionadas todas, se incluyen "
+    L"también las nuevas.\r\n\r\nSeleccione varios monitores en la lista; un doble clic alterna la "
+    L"animación en un monitor y también puede desmarcarlos todos. Cada monitor usa una escena "
+    L"independiente. Captura guarda un PNG y el botón de grabación inicia o detiene un MP4. Pausar detiene "
+    L"la animación. La aplicación instala o desinstala además el salvapantallas incorporado. Los ajustes se "
+    L"guardan continuamente. La aplicación solo permite una instancia. Al volver a iniciarla, restaura la "
+    L"ventana de control minimizada y la trae al primer plano. Use Tab y Mayús+Tab para desplazarse entre "
     L"controles; Alt y la letra subrayada activan una opción. Esc cierra la ventana activa de Ayuda o "
     L"Acerca de; en la ventana de control, sale de la aplicación. Bloquear salvapantallas durante la "
     L"animación impide que se inicie el salvapantallas de Windows solo mientras la animación está realmente "
@@ -1741,20 +3104,17 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"todas las funciones, incluidas las capturas PNG y la grabación MP4. Para ejecutar la aplicación en "
     L"Windows Vista SP2, es necesario instalar las actualizaciones KB971512 y KB2117917. La grabación MP4 "
     L"no funciona en Vista en la versión actual.",
-    L"SpaceFlight offre „Superficie ondulante infinita“ e „Volo a lunga distanza — superficie "
-    L"deformabile“. Assegnare un solo volo a ogni monitor: selezionare la sua riga e il pulsante di "
-    L"opzione corrispondente. La prima animazione è selezionata per impostazione predefinita su tutti "
-    L"i monitor. La texture è attiva per impostazione predefinita; deselezionare Texture per mostrare "
-    L"i monitor selezionati a reticolo. Se sono selezionate più righe, la scelta vale per tutti quei "
-    L"monitor. Il cursore imposta la velocità dell’animazione da 0 a 1600 %. All’avvio predefinito, EXE "
-    L"attiva solo il monitor di animazione principale, mentre il salvaschermo attiva tutti i monitor. "
-    L"Ogni monitor viene disegnato alla propria frequenza di aggiornamento. Le impostazioni sono salvate "
-    L"separatamente per l’applicazione e il salvaschermo. Rotazione libera della telecamera attiva "
-    L"una rotazione fluida della vista in tutte le direzioni sui monitor selezionati; è disattivata "
-    L"per impostazione predefinita. Arresti e inversioni rallenta gradualmente la rotazione della "
-    L"telecamera a intervalli casuali, la ferma brevemente e la riavvia in senso opposto. L’opzione è "
-    L"disponibile con la rotazione libera attiva ed è disattivata per impostazione predefinita; il volo "
-    L"continua.\r\n\r\nNell’elenco si possono selezionare più monitor; un doppio clic attiva o disattiva "
+    L"SpaceFlight: Superficie ondulante infinita; Volo a lunga distanza — superficie deformabile. Assegnare "
+    L"una sola animazione a ogni schermo. Texture alterna superfici con texture e modello a reticolo. La "
+    L"rotazione libera della telecamera cambia lentamente la direzione dello sguardo nelle tre dimensioni. "
+    L"Arresti e inversioni aggiunge rallentamenti, pause e inversioni casuali della rotazione; il volo in "
+    L"avanti continua. La velocità va da 0 a 1600%. Ogni schermo ha una scena casuale indipendente, "
+    L"renderizzata alla propria frequenza di aggiornamento.\r\n\r\nLa selezione delle righe determina quali "
+    L"schermi si stanno configurando ed è distinta dalle caselle che attivano le uscite di animazione. "
+    L"Ctrl+A seleziona tutti gli schermi; Ctrl e Maiusc modificano la selezione. Tutte le opzioni e i "
+    L"cursori dell’animazione riguardano gli schermi selezionati. La selezione viene memorizzata "
+    L"separatamente per EXE e SCR. Se erano selezionati tutti gli schermi, vengono inclusi anche quelli "
+    L"nuovi.\r\n\r\nNell’elenco si possono selezionare più monitor; un doppio clic attiva o disattiva "
     L"l’animazione su un monitor, ed è possibile deselezionarli tutti. Ogni monitor usa una scena "
     L"indipendente. Istantanea salva un PNG e il pulsante di registrazione avvia o arresta un MP4. Pausa "
     L"ferma l’animazione. L’applicazione installa o disinstalla anche il salvaschermo incorporato. Le "
@@ -1779,97 +3139,87 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Windows 7 a Windows 11 supportano tutte le funzioni, comprese le istantanee PNG e la registrazione "
     L"MP4. Per eseguire l’applicazione su Windows Vista SP2, è necessario installare gli aggiornamenti "
     L"KB971512 e KB2117917. La registrazione MP4 non funziona in Vista nella versione attuale.",
-    L"O SpaceFlight oferece „Superfície ondulante infinita“ e „Voo de longa distância — superfície "
-    L"deformável“. Atribua um único voo a cada monitor: selecione a respetiva linha e o botão de "
-    L"opção correspondente. Por predefinição, a primeira animação está selecionada em todos os "
-    L"monitores. A textura está ativa por predefinição; desmarque Textura para mostrar os monitores "
-    L"selecionados em modelo de arame. Com várias linhas selecionadas, a escolha aplica-se a todos "
-    L"esses monitores. O controlo deslizante define a velocidade da animação entre 0 e 1600 %. No "
-    L"arranque predefinido, EXE ativa apenas o monitor de animação principal, enquanto a proteção de "
-    L"ecrã ativa todos os monitores. Cada monitor é desenhado à sua própria frequência de atualização. "
-    L"As definições são guardadas separadamente para a aplicação e a proteção de ecrã. Rotação livre "
-    L"da câmara ativa uma rotação suave da vista em todas as direções nos monitores selecionados; está "
-    L"desativada por predefinição. Paragens e inversões de sentido abranda gradualmente a rotação da "
-    L"câmara em intervalos aleatórios, interrompe-a brevemente e retoma-a no sentido oposto. A opção "
-    L"está disponível com a rotação livre da câmara ativa e está desativada por predefinição; o voo "
-    L"continua.\r\n\r\nSelecione vários monitores; um duplo clique alterna uma linha e todos podem ser "
-    L"desmarcados. Cada monitor usa uma cena independente. Captura guarda PNG e o botão de gravação inicia "
-    L"ou termina MP4. Pausa para a animação. A aplicação também instala ou desinstala a proteção de ecrã "
-    L"incorporada. As definições são guardadas continuamente. A aplicação só pode ter uma instância em "
-    L"execução. Um novo arranque restaura a janela de controlo minimizada e coloca-a em primeiro plano. Use "
-    L"Tab e Shift+Tab para passar entre controlos; Alt e a letra sublinhada ativam um comando. Esc fecha a "
-    L"janela ativa de Ajuda ou Acerca de; na janela de controlo, termina a aplicação. Bloquear proteção de "
-    L"ecrã durante a animação impede o início da proteção de ecrã do Windows apenas enquanto a animação "
-    L"está efetivamente visível e não está em pausa.\r\n\r\nAs capturas e gravações usam o primeiro monitor "
-    L"de animação ativo, não uma imagem conjunta de todos os monitores. PNG usa Imagens, MP4 Vídeos; se "
-    L"essas pastas não existirem, usa-se Documentos. O botão Definições de gravação permite escolher "
-    L"Viewport ou TV. Viewport conserva as dimensões e a frequência de atualização do monitor de animação, "
-    L"até 60 fotogramas por segundo. TV oferece 1920 × 1080, 1440 × 1080 ou 1280 × 720 no formato 16:9, a "
-    L"50, 25, 59.94 (60000/1001) ou 29.97 (30000/1001) fotogramas por segundo. A proporção da imagem é "
-    L"mantida; TV usa vídeo progressivo BT.709 com intervalo limitado e amostragem 4:2:0. A resolução e a "
-    L"frequência só estão disponíveis no modo TV. A janela Definições de gravação pode ser minimizada e não "
-    L"bloqueia as outras janelas da aplicação. OK guarda as escolhas para a próxima gravação MP4; Cancelar "
-    L"ou Esc descarta as alterações não confirmadas. O monitor gravado não pode ser desmarcado durante a "
-    L"gravação; as alterações aos outros monitores não a interrompem. Fechar a aplicação durante uma "
-    L"gravação exige confirmação, pois também termina a gravação.\r\n\r\nOs sistemas Windows 7 a Windows 11 "
-    L"suportam todas as funcionalidades, incluindo capturas PNG e gravação MP4. Para executar a aplicação "
-    L"no Windows Vista SP2, é necessário instalar as atualizações KB971512 e KB2117917. A gravação MP4 não "
-    L"funciona no Vista na versão atual.",
-    L"SpaceFlight oferuje „Nieskończona falująca powierzchnia“ i „Lot dalekodystansowy — zmienna "
-    L"powierzchnia“. Każdemu monitorowi przypisz dokładnie jeden przelot: zaznacz jego wiersz i "
-    L"odpowiedni przycisk opcji. Domyślnie na wszystkich monitorach wybrana jest pierwsza animacja. "
-    L"Tekstura jest domyślnie włączona; wyłącz Tekstura, aby wybrane monitory wyświetlały model "
-    L"siatkowy. Przy zaznaczeniu kilku wierszy wybór dotyczy wszystkich tych monitorów. Suwak ustawia "
-    L"prędkość animacji w zakresie 0–1600 %. Przy domyślnym uruchomieniu EXE włącza tylko główny monitor "
-    L"animacji, a wygaszacz wszystkie monitory. Każdy monitor jest renderowany z własną częstotliwością "
-    L"odświeżania. Ustawienia są zapisywane osobno dla aplikacji i wygaszacza ekranu. Swobodne obracanie "
-    L"kamery włącza płynne obracanie widoku we wszystkich kierunkach na zaznaczonych monitorach; "
-    L"domyślnie jest wyłączone. Zatrzymania i zmiany kierunku stopniowo wyhamowuje obrót kamery w "
-    L"losowych odstępach, na krótko go zatrzymuje, a następnie wznawia w przeciwnym kierunku. Opcja "
-    L"jest dostępna przy włączonym swobodnym obracaniu kamery i domyślnie jest wyłączona; lot trwa "
-    L"nadal.\r\n\r\nNa liście można zaznaczyć wiele monitorów; podwójne kliknięcie przełącza animację na "
-    L"monitorze, można też odznaczyć wszystkie. Każdy monitor ma niezależną scenę. Zrzut zapisuje PNG, a "
-    L"przycisk nagrywania rozpoczyna lub kończy MP4. Wstrzymaj zatrzymuje animację. Aplikacja instaluje i "
-    L"odinstalowuje również wbudowany wygaszacz. Ustawienia są zapisywane na bieżąco. Aplikacja działa "
-    L"tylko w jednej instancji. Kolejne uruchomienie przywraca zminimalizowane okno sterowania i przenosi "
-    L"na pierwszy plan. Klawisze Tab i Shift+Tab przełączają między kontrolkami; Alt i podkreślona litera "
-    L"wywołują polecenie. Esc zamyka aktywne okno Pomocy lub O programie; w oknie sterowania kończy "
-    L"działanie aplikacji. Blokuj wygaszacz podczas animacji zapobiega uruchomieniu wygaszacza Windows "
-    L"tylko wtedy, gdy animacja jest rzeczywiście widoczna i nie jest wstrzymana.\r\n\r\nZrzuty i nagrania "
-    L"obejmują pierwszy aktywny monitor animacji, a nie wspólny obraz wszystkich monitorów. PNG używa "
-    L"folderu Obrazy, MP4 folderu Wideo; jeśli ich nie ma, używane są Dokumenty. Przycisk Ustawienia "
-    L"nagrywania pozwala wybrać Viewport lub TV. Viewport zachowuje rozmiar i częstotliwość odświeżania "
-    L"monitora animacji, do 60 klatek na sekundę. TV oferuje 1920 × 1080, 1440 × 1080 lub 1280 × 720 w "
-    L"formacie 16:9, z 50, 25, 59.94 (60000/1001) lub 29.97 (30000/1001) klatkami na sekundę. Proporcje "
-    L"obrazu są zachowane; TV używa progresywnego obrazu BT.709 z ograniczonym zakresem i próbkowaniem "
-    L"4:2:0. Rozdzielczość i liczba klatek są dostępne tylko w trybie TV. Okno Ustawienia nagrywania można "
-    L"zminimalizować i nie blokuje ono innych okien aplikacji. OK zapisuje wybór dla następnego nagrania "
-    L"MP4; Anuluj lub Esc odrzuca niepotwierdzone zmiany. Podczas nagrywania nie można odznaczyć "
-    L"nagrywanego monitora; zmiany pozostałych monitorów nie przerywają nagrania. Zamknięcie aplikacji "
-    L"podczas nagrywania wymaga potwierdzenia, ponieważ kończy również nagranie.\r\n\r\nSystemy od Windows "
-    L"7 do Windows 11 obsługują wszystkie funkcje, w tym zrzuty PNG i nagrywanie MP4. Do uruchomienia "
-    L"aplikacji w systemie Windows Vista SP2 konieczne jest zainstalowanie aktualizacji KB971512 i "
-    L"KB2117917. Nagrywanie MP4 nie działa w Vista w obecnej wersji.",
-    L"SpaceFlight ponúka „Nekonečná vlniaca sa plocha“ a „Diaľkový let — premenlivá plocha“. Každému "
-    L"monitoru priradíte práve jeden prelet: označte jeho riadok v zozname a zvoľte príslušný prepínač. "
-    L"V predvolenom stave je na všetkých monitoroch zvolená prvá animácia. Predvolené je zobrazenie "
-    L"s textúrou; zrušením voľby Textúra prepnete vybrané monitory na drôtový model. Pri označení "
-    L"viacerých riadkov sa voľba použije pre všetky označené monitory. Jazdec nastavuje rýchlosť "
-    L"animácie v rozsahu 0–1600 %. EXE predvoleným spustením zapne iba primárny animačný monitor, "
-    L"šetrič všetky monitory. Každý monitor sa vykresľuje podľa vlastnej obnovovacej frekvencie. "
-    L"Nastavenia sa ukladajú zvlášť pre aplikáciu a šetrič obrazovky. Voľba Prevaľovanie kamery zapne "
-    L"na označených monitoroch plynulé otáčanie pohľadu do všetkých smerov; predvolene je vypnutá. "
-    L"Voľba Zastavovanie a zmeny smeru pridá v náhodných intervaloch plynulé brzdenie prevaľovania "
-    L"kamery, krátke zastavenie a rozbeh opačným smerom. Je dostupná pri zapnutom prevaľovaní a "
-    L"predvolene je vypnutá; samotný prelet pokračuje.\r\n\r\nV zozname možno označiť viac monitorov; "
-    L"dvojklik zapína alebo vypína animáciu na monitore a možno zrušiť aj výber všetkých. Každý "
-    L"monitor používa nezávislú scénu. Snímka uloží PNG a tlačidlo záznamu spustí alebo ukončí MP4. "
-    L"Pozastavenie zastaví animáciu. Aplikácia tiež nainštaluje alebo odinštaluje vložený šetrič. "
-    L"Nastavenia sa ukladajú priebežne. Aplikácia beží iba v jednej inštancii. Ďalšie spustenie obnoví "
-    L"minimalizované ovládacie okno a prenesie do popredia. Medzi ovládacími prvkami prechádzajte klávesmi "
-    L"Tab a Shift+Tab; podčiarknuté voľby vyvoláte pomocou Alt a príslušného písmena. Esc zavrie aktívne "
-    L"okno Pomocníka alebo O aplikácii; v ovládacom okne ukončí aplikáciu. Voľba Blokovať šetrič pri "
-    L"animácii bráni spusteniu šetriča Windows iba vtedy, keď je animácia skutočne viditeľná a nie je "
+    L"SpaceFlight: Superfície ondulante infinita; Voo de longa distância — superfície deformável. Atribua "
+    L"uma única animação a cada ecrã. Textura alterna entre superfícies texturadas e modelo em arame. A "
+    L"rotação livre da câmara muda lentamente a direção da vista nas três dimensões. Paragens e inversões "
+    L"de sentido acrescenta desacelerações, pausas e inversões aleatórias da rotação; o voo para a frente "
+    L"continua. A velocidade vai de 0 a 1600%. Cada ecrã tem uma cena aleatória independente, apresentada à "
+    L"sua própria frequência de atualização.\r\n\r\nA seleção das linhas determina os ecrãs a configurar e "
+    L"é independente das caixas que ativam as saídas de animação. Ctrl+A seleciona todos os ecrãs; Ctrl e "
+    L"Shift alteram a seleção. Todas as opções e controlos deslizantes da animação aplicam-se aos ecrãs "
+    L"selecionados. A seleção é guardada separadamente para EXE e SCR. Se todos estavam selecionados, os "
+    L"novos ecrãs também são incluídos.\r\n\r\nSelecione vários monitores; um duplo clique alterna uma "
+    L"linha e todos podem ser desmarcados. Cada monitor usa uma cena independente. Captura guarda PNG e o "
+    L"botão de gravação inicia ou termina MP4. Pausa para a animação. A aplicação também instala ou "
+    L"desinstala a proteção de ecrã incorporada. As definições são guardadas continuamente. A aplicação só "
+    L"pode ter uma instância em execução. Um novo arranque restaura a janela de controlo minimizada e "
+    L"coloca-a em primeiro plano. Use Tab e Shift+Tab para passar entre controlos; Alt e a letra sublinhada "
+    L"ativam um comando. Esc fecha a janela ativa de Ajuda ou Acerca de; na janela de controlo, termina a "
+    L"aplicação. Bloquear proteção de ecrã durante a animação impede o início da proteção de ecrã do "
+    L"Windows apenas enquanto a animação está efetivamente visível e não está em pausa.\r\n\r\nAs capturas "
+    L"e gravações usam o primeiro monitor de animação ativo, não uma imagem conjunta de todos os monitores. "
+    L"PNG usa Imagens, MP4 Vídeos; se essas pastas não existirem, usa-se Documentos. O botão Definições de "
+    L"gravação permite escolher Viewport ou TV. Viewport conserva as dimensões e a frequência de "
+    L"atualização do monitor de animação, até 60 fotogramas por segundo. TV oferece 1920 × 1080, 1440 × "
+    L"1080 ou 1280 × 720 no formato 16:9, a 50, 25, 59.94 (60000/1001) ou 29.97 (30000/1001) fotogramas por "
+    L"segundo. A proporção da imagem é mantida; TV usa vídeo progressivo BT.709 com intervalo limitado e "
+    L"amostragem 4:2:0. A resolução e a frequência só estão disponíveis no modo TV. A janela Definições de "
+    L"gravação pode ser minimizada e não bloqueia as outras janelas da aplicação. OK guarda as escolhas "
+    L"para a próxima gravação MP4; Cancelar ou Esc descarta as alterações não confirmadas. O monitor "
+    L"gravado não pode ser desmarcado durante a gravação; as alterações aos outros monitores não a "
+    L"interrompem. Fechar a aplicação durante uma gravação exige confirmação, pois também termina a "
+    L"gravação.\r\n\r\nOs sistemas Windows 7 a Windows 11 suportam todas as funcionalidades, incluindo "
+    L"capturas PNG e gravação MP4. Para executar a aplicação no Windows Vista SP2, é necessário instalar as "
+    L"atualizações KB971512 e KB2117917. A gravação MP4 não funciona no Vista na versão atual.",
+    L"SpaceFlight: Nieskończona falująca powierzchnia; Lot dalekodystansowy — zmienna powierzchnia. Każdemu "
+    L"monitorowi przypisz dokładnie jedną animację. Tekstura przełącza powierzchnie z teksturą i model "
+    L"szkieletowy. Swobodne obracanie kamery powoli zmienia kierunek widoku we wszystkich trzech wymiarach. "
+    L"Zatrzymania i zmiany kierunku dodają losowe zwalnianie, pauzy i odwracanie obrotu; lot do przodu trwa "
+    L"nadal. Prędkość wynosi 0–1600%. Każdy monitor ma niezależną losową scenę wyświetlaną z własną "
+    L"częstotliwością odświeżania.\r\n\r\nZaznaczenie wierszy określa konfigurowane monitory i jest "
+    L"niezależne od pól wyboru włączających wyjścia animacji. Ctrl+A zaznacza wszystkie monitory; Ctrl i "
+    L"Shift zmieniają zaznaczenie. Wszystkie opcje i suwaki animacji dotyczą zaznaczonych monitorów. "
+    L"Zaznaczenie jest zapamiętywane osobno dla EXE i SCR. Jeśli zaznaczone były wszystkie monitory, nowe "
+    L"również zostaną zaznaczone.\r\n\r\nNa liście można zaznaczyć wiele monitorów; podwójne kliknięcie "
+    L"przełącza animację na monitorze, można też odznaczyć wszystkie. Każdy monitor ma niezależną scenę. "
+    L"Zrzut zapisuje PNG, a przycisk nagrywania rozpoczyna lub kończy MP4. Wstrzymaj zatrzymuje animację. "
+    L"Aplikacja instaluje i odinstalowuje również wbudowany wygaszacz. Ustawienia są zapisywane na bieżąco. "
+    L"Aplikacja działa tylko w jednej instancji. Kolejne uruchomienie przywraca zminimalizowane okno "
+    L"sterowania i przenosi na pierwszy plan. Klawisze Tab i Shift+Tab przełączają między kontrolkami; Alt "
+    L"i podkreślona litera wywołują polecenie. Esc zamyka aktywne okno Pomocy lub O programie; w oknie "
+    L"sterowania kończy działanie aplikacji. Blokuj wygaszacz podczas animacji zapobiega uruchomieniu "
+    L"wygaszacza Windows tylko wtedy, gdy animacja jest rzeczywiście widoczna i nie jest "
+    L"wstrzymana.\r\n\r\nZrzuty i nagrania obejmują pierwszy aktywny monitor animacji, a nie wspólny obraz "
+    L"wszystkich monitorów. PNG używa folderu Obrazy, MP4 folderu Wideo; jeśli ich nie ma, używane są "
+    L"Dokumenty. Przycisk Ustawienia nagrywania pozwala wybrać Viewport lub TV. Viewport zachowuje rozmiar "
+    L"i częstotliwość odświeżania monitora animacji, do 60 klatek na sekundę. TV oferuje 1920 × 1080, 1440 "
+    L"× 1080 lub 1280 × 720 w formacie 16:9, z 50, 25, 59.94 (60000/1001) lub 29.97 (30000/1001) klatkami "
+    L"na sekundę. Proporcje obrazu są zachowane; TV używa progresywnego obrazu BT.709 z ograniczonym "
+    L"zakresem i próbkowaniem 4:2:0. Rozdzielczość i liczba klatek są dostępne tylko w trybie TV. Okno "
+    L"Ustawienia nagrywania można zminimalizować i nie blokuje ono innych okien aplikacji. OK zapisuje "
+    L"wybór dla następnego nagrania MP4; Anuluj lub Esc odrzuca niepotwierdzone zmiany. Podczas nagrywania "
+    L"nie można odznaczyć nagrywanego monitora; zmiany pozostałych monitorów nie przerywają nagrania. "
+    L"Zamknięcie aplikacji podczas nagrywania wymaga potwierdzenia, ponieważ kończy również "
+    L"nagranie.\r\n\r\nSystemy od Windows 7 do Windows 11 obsługują wszystkie funkcje, w tym zrzuty PNG i "
+    L"nagrywanie MP4. Do uruchomienia aplikacji w systemie Windows Vista SP2 konieczne jest zainstalowanie "
+    L"aktualizacji KB971512 i KB2117917. Nagrywanie MP4 nie działa w Vista w obecnej wersji.",
+    L"SpaceFlight: Nekonečná vlniaca sa plocha; Diaľkový let — premenlivá plocha. Každému monitoru priraďte "
+    L"práve jednu animáciu. Textúra prepína medzi textúrovanými plochami a drôteným modelom. Prevaľovanie "
+    L"kamery pomaly mení smer pohľadu vo všetkých troch rozmeroch. Zastavovanie a zmeny smeru pridáva "
+    L"náhodné spomaľovanie, prestávky a zmeny smeru otáčania; dopredný pohyb pokračuje. Rýchlosť je 0–1600 "
+    L"%. Každý monitor má nezávislú náhodnú scénu vykresľovanú podľa vlastnej obnovovacej "
+    L"frekvencie.\r\n\r\nOznačenie riadkov určuje, ktoré monitory práve nastavujete; je nezávislé od "
+    L"políčok zapínajúcich animačné výstupy. Ctrl+A označí všetky monitory, Ctrl a Shift upravujú "
+    L"označenie. Všetky animačné voľby a posuvníky platia pre označené monitory. Označenie sa pamätá zvlášť "
+    L"pre EXE a SCR. Ak boli označené všetky monitory, označia sa aj novopripojené.\r\n\r\nV zozname možno "
+    L"označiť viac monitorov; dvojklik zapína alebo vypína animáciu na monitore a možno zrušiť aj výber "
+    L"všetkých. Každý monitor používa nezávislú scénu. Snímka uloží PNG a tlačidlo záznamu spustí alebo "
+    L"ukončí MP4. Pozastavenie zastaví animáciu. Aplikácia tiež nainštaluje alebo odinštaluje vložený "
+    L"šetrič. Nastavenia sa ukladajú priebežne. Aplikácia beží iba v jednej inštancii. Ďalšie spustenie "
+    L"obnoví minimalizované ovládacie okno a prenesie do popredia. Medzi ovládacími prvkami prechádzajte "
+    L"klávesmi Tab a Shift+Tab; podčiarknuté voľby vyvoláte pomocou Alt a príslušného písmena. Esc zavrie "
+    L"aktívne okno Pomocníka alebo O aplikácii; v ovládacom okne ukončí aplikáciu. Voľba Blokovať šetrič "
+    L"pri animácii bráni spusteniu šetriča Windows iba vtedy, keď je animácia skutočne viditeľná a nie je "
     L"pozastavená.\r\n\r\nSnímky a záznamy zachytávajú prvý aktívny animačný monitor, nie spoločnú plochu "
     L"všetkých monitorov. PNG používa Obrázky, MP4 Videá; ak tieto priečinky neexistujú, použijú sa "
     L"Dokumenty. Tlačidlo Nastavenie záznamu vyberá Viewport alebo TV. Viewport zachováva rozmery "
@@ -1884,29 +3234,26 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"všetky funkcie vrátane snímok PNG a záznamu MP4. Na spustenie aplikácie v systéme Windows Vista SP2 "
     L"je potrebné nainštalovať aktualizácie KB971512 a KB2117917. Záznam MP4 na Viste v súčasnej verzii "
     L"nefunguje.",
-    L"SpaceFlight tilbyder „Uendelig bølgende flade“ og „Langdistanceflyvetur — formskiftende flade“. "
-    L"Tildel præcis én flyvetur til hver skærm: vælg dens række og den tilsvarende alternativknap. Den "
-    L"første animation er valgt på alle skærme som standard. Tekstur er slået til som standard; fjern "
-    L"markeringen ved Tekstur for at vise de valgte skærme som trådmodeller. Når flere rækker er valgt, "
-    L"gælder valget alle disse skærme. Skyderen indstiller animationshastigheden fra 0 til 1600 %. Ved "
-    L"standardstart aktiverer EXE kun den primære animationsskærm, mens pauseskærmen aktiverer alle "
-    L"skærme. Hver skærm gengives med sin egen opdateringsfrekvens. Indstillingerne gemmes separat "
-    L"for programmet og pauseskærmen. Frit roterende kamera giver jævn rotation af visningen i alle "
-    L"retninger på de valgte skærme; indstillingen er som standard slået fra. Stop og retningsskift "
-    L"bremser kamerarotationen jævnt med tilfældige mellemrum, stopper den kort og starter den igen i "
-    L"modsat retning. Valget er tilgængeligt, når frit roterende kamera er aktiveret, og er slået fra "
-    L"som standard; flyvningen fortsætter.\r\n\r\nVælg flere skærme i listen; dobbeltklik på en række "
-    L"for at slå animationen til eller fra, eller fravælg alle. Hver skærm bruger en uafhængig scene. "
-    L"Skærmbillede gemmer PNG, og optageknappen starter eller stopper MP4. Pause standser animationen. "
-    L"Programmet installerer eller afinstallerer også den indbyggede pauseskærm. Indstillinger gemmes "
-    L"løbende. Programmet kan kun køre i én instans ad gangen. En ny start gendanner det minimerede "
-    L"kontrolvindue og bringer det forrest. Brug Tab og Skift+Tab til at flytte mellem kontrollerne; Alt og "
-    L"det understregede bogstav aktiverer en kommando. Esc lukker det aktive Hjælp- eller Om-vindue; i "
-    L"kontrolvinduet afslutter det programmet. Blokér pauseskærm under animation forhindrer "
-    L"Windows-pauseskærmen i at starte, men kun når animationen faktisk er synlig og ikke er sat på "
-    L"pause.\r\n\r\nSkærmbilleder og optagelser bruger den første aktive animationsskærm, ikke et samlet "
-    L"billede af alle skærme. PNG bruger Billeder, MP4 Videoer; hvis disse mapper ikke findes, bruges "
-    L"Dokumenter. Knappen Optagelsesindstillinger vælger Viewport eller TV. Viewport bevarer "
+    L"SpaceFlight: Uendelig bølgende flade; Langdistanceflyvetur — formskiftende flade. Tildel præcis én "
+    L"animation til hver skærm. Tekstur skifter mellem teksturerede flader og trådmodel. Frit roterende "
+    L"kamera ændrer langsomt synsretningen i alle tre dimensioner. Stop og retningsskift tilføjer "
+    L"tilfældige opbremsninger, pauser og ændringer af rotationsretningen; flyvningen fremad fortsætter. "
+    L"Hastigheden er 0–1600 %. Hver skærm har en uafhængig tilfældig scene, der gengives med dens egen "
+    L"opdateringsfrekvens.\r\n\r\nMarkeringen af rækker bestemmer, hvilke skærme du indstiller, og er "
+    L"adskilt fra afkrydsningsfelterne, der aktiverer animationsoutput. Ctrl+A markerer alle skærme; Ctrl "
+    L"og Skift ændrer markeringen. Alle animationsvalg og skydere gælder de markerede skærme. Markeringen "
+    L"huskes separat for EXE og SCR. Hvis alle skærme var markeret, medtages også nye skærme.\r\n\r\nVælg "
+    L"flere skærme i listen; dobbeltklik på en række for at slå animationen til eller fra, eller fravælg "
+    L"alle. Hver skærm bruger en uafhængig scene. Skærmbillede gemmer PNG, og optageknappen starter eller "
+    L"stopper MP4. Pause standser animationen. Programmet installerer eller afinstallerer også den "
+    L"indbyggede pauseskærm. Indstillinger gemmes løbende. Programmet kan kun køre i én instans ad gangen. "
+    L"En ny start gendanner det minimerede kontrolvindue og bringer det forrest. Brug Tab og Skift+Tab til "
+    L"at flytte mellem kontrollerne; Alt og det understregede bogstav aktiverer en kommando. Esc lukker det "
+    L"aktive Hjælp- eller Om-vindue; i kontrolvinduet afslutter det programmet. Blokér pauseskærm under "
+    L"animation forhindrer Windows-pauseskærmen i at starte, men kun når animationen faktisk er synlig og "
+    L"ikke er sat på pause.\r\n\r\nSkærmbilleder og optagelser bruger den første aktive animationsskærm, "
+    L"ikke et samlet billede af alle skærme. PNG bruger Billeder, MP4 Videoer; hvis disse mapper ikke "
+    L"findes, bruges Dokumenter. Knappen Optagelsesindstillinger vælger Viewport eller TV. Viewport bevarer "
     L"animationsskærmens størrelse og opdateringsfrekvens, højst 60 billeder i sekundet. TV tilbyder 1920 × "
     L"1080, 1440 × 1080 eller 1280 × 720 i formatet 16:9 med 50, 25, 59.94 (60000/1001) eller 29.97 "
     L"(30000/1001) billeder i sekundet. Billedets proportioner bevares; TV bruger progressiv BT.709-video "
@@ -1918,19 +3265,16 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"afsluttes.\r\n\r\nWindows 7 til Windows 11 understøtter alle funktioner, herunder PNG-skærmbilleder "
     L"og MP4-optagelse. For at køre programmet på Windows Vista SP2 skal opdateringerne KB971512 og "
     L"KB2117917 installeres. MP4-optagelse fungerer ikke på Vista i den aktuelle version.",
-    L"SpaceFlight tarjoaa „Ääretön aaltoileva pinta“ ja „Pitkän matkan lento — muuntuva pinta“ "
-    L"-animaatiot. Määritä kullekin näytölle täsmälleen yksi lento: valitse näytön rivi ja vastaava "
-    L"valintanappi. Ensimmäinen animaatio on oletusarvoisesti valittuna kaikilla näytöillä. Tekstuuri "
-    L"on oletusarvoisesti käytössä; poista Tekstuuri-valinta, jos haluat näyttää valitut näytöt "
-    L"rautalankamallina. Jos valitset useita rivejä, valinta koskee kaikkia näitä näyttöjä. Liukusäädin "
-    L"asettaa animaation nopeuden välille 0–1600 %. Oletuskäynnistyksessä EXE ottaa käyttöön vain "
-    L"ensisijaisen animaationäytön, näytönsäästäjä kaikki näytöt. Jokainen näyttö piirretään omalla "
-    L"virkistystaajuudellaan. Asetukset tallennetaan erikseen sovellukselle ja näytönsäästäjälle. Kameran "
-    L"vapaa pyörintä kääntää näkymää pehmeästi kaikkiin suuntiin valituilla näytöillä; toiminto on "
-    L"oletusarvoisesti pois käytöstä. Pysähdykset ja suunnanvaihdot hidastaa kameran pyörintää tasaisesti "
-    L"satunnaisin väliajoin, pysäyttää sen hetkeksi ja käynnistää sen vastakkaiseen suuntaan. Valinta "
-    L"on käytettävissä kameran vapaan pyörinnän ollessa käytössä ja on oletuksena pois käytöstä; lento "
-    L"jatkuu.\r\n\r\nLuettelosta voi valita useita näyttöjä; kaksoisnapsautus vaihtaa rivin tilaa ja "
+    L"SpaceFlight: Ääretön aaltoileva pinta; Pitkän matkan lento — muuntuva pinta. Valitse kullekin "
+    L"näytölle yksi animaatio. Tekstuuri vaihtaa teksturoitujen pintojen ja rautalankamallin välillä. "
+    L"Kameran vapaa pyörintä muuttaa katselusuuntaa hitaasti kaikissa kolmessa ulottuvuudessa. Pysähdykset "
+    L"ja suunnanvaihdot lisää satunnaisia hidastuksia, taukoja ja pyörimissuunnan vaihtoja; lento eteenpäin "
+    L"jatkuu. Nopeus on 0–1600%. Jokaisella näytöllä on itsenäinen satunnainen näkymä, joka piirretään sen "
+    L"omalla virkistystaajuudella.\r\n\r\nRivien valinta määrää muokattavat näytöt ja on erillinen "
+    L"animaatioulostulon valintaruuduista. Ctrl+A valitsee kaikki näytöt; Ctrl ja Vaihto muuttavat "
+    L"valintaa. Kaikki animaatioasetukset ja liukusäätimet koskevat valittuja näyttöjä. Valinta muistetaan "
+    L"erikseen EXE- ja SCR-tiloissa. Jos kaikki näytöt olivat valittuina, myös uudet näytöt "
+    L"valitaan.\r\n\r\nLuettelosta voi valita useita näyttöjä; kaksoisnapsautus vaihtaa rivin tilaa ja "
     L"kaikkien näyttöjen valinnan voi poistaa. Jokaisella näytöllä on itsenäinen näkymä. Tilannekuva "
     L"tallentaa PNG:n ja tallennuspainike käynnistää tai lopettaa MP4:n. Keskeytä pysäyttää animaation. "
     L"Sovellus asentaa tai poistaa myös sisäisen näytönsäästäjän. Asetukset tallennetaan jatkuvasti. "
@@ -1954,31 +3298,29 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"toimintoja, myös PNG-tilannekuvia ja MP4-tallennusta. Sovelluksen suorittaminen Windows Vista SP2:ssa "
     L"edellyttää päivitysten KB971512 ja KB2117917 asentamista. MP4-tallennus ei toimi Vistassa nykyisessä "
     L"versiossa.",
-    L"SpaceFlight býður upp á „Óendanleg bylgjandi flötur“ og „Langflug — breytilegur flötur“. Veldu "
-    L"nákvæmlega eitt flug fyrir hvern skjá: veldu röð skjásins og viðeigandi valhnapp. Fyrsta "
-    L"hreyfimyndin er sjálfgefið valin á öllum skjám. Áferð er sjálfgefið virk; taktu hakið úr Áferð "
-    L"til að sýna valda skjái sem víralíkön. Þegar margar raðir eru valdar gildir valið fyrir alla "
-    L"þá skjái. Sleðinn stillir hraða hreyfimyndarinnar frá 0 til 1600 %. Við sjálfgefna ræsingu "
-    L"virkjar EXE aðeins aðalhreyfimyndaskjáinn en skjávarinn alla skjái. Hver skjár er teiknaður á "
-    L"sínum eigin endurnýjunarhraða. Stillingar eru vistaðar sérstaklega fyrir forritið og skjávarann. "
-    L"Frjáls snúningur myndavélar snýr sjónarhorninu mjúklega í allar áttir á völdum skjám; sjálfgefið "
-    L"er slökkt á þessum valkosti. Stopp og stefnuskipti hægir mjúklega á snúningi myndavélarinnar "
-    L"með slembnu millibili, stöðvar hann stuttlega og byrjar aftur í gagnstæða átt. Valkosturinn er "
-    L"tiltækur þegar frjáls snúningur myndavélar er virkur og er sjálfgefið óvirkur; flugið heldur "
-    L"áfram.\r\n\r\nVelja má marga skjái; tvísmellur virkjar eða slekkur á hreyfimynd á skjá og afvelja "
-    L"má alla skjái. Hver skjár notar sjálfstæða senu. Skjámynd vistar PNG og upptökuhnappurinn ræsir eða "
-    L"stöðvar MP4. Hnappurinn Gera hlé stöðvar hreyfimyndina. Forritið setur einnig upp eða fjarlægir "
-    L"innbyggðu skjáhvíluna. Stillingar vistast jafnóðum. Aðeins eitt eintak af forritinu getur verið í "
-    L"gangi í einu. Ný ræsing endurheimtir lágmarkaðan stjórngluggann og færir hann fremst. Notaðu Tab og "
-    L"Shift+Tab til að færa þig milli stýrieininga; Alt og undirstrikaður stafur virkja skipun. Esc lokar "
-    L"virka Hjálp- eða Um-glugganum; í stjórnglugganum lokar það forritinu. Hindra skjáhvílu meðan "
-    L"hreyfimynd er í gangi kemur aðeins í veg fyrir að skjáhvíla Windows fari í gang meðan hreyfimyndin er "
-    L"í raun sýnileg og ekki í pásu.\r\n\r\nSkjámyndir og upptökur nota fyrsta virka hreyfimyndaskjáinn, "
-    L"ekki sameinaða mynd af öllum skjám. PNG notar Myndir, MP4 Myndbönd; ef þær möppur eru ekki til er "
-    L"Skjöl notuð. Hnappurinn Upptökustillingar velur Viewport eða TV. Viewport varðveitir stærð og "
-    L"endurnýjunartíðni hreyfimyndaskjásins, þó mest 60 ramma á sekúndu. TV býður upp á 1920 × 1080, 1440 × "
-    L"1080 eða 1280 × 720 í hlutfallinu 16:9 með 50, 25, 59.94 (60000/1001) eða 29.97 (30000/1001) römmum á "
-    L"sekúndu. Hlutföll myndarinnar haldast; TV notar stigvaxandi BT.709-myndband með takmörkuðu sviði og "
+    L"SpaceFlight: Óendanleg bylgjandi flötur; Langflug — breytilegur flötur. Veldu nákvæmlega eina "
+    L"hreyfimynd fyrir hvern skjá. Áferð skiptir milli áferðarlagðra flata og víragrindar. Frjáls snúningur "
+    L"myndavélar breytir sjónstefnunni hægt í öllum þremur víddum. Stopp og stefnuskipti bætir við "
+    L"tilviljanakenndri hægingu, hléum og breytingum á snúningsstefnu; flug áfram heldur áfram. Hraðinn er "
+    L"0–1600%. Hver skjár hefur sjálfstæða tilviljanakennda senu sem er teiknuð á eigin "
+    L"endurnýjunartíðni.\r\n\r\nVal lína ákvarðar hvaða skjám er verið að breyta og er óháð gátreitunum sem "
+    L"kveikja á hreyfimyndaúttaki. Ctrl+A velur alla skjái; Ctrl og Shift breyta valinu. Allir valkostir og "
+    L"sleðar hreyfimynda gilda fyrir valda skjái. Valið er munað sérstaklega fyrir EXE og SCR. Ef allir "
+    L"skjáir voru valdir bætast nýir skjáir einnig við valið.\r\n\r\nVelja má marga skjái; tvísmellur "
+    L"virkjar eða slekkur á hreyfimynd á skjá og afvelja má alla skjái. Hver skjár notar sjálfstæða senu. "
+    L"Skjámynd vistar PNG og upptökuhnappurinn ræsir eða stöðvar MP4. Hnappurinn Gera hlé stöðvar "
+    L"hreyfimyndina. Forritið setur einnig upp eða fjarlægir innbyggðu skjáhvíluna. Stillingar vistast "
+    L"jafnóðum. Aðeins eitt eintak af forritinu getur verið í gangi í einu. Ný ræsing endurheimtir "
+    L"lágmarkaðan stjórngluggann og færir hann fremst. Notaðu Tab og Shift+Tab til að færa þig milli "
+    L"stýrieininga; Alt og undirstrikaður stafur virkja skipun. Esc lokar virka Hjálp- eða Um-glugganum; í "
+    L"stjórnglugganum lokar það forritinu. Hindra skjáhvílu meðan hreyfimynd er í gangi kemur aðeins í veg "
+    L"fyrir að skjáhvíla Windows fari í gang meðan hreyfimyndin er í raun sýnileg og ekki í "
+    L"pásu.\r\n\r\nSkjámyndir og upptökur nota fyrsta virka hreyfimyndaskjáinn, ekki sameinaða mynd af "
+    L"öllum skjám. PNG notar Myndir, MP4 Myndbönd; ef þær möppur eru ekki til er Skjöl notuð. Hnappurinn "
+    L"Upptökustillingar velur Viewport eða TV. Viewport varðveitir stærð og endurnýjunartíðni "
+    L"hreyfimyndaskjásins, þó mest 60 ramma á sekúndu. TV býður upp á 1920 × 1080, 1440 × 1080 eða 1280 × "
+    L"720 í hlutfallinu 16:9 með 50, 25, 59.94 (60000/1001) eða 29.97 (30000/1001) römmum á sekúndu. "
+    L"Hlutföll myndarinnar haldast; TV notar stigvaxandi BT.709-myndband með takmörkuðu sviði og "
     L"4:2:0-sýnatöku. Upplausn og rammatíðni eru aðeins valanleg í TV-ham. Hægt er að lágmarka gluggann "
     L"Upptökustillingar og hann hindrar ekki notkun annarra glugga forritsins. Í lagi vistar valið fyrir "
     L"næstu MP4-upptöku; Hætta við eða Esc hendir óstaðfestum breytingum. Ekki er hægt að afvelja skjáinn "
@@ -1987,54 +3329,48 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"upptökuna.\r\n\r\nWindows 7 til Windows 11 styðja alla eiginleika, þar á meðal PNG-skjámyndir og "
     L"MP4-upptöku. Til að keyra forritið á Windows Vista SP2 þarf að setja upp uppfærslurnar KB971512 og "
     L"KB2117917. MP4-upptaka virkar ekki í Vista í núverandi útgáfu.",
-    L"SpaceFlight tilbyr „Uendelig bølgende flate“ og „Langdistanseflytur — formendrende flate“. "
-    L"Tilordne nøyaktig én flytur til hver skjerm: velg raden og den tilsvarende alternativknappen. "
-    L"Den første animasjonen er valgt på alle skjermer som standard. Tekstur er aktivert som standard; "
-    L"fjern avmerkingen for Tekstur for å vise de valgte skjermene som trådmodeller. Når flere rader er "
-    L"valgt, gjelder valget alle disse skjermene. Glidebryteren angir animasjonshastigheten fra 0 til "
-    L"1600 %. Ved standard oppstart aktiverer EXE bare den primære animasjonsskjermen; skjermspareren "
-    L"aktiverer alle skjermene. Hver skjerm gjengis med sin egen oppdateringsfrekvens. Innstillingene "
-    L"lagres separat for programmet og skjermspareren. Fritt roterende kamera gir jevn rotasjon av "
-    L"visningen i alle retninger på de valgte skjermene; alternativet er av som standard. Stopp og "
-    L"retningsendringer bremser kamerarotasjonen gradvis med tilfeldige mellomrom, stopper den kort "
-    L"og starter den igjen i motsatt retning. Valget er tilgjengelig når fritt roterende kamera er "
-    L"aktivert, og er av som standard; flygingen fortsetter.\r\n\r\nVelg flere skjermer i listen; "
-    L"dobbeltklikk en rad for å slå animasjonen av eller på, eller fjern valget for alle. Hver skjerm "
-    L"bruker en uavhengig scene. Skjermbilde lagrer PNG, og opptaksknappen starter eller stopper MP4. Pause "
-    L"stanser animasjonen. Programmet installerer eller avinstallerer også den innebygde skjermspareren. "
-    L"Innstillingene lagres fortløpende. Bare én instans av programmet kan kjøre om gangen. En ny start "
-    L"gjenoppretter det minimerte kontrollvinduet og bringer det fremst. Bruk Tab og Shift+Tab for å flytte "
-    L"mellom kontrollene; Alt og den understrekede bokstaven aktiverer en kommando. Esc lukker det aktive "
-    L"Hjelp- eller Om-vinduet; i kontrollvinduet avslutter det programmet. Hindre skjermsparer under "
-    L"animasjon hindrer Windows-skjermspareren i å starte bare når animasjonen faktisk er synlig og ikke er "
-    L"satt på pause.\r\n\r\nSkjermbilder og opptak bruker den første aktive animasjonsskjermen, ikke et "
-    L"samlet bilde av alle skjermene. PNG bruker Bilder, MP4 Videoer; hvis disse mappene ikke finnes, "
-    L"brukes Dokumenter. Knappen Opptaksinnstillinger velger Viewport eller TV. Viewport beholder "
-    L"animasjonsskjermens størrelse og oppdateringsfrekvens, opptil 60 bilder per sekund. TV tilbyr 1920 × "
-    L"1080, 1440 × 1080 eller 1280 × 720 i formatet 16:9, med 50, 25, 59.94 (60000/1001) eller 29.97 "
-    L"(30000/1001) bilder per sekund. Bildets proporsjoner beholdes; TV bruker progressiv BT.709-video med "
-    L"begrenset område og 4:2:0-sampling. Oppløsning og bildefrekvens er bare tilgjengelige i TV-modus. "
-    L"Vinduet Opptaksinnstillinger kan minimeres og blokkerer ikke de andre programvinduene. OK lagrer "
-    L"valgene for neste MP4-opptak; Avbryt eller Esc forkaster ubekreftede endringer. Skjermen som tas opp, "
-    L"kan ikke velges bort under opptaket; endringer på andre skjermer stopper ikke opptaket. Å avslutte "
-    L"programmet under et opptak krever bekreftelse, fordi det også avslutter opptaket.\r\n\r\nWindows 7 "
-    L"til Windows 11 støtter alle funksjoner, inkludert PNG-skjermbilder og MP4-opptak. For å kjøre "
-    L"programmet på Windows Vista SP2 må oppdateringene KB971512 og KB2117917 installeres. MP4-opptak "
-    L"fungerer ikke på Vista i den gjeldende versjonen.",
-    L"SpaceFlight erbjuder „Oändlig böljande yta“ och „Långdistansflygtur — formföränderlig yta“. Tilldela "
-    L"exakt en flygtur till varje bildskärm: välj dess rad och motsvarande alternativknapp. Den första "
-    L"animationen är vald på alla bildskärmar som standard. Textur är aktiverad som standard; avmarkera "
-    L"Textur för att visa de valda bildskärmarna som trådmodeller. När flera rader är markerade gäller "
-    L"valet alla dessa bildskärmar. Reglaget ställer in animationshastigheten från 0 till 1600 %. Vid "
-    L"standardstart aktiverar EXE endast den primära animationsskärmen, medan skärmsläckaren aktiverar "
-    L"alla bildskärmar. Varje bildskärm återges med sin egen uppdateringsfrekvens. Inställningarna "
-    L"sparas separat för programmet och skärmsläckaren. Fritt roterande kamera ger mjuk rotation av "
-    L"vyn i alla riktningar på de markerade skärmarna; alternativet är av som standard. Stopp och "
-    L"riktningsbyten bromsar kamerarotationen mjukt med slumpmässiga mellanrum, stoppar den kort och "
-    L"startar den igen åt motsatt håll. Alternativet är tillgängligt när fritt roterande kamera är "
-    L"aktiverat och är avstängt som standard; flygningen fortsätter.\r\n\r\nVälj flera bildskärmar i "
-    L"listan; dubbelklicka en rad för att slå på eller av animeringen, eller avmarkera alla. Varje "
-    L"bildskärm använder en oberoende scen. Skärmbild sparar PNG och inspelningsknappen startar eller "
+    L"SpaceFlight: Uendelig bølgende flate; Langdistanseflytur — formendrende flate. Tilordne nøyaktig én "
+    L"animasjon til hver skjerm. Tekstur veksler mellom teksturerte flater og trådmodell. Fritt roterende "
+    L"kamera endrer synsretningen langsomt i alle tre dimensjoner. Stopp og retningsendringer legger til "
+    L"tilfeldige oppbremsinger, pauser og endringer i rotasjonsretningen; flyvningen fremover fortsetter. "
+    L"Hastigheten er 0–1600 %. Hver skjerm har en uavhengig tilfeldig scene som gjengis ved dens egen "
+    L"oppdateringsfrekvens.\r\n\r\nMarkeringen av rader bestemmer hvilke skjermer du redigerer, og er "
+    L"atskilt fra avkrysningsboksene som aktiverer animasjonsutgangen. Ctrl+A markerer alle skjermer; Ctrl "
+    L"og Skift endrer markeringen. Alle animasjonsvalg og glidebrytere gjelder de markerte skjermene. "
+    L"Markeringen huskes separat for EXE og SCR. Hvis alle skjermer var markert, inkluderes også nye "
+    L"skjermer.\r\n\r\nVelg flere skjermer i listen; dobbeltklikk en rad for å slå animasjonen av eller på, "
+    L"eller fjern valget for alle. Hver skjerm bruker en uavhengig scene. Skjermbilde lagrer PNG, og "
+    L"opptaksknappen starter eller stopper MP4. Pause stanser animasjonen. Programmet installerer eller "
+    L"avinstallerer også den innebygde skjermspareren. Innstillingene lagres fortløpende. Bare én instans "
+    L"av programmet kan kjøre om gangen. En ny start gjenoppretter det minimerte kontrollvinduet og bringer "
+    L"det fremst. Bruk Tab og Shift+Tab for å flytte mellom kontrollene; Alt og den understrekede bokstaven "
+    L"aktiverer en kommando. Esc lukker det aktive Hjelp- eller Om-vinduet; i kontrollvinduet avslutter det "
+    L"programmet. Hindre skjermsparer under animasjon hindrer Windows-skjermspareren i å starte bare når "
+    L"animasjonen faktisk er synlig og ikke er satt på pause.\r\n\r\nSkjermbilder og opptak bruker den "
+    L"første aktive animasjonsskjermen, ikke et samlet bilde av alle skjermene. PNG bruker Bilder, MP4 "
+    L"Videoer; hvis disse mappene ikke finnes, brukes Dokumenter. Knappen Opptaksinnstillinger velger "
+    L"Viewport eller TV. Viewport beholder animasjonsskjermens størrelse og oppdateringsfrekvens, opptil 60 "
+    L"bilder per sekund. TV tilbyr 1920 × 1080, 1440 × 1080 eller 1280 × 720 i formatet 16:9, med 50, 25, "
+    L"59.94 (60000/1001) eller 29.97 (30000/1001) bilder per sekund. Bildets proporsjoner beholdes; TV "
+    L"bruker progressiv BT.709-video med begrenset område og 4:2:0-sampling. Oppløsning og bildefrekvens er "
+    L"bare tilgjengelige i TV-modus. Vinduet Opptaksinnstillinger kan minimeres og blokkerer ikke de andre "
+    L"programvinduene. OK lagrer valgene for neste MP4-opptak; Avbryt eller Esc forkaster ubekreftede "
+    L"endringer. Skjermen som tas opp, kan ikke velges bort under opptaket; endringer på andre skjermer "
+    L"stopper ikke opptaket. Å avslutte programmet under et opptak krever bekreftelse, fordi det også "
+    L"avslutter opptaket.\r\n\r\nWindows 7 til Windows 11 støtter alle funksjoner, inkludert "
+    L"PNG-skjermbilder og MP4-opptak. For å kjøre programmet på Windows Vista SP2 må oppdateringene "
+    L"KB971512 og KB2117917 installeres. MP4-opptak fungerer ikke på Vista i den gjeldende versjonen.",
+    L"SpaceFlight: Oändlig böljande yta; Långdistansflygtur — formföränderlig yta. Tilldela varje skärm "
+    L"exakt en animering. Textur växlar mellan texturerade ytor och trådmodell. Fritt roterande kamera "
+    L"ändrar långsamt blickriktningen i alla tre dimensioner. Stopp och riktningsbyten lägger till "
+    L"slumpmässiga inbromsningar, pauser och byten av rotationsriktning; flygningen framåt fortsätter. "
+    L"Hastigheten är 0–1600 %. Varje skärm har en oberoende slumpmässig scen som återges med dess egen "
+    L"uppdateringsfrekvens.\r\n\r\nMarkeringen av rader avgör vilka skärmar du redigerar och är skild från "
+    L"kryssrutorna som aktiverar animationsutgångarna. Ctrl+A markerar alla skärmar; Ctrl och Skift ändrar "
+    L"markeringen. Alla animationsalternativ och reglage gäller de markerade skärmarna. Markeringen sparas "
+    L"separat för EXE och SCR. Om alla skärmar var markerade inkluderas även nya skärmar.\r\n\r\nVälj flera "
+    L"bildskärmar i listan; dubbelklicka en rad för att slå på eller av animeringen, eller avmarkera alla. "
+    L"Varje bildskärm använder en oberoende scen. Skärmbild sparar PNG och inspelningsknappen startar eller "
     L"stoppar MP4. Paus stannar animeringen. Programmet installerar eller avinstallerar även den inbyggda "
     L"skärmsläckaren. Inställningarna sparas fortlöpande. Programmet kan bara köras i en instans åt gången. "
     L"En ny start återställer det minimerade kontrollfönstret och för det längst fram. Använd Tab och "
@@ -2056,358 +3392,1142 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"funktioner, inklusive PNG-skärmbilder och MP4-inspelning. För att köra programmet på Windows Vista "
     L"SP2 måste uppdateringarna KB971512 och KB2117917 installeras. MP4-inspelning fungerar inte på Vista i "
     L"den aktuella versionen.",
-    L"SpaceFlight, „Sonsuz dalgalanan yüzey“ ve „Uzun mesafeli uçuş — biçim değiştiren yüzey“ seçeneklerini "
-    L"sunar. Her monitöre tam olarak bir uçuş atayın: monitörün satırını ve ilgili seçenek düğmesini "
-    L"seçin. Varsayılan olarak tüm monitörlerde ilk animasyon seçilidir. Doku varsayılan olarak açıktır; "
-    L"seçili monitörleri tel kafes modeliyle göstermek için Doku seçeneğini kapatın. Birden fazla satır "
-    L"seçilirse seçim tüm bu monitörlere uygulanır. Kaydırıcı animasyon hızını %0–1600 arasında ayarlar. "
-    L"Varsayılan başlangıçta EXE yalnızca birincil animasyon monitörünü, ekran koruyucu tüm monitörleri "
-    L"etkinleştirir. Her monitör kendi yenileme hızında çizilir. Ayarlar uygulama ve ekran koruyucu "
-    L"için ayrı ayrı kaydedilir. Serbest kamera dönüşü, seçili ekranlarda görünümü tüm yönlerde akıcı "
-    L"biçimde döndürür; varsayılan olarak kapalıdır. Duraklamalar ve yön değişimleri kamera dönüşünü "
-    L"rastgele aralıklarla yavaşlatır, kısa süreliğine durdurur ve ters yönde yeniden başlatır. Bu "
-    L"seçenek serbest kamera dönüşü etkin olduğunda kullanılabilir ve varsayılan olarak kapalıdır; ileri "
-    L"uçuş devam eder.\r\n\r\nListede birden çok monitör seçilebilir; satıra çift tıklamak monitördeki "
-    L"animasyonu açıp kapatır; tüm monitörlerin seçimi de kaldırılabilir. Her monitör bağımsız "
-    L"sahne kullanır. Anlık görüntü PNG kaydeder; kayıt düğmesi MP4 kaydını başlatır veya bitirir. Duraklat "
-    L"animasyonu durdurur. Uygulama gömülü ekran koruyucuyu da kurar veya kaldırır. Ayarlar sürekli "
-    L"kaydedilir. Uygulamanın aynı anda yalnızca bir örneği çalışabilir. Yeniden başlatılması, simge "
-    L"durumuna küçültülmüş denetim penceresini geri yükler ve ön plana getirir. Denetimler arasında Tab ve "
-    L"Shift+Tab ile ilerleyin; Alt ve altı çizili harf bir komutu etkinleştirir. Esc, etkin Yardım veya "
-    L"Hakkında penceresini kapatır; denetim penceresinde uygulamadan çıkar. Animasyon sırasında ekran "
-    L"koruyucuyu engelle seçeneği, Windows ekran koruyucusunun yalnızca animasyon gerçekten görünürken ve "
-    L"duraklatılmamışken başlamasını engeller.\r\n\r\nAnlık görüntüler ve kayıtlar, tüm monitörlerin "
-    L"birleşik görüntüsünü değil, ilk etkin animasyon monitörünü kullanır. PNG Resimler, MP4 Videolar "
-    L"klasörünü kullanır; bu klasörler yoksa Belgeler kullanılır. Kayıt ayarları düğmesi Viewport veya TV "
-    L"seçimini açar. Viewport, animasyon monitörünün boyutlarını ve yenileme hızını saniyede en fazla 60 "
-    L"kareyle korur. TV, 16:9 oranında 1920 × 1080, 1440 × 1080 veya 1280 × 720 çözünürlük ile saniyede 50, "
-    L"25, 59.94 (60000/1001) veya 29.97 (30000/1001) kare sunar. Görüntünün en boy oranı korunur; TV, "
-    L"sınırlı aralıklı, 4:2:0 örneklemeli ilerlemeli BT.709 video kullanır. Çözünürlük ve kare hızı "
-    L"yalnızca TV modunda seçilebilir. Kayıt ayarları penceresi simge durumuna küçültülebilir ve "
-    L"uygulamanın diğer pencerelerini engellemez. Tamam, seçenekleri bir sonraki MP4 kaydı için kaydeder; "
-    L"İptal veya Esc onaylanmamış değişiklikleri iptal eder. Kayıt sırasında kaydedilen ekranın seçimi "
-    L"kaldırılamaz; diğer ekranlardaki değişiklikler kaydı durdurmaz. Kayıt sırasında uygulamayı kapatmak "
-    L"kaydı da durduracağı için onay gerektirir.\r\n\r\nWindows 7 ile Windows 11 arasındaki sürümler, PNG "
-    L"anlık görüntüler ve MP4 kaydı dâhil tüm özellikleri destekler. Uygulamayı Windows Vista SP2'de "
-    L"çalıştırmak için KB971512 ve KB2117917 güncellemelerini yüklemeniz gerekir. Geçerli sürümde MP4 kaydı "
-    L"Vista'da çalışmaz."
+    L"SpaceFlight: Sonsuz dalgalanan yüzey; Uzun mesafeli uçuş — biçim değiştiren yüzey. Her ekrana tam bir "
+    L"animasyon atayın. Doku, dokulu yüzeyler ile tel kafes modeli arasında geçiş yapar. Serbest kamera "
+    L"dönüşü bakış yönünü üç boyutta yavaşça değiştirir. Duraklamalar ve yön değişimleri, dönüşe rastgele "
+    L"yavaşlamalar, duraklamalar ve ters yön değişimleri ekler; ileri uçuş devam eder. Hız 0–1600% "
+    L"aralığındadır. Her ekranın kendi yenileme hızında çizilen bağımsız rastgele bir sahnesi "
+    L"vardır.\r\n\r\nSatır seçimi, hangi ekranların düzenlendiğini belirler; animasyon çıkışlarını açan "
+    L"onay kutularından ayrıdır. Ctrl+A tüm ekranları seçer; Ctrl ve Shift seçimi değiştirir. Tüm animasyon "
+    L"seçenekleri ve kaydırıcılar seçili ekranlara uygulanır. Seçim EXE ve SCR için ayrı saklanır. Tüm "
+    L"ekranlar seçiliyse sonradan bağlanan ekranlar da seçime katılır.\r\n\r\nListede birden çok monitör "
+    L"seçilebilir; satıra çift tıklamak monitördeki animasyonu açıp kapatır; tüm monitörlerin seçimi de "
+    L"kaldırılabilir. Her monitör bağımsız sahne kullanır. Anlık görüntü PNG kaydeder; kayıt düğmesi MP4 "
+    L"kaydını başlatır veya bitirir. Duraklat animasyonu durdurur. Uygulama gömülü ekran koruyucuyu da "
+    L"kurar veya kaldırır. Ayarlar sürekli kaydedilir. Uygulamanın aynı anda yalnızca bir örneği "
+    L"çalışabilir. Yeniden başlatılması, simge durumuna küçültülmüş denetim penceresini geri yükler ve ön "
+    L"plana getirir. Denetimler arasında Tab ve Shift+Tab ile ilerleyin; Alt ve altı çizili harf bir komutu "
+    L"etkinleştirir. Esc, etkin Yardım veya Hakkında penceresini kapatır; denetim penceresinde uygulamadan "
+    L"çıkar. Animasyon sırasında ekran koruyucuyu engelle seçeneği, Windows ekran koruyucusunun yalnızca "
+    L"animasyon gerçekten görünürken ve duraklatılmamışken başlamasını engeller.\r\n\r\nAnlık görüntüler ve "
+    L"kayıtlar, tüm monitörlerin birleşik görüntüsünü değil, ilk etkin animasyon monitörünü kullanır. PNG "
+    L"Resimler, MP4 Videolar klasörünü kullanır; bu klasörler yoksa Belgeler kullanılır. Kayıt ayarları "
+    L"düğmesi Viewport veya TV seçimini açar. Viewport, animasyon monitörünün boyutlarını ve yenileme "
+    L"hızını saniyede en fazla 60 kareyle korur. TV, 16:9 oranında 1920 × 1080, 1440 × 1080 veya 1280 × 720 "
+    L"çözünürlük ile saniyede 50, 25, 59.94 (60000/1001) veya 29.97 (30000/1001) kare sunar. Görüntünün en "
+    L"boy oranı korunur; TV, sınırlı aralıklı, 4:2:0 örneklemeli ilerlemeli BT.709 video kullanır. "
+    L"Çözünürlük ve kare hızı yalnızca TV modunda seçilebilir. Kayıt ayarları penceresi simge durumuna "
+    L"küçültülebilir ve uygulamanın diğer pencerelerini engellemez. Tamam, seçenekleri bir sonraki MP4 "
+    L"kaydı için kaydeder; İptal veya Esc onaylanmamış değişiklikleri iptal eder. Kayıt sırasında "
+    L"kaydedilen ekranın seçimi kaldırılamaz; diğer ekranlardaki değişiklikler kaydı durdurmaz. Kayıt "
+    L"sırasında uygulamayı kapatmak kaydı da durduracağı için onay gerektirir.\r\n\r\nWindows 7 ile Windows "
+    L"11 arasındaki sürümler, PNG anlık görüntüler ve MP4 kaydı dâhil tüm özellikleri destekler. Uygulamayı "
+    L"Windows Vista SP2'de çalıştırmak için KB971512 ve KB2117917 güncellemelerini yüklemeniz gerekir. "
+    L"Geçerli sürümde MP4 kaydı Vista'da çalışmaz.",
+    L"Riistvarakiirendusega lend lainetava pinna kohal. Lõputu lainetav pind; Kauglend — muutuv pind. "
+    L"Valige igale kuvarile täpselt üks animatsioon. Tekstuuri märkeruut vahetab tekstuuriga pinna ja "
+    L"traatmudeli vahel. Kaamera vaba pöörlemine muudab vaatesuunda aeglaselt kõigis kolmes mõõtmes. "
+    L"Peatumised ja suunavahetused lisab sellele juhuslikke aeglustusi, pause ja pöörlemissuuna muutusi; "
+    L"edasilend jätkub. Kiirus on seatav vahemikus 0–1600%. Igal kuvaril on oma sõltumatu juhuslik stseen "
+    L"ja värskendussagedusele vastav renderdus.\r\n\r\nValige loendis üks või mitu kuvaririda. Ctrl+A valib "
+    L"kõik read; Ctrl ja Shift võimaldavad valikut muuta. Animatsiooni juhtnupud ja liugurid mõjutavad "
+    L"ainult valitud kuvarite sätteid, mitte kogu rakendust. Rea valimine ja selle märkeruuduga väljundi "
+    L"lubamine on eri toimingud. Valik jäetakse rakenduse ja ekraanisäästja jaoks eraldi meelde. Kui varem "
+    L"olid valitud kõik kuvarid, kaasatakse ka lisatud kuvarid.\r\n\r\nKäivitage SpaceFlight.exe. Sätteid "
+    L"salvestatakse jooksvalt ning rakendus töötab ühe eksemplarina. Kuvari märkeruut või topeltklõps real "
+    L"lülitab selle animatsiooniväljundi sisse või välja. Animatsiooni saab peatada ja jätkata. PNG-pilt ja "
+    L"MP4-video jäädvustavad esimese aktiivse animatsioonikuvari, mitte kõiki kuvareid koos. Salvestatavat "
+    L"kuvarit ei saa salvestamise ajal välja lülitada; rakenduse sulgemine nõuab siis kinnitust. "
+    L"Ekraanisäästja tõkestamine kehtib ühiselt ja ainult siis, kui vastava valikuga kuvaril on nähtav "
+    L"peatamata animatsioon. Rakendus saab paigaldada ja eemaldada sisseehitatud "
+    L"ekraanisäästja.\r\n\r\nSalvestussätetes valige Viewport või TV. Viewport säilitab kuvari mõõtmed ja "
+    L"värskendussageduse kuni 60 kaadrit sekundis. TV pakub 1920 × 1080, 1440 × 1080 või 1280 × 720 "
+    L"väljundit kuvasuhtega 16:9 ning 50, 25, 59.94 (60000/1001) või 29.97 (30000/1001) kaadrit sekundis. "
+    L"TV-video on progressiivne BT.709, piiratud vahemikuga ja 4:2:0 värvialamdiskreetimisega. Pildi "
+    L"kuvasuhe säilib ja täiteribad on mustad. OK rakendab valikud järgmisele salvestusele; Loobu või Esc "
+    L"tühistab kinnitamata muudatused. Salvestussätted, spikker ja teave ei blokeeri teisi aknaid ning neid "
+    L"saab minimeerida. Tab ja Shift+Tab liigutavad fookust, Enter vajutab fookusega nuppu ning Esc sulgeb "
+    L"aktiivse lisaakna.\r\n\r\nWindows 7–11 toetab kõiki funktsioone. Windows Vista SP2 jaoks tuleb "
+    L"paigaldada värskendused KB971512 ja KB2117917; MP4 salvestamine Vistas ei tööta. Vaja on Direct3D 11 "
+    L"tuge ning MP4 jaoks Media Foundationi ja H.264 kodeerijat. Liides ja dokumentatsioon on saadaval 36 "
+    L"keeles.",
+    L"Eitilt os cionn dromchla tonnúil le luasghéarú crua-earraí. Dromchla tonnúil gan teorainn; Eitilt "
+    L"fhada — dromchla athraitheach. Roghnaigh beochan amháin do gach monatóir. Athraíonn Uigeacht idir "
+    L"dromchla uigeachtaithe agus samhail sreangfhráma. Rothlaíonn rothlú saor an cheamara an radharc go "
+    L"mall sna trí thoise. Cuireann Stadanna agus aisiompuithe coscánú, sosanna agus athruithe treo "
+    L"randamacha leis an rothlú; leanann an eitilt chun tosaigh. Tá luas 0–1600% ar fáil. Tá radharc "
+    L"randamach neamhspleách ag gach monatóir agus déantar rindreáil de réir a ráta athnuachana "
+    L"féin.\r\n\r\nRoghnaigh ró amháin nó níos mó sa liosta monatóirí. Roghnaíonn Ctrl+A gach ró; úsáid "
+    L"Ctrl agus Shift chun an roghnú a athrú. Ní athraíonn rialuithe agus sleamhnáin na beochana ach "
+    L"socruithe na monatóirí roghnaithe. Ní hionann ró a roghnú agus aschur an mhonatóra a chumasú lena "
+    L"bhosca seiceála. Cuimhnítear an roghnú ar leith don fheidhmchlár agus don spárálaí. Má bhí gach "
+    L"monatóir roghnaithe, cuirtear monatóirí nua leis an roghnú freisin.\r\n\r\nRith SpaceFlight.exe. "
+    L"Sábháiltear socruithe go leanúnach agus ní ritheann ach cóip amháin den fheidhmchlár. Cumasaíonn nó "
+    L"díchumasaíonn bosca seiceála an mhonatóra nó déchliceáil ar a ró an t-aschur beochana. Is féidir an "
+    L"bheochan a chur ar sos agus a atosú. Gabhann PNG agus MP4 an chéad mhonatóir beochana gníomhach, ní "
+    L"na monatóirí uile le chéile. Ní féidir an monatóir atá á thaifeadadh a dhíchumasú; teastaíonn "
+    L"deimhniú chun an feidhmchlár a dhúnadh agus taifeadadh ar siúl. Baineann cosc an spárálaí leis an "
+    L"seisiún iomlán, ach amháin agus beochan infheicthe gan sos ar mhonatóir a bhfuil an rogha sin "
+    L"cumasaithe dó. Is féidir an spárálaí leabaithe a shuiteáil nó a dhíshuiteáil ón "
+    L"bhfeidhmchlár.\r\n\r\nRoghnaigh Viewport nó TV i socruithe taifeadta. Coinníonn Viewport toisí agus "
+    L"ráta athnuachana an mhonatóra, suas le 60 fráma sa soicind. Tairgeann TV 1920 × 1080, 1440 × 1080 nó "
+    L"1280 × 720 i gcóimheas 16:9 ag 50, 25, 59.94 (60000/1001) nó 29.97 (30000/1001) fráma sa soicind. Is "
+    L"físeán forásach BT.709 é, le raon teoranta agus foshampláil datha 4:2:0. Coinnítear cóimheas an "
+    L"phictiúir agus tá na barraí líonta dubh. Cuireann OK roghanna i bhfeidhm ar an gcéad taifeadadh eile; "
+    L"cealaíonn Cealaigh nó Esc athruithe neamhdheimhnithe. Ní chuireann socruithe taifeadta, Cabhair ná "
+    L"Maidir leis bac ar fhuinneoga eile agus is féidir iad a íoslaghdú. Bogann Tab agus Shift+Tab an "
+    L"fócas; gníomhaíonn Enter an cnaipe faoi fhócas agus dúnann Esc an fhuinneog chúnta "
+    L"ghníomhach.\r\n\r\nTacaíonn Windows 7–11 leis na gnéithe uile. Ar Windows Vista SP2 ní mór "
+    L"nuashonruithe KB971512 agus KB2117917 a shuiteáil; ní oibríonn taifeadadh MP4 ar Vista. Teastaíonn "
+    L"tacaíocht Direct3D 11, agus Media Foundation agus ionchódóir H.264 le haghaidh MP4. Tá an comhéadan "
+    L"agus an doiciméadú ar fáil i 36 teanga.",
+    L"Aparatine įranga spartinamas skrydis virš banguojančio paviršiaus. Begalinė banguojanti plokštuma; "
+    L"Tolimas skrydis — kintantis paviršius. Kiekvienam monitoriui pasirinkite vieną animaciją. Tekstūros "
+    L"langelis perjungia tekstūruotą paviršių ir vielinį modelį. Laisvas kameros sukimasis lėtai keičia "
+    L"žiūrėjimo kryptį visose trijose dimensijose. Sustojimai ir krypties keitimai prideda atsitiktinį "
+    L"lėtėjimą, pauzes ir sukimosi krypties keitimą; skrydis pirmyn tęsiasi. Galimas 0–1600% greitis. "
+    L"Kiekvienas monitorius turi nepriklausomą atsitiktinę sceną, atvaizduojamą jo atnaujinimo "
+    L"dažniu.\r\n\r\nMonitorių sąraše pasirinkite vieną ar kelias eilutes. Ctrl+A pasirenka visas, o Ctrl "
+    L"ir Shift leidžia keisti pasirinkimą. Animacijos valdikliai ir slankikliai keičia tik pasirinktų "
+    L"monitorių nuostatas. Eilutės pasirinkimas nėra tas pats, kas animacijos išvesties įjungimas jos "
+    L"žymimuoju langeliu. Pasirinkimas atskirai įsimenamas programai ir užsklandai. Jei buvo pasirinkti "
+    L"visi monitoriai, į pasirinkimą įtraukiami ir naujai prijungti monitoriai.\r\n\r\nPaleiskite "
+    L"SpaceFlight.exe. Nuostatos išsaugomos nuolat, veikia tik vienas programos egzempliorius. Monitoriaus "
+    L"langelis arba dvigubas eilutės spustelėjimas įjungia ar išjungia animacijos išvestį. Animaciją galima "
+    L"pristabdyti ir tęsti. PNG ir MP4 fiksuoja pirmą aktyvų animacijos monitorių, o ne bendrą visų "
+    L"monitorių vaizdą. Įrašomo monitoriaus išjungti negalima; uždarant programą vykstant įrašymui reikia "
+    L"patvirtinimo. Užsklandos blokavimas yra bendras ir galioja tik kol monitoriuje su įjungta šia "
+    L"nuostata matoma nepristabdyta animacija. Programa gali įdiegti ir pašalinti į ją įtrauktą "
+    L"užsklandą.\r\n\r\nĮrašymo nuostatose pasirinkite Viewport arba TV. Viewport išsaugo monitoriaus "
+    L"matmenis ir dažnį iki 60 kadrų per sekundę. TV siūlo 1920 × 1080, 1440 × 1080 arba 1280 × 720 išvestį "
+    L"16:9 santykiu bei 50, 25, 59.94 (60000/1001) arba 29.97 (30000/1001) kadrų per sekundę. TV vaizdas "
+    L"progresinis, BT.709, riboto diapazono ir 4:2:0 spalvų diskretizavimo. Vaizdo proporcijos išlieka, "
+    L"užpildymo juostos juodos. OK pritaiko nuostatas kitam įrašui, Atšaukti arba Esc atmeta nepatvirtintus "
+    L"pakeitimus. Įrašymo, žinyno ir informacijos langai neblokuoja kitų langų ir gali būti sumažinti. Tab "
+    L"ir Shift+Tab keičia įvesties vietą, Enter paspaudžia aktyvų mygtuką, Esc uždaro aktyvų papildomą "
+    L"langą.\r\n\r\nWindows 7–11 palaiko visas funkcijas. Windows Vista SP2 būtina įdiegti naujinimus "
+    L"KB971512 ir KB2117917; MP4 įrašymas Vistoje neveikia. Reikalingas Direct3D 11 palaikymas, o MP4 "
+    L"įrašymui Media Foundation ir H.264 koduotuvas. Sąsaja ir dokumentacija pateikiamos 36 kalbomis.",
+    L"Aparatūras paātrināts lidojums virs viļņojošas virsmas. Bezgalīga viļņojoša virsma; Tāls lidojums — "
+    L"mainīga virsma. Katram monitoram izvēlieties tieši vienu animāciju. Tekstūras rūtiņa pārslēdz "
+    L"teksturētu virsmu un stiepļu modeli. Brīva kameras rotācija lēnām maina skatiena virzienu visās "
+    L"trijās dimensijās. Apstāšanās un virziena maiņa pievieno nejaušu palēninājumu, pauzes un rotācijas "
+    L"virziena maiņu; lidojums uz priekšu turpinās. Pieejams ātrums 0–1600%. Katram monitoram ir neatkarīga "
+    L"nejauša aina, ko renderē tā atsvaidzināšanas frekvencē.\r\n\r\nMonitoru sarakstā atlasiet vienu vai "
+    L"vairākas rindas. Ctrl+A atlasa visas, bet Ctrl un Shift ļauj mainīt atlasi. Animācijas vadīklas un "
+    L"slīdņi maina tikai atlasīto monitoru iestatījumus. Rindas atlasīšana nav tas pats, kas animācijas "
+    L"izvades ieslēgšana ar izvēles rūtiņu. Atlase tiek atsevišķi atcerēta lietotnei un ekrānsaudzētājam. "
+    L"Ja bija atlasīti visi monitori, atlasē iekļauj arī jaunpievienotos monitorus.\r\n\r\nPalaidiet "
+    L"SpaceFlight.exe. Iestatījumi tiek saglabāti nepārtraukti, un darbojas tikai viena lietotnes instance. "
+    L"Monitora rūtiņa vai dubultklikšķis uz rindas ieslēdz vai izslēdz tā animācijas izvadi. Animāciju var "
+    L"pauzēt un turpināt. PNG un MP4 uzņem pirmo aktīvo animācijas monitoru, nevis visu monitoru kopējo "
+    L"attēlu. Ierakstāmo monitoru nevar izslēgt; aizverot lietotni ieraksta laikā, nepieciešams "
+    L"apstiprinājums. Ekrānsaudzētāja bloķēšana ir kopīga un darbojas tikai tad, kamēr monitorā ar ieslēgtu "
+    L"šo iespēju ir redzama nepauzēta animācija. Lietotne var instalēt vai atinstalēt tajā iebūvēto "
+    L"ekrānsaudzētāju.\r\n\r\nIeraksta iestatījumos izvēlieties Viewport vai TV. Viewport saglabā monitora "
+    L"izmērus un frekvenci līdz 60 kadriem sekundē. TV piedāvā 1920 × 1080, 1440 × 1080 vai 1280 × 720 "
+    L"izvadi ar 16:9 malu attiecību un 50, 25, 59.94 (60000/1001) vai 29.97 (30000/1001) kadriem sekundē. "
+    L"TV video ir progresīvs BT.709 ar ierobežotu diapazonu un 4:2:0 krāsu apakšiztveršanu. Attēla "
+    L"proporcijas saglabājas, aizpildījuma joslas ir melnas. OK piemēro izvēles nākamajam ierakstam, Atcelt "
+    L"vai Esc atmet neapstiprinātās izmaiņas. Ieraksta iestatījumu, palīdzības un informācijas logi nebloķē "
+    L"citus logus un ir minimizējami. Tab un Shift+Tab pārvieto fokusu, Enter aktivizē fokusēto pogu, Esc "
+    L"aizver aktīvo palīglogu.\r\n\r\nWindows 7–11 atbalsta visas funkcijas. Windows Vista SP2 jāinstalē "
+    L"atjauninājumi KB971512 un KB2117917; MP4 ierakstīšana Vistā nedarbojas. Nepieciešams Direct3D 11 "
+    L"atbalsts, bet MP4 vajadzīgi Media Foundation un H.264 kodētājs. Saskarne un dokumentācija ir pieejama "
+    L"36 valodās.",
+    L"Hardveresen gyorsított repülés hullámzó felület felett. Végtelen hullámzó felület; Távolsági repülés "
+    L"— változó felület. Monitoronként pontosan egy animáció választható. A Textúra jelölőnégyzet a "
+    L"textúrázott felület és a drótváz között vált. A kamera szabad forgása lassan változtatja a nézetet "
+    L"mindhárom dimenzióban. A Megállások és irányváltások véletlenszerű lassításokat, szüneteket és "
+    L"forgásirányváltásokat ad hozzá; az előrehaladás folytatódik. A sebesség 0–1600%. Minden monitor "
+    L"önálló véletlenszerű jelenetet kap, saját frissítési gyakoriságához igazodó "
+    L"megjelenítéssel.\r\n\r\nJelöljön ki egy vagy több sort a monitorok listájában. A Ctrl+A mindet "
+    L"kijelöli; a Ctrl és a Shift módosítja a kijelölést. Az animáció vezérlői és csúszkái csak a kijelölt "
+    L"monitorok beállításait változtatják. A sor kijelölése és az animációs kimenet jelölőnégyzetes "
+    L"engedélyezése külön művelet. A kijelölést az alkalmazás és a képernyőkímélő külön megjegyzi. Ha "
+    L"korábban minden monitor ki volt jelölve, az újonnan csatlakoztatott monitorok is bekerülnek a "
+    L"kijelölésbe.\r\n\r\nIndítsa el a SpaceFlight.exe fájlt. A beállítások folyamatosan mentődnek, és csak "
+    L"egy alkalmazáspéldány fut. A monitor jelölőnégyzete vagy a sorra történő dupla kattintás kapcsolja az "
+    L"animációs kimenetet. Az animáció szüneteltethető és folytatható. A PNG és az MP4 az első aktív "
+    L"animációs monitort rögzíti, nem az összes monitor egyesített képét. A rögzített monitor felvétel "
+    L"közben nem kapcsolható ki; az alkalmazás bezárásához ekkor megerősítés szükséges. A képernyőkímélő "
+    L"tiltása közös, és csak akkor aktív, ha egy ezt kérő monitoron látható, nem szünetelő animáció fut. Az "
+    L"alkalmazás telepítheti és eltávolíthatja a beágyazott képernyőkímélőt.\r\n\r\nA felvételi "
+    L"beállításoknál Viewport vagy TV választható. A Viewport megőrzi a monitor képméretét és frissítési "
+    L"gyakoriságát, legfeljebb 60 képkocka/másodpercig. A TV felbontása 1920 × 1080, 1440 × 1080 vagy 1280 "
+    L"× 720, képaránya 16:9; sebessége 50, 25, 59.94 (60000/1001) vagy 29.97 (30000/1001) "
+    L"képkocka/másodperc. A TV videó progresszív BT.709, korlátozott tartománnyal és 4:2:0 "
+    L"színmintavételezéssel. A kép arányai megmaradnak, a kitöltősávok feketék. Az OK a következő "
+    L"felvételhez menti a választást; a Mégse vagy Esc elveti a nem jóváhagyott módosításokat. A felvételi "
+    L"beállítások, a Súgó és a Névjegy nem blokkolja a többi ablakot és kis méretűre állítható. A Tab és "
+    L"Shift+Tab mozgatja a fókuszt, az Enter aktiválja a fókuszban levő gombot, az Esc bezárja az aktív "
+    L"kiegészítő ablakot.\r\n\r\nA Windows 7–11 minden funkciót támogat. Windows Vista SP2 alatt telepíteni "
+    L"kell a KB971512 és KB2117917 frissítést; az MP4-felvétel Vistán nem működik. Direct3D 11 támogatás "
+    L"szükséges, az MP4-hez Media Foundation és H.264-kódoló is kell. A kezelőfelület és a dokumentáció 36 "
+    L"nyelven érhető el.",
+    L"Titjira fuq wiċċ li jimmewweġ aċċellerata bil-ħardwer. Wiċċ infinit li jimmewweġ; Titjira fit-tul — "
+    L"wiċċ li jinbidel. Agħżel animazzjoni waħda biss għal kull moniter. Nisġa taqleb bejn wiċċ b’nisġa u "
+    L"mudell bil-wireframe. Ir-rotazzjoni libera tal-kamera tbiddel id-direzzjoni tal-ħarsa bil-mod "
+    L"fit-tliet dimensjonijiet. Waqfiet u bidliet fid-direzzjoni żżid deċelerazzjonijiet, pawżi u treġġigħ "
+    L"lura tar-rotazzjoni b’mod każwali; it-titjira ’l quddiem tkompli. Il-veloċità hija 0–1600%. Kull "
+    L"moniter għandu xena każwali indipendenti li tintwera bir-rata ta’ aġġornament tiegħu.\r\n\r\nAgħżel "
+    L"ringiela waħda jew aktar fil-lista tal-moniters. Ctrl+A jagħżilhom kollha; Ctrl u Shift ibiddlu "
+    L"l-għażla. Il-kontrolli u s-sliders tal-animazzjoni jibdlu biss is-settings tal-moniters magħżula. "
+    L"L-għażla ta’ ringiela hija differenti mill-attivazzjoni tal-output permezz tal-kaxxa tal-marka. "
+    L"L-għażla tinżamm separatament għall-applikazzjoni u għall-iscreen saver. Jekk il-moniters kollha "
+    L"kienu magħżula, il-moniters ġodda jiddaħħlu wkoll fl-għażla.\r\n\r\nĦaddem SpaceFlight.exe. "
+    L"Is-settings jiġu ssejvjati kontinwament u taħdem istanza waħda biss. Il-kaxxa tal-moniter jew klikk "
+    L"doppja fuq ir-ringiela tattiva jew tiddiżattiva l-output tal-animazzjoni. Tista’ tissospendi u "
+    L"tkompli l-animazzjoni. PNG u MP4 jaqbdu l-ewwel moniter tal-animazzjoni attiv, mhux immaġni magħquda "
+    L"tal-moniters kollha. Il-moniter li qed jiġi rreġistrat ma jistax jiġi diżattivat; l-għeluq "
+    L"tal-applikazzjoni waqt reġistrazzjoni jeħtieġ konferma. L-imblukkar tal-iscreen saver japplika "
+    L"għas-sessjoni kollha u biss waqt animazzjoni viżibbli mhux sospiża fuq moniter bl-għażla attiva. "
+    L"L-applikazzjoni tinstalla jew tneħħi l-iscreen saver inkorporat.\r\n\r\nFis-settings "
+    L"tar-reġistrazzjoni agħżel Viewport jew TV. Viewport iżomm id-dimensjonijiet u r-rata ta’ aġġornament "
+    L"tal-moniter, sa 60 frejm kull sekonda. TV joffri 1920 × 1080, 1440 × 1080 jew 1280 × 720 f’16:9, "
+    L"b’50, 25, 59.94 (60000/1001) jew 29.97 (30000/1001) frejm kull sekonda. Il-vidjo TV huwa progressiv "
+    L"BT.709, b’medda limitata u sottokampjunar tal-kulur 4:2:0. Il-proporzjonijiet jinżammu u l-faxex ta’ "
+    L"mili huma suwed. OK isalva l-għażliet għar-reġistrazzjoni li jmiss; Ikkanċella jew Esc jarmi bidliet "
+    L"mhux ikkonfermati. It-twieqi tar-reġistrazzjoni, Għajnuna u Dwar ma jimblukkawx twieqi oħra u jistgħu "
+    L"jiġu minimizzati. Tab u Shift+Tab ibiddlu l-fokus, Enter jattiva l-buttuna fil-fokus u Esc jagħlaq "
+    L"it-tieqa awżiljarja attiva.\r\n\r\nWindows 7–11 jappoġġja l-funzjonijiet kollha. Fuq Windows Vista "
+    L"SP2 għandhom jiġu installati l-aġġornamenti KB971512 u KB2117917; ir-reġistrazzjoni MP4 ma taħdimx "
+    L"fuq Vista. Huwa meħtieġ Direct3D 11 u, għall-MP4, Media Foundation u encoder H.264. L-interface u "
+    L"d-dokumentazzjoni huma disponibbli f’36 lingwa.",
+    L"Hardwareversnelde vlucht boven een golvend oppervlak. Oneindig golvend oppervlak; Langeafstandsvlucht "
+    L"— veranderend oppervlak. Kies precies één animatie per beeldscherm. Textuur schakelt tussen een "
+    L"getextureerd oppervlak en een draadmodel. Vrije camerarotatie verandert de kijkrichting langzaam in "
+    L"alle drie dimensies. Stops en richtingswisselingen voegt willekeurige vertragingen, pauzes en "
+    L"omkeringen van de rotatie toe; de voorwaartse vlucht gaat door. De snelheid is instelbaar op 0–1600%. "
+    L"Elk beeldscherm heeft een onafhankelijke willekeurige scène en wordt op zijn eigen "
+    L"vernieuwingsfrequentie aangestuurd.\r\n\r\nSelecteer één of meer beeldschermrijen in de lijst. Ctrl+A "
+    L"selecteert alles; met Ctrl en Shift past u de selectie aan. Animatieknoppen en schuifregelaars "
+    L"wijzigen alleen de instellingen van de geselecteerde beeldschermen. Een rij selecteren is iets anders "
+    L"dan de animatie-uitvoer inschakelen met het selectievakje. De selectie wordt apart onthouden voor de "
+    L"toepassing en de schermbeveiliging. Als alle beeldschermen waren geselecteerd, worden nieuw "
+    L"aangesloten beeldschermen ook geselecteerd.\r\n\r\nStart SpaceFlight.exe. Instellingen worden "
+    L"doorlopend opgeslagen en er draait slechts één exemplaar van de toepassing. Het selectievakje of een "
+    L"dubbelklik op de beeldschermrij schakelt de animatie-uitvoer in of uit. U kunt de animatie pauzeren "
+    L"en hervatten. PNG en MP4 leggen het eerste actieve animatiebeeldscherm vast, niet een gecombineerd "
+    L"beeld van alle schermen. Het opgenomen beeldscherm kan niet worden uitgeschakeld; afsluiten tijdens "
+    L"een opname vereist bevestiging. Blokkering van de schermbeveiliging geldt voor de hele sessie, alleen "
+    L"zolang op een beeldscherm met die optie een zichtbare, niet-gepauzeerde animatie draait. De "
+    L"toepassing kan de ingebouwde schermbeveiliging installeren of verwijderen.\r\n\r\nKies Viewport of TV "
+    L"in de opname-instellingen. Viewport behoudt de afmetingen en vernieuwingsfrequentie van het "
+    L"beeldscherm tot 60 frames per seconde. TV biedt 1920 × 1080, 1440 × 1080 of 1280 × 720 met "
+    L"beeldverhouding 16:9 en 50, 25, 59.94 (60000/1001) of 29.97 (30000/1001) frames per seconde. TV "
+    L"gebruikt progressieve BT.709-video met beperkt bereik en 4:2:0-kleursubsampling. De beeldverhouding "
+    L"blijft behouden en opvulbalken zijn zwart. OK bewaart de opties voor de volgende opname; Annuleren of "
+    L"Esc verwerpt onbevestigde wijzigingen. Opname-instellingen, Help en Info blokkeren andere vensters "
+    L"niet en kunnen worden geminimaliseerd. Tab en Shift+Tab verplaatsen de focus, Enter activeert de knop "
+    L"met focus en Esc sluit het actieve hulpvenster.\r\n\r\nWindows 7–11 ondersteunt alle functies. Voor "
+    L"Windows Vista SP2 moet u updates KB971512 en KB2117917 installeren; MP4-opname werkt niet op Vista. "
+    L"Direct3D 11-ondersteuning is vereist; voor MP4 zijn ook Media Foundation en een H.264-encoder nodig. "
+    L"Interface en documentatie zijn beschikbaar in 36 talen.",
+    L"Zbor deasupra unei suprafețe ondulate accelerat hardware. Suprafață ondulată infinită; Zbor la "
+    L"distanță — suprafață variabilă. Alegeți exact o animație pentru fiecare monitor. Textură comută între "
+    L"suprafața texturată și modelul de sârmă. Rotirea liberă a camerei schimbă lent direcția privirii în "
+    L"toate cele trei dimensiuni. Opriri și inversări de sens adaugă încetiniri, pauze și inversări ale "
+    L"rotației la intervale aleatorii; zborul înainte continuă. Viteza este 0–1600%. Fiecare monitor are o "
+    L"scenă aleatorie independentă, randată la propria rată de reîmprospătare.\r\n\r\nSelectați unul sau "
+    L"mai multe rânduri din lista monitoarelor. Ctrl+A le selectează pe toate; Ctrl și Shift modifică "
+    L"selecția. Comenzile și glisoarele animației schimbă numai setările monitoarelor selectate. Selectarea "
+    L"unui rând diferă de activarea ieșirii prin caseta sa de selectare. Selecția este reținută separat "
+    L"pentru aplicație și economizor. Dacă erau selectate toate monitoarele, sunt incluse și cele conectate "
+    L"ulterior.\r\n\r\nRulați SpaceFlight.exe. Setările se salvează continuu și rulează o singură instanță. "
+    L"Caseta monitorului sau un dublu clic pe rând activează ori dezactivează ieșirea animației. Animația "
+    L"poate fi pusă în pauză și reluată. PNG și MP4 capturează primul monitor de animație activ, nu "
+    L"imaginea combinată a tuturor monitoarelor. Monitorul înregistrat nu poate fi dezactivat; închiderea "
+    L"aplicației în timpul înregistrării necesită confirmare. Blocarea economizorului se aplică întregii "
+    L"sesiuni și numai cât timp pe un monitor cu această opțiune este vizibilă o animație care nu este în "
+    L"pauză. Aplicația poate instala sau dezinstala economizorul încorporat.\r\n\r\nÎn setările de "
+    L"înregistrare alegeți Viewport sau TV. Viewport păstrează dimensiunile și rata de reîmprospătare a "
+    L"monitorului, până la 60 de cadre pe secundă. TV oferă 1920 × 1080, 1440 × 1080 sau 1280 × 720 în "
+    L"16:9, la 50, 25, 59.94 (60000/1001) sau 29.97 (30000/1001) cadre pe secundă. Videoul TV este "
+    L"progresiv BT.709, cu interval limitat și subeșantionare cromatică 4:2:0. Proporțiile imaginii se "
+    L"păstrează, iar benzile de completare sunt negre. OK salvează opțiunile pentru următoarea "
+    L"înregistrare; Anulare sau Esc renunță la schimbările neconfirmate. Ferestrele de înregistrare, ajutor "
+    L"și informații nu blochează celelalte ferestre și pot fi minimizate. Tab și Shift+Tab mută "
+    L"focalizarea, Enter activează butonul focalizat, iar Esc închide fereastra auxiliară "
+    L"activă.\r\n\r\nWindows 7–11 acceptă toate funcțiile. Pentru Windows Vista SP2 trebuie instalate "
+    L"actualizările KB971512 și KB2117917; înregistrarea MP4 nu funcționează pe Vista. Este necesar "
+    L"Direct3D 11, iar pentru MP4 și Media Foundation și un codificator H.264. Interfața și documentația "
+    L"sunt disponibile în 36 de limbi.",
+    L"Πτήση πάνω από κυματοειδή επιφάνεια με επιτάχυνση υλικού. Απέραντη κυματοειδής επιφάνεια; Μακρινή "
+    L"πτήση — μεταβαλλόμενη επιφάνεια. Επιλέξτε ακριβώς μία κίνηση ανά οθόνη. Η Υφή εναλλάσσει επιφάνεια με "
+    L"υφή και συρμάτινο μοντέλο. Η ελεύθερη περιστροφή κάμερας αλλάζει αργά την κατεύθυνση θέασης και στις "
+    L"τρεις διαστάσεις. Οι Στάσεις και αντιστροφές προσθέτουν τυχαίες επιβραδύνσεις, παύσεις και "
+    L"αντιστροφές περιστροφής, ενώ η πτήση προς τα εμπρός συνεχίζεται. Η ταχύτητα είναι 0–1600%. Κάθε οθόνη "
+    L"διαθέτει ανεξάρτητη τυχαία σκηνή που αποδίδεται στον δικό της ρυθμό ανανέωσης.\r\n\r\nΕπιλέξτε μία ή "
+    L"περισσότερες γραμμές στη λίστα οθονών. Το Ctrl+A επιλέγει όλες, ενώ τα Ctrl και Shift αλλάζουν την "
+    L"επιλογή. Τα χειριστήρια και τα ρυθμιστικά της κίνησης αλλάζουν μόνο τις ρυθμίσεις των επιλεγμένων "
+    L"οθονών. Η επιλογή γραμμής διαφέρει από την ενεργοποίηση εξόδου μέσω του πλαισίου ελέγχου της. Η "
+    L"επιλογή αποθηκεύεται χωριστά για την εφαρμογή και την προφύλαξη. Αν είχαν επιλεγεί όλες οι οθόνες, "
+    L"περιλαμβάνονται και όσες συνδεθούν αργότερα.\r\n\r\nΕκτελέστε το SpaceFlight.exe. Οι ρυθμίσεις "
+    L"αποθηκεύονται συνεχώς και εκτελείται μόνο ένα αντίγραφο της εφαρμογής. Το πλαίσιο της οθόνης ή το "
+    L"διπλό κλικ στη γραμμή ενεργοποιεί ή απενεργοποιεί την έξοδο κίνησης. Η κίνηση μπορεί να παύσει και να "
+    L"συνεχιστεί. Τα PNG και MP4 καταγράφουν την πρώτη ενεργή οθόνη κίνησης, όχι συνδυασμένη εικόνα όλων "
+    L"των οθονών. Η καταγραφόμενη οθόνη δεν μπορεί να απενεργοποιηθεί· το κλείσιμο της εφαρμογής κατά την "
+    L"εγγραφή απαιτεί επιβεβαίωση. Η αναστολή προφύλαξης ισχύει για όλη τη συνεδρία και μόνο όσο σε οθόνη "
+    L"με ενεργή την επιλογή υπάρχει ορατή κίνηση χωρίς παύση. Η εφαρμογή εγκαθιστά ή καταργεί την "
+    L"ενσωματωμένη προφύλαξη.\r\n\r\nΣτις ρυθμίσεις εγγραφής επιλέξτε Viewport ή TV. Το Viewport διατηρεί "
+    L"διαστάσεις και ρυθμό ανανέωσης οθόνης έως 60 καρέ ανά δευτερόλεπτο. Το TV προσφέρει 1920 × 1080, 1440 "
+    L"× 1080 ή 1280 × 720 σε 16:9, με 50, 25, 59.94 (60000/1001) ή 29.97 (30000/1001) καρέ ανά "
+    L"δευτερόλεπτο. Το βίντεο TV είναι προοδευτικό BT.709 περιορισμένου εύρους με υποδειγματοληψία χρώματος "
+    L"4:2:0. Διατηρούνται οι αναλογίες εικόνας και οι συμπληρωματικές λωρίδες είναι μαύρες. Το OK "
+    L"αποθηκεύει επιλογές για την επόμενη εγγραφή· Άκυρο ή Esc απορρίπτει ανεπιβεβαίωτες αλλαγές. Οι "
+    L"ρυθμίσεις εγγραφής, η βοήθεια και οι πληροφορίες δεν εμποδίζουν άλλα παράθυρα και ελαχιστοποιούνται. "
+    L"Tab και Shift+Tab μετακινούν την εστίαση, Enter ενεργοποιεί το εστιασμένο κουμπί και Esc κλείνει το "
+    L"ενεργό βοηθητικό παράθυρο.\r\n\r\nΤα Windows 7–11 υποστηρίζουν όλες τις λειτουργίες. Στα Windows "
+    L"Vista SP2 πρέπει να εγκατασταθούν οι ενημερώσεις KB971512 και KB2117917· η εγγραφή MP4 δεν λειτουργεί "
+    L"στα Vista. Απαιτείται υποστήριξη Direct3D 11 και, για MP4, Media Foundation και κωδικοποιητής H.264. "
+    L"Η διεπαφή και η τεκμηρίωση διατίθενται σε 36 γλώσσες.",
+    L"Hardverski ubrzan let iznad valovite površine. Beskonačna valovita površina; Daleki let — promjenjiva "
+    L"površina. Za svaki monitor odaberite tačno jednu animaciju. Tekstura mijenja prikaz između "
+    L"teksturirane površine i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda u sve "
+    L"tri dimenzije. Zaustavljanja i promjene smjera dodaju nasumično usporavanje, pauze i promjene smjera "
+    L"rotacije; let naprijed se nastavlja. Brzina je 0–1600%. Svaki monitor ima nezavisnu nasumičnu scenu "
+    L"koja se prikazuje prema njegovoj frekvenciji osvježavanja.\r\n\r\nOdaberite jedan ili više redova u "
+    L"listi monitora. Ctrl+A odabire sve; Ctrl i Shift mijenjaju odabir. Kontrole i klizači animacije "
+    L"mijenjaju samo postavke odabranih monitora. Odabir reda nije isto što i uključivanje izlaza njegovom "
+    L"kućicom. Odabir se pamti odvojeno za aplikaciju i čuvar ekrana. Ako su prethodno bili odabrani svi "
+    L"monitori, uključuju se i novopriključeni monitori.\r\n\r\nPokrenite SpaceFlight.exe. Postavke se "
+    L"stalno čuvaju i radi samo jedna instanca aplikacije. Kućica monitora ili dvostruki klik na red "
+    L"uključuje ili isključuje animacijski izlaz. Animaciju možete pauzirati i nastaviti. PNG i MP4 bilježe "
+    L"prvi aktivni monitor animacije, ne zajedničku sliku svih monitora. Snimani monitor ne možete "
+    L"isključiti; zatvaranje aplikacije tokom snimanja zahtijeva potvrdu. Blokada čuvara ekrana vrijedi za "
+    L"cijelu sesiju i samo dok je na monitoru s uključenom tom opcijom vidljiva animacija koja nije "
+    L"pauzirana. Aplikacija može instalirati i deinstalirati ugrađeni čuvar ekrana.\r\n\r\nU postavkama "
+    L"snimanja odaberite Viewport ili TV. Viewport zadržava dimenzije i frekvenciju monitora do 60 kadrova "
+    L"u sekundi. TV nudi 1920 × 1080, 1440 × 1080 ili 1280 × 720 u omjeru 16:9, s 50, 25, 59.94 "
+    L"(60000/1001) ili 29.97 (30000/1001) kadrova u sekundi. TV video je progresivni BT.709 ograničenog "
+    L"raspona s poduzorkovanjem boje 4:2:0. Omjer slike ostaje sačuvan, a dopunske trake su crne. OK čuva "
+    L"opcije za sljedeći snimak; Otkaži ili Esc odbacuje nepotvrđene izmjene. Prozori snimanja, pomoći i "
+    L"informacija ne blokiraju ostale prozore i mogu se minimizirati. Tab i Shift+Tab pomjeraju fokus, "
+    L"Enter aktivira fokusirano dugme, a Esc zatvara aktivni pomoćni prozor.\r\n\r\nWindows 7–11 podržava "
+    L"sve funkcije. Za Windows Vista SP2 morate instalirati ažuriranja KB971512 i KB2117917; MP4 snimanje "
+    L"na Visti ne radi. Potreban je Direct3D 11, a za MP4 i Media Foundation te H.264 koder. Interfejs i "
+    L"dokumentacija dostupni su na 36 jezika.",
+    L"Hardverski ubrzan let iznad valovite plohe. Beskonačna valovita ploha; Daleki let — promjenjiva "
+    L"ploha. Za svaki zaslon odaberite točno jednu animaciju. Tekstura mijenja prikaz između teksturirane "
+    L"plohe i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda u sve tri dimenzije. "
+    L"Zaustavljanja i promjene smjera dodaju nasumično usporavanje, stanke i promjene smjera rotacije; let "
+    L"naprijed se nastavlja. Brzina je 0–1600%. Svaki zaslon ima neovisnu nasumičnu scenu koja se prikazuje "
+    L"prema njegovoj frekvenciji osvježavanja.\r\n\r\nOdaberite jedan ili više redaka na popisu zaslona. "
+    L"Ctrl+A odabire sve; Ctrl i Shift mijenjaju odabir. Kontrole i klizači animacije mijenjaju samo "
+    L"postavke odabranih zaslona. Odabir retka nije isto što i uključivanje izlaza njegovim potvrdnim "
+    L"okvirom. Odabir se pamti odvojeno za aplikaciju i čuvar zaslona. Ako su prethodno bili odabrani svi "
+    L"zasloni, uključuju se i novopriključeni zasloni.\r\n\r\nPokrenite SpaceFlight.exe. Postavke se "
+    L"neprekidno spremaju i radi samo jedna instanca aplikacije. Potvrdni okvir zaslona ili dvostruki klik "
+    L"na redak uključuje ili isključuje animacijski izlaz. Animaciju možete pauzirati i nastaviti. PNG i "
+    L"MP4 bilježe prvi aktivni zaslon animacije, ne zajedničku sliku svih zaslona. Snimani zaslon ne možete "
+    L"isključiti; zatvaranje aplikacije tijekom snimanja zahtijeva potvrdu. Blokada čuvara zaslona vrijedi "
+    L"za cijelu sesiju i samo dok je na zaslonu s uključenom tom mogućnošću vidljiva animacija koja nije "
+    L"pauzirana. Aplikacija može instalirati i deinstalirati ugrađeni čuvar zaslona.\r\n\r\nU postavkama "
+    L"snimanja odaberite Viewport ili TV. Viewport zadržava dimenzije i frekvenciju zaslona do 60 sličica u "
+    L"sekundi. TV nudi 1920 × 1080, 1440 × 1080 ili 1280 × 720 u omjeru 16:9, s 50, 25, 59.94 (60000/1001) "
+    L"ili 29.97 (30000/1001) sličica u sekundi. TV video je progresivni BT.709 ograničenog raspona s "
+    L"poduzorkovanjem boje 4:2:0. Omjer slike ostaje sačuvan, a dopunske trake su crne. OK sprema "
+    L"mogućnosti za sljedeću snimku; Odustani ili Esc odbacuje nepotvrđene izmjene. Prozori snimanja, "
+    L"pomoći i informacija ne blokiraju ostale prozore i mogu se minimizirati. Tab i Shift+Tab pomiču "
+    L"fokus, Enter aktivira fokusirani gumb, a Esc zatvara aktivni pomoćni prozor.\r\n\r\nWindows 7–11 "
+    L"podržava sve funkcije. Za Windows Vista SP2 morate instalirati ažuriranja KB971512 i KB2117917; MP4 "
+    L"snimanje na Visti ne radi. Potreban je Direct3D 11, a za MP4 i Media Foundation te H.264 koder. "
+    L"Sučelje i dokumentacija dostupni su na 36 jezika.",
+    L"Strojno pospešen let nad valovito ploskvijo. Neskončna valovita ploskev; Oddaljeni let — "
+    L"spreminjajoča se ploskev. Za vsak zaslon izberite natanko eno animacijo. Tekstura preklaplja med "
+    L"teksturirano ploskvijo in žičnim modelom. Prosto vrtenje kamere počasi spreminja smer pogleda v vseh "
+    L"treh razsežnostih. Ustavljanja in spremembe smeri dodajo naključne upočasnitve, premore in obrate "
+    L"smeri vrtenja; let naprej se nadaljuje. Hitrost je 0–1600%. Vsak zaslon ima neodvisen naključen "
+    L"prizor, ki se izrisuje z njegovo hitrostjo osveževanja.\r\n\r\nNa seznamu zaslonov izberite eno ali "
+    L"več vrstic. Ctrl+A izbere vse, Ctrl in Shift pa spreminjata izbor. Kontrolniki in drsniki animacije "
+    L"spreminjajo samo nastavitve izbranih zaslonov. Izbira vrstice ni isto kot vklop izhoda z njenim "
+    L"potrditvenim poljem. Izbor se ločeno shrani za program in ohranjevalnik. Če so bili izbrani vsi "
+    L"zasloni, so vključeni tudi na novo priključeni zasloni.\r\n\r\nZaženite SpaceFlight.exe. Nastavitve "
+    L"se shranjujejo sproti in deluje le en primerek programa. Polje zaslona ali dvojni klik na vrstico "
+    L"vklopi ali izklopi izhod animacije. Animacijo lahko začasno ustavite in nadaljujete. PNG in MP4 "
+    L"zajameta prvi aktivni zaslon animacije, ne skupne slike vseh zaslonov. Snemanega zaslona ni mogoče "
+    L"izklopiti; zapiranje programa med snemanjem zahteva potrditev. Preprečevanje ohranjevalnika velja za "
+    L"celotno sejo in le, dokler je na zaslonu s to možnostjo vidna neustavljena animacija. Program lahko "
+    L"namesti ali odstrani vgrajeni ohranjevalnik.\r\n\r\nV nastavitvah snemanja izberite Viewport ali TV. "
+    L"Viewport ohrani velikost in hitrost osveževanja zaslona do 60 sličic na sekundo. TV ponuja 1920 × "
+    L"1080, 1440 × 1080 ali 1280 × 720 v razmerju 16:9 ter 50, 25, 59.94 (60000/1001) ali 29.97 "
+    L"(30000/1001) sličic na sekundo. TV uporablja progresivni BT.709 z omejenim obsegom in barvnim "
+    L"podvzorčenjem 4:2:0. Razmerje slike se ohrani, dopolnilni pasovi so črni. OK shrani izbiro za "
+    L"naslednje snemanje; Prekliči ali Esc zavrže nepotrjene spremembe. Okna snemanja, pomoči in podatkov o "
+    L"programu ne blokirajo drugih oken in jih je mogoče minimirati. Tab in Shift+Tab premikata fokus, "
+    L"Enter aktivira izbrani gumb, Esc pa zapre aktivno pomožno okno.\r\n\r\nWindows 7–11 podpira vse "
+    L"funkcije. Za Windows Vista SP2 morate namestiti posodobitvi KB971512 in KB2117917; snemanje MP4 v "
+    L"Visti ne deluje. Potrebna je podpora Direct3D 11, za MP4 pa še Media Foundation in kodirnik H.264. "
+    L"Vmesnik in dokumentacija sta na voljo v 36 jezikih.",
+    L"Hardverski ubrzan let iznad talasaste površine. Beskonačna talasasta površina; Daleki let — "
+    L"promjenljiva površina. Za svaki monitor izaberite tačno jednu animaciju. Tekstura mijenja prikaz "
+    L"između teksturisane površine i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda "
+    L"u sve tri dimenzije. Zaustavljanja i promjene smjera dodaju nasumično usporavanje, pauze i promjene "
+    L"smjera rotacije; let naprijed se nastavlja. Brzina je 0–1600%. Svaki monitor ima nezavisnu nasumičnu "
+    L"scenu koja se prikazuje prema njegovoj frekvenciji osvježavanja.\r\n\r\nIzaberite jedan ili više "
+    L"redova u listi monitora. Ctrl+A bira sve; Ctrl i Shift mijenjaju izbor. Kontrole i klizači animacije "
+    L"mijenjaju samo podešavanja izabranih monitora. Izbor reda nije isto što i uključivanje izlaza "
+    L"njegovom kućicom. Izbor se pamti odvojeno za aplikaciju i čuvar ekrana. Ako su prethodno bili "
+    L"izabrani svi monitori, uključuju se i novopriključeni monitori.\r\n\r\nPokrenite SpaceFlight.exe. "
+    L"Podešavanja se stalno čuvaju i radi samo jedna instanca aplikacije. Kućica monitora ili dvostruki "
+    L"klik na red uključuje ili isključuje animacijski izlaz. Animaciju možete pauzirati i nastaviti. PNG i "
+    L"MP4 bilježe prvi aktivni monitor animacije, ne zajedničku sliku svih monitora. Snimani monitor ne "
+    L"možete isključiti; zatvaranje aplikacije tokom snimanja zahtijeva potvrdu. Blokada čuvara ekrana važi "
+    L"za cijelu sesiju i samo dok je na monitoru s uključenom tom opcijom vidljiva animacija koja nije "
+    L"pauzirana. Aplikacija može instalirati i deinstalirati ugrađeni čuvar ekrana.\r\n\r\nU podešavanjima "
+    L"snimanja izaberite Viewport ili TV. Viewport zadržava dimenzije i frekvenciju monitora do 60 kadrova "
+    L"u sekundi. TV nudi 1920 × 1080, 1440 × 1080 ili 1280 × 720 u odnosu 16:9, s 50, 25, 59.94 "
+    L"(60000/1001) ili 29.97 (30000/1001) kadrova u sekundi. TV video je progresivni BT.709 ograničenog "
+    L"opsega s poduzorkovanjem boje 4:2:0. Odnos slike ostaje sačuvan, a dopunske trake su crne. OK čuva "
+    L"opcije za sljedeći snimak; Otkaži ili Esc odbacuje nepotvrđene izmjene. Prozori snimanja, pomoći i "
+    L"informacija ne blokiraju ostale prozore i mogu se minimizovati. Tab i Shift+Tab pomjeraju fokus, "
+    L"Enter aktivira fokusirano dugme, a Esc zatvara aktivni pomoćni prozor.\r\n\r\nWindows 7–11 podržava "
+    L"sve funkcije. Za Windows Vista SP2 morate instalirati ažuriranja KB971512 i KB2117917; MP4 snimanje "
+    L"na Visti ne radi. Potreban je Direct3D 11, a za MP4 i Media Foundation i H.264 koder. Interfejs i "
+    L"dokumentacija dostupni su na 36 jezika.",
+    L"Апаратна паскораны палёт над хвалістай паверхняй. Бясконцая хвалістая паверхня; Далёкі палёт — "
+    L"зменлівая паверхня. Для кожнага манітора выберыце роўна адну анімацыю. Тэкстура пераключае "
+    L"тэкстураваную паверхню і каркасную мадэль. Свабоднае кручэнне камеры павольна змяняе напрамак погляду "
+    L"ва ўсіх трох вымярэннях. Спыненні і змены напрамку дадаюць выпадковыя запаволенні, паўзы і змены "
+    L"напрамку кручэння; палёт наперад працягваецца. Хуткасць — 0–1600%. Кожны манітор мае незалежную "
+    L"выпадковую сцэну з вывадам паводле ўласнай частаты абнаўлення.\r\n\r\nВыберыце адзін або некалькі "
+    L"радкоў у спісе манітораў. Ctrl+A выбірае ўсе; Ctrl і Shift змяняюць выбар. Элементы кіравання і "
+    L"паўзункі анімацыі змяняюць толькі налады выбраных манітораў. Выбар радка і ўключэнне вываду яго "
+    L"сцяжком — розныя дзеянні. Выбар асобна захоўваецца для праграмы і застаўкі. Калі раней былі выбраны "
+    L"ўсе маніторы, да выбару далучаюцца і новыя маніторы.\r\n\r\nЗапусціце SpaceFlight.exe. Налады "
+    L"захоўваюцца пастаянна, працуе толькі адзін асобнік праграмы. Сцяжок манітора або падвойнае націсканне "
+    L"на радок уключае ці выключае вывад анімацыі. Анімацыю можна прыпыніць і працягнуць. PNG і MP4 "
+    L"захопліваюць першы актыўны манітор анімацыі, а не агульны відарыс усіх манітораў. Манітор, які "
+    L"запісваецца, нельга выключыць; закрыццё праграмы падчас запісу патрабуе пацвярджэння. Блакаванне "
+    L"застаўкі дзейнічае на ўсю сесію і толькі пакуль на маніторы з гэтай опцыяй бачная непрыпыненая "
+    L"анімацыя. Праграма можа ўсталяваць або выдаліць убудаваную застаўку.\r\n\r\nУ наладах запісу выберыце "
+    L"Viewport або TV. Viewport захоўвае памеры і частату манітора да 60 кадраў за секунду. TV прапануе "
+    L"1920 × 1080, 1440 × 1080 або 1280 × 720 з суадносінамі 16:9 і частатой 50, 25, 59.94 (60000/1001) або "
+    L"29.97 (30000/1001) кадраў за секунду. Відэа TV прагрэсіўнае, BT.709, з абмежаваным дыяпазонам і "
+    L"субдыскрэтызацыяй колеру 4:2:0. Прапорцыі захоўваюцца, палосы запаўнення чорныя. OK захоўвае выбар "
+    L"для наступнага запісу; Скасаваць або Esc адхіляе непацверджаныя змены. Вокны запісу, даведкі і "
+    L"звестак пра праграму не блакуюць іншыя вокны і могуць згортвацца. Tab і Shift+Tab перамяшчаюць фокус, "
+    L"Enter націскае актыўную кнопку, Esc закрывае актыўнае дапаможнае акно.\r\n\r\nWindows 7–11 "
+    L"падтрымлівае ўсе функцыі. Для Windows Vista SP2 неабходна ўсталяваць абнаўленні KB971512 і KB2117917; "
+    L"запіс MP4 у Vistа не працуе. Патрэбна падтрымка Direct3D 11, а для MP4 таксама Media Foundation і "
+    L"кадавальнік H.264. Інтэрфейс і дакументацыя даступны на 36 мовах.",
+    L"Хардуерно ускорен полет над вълнообразна повърхнина. Безкрайна вълнообразна повърхнина; Далечен полет "
+    L"— променяща се повърхнина. Изберете точно една анимация за всеки монитор. Текстура превключва между "
+    L"текстурирана повърхнина и телен модел. Свободното въртене на камерата бавно променя посоката на "
+    L"погледа в трите измерения. Спирания и обръщания на посоката добавя случайни забавяния, паузи и "
+    L"обръщания на въртенето; полетът напред продължава. Скоростта е 0–1600%. Всеки монитор има независима "
+    L"случайна сцена, изобразявана с неговата честота на опресняване.\r\n\r\nИзберете един или повече "
+    L"редове в списъка с монитори. Ctrl+A избира всички; Ctrl и Shift променят избора. Контролите и "
+    L"плъзгачите на анимацията променят само настройките на избраните монитори. Избирането на ред и "
+    L"включването на изхода чрез отметката му са различни действия. Изборът се запомня отделно за "
+    L"приложението и скрийнсейвъра. Ако са били избрани всички монитори, включват се и "
+    L"новосвързаните.\r\n\r\nСтартирайте SpaceFlight.exe. Настройките се запазват непрекъснато и работи "
+    L"само един екземпляр на приложението. Отметката на монитора или двойно щракване върху реда включва или "
+    L"изключва анимационния изход. Анимацията може да се поставя на пауза и да продължава. PNG и MP4 "
+    L"заснемат първия активен монитор за анимация, не общ образ от всички монитори. Записваният монитор не "
+    L"може да се изключи; затварянето на приложението при запис изисква потвърждение. Блокирането на "
+    L"скрийнсейвъра важи за цялата сесия и само докато на монитор с тази опция има видима анимация без "
+    L"пауза. Приложението може да инсталира и деинсталира вградения скрийнсейвър.\r\n\r\nВ настройките за "
+    L"запис изберете Viewport или TV. Viewport запазва размерите и честотата на монитора до 60 кадъра в "
+    L"секунда. TV предлага 1920 × 1080, 1440 × 1080 или 1280 × 720 със съотношение 16:9 и 50, 25, 59.94 "
+    L"(60000/1001) или 29.97 (30000/1001) кадъра в секунда. TV използва прогресивно видео BT.709 с "
+    L"ограничен диапазон и цветова субдискретизация 4:2:0. Пропорциите се запазват, допълващите ленти са "
+    L"черни. OK запазва избора за следващия запис; Отказ или Esc отхвърля непотвърдените промени. "
+    L"Прозорците за запис, помощ и информация не блокират другите прозорци и могат да се минимизират. Tab и "
+    L"Shift+Tab преместват фокуса, Enter активира фокусирания бутон, Esc затваря активния помощен "
+    L"прозорец.\r\n\r\nWindows 7–11 поддържа всички функции. За Windows Vista SP2 трябва да се инсталират "
+    L"актуализациите KB971512 и KB2117917; записът на MP4 не работи във Vista. Изисква се поддръжка на "
+    L"Direct3D 11, а за MP4 също Media Foundation и H.264 кодер. Интерфейсът и документацията са налични на "
+    L"36 езика.",
+    L"Хардверски забрзан лет над брановидна површина. Бесконечна брановидна површина; Далечен лет — "
+    L"променлива површина. За секој монитор изберете точно една анимација. Текстура менува текстурирана "
+    L"површина и жичен модел. Слободното вртење на камерата полека го менува погледот во сите три димензии. "
+    L"Запирања и промени на насоката додава случајни забавувања, паузи и промени на насоката на вртење; "
+    L"летот напред продолжува. Брзината е 0–1600%. Секој монитор има независна случајна сцена што се "
+    L"прикажува со неговата стапка на освежување.\r\n\r\nИзберете еден или повеќе редови во списокот на "
+    L"монитори. Ctrl+A ги избира сите; Ctrl и Shift го менуваат изборот. Контролите и лизгачите на "
+    L"анимацијата ги менуваат само поставките на избраните монитори. Избирањето ред и вклучувањето на "
+    L"излезот преку неговото поле се различни дејства. Изборот се памети одделно за апликацијата и чуварот. "
+    L"Ако биле избрани сите монитори, се вклучуваат и новоповрзаните монитори.\r\n\r\nСтартувајте "
+    L"SpaceFlight.exe. Поставките се зачувуваат постојано и работи само еден примерок на апликацијата. "
+    L"Полето на мониторот или двоен клик на редот го вклучува или исклучува анимацискиот излез. Анимацијата "
+    L"може да се паузира и продолжи. PNG и MP4 го снимаат првиот активен монитор за анимација, не заедничка "
+    L"слика од сите монитори. Мониторот што се снима не може да се исклучи; затворањето на апликацијата при "
+    L"снимање бара потврда. Блокирањето на чуварот важи за целата сесија и само додека на монитор со таа "
+    L"опција е видлива непаузирана анимација. Апликацијата може да го инсталира и деинсталира вградениот "
+    L"чувар.\r\n\r\nВо поставките за снимање изберете Viewport или TV. Viewport ги зачувува димензиите и "
+    L"стапката на мониторот до 60 кадри во секунда. TV нуди 1920 × 1080, 1440 × 1080 или 1280 × 720 со "
+    L"однос 16:9 и 50, 25, 59.94 (60000/1001) или 29.97 (30000/1001) кадри во секунда. TV видеото е "
+    L"прогресивно BT.709 со ограничен опсег и подсемплирање на боја 4:2:0. Пропорциите се задржуваат, "
+    L"дополнителните ленти се црни. OK ги зачувува опциите за следното снимање; Откажи или Esc ги отфрла "
+    L"непотврдените измени. Прозорците за снимање, помош и информации не ги блокираат другите прозорци и "
+    L"може да се минимизираат. Tab и Shift+Tab го поместуваат фокусот, Enter го активира фокусираното "
+    L"копче, Esc го затвора активниот помошен прозорец.\r\n\r\nWindows 7–11 ги поддржува сите функции. За "
+    L"Windows Vista SP2 мора да се инсталираат ажурирањата KB971512 и KB2117917; MP4 снимањето на Vista не "
+    L"работи. Потребна е поддршка за Direct3D 11, а за MP4 и Media Foundation и H.264 кодер. Интерфејсот и "
+    L"документацијата се достапни на 36 јазици.",
+    L"Хардверски убрзан лет изнад таласасте површи. Бесконачна таласаста површ; Далеки лет — променљива "
+    L"површ. За сваки монитор изаберите тачно једну анимацију. Текстура мења приказ између текстурисане "
+    L"површи и жичаног модела. Слободно окретање камере полако мења смер погледа у све три димензије. "
+    L"Заустављања и промене смера додају насумично успоравање, паузе и промене смера ротације; лет напред "
+    L"се наставља. Брзина је 0–1600%. Сваки монитор има независну насумичну сцену која се приказује према "
+    L"његовој учестаности освежавања.\r\n\r\nИзаберите један или више редова у листи монитора. Ctrl+A бира "
+    L"све; Ctrl и Shift мењају избор. Контроле и клизачи анимације мењају само подешавања изабраних "
+    L"монитора. Избор реда није исто што и укључивање излаза његовим пољем за потврду. Избор се памти "
+    L"одвојено за апликацију и чувар екрана. Ако су претходно били изабрани сви монитори, укључују се и "
+    L"новоприкључени монитори.\r\n\r\nПокрените SpaceFlight.exe. Подешавања се стално чувају и ради само "
+    L"једна инстанца апликације. Поље монитора или двоструки клик на ред укључује или искључује анимацијски "
+    L"излаз. Анимацију можете паузирати и наставити. PNG и MP4 бележе први активни монитор анимације, не "
+    L"заједничку слику свих монитора. Снимани монитор не можете искључити; затварање апликације током "
+    L"снимања захтева потврду. Блокада чувара екрана важи за целу сесију и само док је на монитору с "
+    L"укљученом том опцијом видљива анимација која није паузирана. Апликација може инсталирати и "
+    L"деинсталирати уграђени чувар екрана.\r\n\r\nУ подешавањима снимања изаберите Viewport или TV. "
+    L"Viewport задржава димензије и учестаност монитора до 60 кадрова у секунди. TV нуди 1920 × 1080, 1440 "
+    L"× 1080 или 1280 × 720 у односу 16:9, са 50, 25, 59.94 (60000/1001) или 29.97 (30000/1001) кадрова у "
+    L"секунди. TV видео је прогресивни BT.709 ограниченог опсега с подузорковањем боје 4:2:0. Однос слике "
+    L"остаје сачуван, а допунске траке су црне. OK чува опције за следећи снимак; Откажи или Esc одбацује "
+    L"непотврђене измене. Прозори снимања, помоћи и информација не блокирају остале прозоре и могу се "
+    L"минимизовати. Tab и Shift+Tab померају фокус, Enter активира фокусирано дугме, а Esc затвара активни "
+    L"помоћни прозор.\r\n\r\nWindows 7–11 подржава све функције. За Windows Vista SP2 морате инсталирати "
+    L"ажурирања KB971512 и KB2117917; MP4 снимање на Висти не ради. Потребан је Direct3D 11, а за MP4 и "
+    L"Media Foundation и H.264 кодер. Интерфејс и документација доступни су на 36 језика.",
+    L"Апаратно прискорений політ над хвилястою поверхнею. Нескінченна хвиляста поверхня; Далекий політ — "
+    L"мінлива поверхня. Для кожного монітора виберіть рівно одну анімацію. Текстура перемикає текстуровану "
+    L"поверхню та каркасну модель. Вільне обертання камери повільно змінює напрямок погляду в усіх трьох "
+    L"вимірах. Зупинки та зміни напрямку додають випадкові уповільнення, паузи та зміни напрямку обертання; "
+    L"політ уперед триває. Швидкість — 0–1600%. Кожен монітор має незалежну випадкову сцену з виведенням "
+    L"відповідно до власної частоти оновлення.\r\n\r\nВиберіть один або кілька рядків у списку моніторів. "
+    L"Ctrl+A вибирає всі; Ctrl і Shift змінюють вибір. Елементи керування й повзунки анімації змінюють лише "
+    L"налаштування вибраних моніторів. Вибір рядка та ввімкнення виведення його прапорцем — різні дії. "
+    L"Вибір зберігається окремо для програми й заставки. Якщо раніше були вибрані всі монітори, до вибору "
+    L"долучаються й новопідключені.\r\n\r\nЗапустіть SpaceFlight.exe. Налаштування зберігаються постійно, "
+    L"працює лише один екземпляр програми. Прапорець монітора або подвійне клацання рядка вмикає чи вимикає "
+    L"виведення анімації. Анімацію можна призупинити та продовжити. PNG і MP4 захоплюють перший активний "
+    L"монітор анімації, а не спільне зображення всіх моніторів. Монітор, який записується, вимкнути не "
+    L"можна; закриття програми під час запису потребує підтвердження. Блокування заставки діє для всього "
+    L"сеансу й лише доки на моніторі з цією опцією видима непризупинена анімація. Програма може встановити "
+    L"або видалити вбудовану заставку.\r\n\r\nУ налаштуваннях запису виберіть Viewport або TV. Viewport "
+    L"зберігає розміри та частоту монітора до 60 кадрів за секунду. TV пропонує 1920 × 1080, 1440 × 1080 "
+    L"або 1280 × 720 зі співвідношенням 16:9 і частотою 50, 25, 59.94 (60000/1001) або 29.97 (30000/1001) "
+    L"кадрів за секунду. Відео TV прогресивне, BT.709, з обмеженим діапазоном і субдискретизацією кольору "
+    L"4:2:0. Пропорції зберігаються, смуги заповнення чорні. OK зберігає вибір для наступного запису; "
+    L"Скасувати або Esc відхиляє непідтверджені зміни. Вікна запису, довідки та відомостей не блокують інші "
+    L"вікна й можуть згортатися. Tab і Shift+Tab переміщують фокус, Enter активує кнопку з фокусом, Esc "
+    L"закриває активне допоміжне вікно.\r\n\r\nWindows 7–11 підтримує всі функції. Для Windows Vista SP2 "
+    L"потрібно встановити оновлення KB971512 і KB2117917; запис MP4 у Vista не працює. Потрібна підтримка "
+    L"Direct3D 11, а для MP4 також Media Foundation й кодувальник H.264. Інтерфейс і документація доступні "
+    L"36 мовами.",
+    L"Аппаратно ускоренный полёт над волнообразной поверхностью. Бесконечная волнообразная поверхность; "
+    L"Дальний полёт — меняющаяся поверхность. Для каждого монитора выберите ровно одну анимацию. Текстура "
+    L"переключает текстурированную поверхность и каркасную модель. Свободное вращение камеры медленно "
+    L"меняет направление взгляда во всех трёх измерениях. Остановки и смены направления добавляют случайные "
+    L"замедления, паузы и изменения направления вращения; полёт вперёд продолжается. Скорость — 0–1600%. "
+    L"Каждый монитор имеет независимую случайную сцену с выводом согласно собственной частоте "
+    L"обновления.\r\n\r\nВыберите одну или несколько строк в списке мониторов. Ctrl+A выбирает все; Ctrl и "
+    L"Shift изменяют выбор. Элементы управления и ползунки анимации изменяют только настройки выбранных "
+    L"мониторов. Выбор строки и включение вывода её флажком — разные действия. Выбор сохраняется отдельно "
+    L"для приложения и заставки. Если раньше были выбраны все мониторы, в выбор включаются и вновь "
+    L"подключённые.\r\n\r\nЗапустите SpaceFlight.exe. Настройки сохраняются постоянно, работает только один "
+    L"экземпляр приложения. Флажок монитора или двойной щелчок по строке включает либо выключает вывод "
+    L"анимации. Анимацию можно приостановить и продолжить. PNG и MP4 захватывают первый активный монитор "
+    L"анимации, а не общее изображение всех мониторов. Записываемый монитор нельзя отключить; закрытие "
+    L"приложения во время записи требует подтверждения. Блокировка заставки действует на весь сеанс и "
+    L"только пока на мониторе с этой опцией видима неприостановленная анимация. Приложение может установить "
+    L"или удалить встроенную заставку.\r\n\r\nВ настройках записи выберите Viewport или TV. Viewport "
+    L"сохраняет размеры и частоту монитора до 60 кадров в секунду. TV предлагает 1920 × 1080, 1440 × 1080 "
+    L"или 1280 × 720 с соотношением 16:9 и частотой 50, 25, 59.94 (60000/1001) или 29.97 (30000/1001) "
+    L"кадров в секунду. Видео TV прогрессивное, BT.709, с ограниченным диапазоном и субдискретизацией цвета "
+    L"4:2:0. Пропорции сохраняются, полосы заполнения чёрные. OK сохраняет выбор для следующей записи; "
+    L"Отмена или Esc отклоняет неподтверждённые изменения. Окна записи, справки и сведений не блокируют "
+    L"другие окна и могут сворачиваться. Tab и Shift+Tab перемещают фокус, Enter активирует кнопку с "
+    L"фокусом, Esc закрывает активное вспомогательное окно.\r\n\r\nWindows 7–11 поддерживает все функции. "
+    L"Для Windows Vista SP2 необходимо установить обновления KB971512 и KB2117917; запись MP4 в Vista не "
+    L"работает. Нужна поддержка Direct3D 11, а для MP4 также Media Foundation и кодировщик H.264. Интерфейс "
+    L"и документация доступны на 36 языках."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
-    L"SpaceFlight nabízí „Nekonečná vlnící se plocha“ a „Dálkový let — proměnlivá plocha“. Každému "
-    L"monitoru přiřadíte právě jeden průlet: označte jeho řádek v seznamu a zvolte příslušný přepínač. "
-    L"Ve výchozím stavu je na všech monitorech zvolena první animace. Výchozí je zobrazení s texturou; "
-    L"zrušením volby Textura přepnete vybrané monitory na drátěný model. Při označení více řádků se "
-    L"volba použije pro všechny označené monitory. Jezdec nastavuje rychlost animace v rozsahu 0–1600 "
-    L"%. EXE výchozím spuštěním zapne pouze primární animační monitor, spořič všechny monitory. Každý "
-    L"monitor se vykresluje podle vlastní obnovovací frekvence. Nastavení se ukládá zvlášť pro aplikaci "
-    L"a spořič obrazovky. Volba Převalování kamery zapne na označených monitorech plynulé otáčení "
-    L"pohledu do všech směrů; ve výchozím stavu je vypnutá. Volba Zastavování a změny směru přidá v "
-    L"náhodných intervalech plynulé brzdění převalování kamery, krátké zastavení a rozběh opačným "
-    L"směrem. Je dostupná při zapnutém převalování a ve výchozím stavu je vypnutá; samotný průlet "
-    L"pokračuje.\r\n\r\nZapnout náhled spustí celoobrazovkový náhled na všech monitorech; změny lze "
-    L"zkoušet za otevřeného nastavení. OK nastavení uloží, Storno je zahodí. Celoobrazovkový spořič "
-    L"ukončíte klávesou Esc nebo pohybem myši. Mezi ovládacími prvky přecházejte klávesami Tab a Shift+Tab; "
-    L"podtržené volby lze vyvolat pomocí Alt a příslušného písmene. Esc v nastavení odpovídá tlačítku "
-    L"Storno; v nápovědě nebo okně O aplikaci zavře pouze toto okno.\r\n\r\nPodporovány jsou systémy "
-    L"Windows 7 až Windows 11. Pro spuštění aplikace ve Windows Vista SP2 je nutné nainstalovat aktualizace "
-    L"KB971512 a KB2117917.",
-    L"SpaceFlight offers „Infinite undulating surface“ and „Long-distance flight — morphing surface“. "
-    L"Assign exactly one flight to each display: select its row in the list and choose the corresponding "
-    L"radio button. The first animation is selected on every display by default. Textured rendering is the "
-    L"default; clear Texture to switch the selected displays to wireframe. With several rows selected, the "
-    L"choice applies to every selected display. The slider sets animation speed from 0–1600%. On default "
-    L"startup, EXE enables only the primary animation display; the screen saver enables all displays. Each "
-    L"display renders at its own refresh rate. Settings are stored separately for the application and "
-    L"screen saver. Camera tumbling enables smooth rotation of the view in all directions on the selected "
-    L"displays; it is off by default. Stops and reversals adds gradual braking, brief pauses and reversal "
-    L"of camera tumbling at random intervals. It is available when Camera tumbling is enabled and is off "
-    L"by default; forward flight continues.\r\n\r\nEnable preview starts a full-screen preview on every "
-    L"display while the settings dialog remains open for live adjustments. OK saves the settings and Cancel "
-    L"discards them. Exit the full-screen saver with Esc or mouse movement. Use Tab and Shift+Tab to move "
-    L"between controls; use Alt and the underlined letter to activate a command. Esc in the settings dialog "
-    L"is equivalent to Cancel; in Help or About, it closes only that window.\r\n\r\nWindows 7 through "
-    L"Windows 11 are supported. To run the application on Windows Vista SP2, you must install updates "
-    L"KB971512 and KB2117917.",
-    L"SpaceFlight offers „Infinite undulating surface“ and „Long-distance flight — morphing surface“. "
-    L"Assign exactly one flight to each display: select its row in the list and choose the corresponding "
-    L"radio button. The first animation is selected on every display by default. Textured rendering is the "
-    L"default; clear Texture to switch the selected displays to wireframe. With several rows selected, the "
-    L"choice applies to every selected display. The slider sets animation speed from 0–1600%. On default "
-    L"startup, EXE enables only the primary animation display; the screen saver enables all displays. Each "
-    L"display renders at its own refresh rate. Settings are stored separately for the application and "
-    L"screen saver. Camera tumbling enables smooth rotation of the view in all directions on the selected "
-    L"displays; it is off by default. Stops and reversals adds gradual braking, brief pauses and reversal "
-    L"of camera tumbling at random intervals. It is available when Camera tumbling is enabled and is off by "
-    L"default; forward flight continues.\r\n\r\nEnable preview starts a full-screen preview on every display "
-    L"and allows live adjustments while the settings dialog remains open. OK saves the settings and Cancel "
-    L"discards them. Exit the full-screen screen saver with Esc or mouse movement. Use Tab and Shift+Tab to "
-    L"move between controls; use Alt and the underlined letter to activate a command. Esc in the settings "
-    L"dialog is equivalent to Cancel; in Help or About, it closes only that window.\r\n\r\nWindows 7 "
-    L"through Windows 11 are supported. To run the application on Windows Vista SP2, you must install "
-    L"updates KB971512 and KB2117917.",
-    L"SpaceFlight offers „Infinite undulating surface“ and „Long-distance flight — morphing surface“. "
-    L"Assign exactly one flight to each display: select its row in the list and choose the corresponding "
-    L"radio button. The first animation is selected on every display by default. Textured rendering is the "
-    L"default; clear Texture to switch the selected displays to wireframe. With several rows selected, the "
-    L"choice applies to every selected display. The slider sets animation speed from 0–1600%. On default "
-    L"startup, EXE enables only the primary animation display; the screen saver enables all displays. Each "
-    L"display renders at its own refresh rate. Settings are stored separately for the application and "
-    L"screen saver. Camera tumbling enables smooth rotation of the view in all directions on the selected "
-    L"displays; it is off by default. Stops and reversals adds gradual braking, brief pauses and reversal "
-    L"of camera tumbling at random intervals. It is available when Camera tumbling is enabled and is off by "
-    L"default; forward flight continues.\r\n\r\nEnable preview starts a full-screen preview on every display "
-    L"and allows live adjustments while the settings dialog remains open. OK saves the settings and Cancel "
-    L"discards them. Exit the full-screen screen saver with Esc or mouse movement. Use Tab and Shift+Tab to "
-    L"move between controls; use Alt and the underlined letter to activate a command. Esc in the settings "
-    L"dialog is equivalent to Cancel; in Help or About, it closes only that window.\r\n\r\nWindows 7 "
-    L"through Windows 11 are supported. To run the application on Windows Vista SP2, you must install "
-    L"updates KB971512 and KB2117917.",
-    L"SpaceFlight bietet „Unendliche wellenförmige Fläche“ und „Fernflug — veränderliche Fläche“. Weisen "
-    L"Sie jedem Monitor genau einen Flug zu: Markieren Sie seine Zeile und wählen Sie den entsprechenden "
-    L"Optionsschalter. Standardmäßig ist auf allen Monitoren die erste Animation ausgewählt. Die Textur ist "
-    L"standardmäßig aktiviert; deaktivieren Sie Textur, um die ausgewählten Monitore auf Drahtgittermodelle "
-    L"umzuschalten. Bei mehreren markierten Zeilen gilt die Auswahl für alle markierten Monitore. Der "
-    L"Regler bestimmt die Animationsgeschwindigkeit von 0–1600 %. Beim Standardstart aktiviert EXE "
-    L"nur den primären Animationsmonitor, der Bildschirmschoner alle Monitore. Jeder Monitor wird "
-    L"mit seiner eigenen Bildwiederholfrequenz gerendert. Die Einstellungen werden für Anwendung und "
-    L"Bildschirmschoner getrennt gespeichert. Taumelnde Kamera aktiviert auf den markierten Monitoren "
-    L"eine gleichmäßige Drehung des Blicks in alle Richtungen; standardmäßig ist die Option deaktiviert. "
-    L"Stopps und Richtungswechsel bremst die Kameradrehung in zufälligen Abständen sanft ab, hält sie "
-    L"kurz an und setzt sie in umgekehrter Richtung fort. Die Option ist bei aktivierter taumelnder "
-    L"Kamera verfügbar und standardmäßig deaktiviert; der Vorwärtsflug geht weiter.\r\n\r\nVorschau "
-    L"einschalten startet eine Vollbildvorschau auf allen Monitoren. Der Einstellungsdialog bleibt für "
-    L"Änderungen geöffnet. OK speichert, Abbrechen verwirft. Esc oder eine Mausbewegung beendet den "
-    L"Vollbildschoner. Mit Tab und Umschalt+Tab wechseln Sie zwischen den Steuerelementen; mit Alt und dem "
-    L"unterstrichenen Buchstaben rufen Sie einen Befehl auf. Esc im Einstellungsdialog entspricht "
-    L"Abbrechen; in der Hilfe oder im Infofenster schließt es nur dieses Fenster.\r\n\r\nUnterstützt werden "
-    L"Windows 7 bis Windows 11. Zum Ausführen der Anwendung unter Windows Vista SP2 müssen die Updates "
-    L"KB971512 und KB2117917 installiert werden.",
-    L"SpaceFlight propose „Surface ondulante infinie“ et „Vol longue distance — surface déformable“. "
-    L"Attribuez un seul vol à chaque moniteur : sélectionnez sa ligne, puis le bouton radio correspondant. "
-    L"Par défaut, la première animation est sélectionnée sur tous les moniteurs. La texture est activée "
-    L"par défaut ; décochez Texture pour afficher les moniteurs sélectionnés en mode filaire. Si "
-    L"plusieurs lignes sont sélectionnées, le choix s’applique à tous ces moniteurs. Le curseur règle la "
-    L"vitesse de l’animation de 0 à 1 600 %. Au démarrage par défaut, EXE active uniquement le moniteur "
-    L"d’animation principal, tandis que l’économiseur active tous les moniteurs. Chaque moniteur est "
-    L"rendu à sa propre fréquence de rafraîchissement. Les réglages sont enregistrés séparément pour "
-    L"l’application et l’économiseur d’écran. Rotation libre de la caméra active une rotation fluide du "
-    L"regard dans toutes les directions sur les moniteurs sélectionnés ; cette option est désactivée "
-    L"par défaut. Arrêts et changements de sens ralentit progressivement la rotation de la caméra à "
-    L"intervalles aléatoires, la suspend brièvement, puis la relance en sens inverse. Cette option est "
-    L"disponible lorsque la rotation libre de la caméra est activée et est désactivée par défaut ; le vol "
-    L"continue.\r\n\r\nActiver l’aperçu lance un aperçu plein écran sur tous les moniteurs ; la boîte "
-    L"de dialogue reste ouverte pour les réglages en direct. OK enregistre les réglages, Annuler les "
+    L"SpaceFlight: Nekonečná vlnící se plocha; Dálkový let — proměnlivá plocha. Každému monitoru přiřaďte "
+    L"právě jednu animaci. Textura přepíná mezi texturovanými plochami a drátěným modelem. Převalování "
+    L"kamery pomalu mění směr pohledu ve všech třech rozměrech. Zastavování a změny směru přidává náhodné "
+    L"zpomalování, pauzy a změny směru otáčení; dopředný pohyb pokračuje. Rychlost animace je 0–1600 %. "
+    L"Každý monitor má nezávislou náhodnou scénu a vykreslování podle své obnovovací "
+    L"frekvence.\r\n\r\nOznačení řádků určuje, které monitory právě nastavujete; není totožné se zatržítky "
+    L"zapínajícími animační výstupy. Ctrl+A označí všechny monitory, Ctrl a Shift umožňují upravit "
+    L"označení. Všechny animační volby a jezdce platí pro označené monitory. Označení se pamatuje zvlášť "
+    L"pro EXE a SCR. Pokud byly označené všechny monitory, označí se i nově připojené.\r\n\r\nZapnout "
+    L"náhled spustí celoobrazovkový náhled na všech monitorech; změny lze zkoušet za otevřeného nastavení. "
+    L"OK nastavení uloží, Storno je zahodí. Celoobrazovkový spořič ukončíte klávesou Esc nebo pohybem myši. "
+    L"Mezi ovládacími prvky přecházejte klávesami Tab a Shift+Tab; podtržené volby lze vyvolat pomocí Alt a "
+    L"příslušného písmene. Esc v nastavení odpovídá tlačítku Storno; v nápovědě nebo okně O aplikaci zavře "
+    L"pouze toto okno.\r\n\r\nPodporovány jsou systémy Windows 7 až Windows 11. Pro spuštění aplikace ve "
+    L"Windows Vista SP2 je nutné nainstalovat aktualizace KB971512 a KB2117917.",
+    L"SpaceFlight: Infinite undulating surface; Long-distance flight — morphing surface. Assign exactly one "
+    L"animation to each display. Texture switches between textured surfaces and wireframe. Camera tumbling "
+    L"slowly changes the viewing direction in all three dimensions. Stops and reversals adds randomized "
+    L"braking, pauses, and reversals of the rotation; forward flight continues. Animation speed ranges from "
+    L"0–1600%. Every display has an independent randomized scene rendered at its own refresh "
+    L"rate.\r\n\r\nRow selection determines which displays you are editing; it is separate from the "
+    L"checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the "
+    L"selection. All animation options and sliders apply to the selected displays. The selection is "
+    L"remembered separately for EXE and SCR. If all displays were selected, newly connected displays join "
+    L"the selection.\r\n\r\nEnable preview starts a full-screen preview on every display while the settings "
+    L"dialog remains open for live adjustments. OK saves the settings and Cancel discards them. Exit the "
+    L"full-screen saver with Esc or mouse movement. Use Tab and Shift+Tab to move between controls; use Alt "
+    L"and the underlined letter to activate a command. Esc in the settings dialog is equivalent to Cancel; "
+    L"in Help or About, it closes only that window.\r\n\r\nWindows 7 through Windows 11 are supported. To "
+    L"run the application on Windows Vista SP2, you must install updates KB971512 and KB2117917.",
+    L"SpaceFlight: Infinite undulating surface; Long-distance flight — morphing surface. Assign exactly one "
+    L"animation to each display. Texture switches between textured surfaces and wireframe. Camera tumbling "
+    L"slowly changes the viewing direction in all three dimensions. Stops and reversals adds randomised "
+    L"braking, pauses and reversals of the rotation; forward flight continues. Animation speed ranges from "
+    L"0–1600%. Every display has an independent randomised scene rendered at its own refresh "
+    L"rate.\r\n\r\nRow selection determines which displays you are editing; it is separate from the "
+    L"checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the "
+    L"selection. All animation options and sliders apply to the selected displays. The selection is "
+    L"remembered separately for EXE and SCR. If all displays were selected, newly connected displays join "
+    L"the selection.\r\n\r\nEnable preview starts a full-screen preview on every display and allows live "
+    L"adjustments while the settings dialog remains open. OK saves the settings and Cancel discards them. "
+    L"Exit the full-screen screen saver with Esc or mouse movement. Use Tab and Shift+Tab to move between "
+    L"controls; use Alt and the underlined letter to activate a command. Esc in the settings dialog is "
+    L"equivalent to Cancel; in Help or About, it closes only that window.\r\n\r\nWindows 7 through Windows "
+    L"11 are supported. To run the application on Windows Vista SP2, you must install updates KB971512 and "
+    L"KB2117917.",
+    L"SpaceFlight: Infinite undulating surface; Long-distance flight — morphing surface. Assign exactly one "
+    L"animation to each display. Texture switches between textured surfaces and wireframe. Camera tumbling "
+    L"slowly changes the viewing direction in all three dimensions. Stops and reversals adds randomised "
+    L"braking, pauses and reversals of the rotation; forward flight continues. Animation speed ranges from "
+    L"0–1600%. Every display has an independent randomised scene rendered at its own refresh "
+    L"rate.\r\n\r\nRow selection determines which displays you are editing; it is separate from the "
+    L"checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the "
+    L"selection. All animation options and sliders apply to the selected displays. The selection is "
+    L"remembered separately for EXE and SCR. If all displays were selected, newly connected displays join "
+    L"the selection.\r\n\r\nEnable preview starts a full-screen preview on every display and allows live "
+    L"adjustments while the settings dialog remains open. OK saves the settings and Cancel discards them. "
+    L"Exit the full-screen screen saver with Esc or mouse movement. Use Tab and Shift+Tab to move between "
+    L"controls; use Alt and the underlined letter to activate a command. Esc in the settings dialog is "
+    L"equivalent to Cancel; in Help or About, it closes only that window.\r\n\r\nWindows 7 through Windows "
+    L"11 are supported. To run the application on Windows Vista SP2, you must install updates KB971512 and "
+    L"KB2117917.",
+    L"SpaceFlight: Unendliche wellenförmige Fläche; Fernflug — veränderliche Fläche. Weisen Sie jedem "
+    L"Monitor genau eine Animation zu. Textur wechselt zwischen texturierten Flächen und Drahtgittermodell. "
+    L"Die taumelnde Kamera verändert die Blickrichtung langsam in allen drei Dimensionen. Stopps und "
+    L"Richtungswechsel ergänzt zufälliges Abbremsen, Pausen und Wechsel der Drehrichtung; der Vorwärtsflug "
+    L"läuft weiter. Die Animationsgeschwindigkeit beträgt 0–1600 %. Jeder Monitor besitzt eine unabhängige "
+    L"zufällige Szene und wird mit seiner eigenen Bildwiederholrate angesteuert.\r\n\r\nDie Zeilenauswahl "
+    L"bestimmt, welche Monitore Sie bearbeiten; sie ist von den Kontrollkästchen zum Einschalten der "
+    L"Animationsausgabe getrennt. Strg+A wählt alle Monitore, Strg und Umschalt ändern die Auswahl. Alle "
+    L"Animationsoptionen und Regler gelten für die ausgewählten Monitore. Die Auswahl wird für EXE und SCR "
+    L"getrennt gespeichert. Waren alle Monitore ausgewählt, werden auch neu angeschlossene "
+    L"ausgewählt.\r\n\r\nVorschau einschalten startet eine Vollbildvorschau auf allen Monitoren. Der "
+    L"Einstellungsdialog bleibt für Änderungen geöffnet. OK speichert, Abbrechen verwirft. Esc oder eine "
+    L"Mausbewegung beendet den Vollbildschoner. Mit Tab und Umschalt+Tab wechseln Sie zwischen den "
+    L"Steuerelementen; mit Alt und dem unterstrichenen Buchstaben rufen Sie einen Befehl auf. Esc im "
+    L"Einstellungsdialog entspricht Abbrechen; in der Hilfe oder im Infofenster schließt es nur dieses "
+    L"Fenster.\r\n\r\nUnterstützt werden Windows 7 bis Windows 11. Zum Ausführen der Anwendung unter "
+    L"Windows Vista SP2 müssen die Updates KB971512 und KB2117917 installiert werden.",
+    L"SpaceFlight: Surface ondulante infinie; Vol longue distance — surface déformable. Attribuez une seule "
+    L"animation à chaque écran. Texture alterne entre surfaces texturées et modèle filaire. La rotation "
+    L"libre de la caméra change lentement la direction du regard dans les trois dimensions. Arrêts et "
+    L"changements de sens ajoute des ralentissements, pauses et inversions aléatoires de la rotation ; le "
+    L"vol vers l’avant continue. La vitesse va de 0 à 1600 %. Chaque écran possède une scène aléatoire "
+    L"indépendante, rendue à sa propre fréquence de rafraîchissement.\r\n\r\nLa sélection des lignes "
+    L"détermine les écrans à configurer ; elle est distincte des cases qui activent les sorties "
+    L"d’animation. Ctrl+A sélectionne tous les écrans ; Ctrl et Maj modifient la sélection. Toutes les "
+    L"options et tous les curseurs d’animation concernent les écrans sélectionnés. La sélection est "
+    L"mémorisée séparément pour EXE et SCR. Si tous les écrans étaient sélectionnés, les nouveaux le sont "
+    L"également.\r\n\r\nActiver l’aperçu lance un aperçu plein écran sur tous les moniteurs ; la boîte de "
+    L"dialogue reste ouverte pour les réglages en direct. OK enregistre les réglages, Annuler les "
     L"abandonne. Échap ou un mouvement de souris quitte le plein écran. Utilisez Tab et Maj+Tab pour passer "
     L"d’un contrôle à l’autre ; Alt et la lettre soulignée activent une commande. Échap dans les réglages "
     L"équivaut à Annuler ; dans l’aide ou À propos, cette touche ferme uniquement cette "
     L"fenêtre.\r\n\r\nWindows 7 à Windows 11 sont pris en charge. Pour exécuter l’application sous Windows "
     L"Vista SP2, il est nécessaire d’installer les mises à jour KB971512 et KB2117917.",
-    L"SpaceFlight ofrece „Superficie ondulante infinita“ y „Vuelo de larga distancia — superficie "
-    L"deformable“. Asigne exactamente un vuelo a cada monitor: seleccione su fila y el botón de opción "
-    L"correspondiente. La primera animación está seleccionada de forma predeterminada en todos los "
-    L"monitores. La textura está activada de forma predeterminada; desmarque Textura para mostrar los "
-    L"monitores seleccionados en modo de alambre. Si selecciona varias filas, la opción se aplica a "
-    L"todos esos monitores. El deslizador ajusta la velocidad de animación entre 0 y 1600 %. En el "
-    L"inicio predeterminado, EXE activa solo el monitor de animación principal; el protector activa "
-    L"todos los monitores. Cada monitor se dibuja a su propia frecuencia de actualización. Los ajustes "
-    L"se guardan por separado para la aplicación y el protector de pantalla. Giro libre de la cámara "
-    L"activa una rotación suave de la vista en todas las direcciones en los monitores seleccionados; está "
-    L"desactivado de forma predeterminada. Paradas y cambios de sentido frena gradualmente el giro de la "
-    L"cámara a intervalos aleatorios, lo detiene brevemente y lo reanuda en sentido contrario. La opción "
-    L"está disponible con el giro libre de la cámara activado y está desactivada por defecto; el vuelo "
-    L"continúa.\r\n\r\nActivar vista previa inicia una vista previa a pantalla completa en todos los "
-    L"monitores; el cuadro de configuración permanece abierto para realizar ajustes en tiempo real. Aceptar "
-    L"guarda y Cancelar descarta. Esc o mover el ratón cierra el salvapantallas completo. Use Tab y "
+    L"SpaceFlight: Superficie ondulante infinita; Vuelo de larga distancia — superficie deformable. Asigne "
+    L"una sola animación a cada pantalla. Textura alterna entre superficies texturizadas y modelo de "
+    L"alambre. El giro libre de la cámara cambia lentamente la dirección de la vista en las tres "
+    L"dimensiones. Paradas y cambios de sentido añade frenadas, pausas e inversiones aleatorias del giro; "
+    L"el vuelo hacia delante continúa. La velocidad va del 0 al 1600 %. Cada pantalla tiene una escena "
+    L"aleatoria independiente y se renderiza a su propia frecuencia de actualización.\r\n\r\nLa selección "
+    L"de filas determina qué pantallas se están configurando; es independiente de las casillas que activan "
+    L"las salidas de animación. Ctrl+A selecciona todas; Ctrl y Mayús modifican la selección. Todas las "
+    L"opciones y los controles deslizantes de animación se aplican a las pantallas seleccionadas. La "
+    L"selección se recuerda por separado para EXE y SCR. Si estaban seleccionadas todas, se incluyen "
+    L"también las nuevas.\r\n\r\nActivar vista previa inicia una vista previa a pantalla completa en todos "
+    L"los monitores; el cuadro de configuración permanece abierto para realizar ajustes en tiempo real. "
+    L"Aceptar guarda y Cancelar descarta. Esc o mover el ratón cierra el salvapantallas completo. Use Tab y "
     L"Mayús+Tab para desplazarse entre controles; Alt y la letra subrayada activan una opción. Esc en la "
     L"configuración equivale a Cancelar; en Ayuda o Acerca de, cierra únicamente esa ventana.\r\n\r\nSe "
     L"admiten Windows 7 a Windows 11. Para ejecutar la aplicación en Windows Vista SP2, es necesario "
     L"instalar las actualizaciones KB971512 y KB2117917.",
-    L"SpaceFlight offre „Superficie ondulante infinita“ e „Volo a lunga distanza — superficie "
-    L"deformabile“. Assegnare un solo volo a ogni monitor: selezionare la sua riga e il pulsante di "
-    L"opzione corrispondente. La prima animazione è selezionata per impostazione predefinita su tutti "
-    L"i monitor. La texture è attiva per impostazione predefinita; deselezionare Texture per mostrare "
-    L"i monitor selezionati a reticolo. Se sono selezionate più righe, la scelta vale per tutti quei "
-    L"monitor. Il cursore imposta la velocità dell’animazione da 0 a 1600 %. All’avvio predefinito, EXE "
-    L"attiva solo il monitor di animazione principale, mentre il salvaschermo attiva tutti i monitor. "
-    L"Ogni monitor viene disegnato alla propria frequenza di aggiornamento. Le impostazioni sono salvate "
-    L"separatamente per l’applicazione e il salvaschermo. Rotazione libera della telecamera attiva "
-    L"una rotazione fluida della vista in tutte le direzioni sui monitor selezionati; è disattivata "
-    L"per impostazione predefinita. Arresti e inversioni rallenta gradualmente la rotazione della "
-    L"telecamera a intervalli casuali, la ferma brevemente e la riavvia in senso opposto. L’opzione "
-    L"è disponibile con la rotazione libera attiva ed è disattivata per impostazione predefinita; il "
-    L"volo continua.\r\n\r\nAttiva anteprima avvia un’anteprima a schermo intero su tutti i monitor; le "
+    L"SpaceFlight: Superficie ondulante infinita; Volo a lunga distanza — superficie deformabile. Assegnare "
+    L"una sola animazione a ogni schermo. Texture alterna superfici con texture e modello a reticolo. La "
+    L"rotazione libera della telecamera cambia lentamente la direzione dello sguardo nelle tre dimensioni. "
+    L"Arresti e inversioni aggiunge rallentamenti, pause e inversioni casuali della rotazione; il volo in "
+    L"avanti continua. La velocità va da 0 a 1600%. Ogni schermo ha una scena casuale indipendente, "
+    L"renderizzata alla propria frequenza di aggiornamento.\r\n\r\nLa selezione delle righe determina quali "
+    L"schermi si stanno configurando ed è distinta dalle caselle che attivano le uscite di animazione. "
+    L"Ctrl+A seleziona tutti gli schermi; Ctrl e Maiusc modificano la selezione. Tutte le opzioni e i "
+    L"cursori dell’animazione riguardano gli schermi selezionati. La selezione viene memorizzata "
+    L"separatamente per EXE e SCR. Se erano selezionati tutti gli schermi, vengono inclusi anche quelli "
+    L"nuovi.\r\n\r\nAttiva anteprima avvia un’anteprima a schermo intero su tutti i monitor; le "
     L"impostazioni rimangono aperte per le modifiche in tempo reale. OK salva e Annulla scarta. Esc o il "
     L"movimento del mouse chiude il salvaschermo a schermo intero. Usare Tab e Maiusc+Tab per passare tra i "
     L"controlli; Alt e la lettera sottolineata attivano un comando. Esc nelle impostazioni equivale ad "
     L"Annulla; nella Guida o nelle Informazioni, chiude solo quella finestra.\r\n\r\nSono supportati i "
     L"sistemi da Windows 7 a Windows 11. Per eseguire l’applicazione su Windows Vista SP2, è necessario "
     L"installare gli aggiornamenti KB971512 e KB2117917.",
-    L"O SpaceFlight oferece „Superfície ondulante infinita“ e „Voo de longa distância — superfície "
-    L"deformável“. Atribua um único voo a cada monitor: selecione a respetiva linha e o botão de "
-    L"opção correspondente. Por predefinição, a primeira animação está selecionada em todos os "
-    L"monitores. A textura está ativa por predefinição; desmarque Textura para mostrar os monitores "
-    L"selecionados em modelo de arame. Com várias linhas selecionadas, a escolha aplica-se a todos "
-    L"esses monitores. O controlo deslizante define a velocidade da animação entre 0 e 1600 %. No "
-    L"arranque predefinido, EXE ativa apenas o monitor de animação principal, enquanto a proteção de "
-    L"ecrã ativa todos os monitores. Cada monitor é desenhado à sua própria frequência de atualização. "
-    L"As definições são guardadas separadamente para a aplicação e a proteção de ecrã. Rotação livre "
-    L"da câmara ativa uma rotação suave da vista em todas as direções nos monitores selecionados; está "
-    L"desativada por predefinição. Paragens e inversões de sentido abranda gradualmente a rotação da "
-    L"câmara em intervalos aleatórios, interrompe-a brevemente e retoma-a no sentido oposto. A opção "
-    L"está disponível com a rotação livre da câmara ativa e está desativada por predefinição; o voo "
-    L"continua.\r\n\r\nAtivar pré-visualização inicia uma pré-visualização em ecrã inteiro em todos os "
-    L"monitores e permite ajustes em tempo real. OK guarda as definições e Cancelar descarta-as. Esc ou o "
-    L"movimento do rato termina a proteção em ecrã inteiro. Use Tab e Shift+Tab para passar entre "
-    L"controlos; Alt e a letra sublinhada ativam um comando. Esc nas definições equivale a Cancelar; na "
-    L"Ajuda ou em Acerca de, fecha apenas essa janela.\r\n\r\nSão suportados os sistemas Windows 7 a "
-    L"Windows 11. Para executar a aplicação no Windows Vista SP2, é necessário instalar as atualizações "
-    L"KB971512 e KB2117917.",
-    L"SpaceFlight oferuje „Nieskończona falująca powierzchnia“ i „Lot dalekodystansowy — zmienna "
-    L"powierzchnia“. Każdemu monitorowi przypisz dokładnie jeden przelot: zaznacz jego wiersz i "
-    L"odpowiedni przycisk opcji. Domyślnie na wszystkich monitorach wybrana jest pierwsza animacja. "
-    L"Tekstura jest domyślnie włączona; wyłącz Tekstura, aby wybrane monitory wyświetlały model "
-    L"siatkowy. Przy zaznaczeniu kilku wierszy wybór dotyczy wszystkich tych monitorów. Suwak ustawia "
-    L"prędkość animacji w zakresie 0–1600 %. Przy domyślnym uruchomieniu EXE włącza tylko główny "
-    L"monitor animacji, a wygaszacz wszystkie monitory. Każdy monitor jest renderowany z własną "
-    L"częstotliwością odświeżania. Ustawienia są zapisywane osobno dla aplikacji i wygaszacza ekranu. "
-    L"Swobodne obracanie kamery włącza płynne obracanie widoku we wszystkich kierunkach na zaznaczonych "
-    L"monitorach; domyślnie jest wyłączone. Zatrzymania i zmiany kierunku stopniowo wyhamowuje obrót "
-    L"kamery w losowych odstępach, na krótko go zatrzymuje, a następnie wznawia w przeciwnym kierunku. "
-    L"Opcja jest dostępna przy włączonym swobodnym obracaniu kamery i domyślnie jest wyłączona; lot "
-    L"trwa nadal.\r\n\r\nWłącz podgląd uruchamia podgląd pełnoekranowy na wszystkich monitorach. Okno "
-    L"ustawień pozostaje otwarte, umożliwiając zmiany na bieżąco. OK zapisuje ustawienia, a Anuluj je "
-    L"odrzuca. Esc lub ruch myszy kończy tryb pełnoekranowy. Klawisze Tab i Shift+Tab przełączają między "
-    L"kontrolkami; Alt i podkreślona litera wywołują polecenie. Esc w ustawieniach odpowiada przyciskowi "
-    L"Anuluj; w Pomocy lub O programie zamyka tylko to okno.\r\n\r\nObsługiwane są systemy od Windows 7 do "
-    L"Windows 11. Do uruchomienia aplikacji w systemie Windows Vista SP2 konieczne jest zainstalowanie "
-    L"aktualizacji KB971512 i KB2117917.",
-    L"SpaceFlight ponúka „Nekonečná vlniaca sa plocha“ a „Diaľkový let — premenlivá plocha“. Každému "
-    L"monitoru priradíte práve jeden prelet: označte jeho riadok v zozname a zvoľte príslušný "
-    L"prepínač. V predvolenom stave je na všetkých monitoroch zvolená prvá animácia. Predvolené je "
-    L"zobrazenie s textúrou; zrušením voľby Textúra prepnete vybrané monitory na drôtový model. Pri "
-    L"označení viacerých riadkov sa voľba použije pre všetky označené monitory. Jazdec nastavuje "
-    L"rýchlosť animácie v rozsahu 0–1600 %. EXE predvoleným spustením zapne iba primárny animačný "
-    L"monitor, šetrič všetky monitory. Každý monitor sa vykresľuje podľa vlastnej obnovovacej "
-    L"frekvencie. Nastavenia sa ukladajú zvlášť pre aplikáciu a šetrič obrazovky. Voľba Prevaľovanie "
-    L"kamery zapne na označených monitoroch plynulé otáčanie pohľadu do všetkých smerov; predvolene "
-    L"je vypnutá. Voľba Zastavovanie a zmeny smeru pridá v náhodných intervaloch plynulé brzdenie "
-    L"prevaľovania kamery, krátke zastavenie a rozbeh opačným smerom. Je dostupná pri zapnutom "
-    L"prevaľovaní a predvolene je vypnutá; samotný prelet pokračuje.\r\n\r\nZapnúť náhľad spustí "
-    L"celoobrazovkový náhľad na všetkých monitoroch; nastavenia zostávajú otvorené a zmeny sa prejavia "
-    L"ihneď. OK uloží nastavenia a Zrušiť ich zahodí. Celoobrazovkový šetrič ukončí Esc alebo pohyb myši. "
-    L"Medzi ovládacími prvkami prechádzajte klávesmi Tab a Shift+Tab; podčiarknuté voľby vyvoláte pomocou "
-    L"Alt a príslušného písmena. Esc v nastaveniach zodpovedá tlačidlu Zrušiť; v Pomocníkovi alebo okne O "
-    L"aplikácii zavrie iba toto okno.\r\n\r\nPodporované sú systémy Windows 7 až Windows 11. Na spustenie "
-    L"aplikácie v systéme Windows Vista SP2 je potrebné nainštalovať aktualizácie KB971512 a KB2117917.",
-    L"SpaceFlight tilbyder „Uendelig bølgende flade“ og „Langdistanceflyvetur — formskiftende flade“. "
-    L"Tildel præcis én flyvetur til hver skærm: vælg dens række og den tilsvarende alternativknap. "
-    L"Den første animation er valgt på alle skærme som standard. Tekstur er slået til som standard; "
-    L"fjern markeringen ved Tekstur for at vise de valgte skærme som trådmodeller. Når flere rækker "
-    L"er valgt, gælder valget alle disse skærme. Skyderen indstiller animationshastigheden fra 0 til "
-    L"1600 %. Ved standardstart aktiverer EXE kun den primære animationsskærm, mens pauseskærmen "
-    L"aktiverer alle skærme. Hver skærm gengives med sin egen opdateringsfrekvens. Indstillingerne "
-    L"gemmes separat for programmet og pauseskærmen. Frit roterende kamera giver jævn rotation af "
-    L"visningen i alle retninger på de valgte skærme; indstillingen er som standard slået fra. Stop "
-    L"og retningsskift bremser kamerarotationen jævnt med tilfældige mellemrum, stopper den kort og "
-    L"starter den igen i modsat retning. Valget er tilgængeligt, når frit roterende kamera er aktiveret, "
-    L"og er slået fra som standard; flyvningen fortsætter.\r\n\r\nAktivér forhåndsvisning starter en "
-    L"fuldskærmsvisning på alle skærme. Indstillingerne forbliver åbne, og ændringerne vises med det samme. "
-    L"OK gemmer indstillingerne, og Annuller forkaster ændringerne. Esc eller musebevægelse afslutter "
-    L"fuldskærmen. Brug Tab og Skift+Tab til at flytte mellem kontrollerne; Alt og det understregede "
-    L"bogstav aktiverer en kommando. Esc i indstillingerne svarer til Annuller; i Hjælp eller Om lukker det "
-    L"kun dette vindue.\r\n\r\nWindows 7 til Windows 11 understøttes. For at køre programmet på Windows "
-    L"Vista SP2 skal opdateringerne KB971512 og KB2117917 installeres.",
-    L"SpaceFlight tarjoaa „Ääretön aaltoileva pinta“ ja „Pitkän matkan lento — muuntuva pinta“ -animaatiot. "
-    L"Määritä kullekin näytölle täsmälleen yksi lento: valitse näytön rivi ja vastaava valintanappi. "
-    L"Ensimmäinen animaatio on oletusarvoisesti valittuna kaikilla näytöillä. Tekstuuri on oletusarvoisesti "
-    L"käytössä; poista Tekstuuri-valinta, jos haluat näyttää valitut näytöt rautalankamallina. Jos valitset "
-    L"useita rivejä, valinta koskee kaikkia näitä näyttöjä. Liukusäädin asettaa animaation nopeuden "
-    L"välille 0–1600 %. Oletuskäynnistyksessä EXE ottaa käyttöön vain ensisijaisen animaationäytön, "
-    L"näytönsäästäjä kaikki näytöt. Jokainen näyttö piirretään omalla virkistystaajuudellaan. Asetukset "
-    L"tallennetaan erikseen sovellukselle ja näytönsäästäjälle. Kameran vapaa pyörintä kääntää näkymää "
-    L"pehmeästi kaikkiin suuntiin valituilla näytöillä; toiminto on oletusarvoisesti pois käytöstä. "
-    L"Pysähdykset ja suunnanvaihdot hidastaa kameran pyörintää tasaisesti satunnaisin väliajoin, "
-    L"pysäyttää sen hetkeksi ja käynnistää sen vastakkaiseen suuntaan. Valinta on käytettävissä kameran "
-    L"vapaan pyörinnän ollessa käytössä ja on oletuksena pois käytöstä; lento jatkuu.\r\n\r\nOta "
-    L"esikatselu käyttöön käynnistää koko näytön esikatselun kaikilla näytöillä. Asetusikkuna pysyy "
-    L"avoinna, ja muutokset näkyvät heti. OK tallentaa asetukset ja Peruuta hylkää muutokset. Esc tai "
-    L"hiiren liike lopettaa koko näytön säästäjän. Siirry säätimien välillä Tab- ja Vaihto+Tab-näppäimillä; "
-    L"Alt ja alleviivattu kirjain aktivoivat komennon. Esc asetuksissa vastaa Peruuta-painiketta; Ohje- tai "
-    L"Tietoja-ikkunassa se sulkee vain kyseisen ikkunan.\r\n\r\nTuettuja käyttöjärjestelmiä ovat Windows "
-    L"7–Windows 11. Sovelluksen suorittaminen Windows Vista SP2:ssa edellyttää päivitysten KB971512 ja "
-    L"KB2117917 asentamista.",
-    L"SpaceFlight býður upp á „Óendanleg bylgjandi flötur“ og „Langflug — breytilegur flötur“. Veldu "
-    L"nákvæmlega eitt flug fyrir hvern skjá: veldu röð skjásins og viðeigandi valhnapp. Fyrsta "
-    L"hreyfimyndin er sjálfgefið valin á öllum skjám. Áferð er sjálfgefið virk; taktu hakið úr Áferð "
-    L"til að sýna valda skjái sem víralíkön. Þegar margar raðir eru valdar gildir valið fyrir alla "
-    L"þá skjái. Sleðinn stillir hraða hreyfimyndarinnar frá 0 til 1600 %. Við sjálfgefna ræsingu "
-    L"virkjar EXE aðeins aðalhreyfimyndaskjáinn en skjávarinn alla skjái. Hver skjár er teiknaður á "
-    L"sínum eigin endurnýjunarhraða. Stillingar eru vistaðar sérstaklega fyrir forritið og skjávarann. "
-    L"Frjáls snúningur myndavélar snýr sjónarhorninu mjúklega í allar áttir á völdum skjám; sjálfgefið "
-    L"er slökkt á þessum valkosti. Stopp og stefnuskipti hægir mjúklega á snúningi myndavélarinnar "
-    L"með slembnu millibili, stöðvar hann stuttlega og byrjar aftur í gagnstæða átt. Valkosturinn er "
-    L"tiltækur þegar frjáls snúningur myndavélar er virkur og er sjálfgefið óvirkur; flugið heldur "
-    L"áfram.\r\n\r\nVirkja forskoðun ræsir forskoðun á öllum skjám. Stillingaglugginn helst opinn "
-    L"og breytingar sjást strax. Í lagi vistar stillingar og Hætta við hafnar breytingum. Esc eða "
-    L"músarhreyfing lokar skjáhvílu á öllum skjánum. Notaðu Tab og Shift+Tab til að færa þig milli "
-    L"stýrieininga; Alt og undirstrikaður stafur virkja skipun. Esc í stillingum jafngildir Hætta við; í "
-    L"Hjálp eða Um lokar það aðeins þeim glugga.\r\n\r\nWindows 7 til Windows 11 eru studd. Til að keyra "
-    L"forritið á Windows Vista SP2 þarf að setja upp uppfærslurnar KB971512 og KB2117917.",
-    L"SpaceFlight tilbyr „Uendelig bølgende flate“ og „Langdistanseflytur — formendrende flate“. "
-    L"Tilordne nøyaktig én flytur til hver skjerm: velg raden og den tilsvarende alternativknappen. "
-    L"Den første animasjonen er valgt på alle skjermer som standard. Tekstur er aktivert som standard; "
-    L"fjern avmerkingen for Tekstur for å vise de valgte skjermene som trådmodeller. Når flere rader er "
-    L"valgt, gjelder valget alle disse skjermene. Glidebryteren angir animasjonshastigheten fra 0 til "
-    L"1600 %. Ved standard oppstart aktiverer EXE bare den primære animasjonsskjermen; skjermspareren "
-    L"aktiverer alle skjermene. Hver skjerm gjengis med sin egen oppdateringsfrekvens. Innstillingene "
-    L"lagres separat for programmet og skjermspareren. Fritt roterende kamera gir jevn rotasjon av "
-    L"visningen i alle retninger på de valgte skjermene; alternativet er av som standard. Stopp og "
-    L"retningsendringer bremser kamerarotasjonen gradvis med tilfeldige mellomrom, stopper den kort "
-    L"og starter den igjen i motsatt retning. Valget er tilgjengelig når fritt roterende kamera er "
-    L"aktivert, og er av som standard; flygingen fortsetter.\r\n\r\nSlå på forhåndsvisning starter en "
-    L"fullskjermsvisning på alle skjermer. Innstillingene forblir åpne, og endringene vises fortløpende. OK "
-    L"lagrer innstillingene og Avbryt forkaster dem. Esc eller musebevegelse avslutter "
-    L"fullskjermsvisningen. Bruk Tab og Shift+Tab for å flytte mellom kontrollene; Alt og den understrekede "
-    L"bokstaven aktiverer en kommando. Esc i innstillingene tilsvarer Avbryt; i Hjelp eller Om lukker det "
-    L"bare dette vinduet.\r\n\r\nWindows 7 til Windows 11 støttes. For å kjøre programmet på Windows Vista "
-    L"SP2 må oppdateringene KB971512 og KB2117917 installeres.",
-    L"SpaceFlight erbjuder „Oändlig böljande yta“ och „Långdistansflygtur — formföränderlig yta“. Tilldela "
-    L"exakt en flygtur till varje bildskärm: välj dess rad och motsvarande alternativknapp. Den första "
-    L"animationen är vald på alla bildskärmar som standard. Textur är aktiverad som standard; avmarkera "
-    L"Textur för att visa de valda bildskärmarna som trådmodeller. När flera rader är markerade gäller "
-    L"valet alla dessa bildskärmar. Reglaget ställer in animationshastigheten från 0 till 1600 %. Vid "
-    L"standardstart aktiverar EXE endast den primära animationsskärmen, medan skärmsläckaren aktiverar "
-    L"alla bildskärmar. Varje bildskärm återges med sin egen uppdateringsfrekvens. Inställningarna "
-    L"sparas separat för programmet och skärmsläckaren. Fritt roterande kamera ger mjuk rotation "
-    L"av vyn i alla riktningar på de markerade skärmarna; alternativet är av som standard. Stopp "
-    L"och riktningsbyten bromsar kamerarotationen mjukt med slumpmässiga mellanrum, stoppar den "
-    L"kort och startar den igen åt motsatt håll. Alternativet är tillgängligt när fritt roterande "
-    L"kamera är aktiverat och är avstängt som standard; flygningen fortsätter.\r\n\r\nAktivera "
+    L"SpaceFlight: Superfície ondulante infinita; Voo de longa distância — superfície deformável. Atribua "
+    L"uma única animação a cada ecrã. Textura alterna entre superfícies texturadas e modelo em arame. A "
+    L"rotação livre da câmara muda lentamente a direção da vista nas três dimensões. Paragens e inversões "
+    L"de sentido acrescenta desacelerações, pausas e inversões aleatórias da rotação; o voo para a frente "
+    L"continua. A velocidade vai de 0 a 1600%. Cada ecrã tem uma cena aleatória independente, apresentada à "
+    L"sua própria frequência de atualização.\r\n\r\nA seleção das linhas determina os ecrãs a configurar e "
+    L"é independente das caixas que ativam as saídas de animação. Ctrl+A seleciona todos os ecrãs; Ctrl e "
+    L"Shift alteram a seleção. Todas as opções e controlos deslizantes da animação aplicam-se aos ecrãs "
+    L"selecionados. A seleção é guardada separadamente para EXE e SCR. Se todos estavam selecionados, os "
+    L"novos ecrãs também são incluídos.\r\n\r\nAtivar pré-visualização inicia uma pré-visualização em ecrã "
+    L"inteiro em todos os monitores e permite ajustes em tempo real. OK guarda as definições e Cancelar "
+    L"descarta-as. Esc ou o movimento do rato termina a proteção em ecrã inteiro. Use Tab e Shift+Tab para "
+    L"passar entre controlos; Alt e a letra sublinhada ativam um comando. Esc nas definições equivale a "
+    L"Cancelar; na Ajuda ou em Acerca de, fecha apenas essa janela.\r\n\r\nSão suportados os sistemas "
+    L"Windows 7 a Windows 11. Para executar a aplicação no Windows Vista SP2, é necessário instalar as "
+    L"atualizações KB971512 e KB2117917.",
+    L"SpaceFlight: Nieskończona falująca powierzchnia; Lot dalekodystansowy — zmienna powierzchnia. Każdemu "
+    L"monitorowi przypisz dokładnie jedną animację. Tekstura przełącza powierzchnie z teksturą i model "
+    L"szkieletowy. Swobodne obracanie kamery powoli zmienia kierunek widoku we wszystkich trzech wymiarach. "
+    L"Zatrzymania i zmiany kierunku dodają losowe zwalnianie, pauzy i odwracanie obrotu; lot do przodu trwa "
+    L"nadal. Prędkość wynosi 0–1600%. Każdy monitor ma niezależną losową scenę wyświetlaną z własną "
+    L"częstotliwością odświeżania.\r\n\r\nZaznaczenie wierszy określa konfigurowane monitory i jest "
+    L"niezależne od pól wyboru włączających wyjścia animacji. Ctrl+A zaznacza wszystkie monitory; Ctrl i "
+    L"Shift zmieniają zaznaczenie. Wszystkie opcje i suwaki animacji dotyczą zaznaczonych monitorów. "
+    L"Zaznaczenie jest zapamiętywane osobno dla EXE i SCR. Jeśli zaznaczone były wszystkie monitory, nowe "
+    L"również zostaną zaznaczone.\r\n\r\nWłącz podgląd uruchamia podgląd pełnoekranowy na wszystkich "
+    L"monitorach. Okno ustawień pozostaje otwarte, umożliwiając zmiany na bieżąco. OK zapisuje ustawienia, "
+    L"a Anuluj je odrzuca. Esc lub ruch myszy kończy tryb pełnoekranowy. Klawisze Tab i Shift+Tab "
+    L"przełączają między kontrolkami; Alt i podkreślona litera wywołują polecenie. Esc w ustawieniach "
+    L"odpowiada przyciskowi Anuluj; w Pomocy lub O programie zamyka tylko to okno.\r\n\r\nObsługiwane są "
+    L"systemy od Windows 7 do Windows 11. Do uruchomienia aplikacji w systemie Windows Vista SP2 konieczne "
+    L"jest zainstalowanie aktualizacji KB971512 i KB2117917.",
+    L"SpaceFlight: Nekonečná vlniaca sa plocha; Diaľkový let — premenlivá plocha. Každému monitoru priraďte "
+    L"práve jednu animáciu. Textúra prepína medzi textúrovanými plochami a drôteným modelom. Prevaľovanie "
+    L"kamery pomaly mení smer pohľadu vo všetkých troch rozmeroch. Zastavovanie a zmeny smeru pridáva "
+    L"náhodné spomaľovanie, prestávky a zmeny smeru otáčania; dopredný pohyb pokračuje. Rýchlosť je 0–1600 "
+    L"%. Každý monitor má nezávislú náhodnú scénu vykresľovanú podľa vlastnej obnovovacej "
+    L"frekvencie.\r\n\r\nOznačenie riadkov určuje, ktoré monitory práve nastavujete; je nezávislé od "
+    L"políčok zapínajúcich animačné výstupy. Ctrl+A označí všetky monitory, Ctrl a Shift upravujú "
+    L"označenie. Všetky animačné voľby a posuvníky platia pre označené monitory. Označenie sa pamätá zvlášť "
+    L"pre EXE a SCR. Ak boli označené všetky monitory, označia sa aj novopripojené.\r\n\r\nZapnúť náhľad "
+    L"spustí celoobrazovkový náhľad na všetkých monitoroch; nastavenia zostávajú otvorené a zmeny sa "
+    L"prejavia ihneď. OK uloží nastavenia a Zrušiť ich zahodí. Celoobrazovkový šetrič ukončí Esc alebo "
+    L"pohyb myši. Medzi ovládacími prvkami prechádzajte klávesmi Tab a Shift+Tab; podčiarknuté voľby "
+    L"vyvoláte pomocou Alt a príslušného písmena. Esc v nastaveniach zodpovedá tlačidlu Zrušiť; v "
+    L"Pomocníkovi alebo okne O aplikácii zavrie iba toto okno.\r\n\r\nPodporované sú systémy Windows 7 až "
+    L"Windows 11. Na spustenie aplikácie v systéme Windows Vista SP2 je potrebné nainštalovať aktualizácie "
+    L"KB971512 a KB2117917.",
+    L"SpaceFlight: Uendelig bølgende flade; Langdistanceflyvetur — formskiftende flade. Tildel præcis én "
+    L"animation til hver skærm. Tekstur skifter mellem teksturerede flader og trådmodel. Frit roterende "
+    L"kamera ændrer langsomt synsretningen i alle tre dimensioner. Stop og retningsskift tilføjer "
+    L"tilfældige opbremsninger, pauser og ændringer af rotationsretningen; flyvningen fremad fortsætter. "
+    L"Hastigheden er 0–1600 %. Hver skærm har en uafhængig tilfældig scene, der gengives med dens egen "
+    L"opdateringsfrekvens.\r\n\r\nMarkeringen af rækker bestemmer, hvilke skærme du indstiller, og er "
+    L"adskilt fra afkrydsningsfelterne, der aktiverer animationsoutput. Ctrl+A markerer alle skærme; Ctrl "
+    L"og Skift ændrer markeringen. Alle animationsvalg og skydere gælder de markerede skærme. Markeringen "
+    L"huskes separat for EXE og SCR. Hvis alle skærme var markeret, medtages også nye "
+    L"skærme.\r\n\r\nAktivér forhåndsvisning starter en fuldskærmsvisning på alle skærme. Indstillingerne "
+    L"forbliver åbne, og ændringerne vises med det samme. OK gemmer indstillingerne, og Annuller forkaster "
+    L"ændringerne. Esc eller musebevægelse afslutter fuldskærmen. Brug Tab og Skift+Tab til at flytte "
+    L"mellem kontrollerne; Alt og det understregede bogstav aktiverer en kommando. Esc i indstillingerne "
+    L"svarer til Annuller; i Hjælp eller Om lukker det kun dette vindue.\r\n\r\nWindows 7 til Windows 11 "
+    L"understøttes. For at køre programmet på Windows Vista SP2 skal opdateringerne KB971512 og KB2117917 "
+    L"installeres.",
+    L"SpaceFlight: Ääretön aaltoileva pinta; Pitkän matkan lento — muuntuva pinta. Valitse kullekin "
+    L"näytölle yksi animaatio. Tekstuuri vaihtaa teksturoitujen pintojen ja rautalankamallin välillä. "
+    L"Kameran vapaa pyörintä muuttaa katselusuuntaa hitaasti kaikissa kolmessa ulottuvuudessa. Pysähdykset "
+    L"ja suunnanvaihdot lisää satunnaisia hidastuksia, taukoja ja pyörimissuunnan vaihtoja; lento eteenpäin "
+    L"jatkuu. Nopeus on 0–1600%. Jokaisella näytöllä on itsenäinen satunnainen näkymä, joka piirretään sen "
+    L"omalla virkistystaajuudella.\r\n\r\nRivien valinta määrää muokattavat näytöt ja on erillinen "
+    L"animaatioulostulon valintaruuduista. Ctrl+A valitsee kaikki näytöt; Ctrl ja Vaihto muuttavat "
+    L"valintaa. Kaikki animaatioasetukset ja liukusäätimet koskevat valittuja näyttöjä. Valinta muistetaan "
+    L"erikseen EXE- ja SCR-tiloissa. Jos kaikki näytöt olivat valittuina, myös uudet näytöt "
+    L"valitaan.\r\n\r\nOta esikatselu käyttöön käynnistää koko näytön esikatselun kaikilla näytöillä. "
+    L"Asetusikkuna pysyy avoinna, ja muutokset näkyvät heti. OK tallentaa asetukset ja Peruuta hylkää "
+    L"muutokset. Esc tai hiiren liike lopettaa koko näytön säästäjän. Siirry säätimien välillä Tab- ja "
+    L"Vaihto+Tab-näppäimillä; Alt ja alleviivattu kirjain aktivoivat komennon. Esc asetuksissa vastaa "
+    L"Peruuta-painiketta; Ohje- tai Tietoja-ikkunassa se sulkee vain kyseisen ikkunan.\r\n\r\nTuettuja "
+    L"käyttöjärjestelmiä ovat Windows 7–Windows 11. Sovelluksen suorittaminen Windows Vista SP2:ssa "
+    L"edellyttää päivitysten KB971512 ja KB2117917 asentamista.",
+    L"SpaceFlight: Óendanleg bylgjandi flötur; Langflug — breytilegur flötur. Veldu nákvæmlega eina "
+    L"hreyfimynd fyrir hvern skjá. Áferð skiptir milli áferðarlagðra flata og víragrindar. Frjáls snúningur "
+    L"myndavélar breytir sjónstefnunni hægt í öllum þremur víddum. Stopp og stefnuskipti bætir við "
+    L"tilviljanakenndri hægingu, hléum og breytingum á snúningsstefnu; flug áfram heldur áfram. Hraðinn er "
+    L"0–1600%. Hver skjár hefur sjálfstæða tilviljanakennda senu sem er teiknuð á eigin "
+    L"endurnýjunartíðni.\r\n\r\nVal lína ákvarðar hvaða skjám er verið að breyta og er óháð gátreitunum sem "
+    L"kveikja á hreyfimyndaúttaki. Ctrl+A velur alla skjái; Ctrl og Shift breyta valinu. Allir valkostir og "
+    L"sleðar hreyfimynda gilda fyrir valda skjái. Valið er munað sérstaklega fyrir EXE og SCR. Ef allir "
+    L"skjáir voru valdir bætast nýir skjáir einnig við valið.\r\n\r\nVirkja forskoðun ræsir forskoðun á "
+    L"öllum skjám. Stillingaglugginn helst opinn og breytingar sjást strax. Í lagi vistar stillingar og "
+    L"Hætta við hafnar breytingum. Esc eða músarhreyfing lokar skjáhvílu á öllum skjánum. Notaðu Tab og "
+    L"Shift+Tab til að færa þig milli stýrieininga; Alt og undirstrikaður stafur virkja skipun. Esc í "
+    L"stillingum jafngildir Hætta við; í Hjálp eða Um lokar það aðeins þeim glugga.\r\n\r\nWindows 7 til "
+    L"Windows 11 eru studd. Til að keyra forritið á Windows Vista SP2 þarf að setja upp uppfærslurnar "
+    L"KB971512 og KB2117917.",
+    L"SpaceFlight: Uendelig bølgende flate; Langdistanseflytur — formendrende flate. Tilordne nøyaktig én "
+    L"animasjon til hver skjerm. Tekstur veksler mellom teksturerte flater og trådmodell. Fritt roterende "
+    L"kamera endrer synsretningen langsomt i alle tre dimensjoner. Stopp og retningsendringer legger til "
+    L"tilfeldige oppbremsinger, pauser og endringer i rotasjonsretningen; flyvningen fremover fortsetter. "
+    L"Hastigheten er 0–1600 %. Hver skjerm har en uavhengig tilfeldig scene som gjengis ved dens egen "
+    L"oppdateringsfrekvens.\r\n\r\nMarkeringen av rader bestemmer hvilke skjermer du redigerer, og er "
+    L"atskilt fra avkrysningsboksene som aktiverer animasjonsutgangen. Ctrl+A markerer alle skjermer; Ctrl "
+    L"og Skift endrer markeringen. Alle animasjonsvalg og glidebrytere gjelder de markerte skjermene. "
+    L"Markeringen huskes separat for EXE og SCR. Hvis alle skjermer var markert, inkluderes også nye "
+    L"skjermer.\r\n\r\nSlå på forhåndsvisning starter en fullskjermsvisning på alle skjermer. "
+    L"Innstillingene forblir åpne, og endringene vises fortløpende. OK lagrer innstillingene og Avbryt "
+    L"forkaster dem. Esc eller musebevegelse avslutter fullskjermsvisningen. Bruk Tab og Shift+Tab for å "
+    L"flytte mellom kontrollene; Alt og den understrekede bokstaven aktiverer en kommando. Esc i "
+    L"innstillingene tilsvarer Avbryt; i Hjelp eller Om lukker det bare dette vinduet.\r\n\r\nWindows 7 til "
+    L"Windows 11 støttes. For å kjøre programmet på Windows Vista SP2 må oppdateringene KB971512 og "
+    L"KB2117917 installeres.",
+    L"SpaceFlight: Oändlig böljande yta; Långdistansflygtur — formföränderlig yta. Tilldela varje skärm "
+    L"exakt en animering. Textur växlar mellan texturerade ytor och trådmodell. Fritt roterande kamera "
+    L"ändrar långsamt blickriktningen i alla tre dimensioner. Stopp och riktningsbyten lägger till "
+    L"slumpmässiga inbromsningar, pauser och byten av rotationsriktning; flygningen framåt fortsätter. "
+    L"Hastigheten är 0–1600 %. Varje skärm har en oberoende slumpmässig scen som återges med dess egen "
+    L"uppdateringsfrekvens.\r\n\r\nMarkeringen av rader avgör vilka skärmar du redigerar och är skild från "
+    L"kryssrutorna som aktiverar animationsutgångarna. Ctrl+A markerar alla skärmar; Ctrl och Skift ändrar "
+    L"markeringen. Alla animationsalternativ och reglage gäller de markerade skärmarna. Markeringen sparas "
+    L"separat för EXE och SCR. Om alla skärmar var markerade inkluderas även nya skärmar.\r\n\r\nAktivera "
     L"förhandsvisning startar en helskärmsvisning på alla bildskärmar. Inställningarna förblir öppna och "
     L"ändringarna visas direkt. OK sparar inställningarna och Avbryt förkastar ändringarna. Esc eller "
     L"musrörelse avslutar helskärmsläget. Använd Tab och Skift+Tab för att flytta mellan kontrollerna; Alt "
     L"och den understrukna bokstaven aktiverar ett kommando. Esc i inställningarna motsvarar Avbryt; i "
     L"Hjälp eller Om stänger det bara det fönstret.\r\n\r\nWindows 7 till Windows 11 stöds. För att köra "
     L"programmet på Windows Vista SP2 måste uppdateringarna KB971512 och KB2117917 installeras.",
-    L"SpaceFlight, „Sonsuz dalgalanan yüzey“ ve „Uzun mesafeli uçuş — biçim değiştiren yüzey“ seçeneklerini "
-    L"sunar. Her monitöre tam olarak bir uçuş atayın: monitörün satırını ve ilgili seçenek düğmesini "
-    L"seçin. Varsayılan olarak tüm monitörlerde ilk animasyon seçilidir. Doku varsayılan olarak açıktır; "
-    L"seçili monitörleri tel kafes modeliyle göstermek için Doku seçeneğini kapatın. Birden fazla "
-    L"satır seçilirse seçim tüm bu monitörlere uygulanır. Kaydırıcı animasyon hızını %0–1600 arasında "
-    L"ayarlar. Varsayılan başlangıçta EXE yalnızca birincil animasyon monitörünü, ekran koruyucu tüm "
-    L"monitörleri etkinleştirir. Her monitör kendi yenileme hızında çizilir. Ayarlar uygulama ve "
-    L"ekran koruyucu için ayrı ayrı kaydedilir. Serbest kamera dönüşü, seçili ekranlarda görünümü tüm "
-    L"yönlerde akıcı biçimde döndürür; varsayılan olarak kapalıdır. Duraklamalar ve yön değişimleri "
-    L"kamera dönüşünü rastgele aralıklarla yavaşlatır, kısa süreliğine durdurur ve ters yönde yeniden "
-    L"başlatır. Bu seçenek serbest kamera dönüşü etkin olduğunda kullanılabilir ve varsayılan olarak "
-    L"kapalıdır; ileri uçuş devam eder.\r\n\r\nÖnizlemeyi etkinleştir tüm monitörlerde tam ekran önizleme "
-    L"başlatır. Ayarlar penceresi açık kalır ve değişiklikler anında görülür. Tamam ayarları kaydeder, "
-    L"İptal değişiklikleri iptal eder. Tam ekran koruyucudan Esc veya fare hareketiyle çıkılır. Denetimler "
-    L"arasında Tab ve Shift+Tab ile ilerleyin; Alt ve altı çizili harf bir komutu etkinleştirir. Ayarlarda "
-    L"Esc, İptal ile aynı işlevi görür; Yardım veya Hakkında penceresinde yalnızca o pencereyi "
-    L"kapatır.\r\n\r\nWindows 7 ile Windows 11 arasındaki sürümler desteklenir. Uygulamayı Windows Vista "
-    L"SP2'de çalıştırmak için KB971512 ve KB2117917 güncellemelerini yüklemeniz gerekir."
+    L"SpaceFlight: Sonsuz dalgalanan yüzey; Uzun mesafeli uçuş — biçim değiştiren yüzey. Her ekrana tam bir "
+    L"animasyon atayın. Doku, dokulu yüzeyler ile tel kafes modeli arasında geçiş yapar. Serbest kamera "
+    L"dönüşü bakış yönünü üç boyutta yavaşça değiştirir. Duraklamalar ve yön değişimleri, dönüşe rastgele "
+    L"yavaşlamalar, duraklamalar ve ters yön değişimleri ekler; ileri uçuş devam eder. Hız 0–1600% "
+    L"aralığındadır. Her ekranın kendi yenileme hızında çizilen bağımsız rastgele bir sahnesi "
+    L"vardır.\r\n\r\nSatır seçimi, hangi ekranların düzenlendiğini belirler; animasyon çıkışlarını açan "
+    L"onay kutularından ayrıdır. Ctrl+A tüm ekranları seçer; Ctrl ve Shift seçimi değiştirir. Tüm animasyon "
+    L"seçenekleri ve kaydırıcılar seçili ekranlara uygulanır. Seçim EXE ve SCR için ayrı saklanır. Tüm "
+    L"ekranlar seçiliyse sonradan bağlanan ekranlar da seçime katılır.\r\n\r\nÖnizlemeyi etkinleştir tüm "
+    L"monitörlerde tam ekran önizleme başlatır. Ayarlar penceresi açık kalır ve değişiklikler anında "
+    L"görülür. Tamam ayarları kaydeder, İptal değişiklikleri iptal eder. Tam ekran koruyucudan Esc veya "
+    L"fare hareketiyle çıkılır. Denetimler arasında Tab ve Shift+Tab ile ilerleyin; Alt ve altı çizili harf "
+    L"bir komutu etkinleştirir. Ayarlarda Esc, İptal ile aynı işlevi görür; Yardım veya Hakkında "
+    L"penceresinde yalnızca o pencereyi kapatır.\r\n\r\nWindows 7 ile Windows 11 arasındaki sürümler "
+    L"desteklenir. Uygulamayı Windows Vista SP2'de çalıştırmak için KB971512 ve KB2117917 güncellemelerini "
+    L"yüklemeniz gerekir.",
+    L"Riistvarakiirendusega lend lainetava pinna kohal. Lõputu lainetav pind; Kauglend — muutuv pind. "
+    L"Valige igale kuvarile täpselt üks animatsioon. Tekstuuri märkeruut vahetab tekstuuriga pinna ja "
+    L"traatmudeli vahel. Kaamera vaba pöörlemine muudab vaatesuunda aeglaselt kõigis kolmes mõõtmes. "
+    L"Peatumised ja suunavahetused lisab sellele juhuslikke aeglustusi, pause ja pöörlemissuuna muutusi; "
+    L"edasilend jätkub. Kiirus on seatav vahemikus 0–1600%. Igal kuvaril on oma sõltumatu juhuslik stseen "
+    L"ja värskendussagedusele vastav renderdus.\r\n\r\nValige loendis üks või mitu kuvaririda. Ctrl+A valib "
+    L"kõik read; Ctrl ja Shift võimaldavad valikut muuta. Animatsiooni juhtnupud ja liugurid mõjutavad "
+    L"ainult valitud kuvarite sätteid, mitte kogu rakendust. Rea valimine ja selle märkeruuduga väljundi "
+    L"lubamine on eri toimingud. Valik jäetakse rakenduse ja ekraanisäästja jaoks eraldi meelde. Kui varem "
+    L"olid valitud kõik kuvarid, kaasatakse ka lisatud kuvarid.\r\n\r\nKäivitage SpaceFlight.scr Windowsi "
+    L"ekraanisäästjana. Selle sätted on rakenduse omadest eraldi. Sätete eelvaade lubab täisekraanil "
+    L"animatsiooni jooksvalt muuta. OK salvestab muudatused ning Loobu või Esc tühistab need. Täisekraanil "
+    L"ekraanisäästjast väljumiseks vajutage klahvi või liigutage hiirt.\r\n\r\nWindows 7–11 toetab kõiki "
+    L"funktsioone. Windows Vista SP2 jaoks tuleb paigaldada värskendused KB971512 ja KB2117917; MP4 "
+    L"salvestamine Vistas ei tööta. Vaja on Direct3D 11 tuge ning MP4 jaoks Media Foundationi ja H.264 "
+    L"kodeerijat. Liides ja dokumentatsioon on saadaval 36 keeles.",
+    L"Eitilt os cionn dromchla tonnúil le luasghéarú crua-earraí. Dromchla tonnúil gan teorainn; Eitilt "
+    L"fhada — dromchla athraitheach. Roghnaigh beochan amháin do gach monatóir. Athraíonn Uigeacht idir "
+    L"dromchla uigeachtaithe agus samhail sreangfhráma. Rothlaíonn rothlú saor an cheamara an radharc go "
+    L"mall sna trí thoise. Cuireann Stadanna agus aisiompuithe coscánú, sosanna agus athruithe treo "
+    L"randamacha leis an rothlú; leanann an eitilt chun tosaigh. Tá luas 0–1600% ar fáil. Tá radharc "
+    L"randamach neamhspleách ag gach monatóir agus déantar rindreáil de réir a ráta athnuachana "
+    L"féin.\r\n\r\nRoghnaigh ró amháin nó níos mó sa liosta monatóirí. Roghnaíonn Ctrl+A gach ró; úsáid "
+    L"Ctrl agus Shift chun an roghnú a athrú. Ní athraíonn rialuithe agus sleamhnáin na beochana ach "
+    L"socruithe na monatóirí roghnaithe. Ní hionann ró a roghnú agus aschur an mhonatóra a chumasú lena "
+    L"bhosca seiceála. Cuimhnítear an roghnú ar leith don fheidhmchlár agus don spárálaí. Má bhí gach "
+    L"monatóir roghnaithe, cuirtear monatóirí nua leis an roghnú freisin.\r\n\r\nÚsáid SpaceFlight.scr mar "
+    L"spárálaí scáileáin Windows. Tá a shocruithe ar leith ó shocruithe an fheidhmchláir. Ceadaíonn an "
+    L"réamhamharc lánscáileáin athruithe beo. Sábhálann OK agus cealaíonn Cealaigh nó Esc na hathruithe. "
+    L"Fág an spárálaí lánscáileáin le heochair ar bith nó le gluaiseacht na luiche.\r\n\r\nTacaíonn Windows "
+    L"7–11 leis na gnéithe uile. Ar Windows Vista SP2 ní mór nuashonruithe KB971512 agus KB2117917 a "
+    L"shuiteáil; ní oibríonn taifeadadh MP4 ar Vista. Teastaíonn tacaíocht Direct3D 11, agus Media "
+    L"Foundation agus ionchódóir H.264 le haghaidh MP4. Tá an comhéadan agus an doiciméadú ar fáil i 36 "
+    L"teanga.",
+    L"Aparatine įranga spartinamas skrydis virš banguojančio paviršiaus. Begalinė banguojanti plokštuma; "
+    L"Tolimas skrydis — kintantis paviršius. Kiekvienam monitoriui pasirinkite vieną animaciją. Tekstūros "
+    L"langelis perjungia tekstūruotą paviršių ir vielinį modelį. Laisvas kameros sukimasis lėtai keičia "
+    L"žiūrėjimo kryptį visose trijose dimensijose. Sustojimai ir krypties keitimai prideda atsitiktinį "
+    L"lėtėjimą, pauzes ir sukimosi krypties keitimą; skrydis pirmyn tęsiasi. Galimas 0–1600% greitis. "
+    L"Kiekvienas monitorius turi nepriklausomą atsitiktinę sceną, atvaizduojamą jo atnaujinimo "
+    L"dažniu.\r\n\r\nMonitorių sąraše pasirinkite vieną ar kelias eilutes. Ctrl+A pasirenka visas, o Ctrl "
+    L"ir Shift leidžia keisti pasirinkimą. Animacijos valdikliai ir slankikliai keičia tik pasirinktų "
+    L"monitorių nuostatas. Eilutės pasirinkimas nėra tas pats, kas animacijos išvesties įjungimas jos "
+    L"žymimuoju langeliu. Pasirinkimas atskirai įsimenamas programai ir užsklandai. Jei buvo pasirinkti "
+    L"visi monitoriai, į pasirinkimą įtraukiami ir naujai prijungti monitoriai.\r\n\r\nNaudokite "
+    L"SpaceFlight.scr kaip Windows ekrano užsklandą. Jos nuostatos atskiros nuo programos. Viso ekrano "
+    L"peržiūra leidžia jas keisti vykstant animacijai. OK išsaugo, Atšaukti arba Esc atmeta pakeitimus. "
+    L"Užsklandą užbaikite klavišu arba pajudindami pelę.\r\n\r\nWindows 7–11 palaiko visas funkcijas. "
+    L"Windows Vista SP2 būtina įdiegti naujinimus KB971512 ir KB2117917; MP4 įrašymas Vistoje neveikia. "
+    L"Reikalingas Direct3D 11 palaikymas, o MP4 įrašymui Media Foundation ir H.264 koduotuvas. Sąsaja ir "
+    L"dokumentacija pateikiamos 36 kalbomis.",
+    L"Aparatūras paātrināts lidojums virs viļņojošas virsmas. Bezgalīga viļņojoša virsma; Tāls lidojums — "
+    L"mainīga virsma. Katram monitoram izvēlieties tieši vienu animāciju. Tekstūras rūtiņa pārslēdz "
+    L"teksturētu virsmu un stiepļu modeli. Brīva kameras rotācija lēnām maina skatiena virzienu visās "
+    L"trijās dimensijās. Apstāšanās un virziena maiņa pievieno nejaušu palēninājumu, pauzes un rotācijas "
+    L"virziena maiņu; lidojums uz priekšu turpinās. Pieejams ātrums 0–1600%. Katram monitoram ir neatkarīga "
+    L"nejauša aina, ko renderē tā atsvaidzināšanas frekvencē.\r\n\r\nMonitoru sarakstā atlasiet vienu vai "
+    L"vairākas rindas. Ctrl+A atlasa visas, bet Ctrl un Shift ļauj mainīt atlasi. Animācijas vadīklas un "
+    L"slīdņi maina tikai atlasīto monitoru iestatījumus. Rindas atlasīšana nav tas pats, kas animācijas "
+    L"izvades ieslēgšana ar izvēles rūtiņu. Atlase tiek atsevišķi atcerēta lietotnei un ekrānsaudzētājam. "
+    L"Ja bija atlasīti visi monitori, atlasē iekļauj arī jaunpievienotos monitorus.\r\n\r\nIzmantojiet "
+    L"SpaceFlight.scr kā Windows ekrānsaudzētāju. Tā iestatījumi ir atsevišķi no lietotnes. Pilnekrāna "
+    L"priekšskatījums ļauj tos mainīt animācijas darbības laikā. OK saglabā, Atcelt vai Esc atmet izmaiņas. "
+    L"Pilnekrāna ekrānsaudzētāju aizveriet ar taustiņu vai peles kustību.\r\n\r\nWindows 7–11 atbalsta "
+    L"visas funkcijas. Windows Vista SP2 jāinstalē atjauninājumi KB971512 un KB2117917; MP4 ierakstīšana "
+    L"Vistā nedarbojas. Nepieciešams Direct3D 11 atbalsts, bet MP4 vajadzīgi Media Foundation un H.264 "
+    L"kodētājs. Saskarne un dokumentācija ir pieejama 36 valodās.",
+    L"Hardveresen gyorsított repülés hullámzó felület felett. Végtelen hullámzó felület; Távolsági repülés "
+    L"— változó felület. Monitoronként pontosan egy animáció választható. A Textúra jelölőnégyzet a "
+    L"textúrázott felület és a drótváz között vált. A kamera szabad forgása lassan változtatja a nézetet "
+    L"mindhárom dimenzióban. A Megállások és irányváltások véletlenszerű lassításokat, szüneteket és "
+    L"forgásirányváltásokat ad hozzá; az előrehaladás folytatódik. A sebesség 0–1600%. Minden monitor "
+    L"önálló véletlenszerű jelenetet kap, saját frissítési gyakoriságához igazodó "
+    L"megjelenítéssel.\r\n\r\nJelöljön ki egy vagy több sort a monitorok listájában. A Ctrl+A mindet "
+    L"kijelöli; a Ctrl és a Shift módosítja a kijelölést. Az animáció vezérlői és csúszkái csak a kijelölt "
+    L"monitorok beállításait változtatják. A sor kijelölése és az animációs kimenet jelölőnégyzetes "
+    L"engedélyezése külön művelet. A kijelölést az alkalmazás és a képernyőkímélő külön megjegyzi. Ha "
+    L"korábban minden monitor ki volt jelölve, az újonnan csatlakoztatott monitorok is bekerülnek a "
+    L"kijelölésbe.\r\n\r\nA SpaceFlight.scr Windows-képernyőkímélőként használható, az alkalmazástól külön "
+    L"beállításokkal. A teljes képernyős előnézetben élőben módosíthatók a beállítások. Az OK ment, a Mégse "
+    L"vagy Esc elveti a módosításokat. A teljes képernyős képernyőkímélő billentyűvel vagy egérmozgással "
+    L"zárható be.\r\n\r\nA Windows 7–11 minden funkciót támogat. Windows Vista SP2 alatt telepíteni kell a "
+    L"KB971512 és KB2117917 frissítést; az MP4-felvétel Vistán nem működik. Direct3D 11 támogatás "
+    L"szükséges, az MP4-hez Media Foundation és H.264-kódoló is kell. A kezelőfelület és a dokumentáció 36 "
+    L"nyelven érhető el.",
+    L"Titjira fuq wiċċ li jimmewweġ aċċellerata bil-ħardwer. Wiċċ infinit li jimmewweġ; Titjira fit-tul — "
+    L"wiċċ li jinbidel. Agħżel animazzjoni waħda biss għal kull moniter. Nisġa taqleb bejn wiċċ b’nisġa u "
+    L"mudell bil-wireframe. Ir-rotazzjoni libera tal-kamera tbiddel id-direzzjoni tal-ħarsa bil-mod "
+    L"fit-tliet dimensjonijiet. Waqfiet u bidliet fid-direzzjoni żżid deċelerazzjonijiet, pawżi u treġġigħ "
+    L"lura tar-rotazzjoni b’mod każwali; it-titjira ’l quddiem tkompli. Il-veloċità hija 0–1600%. Kull "
+    L"moniter għandu xena każwali indipendenti li tintwera bir-rata ta’ aġġornament tiegħu.\r\n\r\nAgħżel "
+    L"ringiela waħda jew aktar fil-lista tal-moniters. Ctrl+A jagħżilhom kollha; Ctrl u Shift ibiddlu "
+    L"l-għażla. Il-kontrolli u s-sliders tal-animazzjoni jibdlu biss is-settings tal-moniters magħżula. "
+    L"L-għażla ta’ ringiela hija differenti mill-attivazzjoni tal-output permezz tal-kaxxa tal-marka. "
+    L"L-għażla tinżamm separatament għall-applikazzjoni u għall-iscreen saver. Jekk il-moniters kollha "
+    L"kienu magħżula, il-moniters ġodda jiddaħħlu wkoll fl-għażla.\r\n\r\nUża SpaceFlight.scr bħala screen "
+    L"saver ta’ Windows. Is-settings tiegħu huma separati minn dawk tal-applikazzjoni. Il-previżjoni fuq "
+    L"skrin sħiħ tippermetti bidliet waqt l-animazzjoni. OK isalva u Ikkanċella jew Esc jarmi l-bidliet. "
+    L"Oħroġ mill-iscreen saver bi kwalunkwe tast jew billi ċċaqlaq il-maws.\r\n\r\nWindows 7–11 jappoġġja "
+    L"l-funzjonijiet kollha. Fuq Windows Vista SP2 għandhom jiġu installati l-aġġornamenti KB971512 u "
+    L"KB2117917; ir-reġistrazzjoni MP4 ma taħdimx fuq Vista. Huwa meħtieġ Direct3D 11 u, għall-MP4, Media "
+    L"Foundation u encoder H.264. L-interface u d-dokumentazzjoni huma disponibbli f’36 lingwa.",
+    L"Hardwareversnelde vlucht boven een golvend oppervlak. Oneindig golvend oppervlak; Langeafstandsvlucht "
+    L"— veranderend oppervlak. Kies precies één animatie per beeldscherm. Textuur schakelt tussen een "
+    L"getextureerd oppervlak en een draadmodel. Vrije camerarotatie verandert de kijkrichting langzaam in "
+    L"alle drie dimensies. Stops en richtingswisselingen voegt willekeurige vertragingen, pauzes en "
+    L"omkeringen van de rotatie toe; de voorwaartse vlucht gaat door. De snelheid is instelbaar op 0–1600%. "
+    L"Elk beeldscherm heeft een onafhankelijke willekeurige scène en wordt op zijn eigen "
+    L"vernieuwingsfrequentie aangestuurd.\r\n\r\nSelecteer één of meer beeldschermrijen in de lijst. Ctrl+A "
+    L"selecteert alles; met Ctrl en Shift past u de selectie aan. Animatieknoppen en schuifregelaars "
+    L"wijzigen alleen de instellingen van de geselecteerde beeldschermen. Een rij selecteren is iets anders "
+    L"dan de animatie-uitvoer inschakelen met het selectievakje. De selectie wordt apart onthouden voor de "
+    L"toepassing en de schermbeveiliging. Als alle beeldschermen waren geselecteerd, worden nieuw "
+    L"aangesloten beeldschermen ook geselecteerd.\r\n\r\nGebruik SpaceFlight.scr als "
+    L"Windows-schermbeveiliging met eigen instellingen. Het schermvullende voorbeeld laat live aanpassingen "
+    L"toe. OK slaat wijzigingen op; Annuleren of Esc verwerpt ze. Sluit de schermvullende schermbeveiliging "
+    L"met een toets of een muisbeweging.\r\n\r\nWindows 7–11 ondersteunt alle functies. Voor Windows Vista "
+    L"SP2 moet u updates KB971512 en KB2117917 installeren; MP4-opname werkt niet op Vista. Direct3D "
+    L"11-ondersteuning is vereist; voor MP4 zijn ook Media Foundation en een H.264-encoder nodig. Interface "
+    L"en documentatie zijn beschikbaar in 36 talen.",
+    L"Zbor deasupra unei suprafețe ondulate accelerat hardware. Suprafață ondulată infinită; Zbor la "
+    L"distanță — suprafață variabilă. Alegeți exact o animație pentru fiecare monitor. Textură comută între "
+    L"suprafața texturată și modelul de sârmă. Rotirea liberă a camerei schimbă lent direcția privirii în "
+    L"toate cele trei dimensiuni. Opriri și inversări de sens adaugă încetiniri, pauze și inversări ale "
+    L"rotației la intervale aleatorii; zborul înainte continuă. Viteza este 0–1600%. Fiecare monitor are o "
+    L"scenă aleatorie independentă, randată la propria rată de reîmprospătare.\r\n\r\nSelectați unul sau "
+    L"mai multe rânduri din lista monitoarelor. Ctrl+A le selectează pe toate; Ctrl și Shift modifică "
+    L"selecția. Comenzile și glisoarele animației schimbă numai setările monitoarelor selectate. Selectarea "
+    L"unui rând diferă de activarea ieșirii prin caseta sa de selectare. Selecția este reținută separat "
+    L"pentru aplicație și economizor. Dacă erau selectate toate monitoarele, sunt incluse și cele conectate "
+    L"ulterior.\r\n\r\nFolosiți SpaceFlight.scr drept economizor de ecran Windows, cu setări separate de "
+    L"aplicație. Previzualizarea pe tot ecranul permite ajustări în timp real. OK salvează modificările; "
+    L"Anulare sau Esc le anulează. Ieșiți din economizor apăsând o tastă sau mișcând "
+    L"mouse-ul.\r\n\r\nWindows 7–11 acceptă toate funcțiile. Pentru Windows Vista SP2 trebuie instalate "
+    L"actualizările KB971512 și KB2117917; înregistrarea MP4 nu funcționează pe Vista. Este necesar "
+    L"Direct3D 11, iar pentru MP4 și Media Foundation și un codificator H.264. Interfața și documentația "
+    L"sunt disponibile în 36 de limbi.",
+    L"Πτήση πάνω από κυματοειδή επιφάνεια με επιτάχυνση υλικού. Απέραντη κυματοειδής επιφάνεια; Μακρινή "
+    L"πτήση — μεταβαλλόμενη επιφάνεια. Επιλέξτε ακριβώς μία κίνηση ανά οθόνη. Η Υφή εναλλάσσει επιφάνεια με "
+    L"υφή και συρμάτινο μοντέλο. Η ελεύθερη περιστροφή κάμερας αλλάζει αργά την κατεύθυνση θέασης και στις "
+    L"τρεις διαστάσεις. Οι Στάσεις και αντιστροφές προσθέτουν τυχαίες επιβραδύνσεις, παύσεις και "
+    L"αντιστροφές περιστροφής, ενώ η πτήση προς τα εμπρός συνεχίζεται. Η ταχύτητα είναι 0–1600%. Κάθε οθόνη "
+    L"διαθέτει ανεξάρτητη τυχαία σκηνή που αποδίδεται στον δικό της ρυθμό ανανέωσης.\r\n\r\nΕπιλέξτε μία ή "
+    L"περισσότερες γραμμές στη λίστα οθονών. Το Ctrl+A επιλέγει όλες, ενώ τα Ctrl και Shift αλλάζουν την "
+    L"επιλογή. Τα χειριστήρια και τα ρυθμιστικά της κίνησης αλλάζουν μόνο τις ρυθμίσεις των επιλεγμένων "
+    L"οθονών. Η επιλογή γραμμής διαφέρει από την ενεργοποίηση εξόδου μέσω του πλαισίου ελέγχου της. Η "
+    L"επιλογή αποθηκεύεται χωριστά για την εφαρμογή και την προφύλαξη. Αν είχαν επιλεγεί όλες οι οθόνες, "
+    L"περιλαμβάνονται και όσες συνδεθούν αργότερα.\r\n\r\nΧρησιμοποιήστε το SpaceFlight.scr ως προφύλαξη "
+    L"οθόνης Windows με χωριστές ρυθμίσεις από την εφαρμογή. Η προεπισκόπηση πλήρους οθόνης επιτρέπει "
+    L"ζωντανές αλλαγές. Το OK αποθηκεύει και το Άκυρο ή Esc απορρίπτει τις αλλαγές. Τερματίστε την "
+    L"προφύλαξη με πλήκτρο ή κίνηση του ποντικιού.\r\n\r\nΤα Windows 7–11 υποστηρίζουν όλες τις "
+    L"λειτουργίες. Στα Windows Vista SP2 πρέπει να εγκατασταθούν οι ενημερώσεις KB971512 και KB2117917· η "
+    L"εγγραφή MP4 δεν λειτουργεί στα Vista. Απαιτείται υποστήριξη Direct3D 11 και, για MP4, Media "
+    L"Foundation και κωδικοποιητής H.264. Η διεπαφή και η τεκμηρίωση διατίθενται σε 36 γλώσσες.",
+    L"Hardverski ubrzan let iznad valovite površine. Beskonačna valovita površina; Daleki let — promjenjiva "
+    L"površina. Za svaki monitor odaberite tačno jednu animaciju. Tekstura mijenja prikaz između "
+    L"teksturirane površine i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda u sve "
+    L"tri dimenzije. Zaustavljanja i promjene smjera dodaju nasumično usporavanje, pauze i promjene smjera "
+    L"rotacije; let naprijed se nastavlja. Brzina je 0–1600%. Svaki monitor ima nezavisnu nasumičnu scenu "
+    L"koja se prikazuje prema njegovoj frekvenciji osvježavanja.\r\n\r\nOdaberite jedan ili više redova u "
+    L"listi monitora. Ctrl+A odabire sve; Ctrl i Shift mijenjaju odabir. Kontrole i klizači animacije "
+    L"mijenjaju samo postavke odabranih monitora. Odabir reda nije isto što i uključivanje izlaza njegovom "
+    L"kućicom. Odabir se pamti odvojeno za aplikaciju i čuvar ekrana. Ako su prethodno bili odabrani svi "
+    L"monitori, uključuju se i novopriključeni monitori.\r\n\r\nKoristite SpaceFlight.scr kao Windows čuvar "
+    L"ekrana s odvojenim postavkama. Pregled preko cijelog ekrana omogućava izmjene uživo. OK čuva, a "
+    L"Otkaži ili Esc odbacuje izmjene. Iz čuvara izađite pritiskom tipke ili pomjeranjem "
+    L"miša.\r\n\r\nWindows 7–11 podržava sve funkcije. Za Windows Vista SP2 morate instalirati ažuriranja "
+    L"KB971512 i KB2117917; MP4 snimanje na Visti ne radi. Potreban je Direct3D 11, a za MP4 i Media "
+    L"Foundation te H.264 koder. Interfejs i dokumentacija dostupni su na 36 jezika.",
+    L"Hardverski ubrzan let iznad valovite plohe. Beskonačna valovita ploha; Daleki let — promjenjiva "
+    L"ploha. Za svaki zaslon odaberite točno jednu animaciju. Tekstura mijenja prikaz između teksturirane "
+    L"plohe i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda u sve tri dimenzije. "
+    L"Zaustavljanja i promjene smjera dodaju nasumično usporavanje, stanke i promjene smjera rotacije; let "
+    L"naprijed se nastavlja. Brzina je 0–1600%. Svaki zaslon ima neovisnu nasumičnu scenu koja se prikazuje "
+    L"prema njegovoj frekvenciji osvježavanja.\r\n\r\nOdaberite jedan ili više redaka na popisu zaslona. "
+    L"Ctrl+A odabire sve; Ctrl i Shift mijenjaju odabir. Kontrole i klizači animacije mijenjaju samo "
+    L"postavke odabranih zaslona. Odabir retka nije isto što i uključivanje izlaza njegovim potvrdnim "
+    L"okvirom. Odabir se pamti odvojeno za aplikaciju i čuvar zaslona. Ako su prethodno bili odabrani svi "
+    L"zasloni, uključuju se i novopriključeni zasloni.\r\n\r\nKoristite SpaceFlight.scr kao Windows čuvar "
+    L"zaslona s odvojenim postavkama. Pretpregled preko cijelog zaslona omogućuje izmjene uživo. OK sprema, "
+    L"a Odustani ili Esc odbacuje izmjene. Iz čuvara izađite pritiskom tipke ili pomicanjem "
+    L"miša.\r\n\r\nWindows 7–11 podržava sve funkcije. Za Windows Vista SP2 morate instalirati ažuriranja "
+    L"KB971512 i KB2117917; MP4 snimanje na Visti ne radi. Potreban je Direct3D 11, a za MP4 i Media "
+    L"Foundation te H.264 koder. Sučelje i dokumentacija dostupni su na 36 jezika.",
+    L"Strojno pospešen let nad valovito ploskvijo. Neskončna valovita ploskev; Oddaljeni let — "
+    L"spreminjajoča se ploskev. Za vsak zaslon izberite natanko eno animacijo. Tekstura preklaplja med "
+    L"teksturirano ploskvijo in žičnim modelom. Prosto vrtenje kamere počasi spreminja smer pogleda v vseh "
+    L"treh razsežnostih. Ustavljanja in spremembe smeri dodajo naključne upočasnitve, premore in obrate "
+    L"smeri vrtenja; let naprej se nadaljuje. Hitrost je 0–1600%. Vsak zaslon ima neodvisen naključen "
+    L"prizor, ki se izrisuje z njegovo hitrostjo osveževanja.\r\n\r\nNa seznamu zaslonov izberite eno ali "
+    L"več vrstic. Ctrl+A izbere vse, Ctrl in Shift pa spreminjata izbor. Kontrolniki in drsniki animacije "
+    L"spreminjajo samo nastavitve izbranih zaslonov. Izbira vrstice ni isto kot vklop izhoda z njenim "
+    L"potrditvenim poljem. Izbor se ločeno shrani za program in ohranjevalnik. Če so bili izbrani vsi "
+    L"zasloni, so vključeni tudi na novo priključeni zasloni.\r\n\r\nUporabite SpaceFlight.scr kot "
+    L"ohranjevalnik zaslona Windows z ločenimi nastavitvami. Celozaslonski predogled omogoča sprotne "
+    L"spremembe. OK jih shrani, Prekliči ali Esc jih zavrže. Ohranjevalnik zapustite s tipko ali premikom "
+    L"miške.\r\n\r\nWindows 7–11 podpira vse funkcije. Za Windows Vista SP2 morate namestiti posodobitvi "
+    L"KB971512 in KB2117917; snemanje MP4 v Visti ne deluje. Potrebna je podpora Direct3D 11, za MP4 pa še "
+    L"Media Foundation in kodirnik H.264. Vmesnik in dokumentacija sta na voljo v 36 jezikih.",
+    L"Hardverski ubrzan let iznad talasaste površine. Beskonačna talasasta površina; Daleki let — "
+    L"promjenljiva površina. Za svaki monitor izaberite tačno jednu animaciju. Tekstura mijenja prikaz "
+    L"između teksturisane površine i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda "
+    L"u sve tri dimenzije. Zaustavljanja i promjene smjera dodaju nasumično usporavanje, pauze i promjene "
+    L"smjera rotacije; let naprijed se nastavlja. Brzina je 0–1600%. Svaki monitor ima nezavisnu nasumičnu "
+    L"scenu koja se prikazuje prema njegovoj frekvenciji osvježavanja.\r\n\r\nIzaberite jedan ili više "
+    L"redova u listi monitora. Ctrl+A bira sve; Ctrl i Shift mijenjaju izbor. Kontrole i klizači animacije "
+    L"mijenjaju samo podešavanja izabranih monitora. Izbor reda nije isto što i uključivanje izlaza "
+    L"njegovom kućicom. Izbor se pamti odvojeno za aplikaciju i čuvar ekrana. Ako su prethodno bili "
+    L"izabrani svi monitori, uključuju se i novopriključeni monitori.\r\n\r\nKoristite SpaceFlight.scr kao "
+    L"Windows čuvar ekrana s odvojenim podešavanjima. Pregled preko cijelog ekrana omogućava izmjene uživo. "
+    L"OK čuva, a Otkaži ili Esc odbacuje izmjene. Iz čuvara izađite pritiskom tastera ili pomjeranjem "
+    L"miša.\r\n\r\nWindows 7–11 podržava sve funkcije. Za Windows Vista SP2 morate instalirati ažuriranja "
+    L"KB971512 i KB2117917; MP4 snimanje na Visti ne radi. Potreban je Direct3D 11, a za MP4 i Media "
+    L"Foundation i H.264 koder. Interfejs i dokumentacija dostupni su na 36 jezika.",
+    L"Апаратна паскораны палёт над хвалістай паверхняй. Бясконцая хвалістая паверхня; Далёкі палёт — "
+    L"зменлівая паверхня. Для кожнага манітора выберыце роўна адну анімацыю. Тэкстура пераключае "
+    L"тэкстураваную паверхню і каркасную мадэль. Свабоднае кручэнне камеры павольна змяняе напрамак погляду "
+    L"ва ўсіх трох вымярэннях. Спыненні і змены напрамку дадаюць выпадковыя запаволенні, паўзы і змены "
+    L"напрамку кручэння; палёт наперад працягваецца. Хуткасць — 0–1600%. Кожны манітор мае незалежную "
+    L"выпадковую сцэну з вывадам паводле ўласнай частаты абнаўлення.\r\n\r\nВыберыце адзін або некалькі "
+    L"радкоў у спісе манітораў. Ctrl+A выбірае ўсе; Ctrl і Shift змяняюць выбар. Элементы кіравання і "
+    L"паўзункі анімацыі змяняюць толькі налады выбраных манітораў. Выбар радка і ўключэнне вываду яго "
+    L"сцяжком — розныя дзеянні. Выбар асобна захоўваецца для праграмы і застаўкі. Калі раней былі выбраны "
+    L"ўсе маніторы, да выбару далучаюцца і новыя маніторы.\r\n\r\nВыкарыстоўвайце SpaceFlight.scr як "
+    L"застаўку Windows з асобнымі наладамі. Поўнаэкранны перадпрагляд дазваляе змяняць іх падчас анімацыі. "
+    L"OK захоўвае змены, Скасаваць або Esc адхіляе іх. Для выхаду з застаўкі націсніце клавішу або "
+    L"паварушыце мышшу.\r\n\r\nWindows 7–11 падтрымлівае ўсе функцыі. Для Windows Vista SP2 неабходна "
+    L"ўсталяваць абнаўленні KB971512 і KB2117917; запіс MP4 у Vistа не працуе. Патрэбна падтрымка Direct3D "
+    L"11, а для MP4 таксама Media Foundation і кадавальнік H.264. Інтэрфейс і дакументацыя даступны на 36 "
+    L"мовах.",
+    L"Хардуерно ускорен полет над вълнообразна повърхнина. Безкрайна вълнообразна повърхнина; Далечен полет "
+    L"— променяща се повърхнина. Изберете точно една анимация за всеки монитор. Текстура превключва между "
+    L"текстурирана повърхнина и телен модел. Свободното въртене на камерата бавно променя посоката на "
+    L"погледа в трите измерения. Спирания и обръщания на посоката добавя случайни забавяния, паузи и "
+    L"обръщания на въртенето; полетът напред продължава. Скоростта е 0–1600%. Всеки монитор има независима "
+    L"случайна сцена, изобразявана с неговата честота на опресняване.\r\n\r\nИзберете един или повече "
+    L"редове в списъка с монитори. Ctrl+A избира всички; Ctrl и Shift променят избора. Контролите и "
+    L"плъзгачите на анимацията променят само настройките на избраните монитори. Избирането на ред и "
+    L"включването на изхода чрез отметката му са различни действия. Изборът се запомня отделно за "
+    L"приложението и скрийнсейвъра. Ако са били избрани всички монитори, включват се и "
+    L"новосвързаните.\r\n\r\nИзползвайте SpaceFlight.scr като скрийнсейвър на Windows с отделни настройки. "
+    L"Прегледът на цял екран позволява промени в реално време. OK запазва промените; Отказ или Esc ги "
+    L"отхвърля. Излезте от скрийнсейвъра с клавиш или движение на мишката.\r\n\r\nWindows 7–11 поддържа "
+    L"всички функции. За Windows Vista SP2 трябва да се инсталират актуализациите KB971512 и KB2117917; "
+    L"записът на MP4 не работи във Vista. Изисква се поддръжка на Direct3D 11, а за MP4 също Media "
+    L"Foundation и H.264 кодер. Интерфейсът и документацията са налични на 36 езика.",
+    L"Хардверски забрзан лет над брановидна површина. Бесконечна брановидна површина; Далечен лет — "
+    L"променлива површина. За секој монитор изберете точно една анимација. Текстура менува текстурирана "
+    L"површина и жичен модел. Слободното вртење на камерата полека го менува погледот во сите три димензии. "
+    L"Запирања и промени на насоката додава случајни забавувања, паузи и промени на насоката на вртење; "
+    L"летот напред продолжува. Брзината е 0–1600%. Секој монитор има независна случајна сцена што се "
+    L"прикажува со неговата стапка на освежување.\r\n\r\nИзберете еден или повеќе редови во списокот на "
+    L"монитори. Ctrl+A ги избира сите; Ctrl и Shift го менуваат изборот. Контролите и лизгачите на "
+    L"анимацијата ги менуваат само поставките на избраните монитори. Избирањето ред и вклучувањето на "
+    L"излезот преку неговото поле се различни дејства. Изборот се памети одделно за апликацијата и чуварот. "
+    L"Ако биле избрани сите монитори, се вклучуваат и новоповрзаните монитори.\r\n\r\nКористете "
+    L"SpaceFlight.scr како Windows чувар на екранот со одделни поставки. Прегледот на цел екран овозможува "
+    L"измени во живо. OK ги зачувува, а Откажи или Esc ги отфрла измените. Излезете од чуварот со копче или "
+    L"движење на глувчето.\r\n\r\nWindows 7–11 ги поддржува сите функции. За Windows Vista SP2 мора да се "
+    L"инсталираат ажурирањата KB971512 и KB2117917; MP4 снимањето на Vista не работи. Потребна е поддршка "
+    L"за Direct3D 11, а за MP4 и Media Foundation и H.264 кодер. Интерфејсот и документацијата се достапни "
+    L"на 36 јазици.",
+    L"Хардверски убрзан лет изнад таласасте површи. Бесконачна таласаста површ; Далеки лет — променљива "
+    L"површ. За сваки монитор изаберите тачно једну анимацију. Текстура мења приказ између текстурисане "
+    L"површи и жичаног модела. Слободно окретање камере полако мења смер погледа у све три димензије. "
+    L"Заустављања и промене смера додају насумично успоравање, паузе и промене смера ротације; лет напред "
+    L"се наставља. Брзина је 0–1600%. Сваки монитор има независну насумичну сцену која се приказује према "
+    L"његовој учестаности освежавања.\r\n\r\nИзаберите један или више редова у листи монитора. Ctrl+A бира "
+    L"све; Ctrl и Shift мењају избор. Контроле и клизачи анимације мењају само подешавања изабраних "
+    L"монитора. Избор реда није исто што и укључивање излаза његовим пољем за потврду. Избор се памти "
+    L"одвојено за апликацију и чувар екрана. Ако су претходно били изабрани сви монитори, укључују се и "
+    L"новоприкључени монитори.\r\n\r\nКористите SpaceFlight.scr као Windows чувар екрана са одвојеним "
+    L"подешавањима. Преглед преко целог екрана омогућава измене уживо. OK чува, а Откажи или Esc одбацује "
+    L"измене. Из чувара изађите притиском тастера или померањем миша.\r\n\r\nWindows 7–11 подржава све "
+    L"функције. За Windows Vista SP2 морате инсталирати ажурирања KB971512 и KB2117917; MP4 снимање на "
+    L"Висти не ради. Потребан је Direct3D 11, а за MP4 и Media Foundation и H.264 кодер. Интерфејс и "
+    L"документација доступни су на 36 језика.",
+    L"Апаратно прискорений політ над хвилястою поверхнею. Нескінченна хвиляста поверхня; Далекий політ — "
+    L"мінлива поверхня. Для кожного монітора виберіть рівно одну анімацію. Текстура перемикає текстуровану "
+    L"поверхню та каркасну модель. Вільне обертання камери повільно змінює напрямок погляду в усіх трьох "
+    L"вимірах. Зупинки та зміни напрямку додають випадкові уповільнення, паузи та зміни напрямку обертання; "
+    L"політ уперед триває. Швидкість — 0–1600%. Кожен монітор має незалежну випадкову сцену з виведенням "
+    L"відповідно до власної частоти оновлення.\r\n\r\nВиберіть один або кілька рядків у списку моніторів. "
+    L"Ctrl+A вибирає всі; Ctrl і Shift змінюють вибір. Елементи керування й повзунки анімації змінюють лише "
+    L"налаштування вибраних моніторів. Вибір рядка та ввімкнення виведення його прапорцем — різні дії. "
+    L"Вибір зберігається окремо для програми й заставки. Якщо раніше були вибрані всі монітори, до вибору "
+    L"долучаються й новопідключені.\r\n\r\nВикористовуйте SpaceFlight.scr як заставку Windows з окремими "
+    L"налаштуваннями. Повноекранний попередній перегляд дозволяє змінювати їх під час анімації. OK зберігає "
+    L"зміни, Скасувати або Esc відхиляє їх. Для виходу із заставки натисніть клавішу або порухайте "
+    L"мишею.\r\n\r\nWindows 7–11 підтримує всі функції. Для Windows Vista SP2 потрібно встановити оновлення "
+    L"KB971512 і KB2117917; запис MP4 у Vista не працює. Потрібна підтримка Direct3D 11, а для MP4 також "
+    L"Media Foundation й кодувальник H.264. Інтерфейс і документація доступні 36 мовами.",
+    L"Аппаратно ускоренный полёт над волнообразной поверхностью. Бесконечная волнообразная поверхность; "
+    L"Дальний полёт — меняющаяся поверхность. Для каждого монитора выберите ровно одну анимацию. Текстура "
+    L"переключает текстурированную поверхность и каркасную модель. Свободное вращение камеры медленно "
+    L"меняет направление взгляда во всех трёх измерениях. Остановки и смены направления добавляют случайные "
+    L"замедления, паузы и изменения направления вращения; полёт вперёд продолжается. Скорость — 0–1600%. "
+    L"Каждый монитор имеет независимую случайную сцену с выводом согласно собственной частоте "
+    L"обновления.\r\n\r\nВыберите одну или несколько строк в списке мониторов. Ctrl+A выбирает все; Ctrl и "
+    L"Shift изменяют выбор. Элементы управления и ползунки анимации изменяют только настройки выбранных "
+    L"мониторов. Выбор строки и включение вывода её флажком — разные действия. Выбор сохраняется отдельно "
+    L"для приложения и заставки. Если раньше были выбраны все мониторы, в выбор включаются и вновь "
+    L"подключённые.\r\n\r\nИспользуйте SpaceFlight.scr как заставку Windows с отдельными настройками. "
+    L"Полноэкранный предпросмотр позволяет изменять их во время анимации. OK сохраняет изменения, Отмена "
+    L"или Esc отклоняет их. Для выхода из заставки нажмите клавишу или подвигайте мышью.\r\n\r\nWindows "
+    L"7–11 поддерживает все функции. Для Windows Vista SP2 необходимо установить обновления KB971512 и "
+    L"KB2117917; запись MP4 в Vista не работает. Нужна поддержка Direct3D 11, а для MP4 также Media "
+    L"Foundation и кодировщик H.264. Интерфейс и документация доступны на 36 языках."
 };
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_DESCRIPTION_TEXTS = {
@@ -2427,7 +4547,186 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_DESCRIPTION_TEXTS = {
     L"Vélbúnaðarhraðað flug yfir bylgjandi og breytilega fleti.",
     L"Maskinvareakselerert flytur over bølgende og formendrende flater.",
     L"Maskinvaruaccelererad flygtur över böljande och formföränderliga ytor.",
-    L"Dalgalanan ve biçim değiştiren yüzeyler üzerinde donanım hızlandırmalı uçuş."
+    L"Dalgalanan ve biçim değiştiren yüzeyler üzerinde donanım hızlandırmalı uçuş.",
+    L"Riistvarakiirendusega lend lainetava pinna kohal.",
+    L"Eitilt os cionn dromchla tonnúil le luasghéarú crua-earraí.",
+    L"Aparatine įranga spartinamas skrydis virš banguojančio paviršiaus.",
+    L"Aparatūras paātrināts lidojums virs viļņojošas virsmas.",
+    L"Hardveresen gyorsított repülés hullámzó felület felett.",
+    L"Titjira fuq wiċċ li jimmewweġ aċċellerata bil-ħardwer.",
+    L"Hardwareversnelde vlucht boven een golvend oppervlak.",
+    L"Zbor deasupra unei suprafețe ondulate accelerat hardware.",
+    L"Πτήση πάνω από κυματοειδή επιφάνεια με επιτάχυνση υλικού.",
+    L"Hardverski ubrzan let iznad valovite površine.",
+    L"Hardverski ubrzan let iznad valovite plohe.",
+    L"Strojno pospešen let nad valovito ploskvijo.",
+    L"Hardverski ubrzan let iznad talasaste površine.",
+    L"Апаратна паскораны палёт над хвалістай паверхняй.",
+    L"Хардуерно ускорен полет над вълнообразна повърхнина.",
+    L"Хардверски забрзан лет над брановидна површина.",
+    L"Хардверски убрзан лет изнад таласасте површи.",
+    L"Апаратно прискорений політ над хвилястою поверхнею.",
+    L"Аппаратно ускоренный полёт над волнообразной поверхностью."
+};
+
+/// Website tooltip copied from the corresponding CalClock language entries.
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_VISIT_TOOLTIP_TEXTS = {
+    L"Navštívit web",
+    L"Visit website",
+    L"Visit website",
+    L"Visit website",
+    L"Website besuchen",
+    L"Visiter le site web",
+    L"Visitar el sitio web",
+    L"Visita il sito web",
+    L"Visitar o site",
+    L"Odwiedź witrynę",
+    L"Navštíviť web",
+    L"Besøg webstedet",
+    L"Käy verkkosivustolla",
+    L"Heimsækja vefsvæði",
+    L"Besøk nettstedet",
+    L"Besök webbplatsen",
+    L"Web sitesini ziyaret et",
+    L"Ava veebisait",
+    L"Oscail an suíomh gréasáin",
+    L"Atidaryti svetainę",
+    L"Atvērt tīmekļa vietni",
+    L"Webhely megnyitása",
+    L"Iftaħ is-sit web",
+    L"Website openen",
+    L"Deschidere site web",
+    L"Άνοιγμα τοποθεσίας web",
+    L"Posjeti web-mjesto",
+    L"Posjeti web-mjesto",
+    L"Obišči spletno mesto",
+    L"Otvori veb-sajt",
+    L"Адкрыць вэб-сайт",
+    L"Отвори уебсайта",
+    L"Отвори ја веб-страницата",
+    L"Отвори веб-сајт",
+    L"Відкрити вебсайт",
+    L"Открыть веб-сайт"
+};
+
+/// Per-monitor switch between the original textured surfaces and wireframe rendering.
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> FILLED_SURFACE_TEXTS = {
+    L"Textura",
+    L"Texture",
+    L"Texture",
+    L"Texture",
+    L"Textur",
+    L"Texture",
+    L"Textura",
+    L"Texture",
+    L"Textura",
+    L"Tekstura",
+    L"Textúra",
+    L"Tekstur",
+    L"Tekstuuri",
+    L"Áferð",
+    L"Tekstur",
+    L"Textur",
+    L"Doku",
+    L"Tekstuur",
+    L"Uigeacht",
+    L"Tekstūra",
+    L"Tekstūra",
+    L"Textúra",
+    L"Nisġa",
+    L"Textuur",
+    L"Textură",
+    L"Υφή",
+    L"Tekstura",
+    L"Tekstura",
+    L"Tekstura",
+    L"Tekstura",
+    L"Тэкстура",
+    L"Текстура",
+    L"Текстура",
+    L"Текстура",
+    L"Текстура",
+    L"Текстура"
+};
+
+/// Per-monitor switch for continuous camera rotation in all three dimensions.
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> CAMERA_TUMBLING_TEXTS = {
+    L"Převalování kamery",
+    L"Camera tumbling",
+    L"Camera tumbling",
+    L"Camera tumbling",
+    L"Taumelnde Kamera",
+    L"Rotation libre de la caméra",
+    L"Giro libre de la cámara",
+    L"Rotazione libera della telecamera",
+    L"Rotação livre da câmara",
+    L"Swobodne obracanie kamery",
+    L"Prevaľovanie kamery",
+    L"Frit roterende kamera",
+    L"Kameran vapaa pyörintä",
+    L"Frjáls snúningur myndavélar",
+    L"Fritt roterende kamera",
+    L"Fritt roterande kamera",
+    L"Serbest kamera dönüşü",
+    L"Kaamera vaba pöörlemine",
+    L"Rothlú saor an cheamara",
+    L"Laisvas kameros sukimasis",
+    L"Brīva kameras rotācija",
+    L"A kamera szabad forgása",
+    L"Rotazzjoni libera tal-kamera",
+    L"Vrije camerarotatie",
+    L"Rotirea liberă a camerei",
+    L"Ελεύθερη περιστροφή κάμερας",
+    L"Slobodno okretanje kamere",
+    L"Slobodno okretanje kamere",
+    L"Prosto vrtenje kamere",
+    L"Slobodno okretanje kamere",
+    L"Свабоднае кручэнне камеры",
+    L"Свободно въртене на камерата",
+    L"Слободно вртење на камерата",
+    L"Слободно окретање камере",
+    L"Вільне обертання камери",
+    L"Свободное вращение камеры"
+};
+
+/// Per-monitor switch for gradual stops and reversals of camera tumbling.
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> CAMERA_REVERSALS_TEXTS = {
+    L"Zastavování a změny směru",
+    L"Stops and reversals",
+    L"Stops and reversals",
+    L"Stops and reversals",
+    L"Stopps und Richtungswechsel",
+    L"Arrêts et changements de sens",
+    L"Paradas y cambios de sentido",
+    L"Arresti e inversioni",
+    L"Paragens e inversões de sentido",
+    L"Zatrzymania i zmiany kierunku",
+    L"Zastavovanie a zmeny smeru",
+    L"Stop og retningsskift",
+    L"Pysähdykset ja suunnanvaihdot",
+    L"Stopp og stefnuskipti",
+    L"Stopp og retningsendringer",
+    L"Stopp och riktningsbyten",
+    L"Duraklamalar ve yön değişimleri",
+    L"Peatumised ja suunavahetused",
+    L"Stadanna agus aisiompuithe",
+    L"Sustojimai ir krypties keitimai",
+    L"Apstāšanās un virziena maiņa",
+    L"Megállások és irányváltások",
+    L"Waqfiet u bidliet fid-direzzjoni",
+    L"Stops en richtingswisselingen",
+    L"Opriri și inversări de sens",
+    L"Στάσεις και αντιστροφές",
+    L"Zaustavljanja i promjene smjera",
+    L"Zaustavljanja i promjene smjera",
+    L"Ustavljanja in spremembe smeri",
+    L"Zaustavljanja i promjene smjera",
+    L"Спыненні і змены напрамку",
+    L"Спирания и обръщания на посоката",
+    L"Запирања и промени на насоката",
+    L"Заустављања и промене смера",
+    L"Зупинки та зміни напрямку",
+    L"Остановки и смены направления"
 };
 
 /// Returns localized recording-settings captions for a validated language.
@@ -2483,11 +4782,11 @@ AppLanguage DetectSystemLanguage() {
         case LANG_ENGLISH:
             if (SUBLANGID(language) == SUBLANG_ENGLISH_UK) {
                 return AppLanguage::EnglishUk;
-            }
-            if (SUBLANGID(language) == SUBLANG_ENGLISH_AUS) {
+            } else if (SUBLANGID(language) == SUBLANG_ENGLISH_AUS) {
                 return AppLanguage::EnglishAu;
+            } else {
+                return AppLanguage::EnglishUs;
             }
-            return AppLanguage::EnglishUs;
         case LANG_GERMAN:
             return AppLanguage::German;
         case LANG_FRENCH:
@@ -2514,31 +4813,58 @@ AppLanguage DetectSystemLanguage() {
             return AppLanguage::Icelandic;
         case LANG_TURKISH:
             return AppLanguage::Turkish;
+        case LANG_CROATIAN:
+            switch (SUBLANGID(language)) {
+                case SUBLANG_BOSNIAN_BOSNIA_HERZEGOVINA_LATIN:
+                case SUBLANG_BOSNIAN_BOSNIA_HERZEGOVINA_CYRILLIC:
+                    return AppLanguage::Bosnian;
+                case SUBLANG_SERBIAN_MONTENEGRO_LATIN:
+                case SUBLANG_SERBIAN_MONTENEGRO_CYRILLIC:
+                    return AppLanguage::Montenegrin;
+                case SUBLANG_SERBIAN_LATIN:
+                case SUBLANG_SERBIAN_CYRILLIC:
+                case SUBLANG_SERBIAN_BOSNIA_HERZEGOVINA_LATIN:
+                case SUBLANG_SERBIAN_BOSNIA_HERZEGOVINA_CYRILLIC:
+                case SUBLANG_SERBIAN_SERBIA_LATIN:
+                case SUBLANG_SERBIAN_SERBIA_CYRILLIC:
+                    return AppLanguage::Serbian;
+                default:
+                    return AppLanguage::Croatian;
+            }
+        case LANG_ESTONIAN:
+            return AppLanguage::Estonian;
+        case LANG_IRISH:
+            return AppLanguage::Irish;
+        case LANG_LITHUANIAN:
+            return AppLanguage::Lithuanian;
+        case LANG_LATVIAN:
+            return AppLanguage::Latvian;
+        case LANG_HUNGARIAN:
+            return AppLanguage::Hungarian;
+        case LANG_MALTESE:
+            return AppLanguage::Maltese;
+        case LANG_DUTCH:
+            return AppLanguage::Dutch;
+        case LANG_ROMANIAN:
+            return AppLanguage::Romanian;
+        case LANG_GREEK:
+            return AppLanguage::Greek;
+        case LANG_SLOVENIAN:
+            return AppLanguage::Slovenian;
+        case LANG_BELARUSIAN:
+            return AppLanguage::Belarusian;
+        case LANG_BULGARIAN:
+            return AppLanguage::Bulgarian;
+        case LANG_MACEDONIAN:
+            return AppLanguage::Macedonian;
+        case LANG_UKRAINIAN:
+            return AppLanguage::Ukrainian;
+        case LANG_RUSSIAN:
+            return AppLanguage::Russian;
         default:
             return AppLanguage::EnglishUs;
     }
 }
-
-/// Website tooltip copied from the corresponding CalClock language entries.
-constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_VISIT_TOOLTIP_TEXTS = {
-    L"Navštívit web",
-    L"Visit website",
-    L"Visit website",
-    L"Visit website",
-    L"Website besuchen",
-    L"Visiter le site web",
-    L"Visitar el sitio web",
-    L"Visita il sito web",
-    L"Visitar o site",
-    L"Odwiedź witrynę",
-    L"Navštíviť web",
-    L"Besøg webstedet",
-    L"Käy verkkosivustolla",
-    L"Heimsækja vefsvæði",
-    L"Besøk nettstedet",
-    L"Besök webbplatsen",
-    L"Web sitesini ziyaret et"
-};
 
 /// Returns the localized About website tooltip.
 const wchar_t* AboutVisitTooltipText(AppLanguage language) {
@@ -2683,78 +5009,15 @@ const wchar_t* CopyInformationText(AppLanguage language) {
     return COPY_INFORMATION_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
-/// Per-monitor switch between the original textured surfaces and wireframe rendering.
-constexpr std::array<const wchar_t*, LANGUAGE_COUNT> FILLED_SURFACE_TEXTS = {
-    L"Textura",
-    L"Texture",
-    L"Texture",
-    L"Texture",
-    L"Textur",
-    L"Texture",
-    L"Textura",
-    L"Texture",
-    L"Textura",
-    L"Tekstura",
-    L"Textúra",
-    L"Tekstur",
-    L"Tekstuuri",
-    L"Áferð",
-    L"Tekstur",
-    L"Textur",
-    L"Doku"
-};
-
 /// Returns the selected monitors' texture option in the selected language.
 const wchar_t* FilledSurfaceText(AppLanguage language) {
     return FILLED_SURFACE_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
-/// Per-monitor switch for continuous camera rotation in all three dimensions.
-constexpr std::array<const wchar_t*, LANGUAGE_COUNT> CAMERA_TUMBLING_TEXTS = {
-    L"Převalování kamery",
-    L"Camera tumbling",
-    L"Camera tumbling",
-    L"Camera tumbling",
-    L"Taumelnde Kamera",
-    L"Rotation libre de la caméra",
-    L"Giro libre de la cámara",
-    L"Rotazione libera della telecamera",
-    L"Rotação livre da câmara",
-    L"Swobodne obracanie kamery",
-    L"Prevaľovanie kamery",
-    L"Frit roterende kamera",
-    L"Kameran vapaa pyörintä",
-    L"Frjáls snúningur myndavélar",
-    L"Fritt roterende kamera",
-    L"Fritt roterande kamera",
-    L"Serbest kamera dönüşü"
-};
-
 /// Returns the selected monitors' camera-tumbling option in the selected language.
 const wchar_t* CameraTumblingText(AppLanguage language) {
     return CAMERA_TUMBLING_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
-
-/// Per-monitor switch for gradual stops and reversals of camera tumbling.
-constexpr std::array<const wchar_t*, LANGUAGE_COUNT> CAMERA_REVERSALS_TEXTS = {
-    L"Zastavování a změny směru",
-    L"Stops and reversals",
-    L"Stops and reversals",
-    L"Stops and reversals",
-    L"Stopps und Richtungswechsel",
-    L"Arrêts et changements de sens",
-    L"Paradas y cambios de sentido",
-    L"Arresti e inversioni",
-    L"Paragens e inversões de sentido",
-    L"Zatrzymania i zmiany kierunku",
-    L"Zastavovanie a zmeny smeru",
-    L"Stop og retningsskift",
-    L"Pysähdykset ja suunnanvaihdot",
-    L"Stopp og stefnuskipti",
-    L"Stopp og retningsendringer",
-    L"Stopp och riktningsbyten",
-    L"Duraklamalar ve yön değişimleri"
-};
 
 /// Returns the selected monitors’ optional camera stops and reversals caption.
 const wchar_t* CameraReversalsText(AppLanguage language) {

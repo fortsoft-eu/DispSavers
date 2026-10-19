@@ -1,8 +1,10 @@
 # FlyingSolids
 
-[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · **Polski** · [Slovenčina](README.sk-SK.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Português](README.pt-PT.md) · [Norsk](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Suomi](README.fi-FI.md) · [Dansk](README.da-DK.md) · [Íslenska](README.is-IS.md) · [Türkçe](README.tr-TR.md)
+[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Português](README.pt-PT.md) · **Polski** · [Slovenčina](README.sk-SK.md) · [Dansk](README.da-DK.md) · [Suomi](README.fi-FI.md) · [Íslenska](README.is-IS.md) · [Norsk (bokmål)](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Türkçe](README.tr-TR.md) · [Eesti](README.et-EE.md) · [Gaeilge](README.ga-IE.md) · [Lietuvių](README.lt-LT.md) · [Latviešu](README.lv-LV.md) · [Magyar](README.hu-HU.md) · [Malti](README.mt-MT.md) · [Nederlands](README.nl-NL.md) · [Română](README.ro-RO.md) · [Ελληνικά](README.el-GR.md) · [Bosanski](README.bs-Latn-BA.md) · [Hrvatski](README.hr-HR.md) · [Slovenščina](README.sl-SI.md) · [Crnogorski](README.cnr-Latn-ME.md) · [Беларуская](README.be-BY.md) · [Български](README.bg-BG.md) · [Македонски](README.mk-MK.md) · [Српски](README.sr-Cyrl-RS.md) · [Українська](README.uk-UA.md) · [Русский](README.ru-RU.md)
 
 FlyingSolids to natywna aplikacja Win32/x86 korzystająca z Direct3D oraz wygaszacz ekranu Windows. Wyświetla oświetlone, pełne bryły geometryczne 3D. Bryły poruszają się i obracają niezależnie oraz odbijają się bez przenikania.
+
+Zaznaczenie wierszy określa konfigurowane monitory i jest niezależne od pól wyboru włączających wyjścia animacji. Ctrl+A zaznacza wszystkie monitory; Ctrl i Shift zmieniają zaznaczenie. Wszystkie opcje i suwaki animacji dotyczą zaznaczonych monitorów. Zaznaczenie jest zapamiętywane osobno dla EXE i SCR. Jeśli zaznaczone były wszystkie monitory, nowe również zostaną zaznaczone.
 
 ## Funkcje
 
@@ -15,15 +17,15 @@ FlyingSolids to natywna aplikacja Win32/x86 korzystająca z Direct3D oraz wygasz
 - Renderowanie dopasowane do częstotliwości odświeżania monitorów
 - Zrzuty PNG i nagrywanie MP4 w aplikacji samodzielnej
 - Oddzielne ustawienia aplikacji i wygaszacza
-- 30 rodzajów brył oraz interfejs w 17 językach
+- 30 rodzajów brył oraz interfejs w 36 językach
 
 ## Bryły
 
-Katalog obejmuje wielościany, graniastosłupy prawidłowe, ostrosłupy i ich przekroje płaskie, stożki i walce oraz ich przekroje, paraboloidę obrotową zamkniętą płaszczyzną, bryły pochodne kuli, elipsoidy, owoidę, sferocylinder i torus. Interfejs stosuje uznaną polską terminologię geometryczną.
+Sześcian; Ostrosłup prawidłowy czworokątny; Ostrosłup ścięty prawidłowy czworokątny; Ostrosłup czworokątny, cięcie ukośne; Ostrosłup, cięcie prostopadłe do podstawy; Graniastosłup prawidłowy trójkątny; Graniastosłup prawidłowy pięciokątny; Graniastosłup prawidłowy sześciokątny; Ośmiościan foremny; Dwupiramida pięciokątna; Stożek obrotowy; Stożek ścięty; Stożek ścięty płaszczyzną ukośną; Stożek, cięcie prostopadłe do podstawy; Walec obrotowy; Walec pusty; Walec pusty z toroidalnymi końcami; Paraboloida obrotowa zamknięta płaszczyzną; Kula; Półkula; Odcinek kuli; Duży odcinek kuli; Warstwa kulista; Elipsoida trójosiowa; Sferoida wydłużona; Sferoida spłaszczona; Owoida; Sferocylinder; Zaokrąglony dysk (spheroplatelet); Torus.
 
 ## Oświetlenie
 
-Pola wyboru `Światło główne`, `Światło wypełniające`, `Światło otoczenia` i `Oświetlenie konturów` pod suwakami niezależnie sterują oświetleniem całej sceny. Światło otoczenia zapewnia podstawową jasność powierzchni, a oświetlenie konturów podkreśla krawędzie. Domyślnie światło główne, światło otoczenia i oświetlenie konturów są włączone, a światło wypełniające jest wyłączone. Ustawienia są zapisywane osobno dla aplikacji i wygaszacza ekranu.
+Pola wyboru `Światło główne`, `Światło wypełniające`, `Światło otoczenia` i `Oświetlenie konturów` pod suwakami niezależnie sterują oświetleniem całej sceny. Światło otoczenia zapewnia podstawową jasność powierzchni, a oświetlenie konturów podkreśla krawędzie. Ustawienia są zapisywane osobno dla aplikacji i wygaszacza ekranu.
 
 ## Aplikacja i wygaszacz
 
@@ -42,7 +44,7 @@ Systemy od Windows 7 do Windows 11 obsługują wszystkie funkcje, w tym zrzuty P
 
 ## Kompilowanie
 
-Otwórz `DispSavers.slnx` w Visual Studio z MSVC v145 i Windows SDK. Wybierz `Release | x86` i przebuduj rozwiązanie, aby utworzyć `Release\FlyingSolids.exe` oraz `Release\FlyingSolids.scr`. Konfiguracja x64 nie jest dostępna. Podpisywanie jest domyślnie włączone dla Release i Debug. We właściwościach projektu `FlyingSolids`, na stronie `Signing`, podaj nazwę lub odcisk ważnego certyfikatu podpisywania kodu z kluczem prywatnym w magazynie `Personal (My)` bieżącego użytkownika. Ustawienia dotyczą EXE i SCR i są zapisywane w pliku `FlyingSolids.vcxproj.user`, ignorowanym przez Git. SignTool jest automatycznie wyszukiwany w PATH lub Windows SDK. Jeśli korzystasz z SimplySign, przed kompilacją zaloguj się do SimplySign Desktop. Najpierw podpisywany jest SCR i dodawany jest obowiązkowy znacznik czasu RFC 3161 SHA-256 z ustawionego serwera znaczników czasu, następnie SCR jest osadzany w EXE, który również otrzymuje podpis i znacznik czasu. W polu `Timestamp server` podaj adres URL serwera znaczników czasu RFC 3161. Błąd podpisywania, znacznika czasu lub weryfikacji przerywa kompilację; pliki z prawidłowym podpisem i znacznikiem czasu nie są podpisywane ponownie.
+Otwórz `DispSavers.slnx` w Visual Studio z MSVC v145 i Windows SDK. Wybierz `Release | x86` i przebuduj rozwiązanie, aby utworzyć `Release\FlyingSolids.exe` oraz `Release\FlyingSolids.scr`. Konfiguracja x64 nie jest dostępna. We właściwościach projektu `FlyingSolids`, na stronie `Signing`, podaj nazwę lub odcisk ważnego certyfikatu podpisywania kodu z kluczem prywatnym w magazynie `Personal (My)` bieżącego użytkownika. Ustawienia dotyczą EXE i SCR i są zapisywane w pliku `FlyingSolids.vcxproj.user`, ignorowanym przez Git. SignTool jest automatycznie wyszukiwany w PATH lub Windows SDK. Jeśli korzystasz z SimplySign, przed kompilacją zaloguj się do SimplySign Desktop. Najpierw podpisywany jest SCR i dodawany jest obowiązkowy znacznik czasu RFC 3161 SHA-256 z ustawionego serwera znaczników czasu, następnie SCR jest osadzany w EXE, który również otrzymuje podpis i znacznik czasu. W polu `Timestamp server` podaj adres URL serwera znaczników czasu RFC 3161. Błąd podpisywania, znacznika czasu lub weryfikacji przerywa kompilację; pliki z prawidłowym podpisem i znacznikiem czasu nie są podpisywane ponownie.
 
 Uruchom `PackageRelease.ps1` bez parametrów podpisywania, aby spakować zbudowane pliki. Skrypt używa kopii tymczasowych, nie zmienia plików w `Release` i jedynie weryfikuje istniejące prawidłowe podpisy. Tworzy jeden plik `DispSavers-<version>-win32.zip` zawierający `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr` oraz `SpaceFlight\license.txt`. Poprzedni ZIP jest usuwany na początku uruchomienia; błąd weryfikacji uniemożliwia utworzenie nowego archiwum.
 
@@ -50,15 +52,14 @@ Uruchom `PackageRelease.ps1` bez parametrów podpisywania, aby spakować zbudowa
 
 FlyingSolids jest udostępniany na [licencji MIT](../license.txt). Copyright © Petr Červinka — FortSoft 2026
 
-
 ## FlightCorridor
 
-FlightCorridor oferuje Przelot między czterema zmiennymi powierzchniami i Przelot przez zmienny lejek. Każdemu monitorowi przypisz dokładnie jeden przelot: zaznacz jego wiersz i odpowiedni przycisk opcji. Domyślnie na wszystkich monitorach wybrana jest pierwsza animacja.
+FlightCorridor oferuje Przelot między czterema zmiennymi powierzchniami i Przelot przez zmienny lejek. Każdemu monitorowi przypisz dokładnie jeden przelot: zaznacz jego wiersz i odpowiedni przycisk opcji.
 
 `Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](../FlightCorridor/README.pl-PL.md)
 
 ## SpaceFlight
 
-SpaceFlight oferuje „Nieskończona falująca powierzchnia“ i „Lot dalekodystansowy — zmienna powierzchnia“. Każdemu monitorowi przypisz dokładnie jeden przelot: zaznacz jego wiersz i odpowiedni przycisk opcji. Domyślnie na wszystkich monitorach wybrana jest pierwsza animacja.
+SpaceFlight oferuje „Nieskończona falująca powierzchnia“ i „Lot dalekodystansowy — zmienna powierzchnia“. Każdemu monitorowi przypisz dokładnie jeden przelot: zaznacz jego wiersz i odpowiedni przycisk opcji.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.pl-PL.md)

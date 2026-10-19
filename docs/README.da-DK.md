@@ -1,8 +1,10 @@
 # FlyingSolids
 
-[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Português](README.pt-PT.md) · [Norsk](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Suomi](README.fi-FI.md) · **Dansk** · [Íslenska](README.is-IS.md) · [Türkçe](README.tr-TR.md)
+[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Português](README.pt-PT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · **Dansk** · [Suomi](README.fi-FI.md) · [Íslenska](README.is-IS.md) · [Norsk (bokmål)](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Türkçe](README.tr-TR.md) · [Eesti](README.et-EE.md) · [Gaeilge](README.ga-IE.md) · [Lietuvių](README.lt-LT.md) · [Latviešu](README.lv-LV.md) · [Magyar](README.hu-HU.md) · [Malti](README.mt-MT.md) · [Nederlands](README.nl-NL.md) · [Română](README.ro-RO.md) · [Ελληνικά](README.el-GR.md) · [Bosanski](README.bs-Latn-BA.md) · [Hrvatski](README.hr-HR.md) · [Slovenščina](README.sl-SI.md) · [Crnogorski](README.cnr-Latn-ME.md) · [Беларуская](README.be-BY.md) · [Български](README.bg-BG.md) · [Македонски](README.mk-MK.md) · [Српски](README.sr-Cyrl-RS.md) · [Українська](README.uk-UA.md) · [Русский](README.ru-RU.md)
 
 FlyingSolids er et integreret Win32/x86 Direct3D-program og en Windows-pauseskærm, som viser belyste, solide tredimensionale geometriske legemer. Legemerne bevæger og roterer sig uafhængigt og kolliderer uden at trænge gennem hinanden.
+
+Markeringen af rækker bestemmer, hvilke skærme du indstiller, og er adskilt fra afkrydsningsfelterne, der aktiverer animationsoutput. Ctrl+A markerer alle skærme; Ctrl og Skift ændrer markeringen. Alle animationsvalg og skydere gælder de markerede skærme. Markeringen huskes separat for EXE og SCR. Hvis alle skærme var markeret, medtages også nye skærme.
 
 ## Funktioner
 
@@ -15,15 +17,15 @@ FlyingSolids er et integreret Win32/x86 Direct3D-program og en Windows-pauseskæ
 - Gengivelse tilpasset hver skærms opdateringsfrekvens
 - PNG-skærmbilleder og MP4-optagelse i det selvstændige program
 - Separate indstillinger for program og pauseskærm
-- 30 typer legemer og brugerflade på 17 sprog
+- 30 typer legemer og brugerflade på 36 sprog
 
 ## Geometriske legemer
 
-Udvalget omfatter polyedre, regulære prismer, pyramider og plansnit, kegler og cylindre og deres plansnit, en rotationsparaboloide lukket af et plan, kugleafledte legemer, ellipsoider, ovoide, sfærocylinder og torus. Brugerfladen anvender etablerede danske geometriske fagudtryk.
+Terning; Regulær firsidet pyramide; Afkortet firsidet pyramide; Firsidet pyramide skåret med et skråt plan; Firkantpyramide, snit vinkelret på basen; Regulært trekantet prisme; Regulært femkantet prisme; Regulært sekskantet prisme; Regulært oktaeder; Femkantet bipyramide; Ret cirkulær kegle; Afkortet kegle; Kegle skåret med et skråt plan; Kegle med snit vinkelret på grundfladen; Ret cirkulær cylinder; Hul cylinder; Hul cylinder med toroidale ender; Rotationsparaboloide lukket af et plan; Kugle; Halvkugle; Kuglesegment; Stort kuglesegment; Kuglelag; Treakset ellipsoide; Prolat sfæroide; Fladtrykt sfæroide; Ovoide; Sfærocylinder; Afrundet skive (spheroplatelet); Torus.
 
 ## Belysning
 
-Afkrydsningsfelterne `Hovedlys`, `Udfyldningslys`, `Omgivende lys` og `Konturlys` under skyderne styrer belysningen af hele scenen uafhængigt af hinanden. Omgivende lys giver overfladerne en grundbelysning, og konturlys fremhæver kanterne. Som standard er hovedlys, omgivende lys og konturlys slået til og udfyldningslys slået fra. Indstillingerne gemmes separat for programmet og pauseskærmen.
+Afkrydsningsfelterne `Hovedlys`, `Udfyldningslys`, `Omgivende lys` og `Konturlys` under skyderne styrer belysningen af hele scenen uafhængigt af hinanden. Omgivende lys giver overfladerne en grundbelysning, og konturlys fremhæver kanterne. Indstillingerne gemmes separat for programmet og pauseskærmen.
 
 ## Program og pauseskærm
 
@@ -42,7 +44,7 @@ Windows 7 til Windows 11 understøtter alle funktioner, herunder PNG-skærmbille
 
 ## Kompilering
 
-Åbn `DispSavers.slnx` i Visual Studio med MSVC v145 og Windows SDK. Vælg `Release | x86`, og genopbyg løsningen for at oprette `Release\FlyingSolids.exe` og `Release\FlyingSolids.scr`. Der findes ingen x64-konfiguration. Signering er som standard slået til for både Release og Debug. Angiv navnet eller fingeraftrykket for et gyldigt certifikat til kodesignering med en privat nøgle i den aktuelle brugers `Personal (My)`-lager på siden `Signing` i egenskaberne for projektet `FlyingSolids`. Indstillingerne gælder EXE og SCR og gemmes i `FlyingSolids.vcxproj.user`, som Git ignorerer. SignTool findes automatisk i PATH eller Windows SDK. Hvis du bruger SimplySign, skal du logge på SimplySign Desktop før bygget. Først signeres SCR og får et obligatorisk RFC 3161 SHA-256-tidsstempel fra den konfigurerede tidsstempelserver; derefter indlejres det i EXE, som også signeres og tidsstemples. Angiv URL-adressen til RFC 3161-tidsstempelserveren i feltet `Timestamp server`. Fejl ved signering, tidsstempling eller kontrol stopper bygget; filer med gyldige tidsstemplede signaturer signeres ikke igen.
+Åbn `DispSavers.slnx` i Visual Studio med MSVC v145 og Windows SDK. Vælg `Release | x86`, og genopbyg løsningen for at oprette `Release\FlyingSolids.exe` og `Release\FlyingSolids.scr`. Der findes ingen x64-konfiguration. Angiv navnet eller fingeraftrykket for et gyldigt certifikat til kodesignering med en privat nøgle i den aktuelle brugers `Personal (My)`-lager på siden `Signing` i egenskaberne for projektet `FlyingSolids`. Indstillingerne gælder EXE og SCR og gemmes i `FlyingSolids.vcxproj.user`, som Git ignorerer. SignTool findes automatisk i PATH eller Windows SDK. Hvis du bruger SimplySign, skal du logge på SimplySign Desktop før bygget. Først signeres SCR og får et obligatorisk RFC 3161 SHA-256-tidsstempel fra den konfigurerede tidsstempelserver; derefter indlejres det i EXE, som også signeres og tidsstemples. Angiv URL-adressen til RFC 3161-tidsstempelserveren i feltet `Timestamp server`. Fejl ved signering, tidsstempling eller kontrol stopper bygget; filer med gyldige tidsstemplede signaturer signeres ikke igen.
 
 Pak disse byggeoutput ved at køre `PackageRelease.ps1` uden signeringsparametre. Scriptet bruger midlertidige kopier, ændrer ikke filer i `Release` og kontrollerer kun eksisterende gyldige signaturer. Det opretter ét arkiv, `DispSavers-<version>-win32.zip`, med `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr` og `SpaceFlight\license.txt`. Den tidligere ZIP-fil fjernes ved starten af kørslen; en kontrolfejl forhindrer oprettelsen af et nyt arkiv.
 
@@ -50,15 +52,14 @@ Pak disse byggeoutput ved at køre `PackageRelease.ps1` uden signeringsparametre
 
 FlyingSolids udgives under [MIT-licensen](../license.txt). Copyright © Petr Červinka — FortSoft 2026
 
-
 ## FlightCorridor
 
-FlightCorridor tilbyder Flyvetur mellem fire formskiftende flader og Flyvetur gennem en formskiftende tragt. Tildel præcis én flyvetur til hver skærm: vælg dens række og den tilsvarende alternativknap. Den første animation er valgt på alle skærme som standard.
+FlightCorridor tilbyder Flyvetur mellem fire formskiftende flader og Flyvetur gennem en formskiftende tragt. Tildel præcis én flyvetur til hver skærm: vælg dens række og den tilsvarende alternativknap.
 
 `Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](../FlightCorridor/README.da-DK.md)
 
 ## SpaceFlight
 
-SpaceFlight tilbyder „Uendelig bølgende flade“ og „Langdistanceflyvetur — formskiftende flade“. Tildel præcis én flyvetur til hver skærm: vælg dens række og den tilsvarende alternativknap. Den første animation er valgt på alle skærme som standard.
+SpaceFlight tilbyder „Uendelig bølgende flade“ og „Langdistanceflyvetur — formskiftende flade“. Tildel præcis én flyvetur til hver skærm: vælg dens række og den tilsvarende alternativknap.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.da-DK.md)

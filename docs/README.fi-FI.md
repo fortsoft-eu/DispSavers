@@ -1,8 +1,10 @@
 # FlyingSolids
 
-[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Português](README.pt-PT.md) · [Norsk](README.nb-NO.md) · [Svenska](README.sv-SE.md) · **Suomi** · [Dansk](README.da-DK.md) · [Íslenska](README.is-IS.md) · [Türkçe](README.tr-TR.md)
+[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Português](README.pt-PT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [Dansk](README.da-DK.md) · **Suomi** · [Íslenska](README.is-IS.md) · [Norsk (bokmål)](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Türkçe](README.tr-TR.md) · [Eesti](README.et-EE.md) · [Gaeilge](README.ga-IE.md) · [Lietuvių](README.lt-LT.md) · [Latviešu](README.lv-LV.md) · [Magyar](README.hu-HU.md) · [Malti](README.mt-MT.md) · [Nederlands](README.nl-NL.md) · [Română](README.ro-RO.md) · [Ελληνικά](README.el-GR.md) · [Bosanski](README.bs-Latn-BA.md) · [Hrvatski](README.hr-HR.md) · [Slovenščina](README.sl-SI.md) · [Crnogorski](README.cnr-Latn-ME.md) · [Беларуская](README.be-BY.md) · [Български](README.bg-BG.md) · [Македонски](README.mk-MK.md) · [Српски](README.sr-Cyrl-RS.md) · [Українська](README.uk-UA.md) · [Русский](README.ru-RU.md)
 
 FlyingSolids on natiivi Win32/x86 Direct3D -sovellus ja Windowsin näytönsäästäjä, joka näyttää valaistuja kiinteitä kolmiulotteisia geometrisia kappaleita. Kappaleet liikkuvat ja pyörivät itsenäisesti ja törmäävät läpäisemättä toisiaan.
+
+Rivien valinta määrää muokattavat näytöt ja on erillinen animaatioulostulon valintaruuduista. Ctrl+A valitsee kaikki näytöt; Ctrl ja Vaihto muuttavat valintaa. Kaikki animaatioasetukset ja liukusäätimet koskevat valittuja näyttöjä. Valinta muistetaan erikseen EXE- ja SCR-tiloissa. Jos kaikki näytöt olivat valittuina, myös uudet näytöt valitaan.
 
 ## Ominaisuudet
 
@@ -15,15 +17,15 @@ FlyingSolids on natiivi Win32/x86 Direct3D -sovellus ja Windowsin näytönsääs
 - Kunkin näytön virkistystaajuuteen mukautuva piirto
 - PNG-kuvat ja MP4-tallennus erillisessä sovelluksessa
 - Erilliset asetukset sovellukselle ja näytönsäästäjälle
-- 30 kappaletyyppiä ja käyttöliittymä 17 kielellä
+- 30 kappaletyyppiä ja käyttöliittymä 36 kielellä
 
 ## Geometriset kappaleet
 
-Valikoimaan kuuluu monitahokkaita, säännöllisiä prismoja, pyramideja ja tasoleikkauksia, kartioita ja lieriöitä leikkauksineen, tasolla suljettu pyörähdysparaboloidi, pallosta johdettuja kappaleita, ellipsoideja, ovoidi, sferosylinteri ja torus. Käyttöliittymä käyttää vakiintunutta suomenkielistä geometrian sanastoa.
+Kuutio; Säännöllinen neliöpyramidi; Katkaistu neliöpyramidi; Neliöpyramidi, vino leikkaus; Pyramidi, leikkaus kohtisuoraan pohjaan; Säännöllinen kolmioprisma; Säännöllinen viisikulmainen prisma; Säännöllinen kuusikulmainen prisma; Säännöllinen oktaedri; Viisikulmainen kaksoispyramidi; Suora ympyräkartio; Katkaistu kartio; Kartio vinolla tasolla leikattuna; Kartio, pohjaan nähden kohtisuora leikkaus; Suora ympyrälieriö; Ontto lieriö; Ontto lieriö, toroidiset päädyt; Tasolla suljettu pyörähdysparaboloidi; Pallo; Puolipallo; Pallosegmentti; Suuri pallosegmentti; Katkaistu pallosegmentti; Kolmiakselinen ellipsoidi; Prolaatti sferoidi; Litteä sferoidi; Ovoidi; Sferosylinteri; Pyöristetty kiekko (spheroplatelet); Torus.
 
 ## Valaistus
 
-Liukusäätimien alla olevat `Päävalo`-, `Täytevalo`-, `Ympäristövalo`- ja `Reunavalo`-valintaruudut ohjaavat koko näkymän valaistusta toisistaan riippumatta. Ympäristövalo antaa pinnoille perusvalaistuksen ja reunavalo korostaa reunoja. Oletuksena päävalo, ympäristövalo ja reunavalo ovat päällä ja täytevalo pois päältä. Asetukset tallennetaan erikseen sovellukselle ja näytönsäästäjälle.
+Liukusäätimien alla olevat `Päävalo`-, `Täytevalo`-, `Ympäristövalo`- ja `Reunavalo`-valintaruudut ohjaavat koko näkymän valaistusta toisistaan riippumatta. Ympäristövalo antaa pinnoille perusvalaistuksen ja reunavalo korostaa reunoja. Asetukset tallennetaan erikseen sovellukselle ja näytönsäästäjälle.
 
 ## Sovellus ja näytönsäästäjä
 
@@ -42,7 +44,7 @@ Windows 7–Windows 11 tukevat kaikkia toimintoja, myös PNG-tilannekuvia ja MP4
 
 ## Koonti
 
-Avaa `DispSavers.slnx` Visual Studiossa käyttäen MSVC v145:tä ja Windows SDK:ta. Valitse `Release | x86` ja kokoa ratkaisu uudelleen, jolloin syntyvät `Release\FlyingSolids.exe` ja `Release\FlyingSolids.scr`. x64-kokoonpanoa ei ole. Allekirjoitus on oletuksena käytössä sekä Release- että Debug-kokoonpanossa. Anna `FlyingSolids`-projektin ominaisuuksien `Signing`-sivulla nykyisen käyttäjän `Personal (My)`-varastossa olevan voimassa olevan koodin allekirjoitusvarmenteen nimi tai sormenjälki; varmenteella on oltava yksityinen avain. Asetukset koskevat EXE- ja SCR-tiedostoja, ja ne tallennetaan Gitin ohittamaan `FlyingSolids.vcxproj.user`-tiedostoon. SignTool etsitään automaattisesti PATH-muuttujasta tai Windows SDK:sta. Jos käytät SimplySignia, kirjaudu SimplySign Desktopiin ennen koontia. Ensin SCR allekirjoitetaan ja siihen lisätään pakollinen RFC 3161 SHA-256 -aikaleima määritetyltä aikaleimapalvelimelta; sen jälkeen SCR upotetaan EXE-tiedostoon, joka myös allekirjoitetaan ja aikaleimataan. Anna RFC 3161 -aikaleimapalvelimen URL-osoite `Timestamp server`-kenttään. Allekirjoituksen, aikaleiman tai tarkistuksen virhe keskeyttää koonnin; kelvollisesti allekirjoitettuja ja aikaleimattuja tiedostoja ei allekirjoiteta uudelleen.
+Avaa `DispSavers.slnx` Visual Studiossa käyttäen MSVC v145:tä ja Windows SDK:ta. Valitse `Release | x86` ja kokoa ratkaisu uudelleen, jolloin syntyvät `Release\FlyingSolids.exe` ja `Release\FlyingSolids.scr`. x64-kokoonpanoa ei ole. Anna `FlyingSolids`-projektin ominaisuuksien `Signing`-sivulla nykyisen käyttäjän `Personal (My)`-varastossa olevan voimassa olevan koodin allekirjoitusvarmenteen nimi tai sormenjälki; varmenteella on oltava yksityinen avain. Asetukset koskevat EXE- ja SCR-tiedostoja, ja ne tallennetaan Gitin ohittamaan `FlyingSolids.vcxproj.user`-tiedostoon. SignTool etsitään automaattisesti PATH-muuttujasta tai Windows SDK:sta. Jos käytät SimplySignia, kirjaudu SimplySign Desktopiin ennen koontia. Ensin SCR allekirjoitetaan ja siihen lisätään pakollinen RFC 3161 SHA-256 -aikaleima määritetyltä aikaleimapalvelimelta; sen jälkeen SCR upotetaan EXE-tiedostoon, joka myös allekirjoitetaan ja aikaleimataan. Anna RFC 3161 -aikaleimapalvelimen URL-osoite `Timestamp server`-kenttään. Allekirjoituksen, aikaleiman tai tarkistuksen virhe keskeyttää koonnin; kelvollisesti allekirjoitettuja ja aikaleimattuja tiedostoja ei allekirjoiteta uudelleen.
 
 Paketoi nämä koontitulokset suorittamalla `PackageRelease.ps1` ilman allekirjoitusparametreja. Skripti käyttää väliaikaisia kopioita, ei muuta `Release`-hakemiston tiedostoja ja ainoastaan tarkistaa olemassa olevat kelvolliset allekirjoitukset. Se luo yhden `DispSavers-<version>-win32.zip`-arkiston, jossa ovat `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr` ja `SpaceFlight\license.txt`. Edellinen ZIP poistetaan suorituksen alussa; tarkistusvirhe estää uuden arkiston luomisen.
 
@@ -50,15 +52,14 @@ Paketoi nämä koontitulokset suorittamalla `PackageRelease.ps1` ilman allekirjo
 
 FlyingSolids on saatavana [MIT-lisenssillä](../license.txt). Copyright © Petr Červinka — FortSoft 2026
 
-
 ## FlightCorridor
 
-FlightCorridor tarjoaa Lento neljän muuntuvan pinnan välissä ja Lento muuntuvan suppilon läpi -animaatiot. Määritä kullekin näytölle täsmälleen yksi lento: valitse näytön rivi ja vastaava valintanappi. Ensimmäinen animaatio on oletusarvoisesti valittuna kaikilla näytöillä.
+FlightCorridor tarjoaa Lento neljän muuntuvan pinnan välissä ja Lento muuntuvan suppilon läpi -animaatiot. Määritä kullekin näytölle täsmälleen yksi lento: valitse näytön rivi ja vastaava valintanappi.
 
 `Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](../FlightCorridor/README.fi-FI.md)
 
 ## SpaceFlight
 
-SpaceFlight tarjoaa „Ääretön aaltoileva pinta“ ja „Pitkän matkan lento — muuntuva pinta“ -animaatiot. Määritä kullekin näytölle täsmälleen yksi lento: valitse näytön rivi ja vastaava valintanappi. Ensimmäinen animaatio on oletusarvoisesti valittuna kaikilla näytöillä.
+SpaceFlight tarjoaa „Ääretön aaltoileva pinta“ ja „Pitkän matkan lento — muuntuva pinta“ -animaatiot. Määritä kullekin näytölle täsmälleen yksi lento: valitse näytön rivi ja vastaava valintanappi.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.fi-FI.md)

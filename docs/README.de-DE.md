@@ -1,8 +1,10 @@
 # FlyingSolids
 
-[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · **Deutsch** · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Português](README.pt-PT.md) · [Norsk](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Suomi](README.fi-FI.md) · [Dansk](README.da-DK.md) · [Íslenska](README.is-IS.md) · [Türkçe](README.tr-TR.md)
+[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · **Deutsch** · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Português](README.pt-PT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [Dansk](README.da-DK.md) · [Suomi](README.fi-FI.md) · [Íslenska](README.is-IS.md) · [Norsk (bokmål)](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Türkçe](README.tr-TR.md) · [Eesti](README.et-EE.md) · [Gaeilge](README.ga-IE.md) · [Lietuvių](README.lt-LT.md) · [Latviešu](README.lv-LV.md) · [Magyar](README.hu-HU.md) · [Malti](README.mt-MT.md) · [Nederlands](README.nl-NL.md) · [Română](README.ro-RO.md) · [Ελληνικά](README.el-GR.md) · [Bosanski](README.bs-Latn-BA.md) · [Hrvatski](README.hr-HR.md) · [Slovenščina](README.sl-SI.md) · [Crnogorski](README.cnr-Latn-ME.md) · [Беларуская](README.be-BY.md) · [Български](README.bg-BG.md) · [Македонски](README.mk-MK.md) · [Српски](README.sr-Cyrl-RS.md) · [Українська](README.uk-UA.md) · [Русский](README.ru-RU.md)
 
 FlyingSolids ist eine native Win32/x86-Direct3D-Anwendung und ein Windows-Bildschirmschoner für beleuchtete, räumliche Vollkörper. Die Körper bewegen und drehen sich unabhängig und prallen voneinander ab, ohne einander zu durchdringen.
+
+Die Zeilenauswahl bestimmt, welche Monitore Sie bearbeiten; sie ist von den Kontrollkästchen zum Einschalten der Animationsausgabe getrennt. Strg+A wählt alle Monitore, Strg und Umschalt ändern die Auswahl. Alle Animationsoptionen und Regler gelten für die ausgewählten Monitore. Die Auswahl wird für EXE und SCR getrennt gespeichert. Waren alle Monitore ausgewählt, werden auch neu angeschlossene ausgewählt.
 
 ## Funktionen
 
@@ -15,15 +17,15 @@ FlyingSolids ist eine native Win32/x86-Direct3D-Anwendung und ein Windows-Bildsc
 - An die Bildwiederholfrequenz jedes Monitors angepasste Darstellung
 - PNG-Schnappschüsse und MP4-Aufnahme in der eigenständigen Anwendung
 - Getrennte Einstellungen für Anwendung und Bildschirmschoner
-- 30 Körperarten und eine Oberfläche in 17 Sprachen
+- 30 Körperarten und eine Oberfläche in 36 Sprachen
 
 ## Körper
 
-Der Katalog umfasst Polyeder, regelmäßige Prismen, Pyramiden und ebene Schnitte, Kegel und Zylinder und deren ebene Schnitte, einen durch eine Ebene geschlossenen Rotationsparaboloid, von der Kugel abgeleitete Körper, Ellipsoide, Ovoid, Sphärozylinder und Torus. Das Programm verwendet die fachüblichen deutschen geometrischen Bezeichnungen.
+Würfel; Regelmäßige quadratische Pyramide; Quadratischer Pyramidenstumpf; Schräg abgeschnittene Quadratpyramide; Quadratpyramide, basissenkrechter Schnitt; Regelmäßiges Dreiecksprisma; Regelmäßiges Fünfeckprisma; Regelmäßiges Sechseckprisma; Regelmäßiges Oktaeder; Fünfeck-Doppelpyramide; Gerader Kreiskegel; Kegelstumpf; Schräg abgeschnittener Kreiskegel; Kreiskegel, Schnitt senkrecht zur Basis; Gerader Kreiszylinder; Hohlzylinder; Hohlzylinder mit toroidalen Enden; Geschlossener Rotationsparaboloid; Kugel; Halbkugel; Kugelabschnitt; Großer Kugelabschnitt; Kugelschicht; Dreiachsiges Ellipsoid; Verlängertes Rotationsellipsoid; Abgeplattetes Rotationsellipsoid; Ovoid; Sphärozylinder; Abgerundete Scheibe (Spheroplatelet); Torus.
 
 ## Beleuchtung
 
-Die Kontrollkästchen `Hauptlicht`, `Aufhelllicht`, `Umgebungslicht` und `Konturlicht` unter den Reglern steuern die Beleuchtung der gesamten Szene unabhängig voneinander. Umgebungslicht sorgt für eine Grundhelligkeit der Körperoberflächen, Konturlicht betont ihre Ränder. Standardmäßig sind Hauptlicht, Umgebungslicht und Konturlicht eingeschaltet und Aufhelllicht ausgeschaltet. Die Beleuchtungseinstellungen werden für Anwendung und Bildschirmschoner getrennt gespeichert.
+Die Kontrollkästchen `Hauptlicht`, `Aufhelllicht`, `Umgebungslicht` und `Konturlicht` unter den Reglern steuern die Beleuchtung der gesamten Szene unabhängig voneinander. Umgebungslicht sorgt für eine Grundhelligkeit der Körperoberflächen, Konturlicht betont ihre Ränder. Die Beleuchtungseinstellungen werden für Anwendung und Bildschirmschoner getrennt gespeichert.
 
 ## Anwendung und Bildschirmschoner
 
@@ -42,7 +44,7 @@ Windows 7 bis Windows 11 unterstützen alle Funktionen einschließlich PNG-Schna
 
 ## Erstellen und Paketieren
 
-Öffnen Sie `DispSavers.slnx` in Visual Studio mit MSVC v145 und Windows SDK. Wählen Sie `Release | x86` und erstellen Sie die Projektmappe neu; dabei entstehen `Release\FlyingSolids.exe` und `Release\FlyingSolids.scr`. Eine x64-Konfiguration ist nicht vorhanden. Das Signieren ist für Release und Debug standardmäßig aktiviert. Geben Sie in den Eigenschaften des Projekts `FlyingSolids` auf der Seite `Signing` den Namen oder Fingerabdruck eines gültigen Codesignaturzertifikats mit privatem Schlüssel im Zertifikatspeicher `Personal (My)` des aktuellen Benutzers ein. Die Einstellungen gelten für EXE und SCR und werden in der von Git ignorierten Datei `FlyingSolids.vcxproj.user` gespeichert. SignTool wird automatisch über PATH oder im Windows SDK gefunden. Melden Sie sich bei Verwendung von SimplySign vor dem Erstellen in SimplySign Desktop an. Zuerst wird SCR signiert und mit einem obligatorischen RFC-3161-SHA-256-Zeitstempel vom konfigurierten Zeitstempelserver versehen. Danach wird es in EXE eingebettet, die ebenfalls signiert und mit einem Zeitstempel versehen wird. Geben Sie im Feld `Timestamp server` die URL eines RFC-3161-Zeitstempelservers ein. Fehler beim Signieren, Zeitstempeln oder Überprüfen brechen den Build ab; bereits gültig signierte Dateien mit Zeitstempel werden nicht erneut signiert.
+Öffnen Sie `DispSavers.slnx` in Visual Studio mit MSVC v145 und Windows SDK. Wählen Sie `Release | x86` und erstellen Sie die Projektmappe neu; dabei entstehen `Release\FlyingSolids.exe` und `Release\FlyingSolids.scr`. Eine x64-Konfiguration ist nicht vorhanden. Geben Sie in den Eigenschaften des Projekts `FlyingSolids` auf der Seite `Signing` den Namen oder Fingerabdruck eines gültigen Codesignaturzertifikats mit privatem Schlüssel im Zertifikatspeicher `Personal (My)` des aktuellen Benutzers ein. Die Einstellungen gelten für EXE und SCR und werden in der von Git ignorierten Datei `FlyingSolids.vcxproj.user` gespeichert. SignTool wird automatisch über PATH oder im Windows SDK gefunden. Melden Sie sich bei Verwendung von SimplySign vor dem Erstellen in SimplySign Desktop an. Zuerst wird SCR signiert und mit einem obligatorischen RFC-3161-SHA-256-Zeitstempel vom konfigurierten Zeitstempelserver versehen. Danach wird es in EXE eingebettet, die ebenfalls signiert und mit einem Zeitstempel versehen wird. Geben Sie im Feld `Timestamp server` die URL eines RFC-3161-Zeitstempelservers ein. Fehler beim Signieren, Zeitstempeln oder Überprüfen brechen den Build ab; bereits gültig signierte Dateien mit Zeitstempel werden nicht erneut signiert.
 
 Verpacken Sie diese Build-Ergebnisse mit `PackageRelease.ps1` ohne Signaturparameter. Das Skript verwendet temporäre Kopien, verändert keine Dateien in `Release` und überprüft vorhandene gültige Signaturen lediglich. Es erstellt das einzige Archiv `DispSavers-<version>-win32.zip` mit `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr` und `SpaceFlight\license.txt`. Die vorherige ZIP-Datei wird zu Beginn entfernt; ein Überprüfungsfehler verhindert die Erstellung eines neuen Archivs.
 
@@ -50,15 +52,14 @@ Verpacken Sie diese Build-Ergebnisse mit `PackageRelease.ps1` ohne Signaturparam
 
 FlyingSolids steht unter der [MIT-Lizenz](../license.txt). Copyright © Petr Červinka — FortSoft 2026
 
-
 ## FlightCorridor
 
-FlightCorridor bietet Flug zwischen vier veränderlichen Flächen und Flug durch einen veränderlichen Trichter. Weisen Sie jedem Monitor genau einen Flug zu: Markieren Sie seine Zeile und wählen Sie den entsprechenden Optionsschalter. Standardmäßig ist auf allen Monitoren die erste Animation ausgewählt.
+FlightCorridor bietet Flug zwischen vier veränderlichen Flächen und Flug durch einen veränderlichen Trichter. Weisen Sie jedem Monitor genau einen Flug zu: Markieren Sie seine Zeile und wählen Sie den entsprechenden Optionsschalter.
 
 `Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](../FlightCorridor/README.de-DE.md)
 
 ## SpaceFlight
 
-SpaceFlight bietet „Unendliche wellenförmige Fläche“ und „Fernflug — veränderliche Fläche“. Weisen Sie jedem Monitor genau einen Flug zu: Markieren Sie seine Zeile und wählen Sie den entsprechenden Optionsschalter. Standardmäßig ist auf allen Monitoren die erste Animation ausgewählt.
+SpaceFlight bietet „Unendliche wellenförmige Fläche“ und „Fernflug — veränderliche Fläche“. Weisen Sie jedem Monitor genau einen Flug zu: Markieren Sie seine Zeile und wählen Sie den entsprechenden Optionsschalter.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.de-DE.md)

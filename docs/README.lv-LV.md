@@ -1,0 +1,35 @@
+# FlyingSolids
+
+[Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Português](README.pt-PT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [Dansk](README.da-DK.md) · [Suomi](README.fi-FI.md) · [Íslenska](README.is-IS.md) · [Norsk (bokmål)](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Türkçe](README.tr-TR.md) · [Eesti](README.et-EE.md) · [Gaeilge](README.ga-IE.md) · [Lietuvių](README.lt-LT.md) · **Latviešu** · [Magyar](README.hu-HU.md) · [Malti](README.mt-MT.md) · [Nederlands](README.nl-NL.md) · [Română](README.ro-RO.md) · [Ελληνικά](README.el-GR.md) · [Bosanski](README.bs-Latn-BA.md) · [Hrvatski](README.hr-HR.md) · [Slovenščina](README.sl-SI.md) · [Crnogorski](README.cnr-Latn-ME.md) · [Беларуская](README.be-BY.md) · [Български](README.bg-BG.md) · [Македонски](README.mk-MK.md) · [Српски](README.sr-Cyrl-RS.md) · [Українська](README.uk-UA.md) · [Русский](README.ru-RU.md)
+
+FlyingSolids rāda kustīgus, rotējošus un savstarpēji sadurošus telpiskus ķermeņus. Izvēlieties telpas novērošanu vai lidojumu telpā un vajadzīgos ķermeņus. Katram monitoram atsevišķi var iestatīt objektu un kameras ātrumu 0–1600%, objektu izmēru 50–200% un 1–10 katra ķermeņa kopijas. Galveno, papildu, apkārtējo un kontūru gaismu var pārslēgt neatkarīgi.
+
+## Vadība
+
+Monitoru sarakstā atlasiet vienu vai vairākas rindas. Ctrl+A atlasa visas, bet Ctrl un Shift ļauj mainīt atlasi. Animācijas vadīklas un slīdņi maina tikai atlasīto monitoru iestatījumus. Rindas atlasīšana nav tas pats, kas animācijas izvades ieslēgšana ar izvēles rūtiņu. Atlase tiek atsevišķi atcerēta lietotnei un ekrānsaudzētājam. Ja bija atlasīti visi monitori, atlasē iekļauj arī jaunpievienotos monitorus.
+
+## Lietotne
+
+Palaidiet FlyingSolids.exe. Iestatījumi tiek saglabāti nepārtraukti, un darbojas tikai viena lietotnes instance. Monitora rūtiņa vai dubultklikšķis uz rindas ieslēdz vai izslēdz tā animācijas izvadi. Animāciju var pauzēt un turpināt. PNG un MP4 uzņem pirmo aktīvo animācijas monitoru, nevis visu monitoru kopējo attēlu. Ierakstāmo monitoru nevar izslēgt; aizverot lietotni ieraksta laikā, nepieciešams apstiprinājums. Ekrānsaudzētāja bloķēšana ir kopīga un darbojas tikai tad, kamēr monitorā ar ieslēgtu šo iespēju ir redzama nepauzēta animācija. Lietotne var instalēt vai atinstalēt tajā iebūvēto ekrānsaudzētāju.
+
+Ieraksta iestatījumos izvēlieties Viewport vai TV. Viewport saglabā monitora izmērus un frekvenci līdz 60 kadriem sekundē. TV piedāvā 1920 × 1080, 1440 × 1080 vai 1280 × 720 izvadi ar 16:9 malu attiecību un 50, 25, 59.94 (60000/1001) vai 29.97 (30000/1001) kadriem sekundē. TV video ir progresīvs BT.709 ar ierobežotu diapazonu un 4:2:0 krāsu apakšiztveršanu. Attēla proporcijas saglabājas, aizpildījuma joslas ir melnas. OK piemēro izvēles nākamajam ierakstam, Atcelt vai Esc atmet neapstiprinātās izmaiņas. Ieraksta iestatījumu, palīdzības un informācijas logi nebloķē citus logus un ir minimizējami. Tab un Shift+Tab pārvieto fokusu, Enter aktivizē fokusēto pogu, Esc aizver aktīvo palīglogu.
+
+## Ekrānsaudzētājs
+
+Izmantojiet FlyingSolids.scr kā Windows ekrānsaudzētāju. Tā iestatījumi ir atsevišķi no lietotnes. Pilnekrāna priekšskatījums ļauj tos mainīt animācijas darbības laikā. OK saglabā, Atcelt vai Esc atmet izmaiņas. Pilnekrāna ekrānsaudzētāju aizveriet ar taustiņu vai peles kustību.
+
+## Sistēmas prasības
+
+Windows 7–11 atbalsta visas funkcijas. Windows Vista SP2 jāinstalē atjauninājumi KB971512 un KB2117917; MP4 ierakstīšana Vistā nedarbojas. Nepieciešams Direct3D 11 atbalsts, bet MP4 vajadzīgi Media Foundation un H.264 kodētājs. Saskarne un dokumentācija ir pieejama 36 valodās.
+
+## Būvēšana un pakošana
+
+Atveriet DispSavers.slnx programmā Visual Studio un būvējiet Release | x86 ar MSVC v145 un Windows SDK. Projekta Signing lapā norādiet sertifikātu un obligāto RFC 3161 laika zīmoga serveri; personīgās vērtības paliek ignorētajā .vcxproj.user failā. Parakstītais SCR ar laika zīmogu tiek ievietots EXE, pēc tam paraksta arī EXE. PackageRelease.ps1 izveido kopīgu `DispSavers-<version>-win32.zip` arhīvu, nemainot Release bināros failus.
+
+## Ģeometriskie ķermeņi
+
+Kubs; Regulāra četrstūra piramīda; Nošķelta četrstūra piramīda; Slīpi nošķelta četrstūra piramīda; Piramīda ar pamatnei perpendikulāru griezumu; Regulāra trijstūra prizma; Regulāra piecstūra prizma; Regulāra sešstūra prizma; Regulārs oktaedrs; Piecstūra bipiramīda; Taisns riņķa konuss; Nošķelts konuss; Slīpi nošķelts konuss; Konuss ar pamatnei perpendikulāru griezumu; Taisns riņķa cilindrs; Dobs cilindrs; Dobs cilindrs ar toroidāliem galiem; Ar plakni noslēgts rotācijas paraboloīds; Lode; Puslode; Lodes segments; Lielais lodes segments; Lodes slānis; Trīsasu elipsoīds; Izstiepts rotācijas elipsoīds; Saspiests rotācijas elipsoīds; Ovoīds; Sferocilindrs; Noapaļots disks (spheroplatelet); Tors.
+
+## Licence
+
+[MIT](../license.txt) — Copyright © Petr Červinka — FortSoft 2026
