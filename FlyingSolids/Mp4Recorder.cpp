@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.1.0.0
+ * Last modified for version 1.2.0.0
  */
 
 #define NOMINMAX
@@ -64,6 +64,215 @@ constexpr wchar_t VIDEO_RENDERER_LIBRARY[] = L"evr.dll";
 constexpr char COPY_IMAGE_FUNCTION[] = "MFCopyImage";
 constexpr wchar_t RECORDING_TEST_PREFIX[] = L"FSP";
 
+/// Bounds GPU readback storage and CPU work independently of recording duration.
+constexpr std::size_t RECORDING_READBACK_COUNT = 3;
+constexpr std::size_t RECORDING_QUEUE_CAPACITY = 2;
+constexpr std::size_t RECORDING_IMAGE_COUNT = RECORDING_QUEUE_CAPACITY + 3;
+
+/// Packed source image and its destination viewport, matching Emulators' recording resampler.
+struct RecordingImage {
+    std::vector<std::uint32_t> pixels;
+    unsigned width = 0;
+    unsigned height = 0;
+    RECT area{};
+};
+
+/// Source-column indices and interpolation weight used by the recording resampler.
+struct RecordingColumn {
+    unsigned first;
+    unsigned second;
+    unsigned weight;
+};
+
+/// Byte ranges of a validated MP4 box, following Emulators' metadata normalizer.
+struct RecordingBox {
+    std::size_t begin;
+    std::size_t data;
+    std::size_t end;
+    std::uint32_t type;
+};
+
+/// Validates and edits the retained movie metadata without touching encoded media.
+struct RecordingTable {
+    std::vector<std::uint8_t> bytes;
+
+    /// Reads a bounded big-endian metadata value.
+    std::uint64_t Read(std::size_t position, std::size_t count = 4) const {
+        if (position > bytes.size() || count > bytes.size() - position) {
+            throw std::runtime_error("Invalid MP4 timing table.");
+        }
+        std::uint64_t value = 0;
+        for (std::size_t index = 0; index < count; index++) {
+            value = value << 8 | bytes[position + index];
+        }
+        return value;
+    }
+
+    /// Writes a bounded big-endian value without changing the box length.
+    void Write(std::size_t position, std::uint64_t value, std::size_t count = 4) {
+        if (position > bytes.size() || count > bytes.size() - position || count == 4 && value > UINT32_MAX) {
+            throw std::runtime_error("MP4 timing value is out of range.");
+        }
+        for (std::size_t index = count; index > 0; index--) {
+            bytes[position + index - 1] = std::uint8_t(value);
+            value >>= 8;
+        }
+    }
+
+    /// Enumerates children while rejecting truncated or overflowing box extents.
+    std::vector<RecordingBox> Children(std::size_t start, std::size_t end) const {
+        std::vector<RecordingBox> result;
+        while (start < end) {
+            if (end - start < 8) {
+                throw std::runtime_error("Truncated MP4 box.");
+            }
+            std::uint64_t size = Read(start);
+            std::size_t header = 8;
+            if (size == 1) {
+                size = Read(start + 8, 8);
+                header = 16;
+            } else if (size == 0) {
+                size = std::uint64_t(end) - start;
+            }
+            if (size < header || size > std::uint64_t(end) - start) {
+                throw std::runtime_error("Invalid MP4 box size.");
+            }
+            const RecordingBox box{ start, start + header, start + std::size_t(size), std::uint32_t(Read(start + 4)) };
+            result.push_back(box);
+            start += std::size_t(size);
+        }
+        return result;
+    }
+
+    /// Finds the required child box or rejects incomplete movie metadata.
+    RecordingBox Child(RecordingBox parent, std::uint32_t type) const {
+        for (const RecordingBox& box : Children(parent.data, parent.end)) {
+            if (box.type == type) {
+                return box;
+            }
+        }
+        throw std::runtime_error("Missing MP4 timing table.");
+    }
+
+    /// Returns the clock-field position for either supported header version.
+    std::size_t ScaleOffset(RecordingBox header) const {
+        return header.data + (Read(header.data, 1) != 0 ? 20 : 12);
+    }
+
+    /// Returns the duration-field width for either supported header version.
+    std::size_t DurationSize(RecordingBox header) const {
+        return Read(header.data, 1) != 0 ? 8 : 4;
+    }
+};
+
+/// One completed source image with its original capture timestamp.
+struct RecordingFrame {
+    RecordingImage image;
+    LONGLONG time = 0;
+    std::uint64_t sequence = 0;
+};
+
+/// One asynchronous GPU copy retained until it can be mapped without waiting.
+struct RecordingReadback {
+    ComPtr<ID3D11Texture2D> texture;
+    LONGLONG time = 0;
+    std::uint64_t sequence = 0;
+    bool pending = false;
+};
+
+/// Keeps capture resources on the rendering thread and Media Foundation resources on its own worker.
+struct Mp4Recorder::Impl {
+    /// Immutable session format and render-thread capture state
+    UINT width = 0;
+    UINT height = 0;
+    UINT frameRate = 0;
+    RecordingFormat format;
+    std::wstring filePath;
+    LARGE_INTEGER performanceFrequency{};
+    LARGE_INTEGER recordingStartedAt{};
+    std::array<RecordingReadback, RECORDING_READBACK_COUNT> readbacks;
+    LONGLONG lastCapturedFrame = -1;
+    std::uint64_t nextCaptureSequence = 0;
+
+    /// Bounded handoff and reusable CPU image storage
+    std::thread worker;
+    std::mutex queueMutex;
+    std::condition_variable queueChanged;
+    std::array<RecordingFrame, RECORDING_QUEUE_CAPACITY> frames;
+    std::vector<RecordingImage> freeImages;
+    std::size_t firstFrame = 0;
+    std::size_t frameCount = 0;
+    bool workerReady = false;
+    bool stopRequested = false;
+    LONGLONG stopTime = -1;
+    std::atomic_bool recording = false;
+    std::atomic<HRESULT> lastError = S_OK;
+
+    /// Encoder state accessed only by the recording worker
+    ComPtr<IMFSinkWriter> sinkWriter;
+    DWORD streamIndex = 0;
+    bool comInitialized = false;
+    bool mediaFoundationStarted = false;
+    bool writing = false;
+    bool hardwareWriter = false;
+    RecordingImage previousImage;
+    LONGLONG previousImageTime = 0;
+    std::uint64_t previousSequence = 0;
+    LONGLONG lastFrameIndex = -1;
+    std::vector<std::uint32_t> scaled;
+    std::vector<std::uint8_t> converted;
+    std::vector<std::uint8_t> previousConverted;
+    bool previousPrepared = false;
+
+    /// Creates COM and the H.264 sink on the thread that will perform all encoding.
+    HRESULT OpenWriter();
+
+    /// Initializes a hardware-permitted or explicitly software-only sink without changing session timing.
+    HRESULT CreateWriter(bool hardware);
+
+    /// Finalizes the MP4 stream and releases thread-owned Media Foundation and COM state.
+    HRESULT FinishWriter();
+
+    /// Resamples and encodes a source image using capture time rather than worker completion time.
+    HRESULT EncodeFrame(RecordingFrame& frame);
+
+    /// Repeats the last encoded image through the requested TV stop time without extending encoding time into playback.
+    HRESULT FillUntil(LONGLONG time);
+
+    /// Reads elapsed capture time from the immutable session clock.
+    LONGLONG Elapsed() const;
+
+    /// Runs the encoder independently of animation and drains accepted images before normal shutdown.
+    void Run();
+
+    /// Publishes completed worker initialization while holding the queue lock.
+    void MarkWorkerReady();
+
+    /// Waits for queued input and transfers one frame or the stop deadline under the queue lock.
+    bool TakeNextFrame(RecordingFrame& frame, LONGLONG& finishTime);
+
+    /// Preserves the first capture, encoder or finalization failure across threads.
+    void SetError(HRESULT error);
+
+    /// Wakes the worker to finish all accepted images and exit.
+    void RequestStop(LONGLONG time = -1);
+
+    /// Retains the first stop deadline and disables further waiting while holding the queue lock.
+    void SetStopRequest(LONGLONG time);
+
+    /// Acquires reusable pixel storage without waiting during ordinary rendering.
+    bool AcquireImage(RecordingImage& image, bool wait);
+
+    /// Returns pixel storage after capture or encoding without reallocating it.
+    void RecycleImage(RecordingImage& image);
+
+    /// Queues the newest image, discarding stale queued input rather than blocking animation.
+    bool SubmitImage(RecordingImage& image, LONGLONG time, std::uint64_t sequence);
+
+    /// Collects completed GPU copies without waiting, except when explicitly stopping a recording.
+    HRESULT CollectReadbacks(ID3D11DeviceContext* context, bool wait);
+};
+
 /// Preserves Emulators' no-blending exception for NTSC output on a 60 Hz monitor.
 void RecordingFormat::SetMonitorRate(unsigned rate, unsigned divisor) {
     temporalBlend = !(std::uint64_t(rate) * denominator % (std::uint64_t(numerator) * divisor) == 0
@@ -95,12 +304,7 @@ RECT RecordingFormat::Viewport(POINT base) const {
     const LONG viewportHeight = std::clamp(LONG(std::lround(base.y * scale)), 1L, LONG(height));
     const LONG left = (LONG(width) - viewportWidth) / 2;
     const LONG top = (LONG(height) - viewportHeight) / 2;
-    return RECT{
-        left,
-        top,
-        left + viewportWidth,
-        top + viewportHeight
-    };
+    return RECT{ left, top, left + viewportWidth, top + viewportHeight };
 }
 
 /// Selects Emulators' TV presets or the unchanged viewport and monitor-rate recording format.
@@ -113,16 +317,8 @@ RecordingFormat RecordingOptions::Format(unsigned nativeWidth, unsigned nativeHe
         return format;
     }
     format.television = true;
-    constexpr unsigned widths[]{
-        1920,
-        1440,
-        1280
-    };
-    constexpr unsigned heights[]{
-        1080,
-        1080,
-        720
-    };
+    constexpr unsigned widths[]{ 1920, 1440, 1280 };
+    constexpr unsigned heights[]{ 1080, 1080, 720 };
     const int selectedResolution = std::clamp(resolution, 0, 2);
     format.width = widths[selectedResolution];
     format.height = heights[selectedResolution];
@@ -130,32 +326,14 @@ RecordingFormat RecordingOptions::Format(unsigned nativeWidth, unsigned nativeHe
         format.aspectX = 4;
         format.aspectY = 3;
     }
-    constexpr unsigned numerators[]{
-        50,
-        25,
-        60000,
-        30000
-    };
-    constexpr unsigned denominators[]{
-        1,
-        1,
-        1001,
-        1001
-    };
+    constexpr unsigned numerators[]{ 50, 25, 60000, 30000 };
+    constexpr unsigned denominators[]{ 1, 1, 1001, 1001 };
     const int selectedRate = std::clamp(rate, 0, 3);
     format.numerator = numerators[selectedRate];
     format.denominator = denominators[selectedRate];
     format.SetMonitorRate(nativeRate, 1);
     return format;
 }
-
-/// Packed source image and its destination viewport, matching Emulators' recording resampler.
-struct RecordingImage {
-    std::vector<std::uint32_t> pixels;
-    unsigned width = 0;
-    unsigned height = 0;
-    RECT area{};
-};
 
 /// Blends RGB channels independently with the same fixed-point rounding as Emulators.
 static std::uint32_t BlendRecordingPixel(std::uint32_t first, std::uint32_t second, unsigned weight) {
@@ -193,19 +371,14 @@ static constexpr std::uint32_t MixRecordingPixel(std::uint32_t first, std::uint3
 /// Letterboxes and bilinearly scales TV frames with Emulators' pixel-center mapping.
 static void ScaleRecordingImage(const RecordingImage& image, unsigned width, unsigned height,
         std::vector<std::uint32_t>& result) {
-    struct Column {
-        unsigned first;
-        unsigned second;
-        unsigned weight;
-    };
     result.assign(std::size_t(width) * height, 0);
     const int left = std::max(0L, image.area.left);
     const int right = std::min(LONG(width), image.area.right);
-    std::vector<Column> columns(std::size_t(right - left));
+    std::vector<RecordingColumn> columns(std::size_t(right - left));
     for (int x = left; x < right; x++) {
         const double source = RecordingCoordinate(x, image.area.left, image.area.right - image.area.left, image.width);
         const unsigned first = unsigned(source);
-        const Column column{
+        const RecordingColumn column{
             first,
             std::min(first + 1, image.width - 1),
             unsigned(std::lround((source - first) * 256))
@@ -221,7 +394,7 @@ static void ScaleRecordingImage(const RecordingImage& image, unsigned width, uns
         const std::uint32_t* secondRow = image.pixels.data() + std::size_t(second) * image.width;
         std::uint32_t* output = result.data() + std::size_t(y) * width;
         for (int x = left; x < right; x++) {
-            const Column column = columns[x - left];
+            const RecordingColumn column = columns[x - left];
             output[x] = MixRecordingPixel(
                 MixRecordingPixel(firstRow[column.first], firstRow[column.second], column.weight),
                 MixRecordingPixel(secondRow[column.first], secondRow[column.second], column.weight), weight);
@@ -275,96 +448,10 @@ static void ConvertRecordingNv12(const std::vector<std::uint32_t>& rgb, unsigned
     }
 }
 
-/// Byte ranges of a validated MP4 box, following Emulators' metadata normalizer.
-struct RecordingBox {
-    std::size_t begin;
-    std::size_t data;
-    std::size_t end;
-    std::uint32_t type;
-};
-
 /// Builds an MP4 box identifier in network byte order.
 static constexpr std::uint32_t RecordingTag(char first, char second, char third, char fourth) {
     return std::uint32_t(first) << 24 | std::uint32_t(second) << 16 | std::uint32_t(third) << 8 | std::uint32_t(fourth);
 }
-
-/// Validates and edits the retained movie metadata without touching encoded media.
-struct RecordingTable {
-    std::vector<std::uint8_t> bytes;
-
-    /// Reads a bounded big-endian metadata value.
-    std::uint64_t Read(std::size_t position, std::size_t count = 4) const {
-        if (position > bytes.size() || count > bytes.size() - position) {
-            throw std::runtime_error("Invalid MP4 timing table.");
-        }
-        std::uint64_t value = 0;
-        for (std::size_t index = 0; index < count; index++) {
-            value = value << 8 | bytes[position + index];
-        }
-        return value;
-    }
-
-    /// Writes a bounded big-endian value without changing the box length.
-    void Write(std::size_t position, std::uint64_t value, std::size_t count = 4) {
-        if (position > bytes.size() || count > bytes.size() - position || count == 4 && value > UINT32_MAX) {
-            throw std::runtime_error("MP4 timing value is out of range.");
-        }
-        for (std::size_t index = count; index > 0; index--) {
-            bytes[position + index - 1] = std::uint8_t(value);
-            value >>= 8;
-        }
-    }
-
-    /// Enumerates children while rejecting truncated or overflowing box extents.
-    std::vector<RecordingBox> Children(std::size_t start, std::size_t end) const {
-        std::vector<RecordingBox> result;
-        while (start < end) {
-            if (end - start < 8) {
-                throw std::runtime_error("Truncated MP4 box.");
-            }
-            std::uint64_t size = Read(start);
-            std::size_t header = 8;
-            if (size == 1) {
-                size = Read(start + 8, 8);
-                header = 16;
-            } else if (size == 0) {
-                size = std::uint64_t(end) - start;
-            }
-            if (size < header || size > std::uint64_t(end) - start) {
-                throw std::runtime_error("Invalid MP4 box size.");
-            }
-            const RecordingBox box{
-                start,
-                start + header,
-                start + std::size_t(size),
-                std::uint32_t(Read(start + 4))
-            };
-            result.push_back(box);
-            start += std::size_t(size);
-        }
-        return result;
-    }
-
-    /// Finds the required child box or rejects incomplete movie metadata.
-    RecordingBox Child(RecordingBox parent, std::uint32_t type) const {
-        for (const RecordingBox& box : Children(parent.data, parent.end)) {
-            if (box.type == type) {
-                return box;
-            }
-        }
-        throw std::runtime_error("Missing MP4 timing table.");
-    }
-
-    /// Returns the clock-field position for either supported header version.
-    std::size_t ScaleOffset(RecordingBox header) const {
-        return header.data + (Read(header.data, 1) != 0 ? 20 : 12);
-    }
-
-    /// Returns the duration-field width for either supported header version.
-    std::size_t DurationSize(RecordingBox header) const {
-        return Read(header.data, 1) != 0 ? 8 : 4;
-    }
-};
 
 /// Reads a big-endian value from one already bounded top-level box header.
 static std::uint64_t RecordingHeaderValue(const std::uint8_t* header, unsigned position, unsigned count) {
@@ -434,12 +521,7 @@ static void NormalizeRecordingTiming(const std::filesystem::path& path, const Re
     if (table.bytes.empty()) {
         throw std::runtime_error("Missing MP4 movie metadata.");
     }
-    const RecordingBox root{
-        0,
-        0,
-        table.bytes.size(),
-        0
-    };
+    const RecordingBox root{ 0, 0, table.bytes.size(), 0 };
     const RecordingBox movie = table.Child(root, RecordingTag('m', 'v', 'h', 'd'));
     const std::size_t movieScaleOffset = table.ScaleOffset(movie);
     const std::uint64_t movieScale = table.Read(movieScaleOffset);
@@ -482,14 +564,7 @@ static void NormalizeRecordingTiming(const std::filesystem::path& path, const Re
                 }
                 if (!hasAspect) {
                     aspectInsert = entry.end;
-                    aspectParents = std::vector<RecordingBox>{
-                        track,
-                        media,
-                        info,
-                        samples,
-                        description,
-                        entry
-                    };
+                    aspectParents = std::vector<RecordingBox>{ track, media, info, samples, description, entry };
                 }
             }
             table.Write(trackHeader.end - 8, (std::uint64_t(format.width) * format.aspectX << 16) / format.aspectY);
@@ -502,8 +577,8 @@ static void NormalizeRecordingTiming(const std::filesystem::path& path, const Re
                 const std::size_t entry = times.data + 8 + std::size_t(index) * 8;
                 const std::uint64_t runs = table.Read(entry);
                 const std::uint64_t old = table.Read(entry + 4);
-                const std::uint64_t frames = (old * format.numerator + oldScale * format.denominator / 2)
-                    / (oldScale * format.denominator);
+                const std::uint64_t frames =
+                    (old * format.numerator + oldScale * format.denominator / 2) / (oldScale * format.denominator);
                 if (frames == 0) {
                     throw std::runtime_error("Invalid MP4 frame duration.");
                 }
@@ -719,119 +794,6 @@ static HRESULT WriteRecordingSample(IMFSinkWriter* writer, DWORD stream, const v
     }
     return result;
 }
-
-/// Bounds GPU readback storage and CPU work independently of recording duration.
-constexpr std::size_t RECORDING_READBACK_COUNT = 3;
-constexpr std::size_t RECORDING_QUEUE_CAPACITY = 2;
-constexpr std::size_t RECORDING_IMAGE_COUNT = RECORDING_QUEUE_CAPACITY + 3;
-
-/// One completed source image with its original capture timestamp.
-struct RecordingFrame {
-    RecordingImage image;
-    LONGLONG time = 0;
-    std::uint64_t sequence = 0;
-};
-
-/// One asynchronous GPU copy retained until it can be mapped without waiting.
-struct RecordingReadback {
-    ComPtr<ID3D11Texture2D> texture;
-    LONGLONG time = 0;
-    std::uint64_t sequence = 0;
-    bool pending = false;
-};
-
-/// Keeps capture resources on the rendering thread and Media Foundation resources on its own worker.
-struct Mp4Recorder::Impl {
-    /// Immutable session format and render-thread capture state
-    UINT width = 0;
-    UINT height = 0;
-    UINT frameRate = 0;
-    RecordingFormat format;
-    std::wstring filePath;
-    LARGE_INTEGER performanceFrequency{};
-    LARGE_INTEGER recordingStartedAt{};
-    std::array<RecordingReadback, RECORDING_READBACK_COUNT> readbacks;
-    LONGLONG lastCapturedFrame = -1;
-    std::uint64_t nextCaptureSequence = 0;
-
-    /// Bounded handoff and reusable CPU image storage
-    std::thread worker;
-    std::mutex queueMutex;
-    std::condition_variable queueChanged;
-    std::array<RecordingFrame, RECORDING_QUEUE_CAPACITY> frames;
-    std::vector<RecordingImage> freeImages;
-    std::size_t firstFrame = 0;
-    std::size_t frameCount = 0;
-    bool workerReady = false;
-    bool stopRequested = false;
-    LONGLONG stopTime = -1;
-    std::atomic_bool recording = false;
-    std::atomic<HRESULT> lastError = S_OK;
-
-    /// Encoder state accessed only by the recording worker
-    ComPtr<IMFSinkWriter> sinkWriter;
-    DWORD streamIndex = 0;
-    bool comInitialized = false;
-    bool mediaFoundationStarted = false;
-    bool writing = false;
-    bool hardwareWriter = false;
-    RecordingImage previousImage;
-    LONGLONG previousImageTime = 0;
-    std::uint64_t previousSequence = 0;
-    LONGLONG lastFrameIndex = -1;
-    std::vector<std::uint32_t> scaled;
-    std::vector<std::uint8_t> converted;
-    std::vector<std::uint8_t> previousConverted;
-    bool previousPrepared = false;
-
-    /// Creates COM and the H.264 sink on the thread that will perform all encoding.
-    HRESULT OpenWriter();
-
-    /// Initializes a hardware-permitted or explicitly software-only sink without changing session timing.
-    HRESULT CreateWriter(bool hardware);
-
-    /// Finalizes the MP4 stream and releases thread-owned Media Foundation and COM state.
-    HRESULT FinishWriter();
-
-    /// Resamples and encodes a source image using capture time rather than worker completion time.
-    HRESULT EncodeFrame(RecordingFrame& frame);
-
-    /// Repeats the last encoded image through the requested TV stop time without extending encoding time into playback.
-    HRESULT FillUntil(LONGLONG time);
-
-    /// Reads elapsed capture time from the immutable session clock.
-    LONGLONG Elapsed() const;
-
-    /// Runs the encoder independently of animation and drains accepted images before normal shutdown.
-    void Run();
-
-    /// Publishes completed worker initialization while holding the queue lock.
-    void MarkWorkerReady();
-
-    /// Waits for queued input and transfers one frame or the stop deadline under the queue lock.
-    bool TakeNextFrame(RecordingFrame& frame, LONGLONG& finishTime);
-
-    /// Preserves the first capture, encoder or finalization failure across threads.
-    void SetError(HRESULT error);
-
-    /// Wakes the worker to finish all accepted images and exit.
-    void RequestStop(LONGLONG time = -1);
-
-    /// Retains the first stop deadline and disables further waiting while holding the queue lock.
-    void SetStopRequest(LONGLONG time);
-
-    /// Acquires reusable pixel storage without waiting during ordinary rendering.
-    bool AcquireImage(RecordingImage& image, bool wait);
-
-    /// Returns pixel storage after capture or encoding without reallocating it.
-    void RecycleImage(RecordingImage& image);
-
-    /// Queues the newest image, discarding stale queued input rather than blocking animation.
-    bool SubmitImage(RecordingImage& image, LONGLONG time, std::uint64_t sequence);
-
-    /// Collects completed GPU copies without waiting, except when explicitly stopping a recording.
-    HRESULT CollectReadbacks(ID3D11DeviceContext* context, bool wait);
-};
 
 /// Creates an idle recorder with no worker or Media Foundation session.
 Mp4Recorder::Mp4Recorder() : impl(new Impl{}) {}
@@ -1328,10 +1290,7 @@ bool Mp4Recorder::Start(ID3D11Device* device, const wchar_t* filePath, UINT widt
     try {
         impl->filePath = filePath;
         impl->freeImages.reserve(RECORDING_IMAGE_COUNT);
-        const POINT base{
-            LONG(width),
-            LONG(height)
-        };
+        const POINT base{ LONG(width), LONG(height) };
         for (std::size_t index = 0; index < RECORDING_IMAGE_COUNT; index++) {
             RecordingImage image;
             image.width = width;

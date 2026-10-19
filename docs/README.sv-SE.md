@@ -1,4 +1,4 @@
-﻿# FlyingSolids
+# FlyingSolids
 
 [Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Português](README.pt-PT.md) · [Norsk](README.nb-NO.md) · **Svenska** · [Suomi](README.fi-FI.md) · [Dansk](README.da-DK.md) · [Íslenska](README.is-IS.md) · [Türkçe](README.tr-TR.md)
 
@@ -6,7 +6,7 @@ FlyingSolids är ett inbyggt Win32/x86 Direct3D-program och en skärmsläckare f
 
 ## Funktioner
 
-- **Rymdobservation** och rak **Flygning genom rymden**
+- **Rymdobservation** och rak **Flygning genom rymden**. Markera en eller flera skärmar i listan. Kameraläge, objekt, belysning, hastigheter, storlek och antal kopior gäller bara de markerade skärmarna. Varje skärm sparar sina egna inställningar.
 - Oberoende styrning av huvudljus, upplättningsljus, omgivningsljus och konturljus
 - Oberoende scen på varje vald bildskärm
 - En till tio kopior av varje aktiverad kropp
@@ -44,8 +44,21 @@ Windows 7 till Windows 11 stöder alla funktioner, inklusive PNG-skärmbilder oc
 
 Öppna `DispSavers.slnx` i Visual Studio med MSVC v145 och Windows SDK. Välj `Release | x86` och bygg om lösningen för att skapa `Release\FlyingSolids.exe` och `Release\FlyingSolids.scr`. Ingen x64-konfiguration finns. Signering är aktiverad som standard för både Release och Debug. Ange namnet eller tumavtrycket för ett giltigt kodsigneringscertifikat med privat nyckel i den aktuella användarens `Personal (My)`-arkiv på sidan `Signing` i egenskaperna för projektet `FlyingSolids`. Inställningarna gäller EXE och SCR och sparas i `FlyingSolids.vcxproj.user`, som ignoreras av Git. SignTool hittas automatiskt i PATH eller Windows SDK. Om du använder SimplySign, logga in i SimplySign Desktop före bygget. Först signeras SCR och får en obligatorisk RFC 3161 SHA-256-tidsstämpel från den konfigurerade tidsstämpelservern; därefter bäddas det in i EXE, som också signeras och tidsstämplas. Ange URL-adressen till RFC 3161-tidsstämpelservern i fältet `Timestamp server`. Fel vid signering, tidsstämpling eller verifiering stoppar bygget; filer med giltiga tidsstämplade signaturer signeras inte igen.
 
-Paketera dessa byggresultat genom att köra `PackageRelease.ps1` utan signeringsparametrar. Skriptet använder tillfälliga kopior, ändrar inte filer i `Release` och verifierar endast befintliga giltiga signaturer. Det skapar ett enda arkiv, `DispSavers-<version>-win32.zip`, med `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr` och `FlyingSolids\license.txt`. Den tidigare ZIP-filen tas bort vid körningens början; ett verifieringsfel förhindrar att ett nytt arkiv skapas.
+Paketera dessa byggresultat genom att köra `PackageRelease.ps1` utan signeringsparametrar. Skriptet använder tillfälliga kopior, ändrar inte filer i `Release` och verifierar endast befintliga giltiga signaturer. Det skapar ett enda arkiv, `DispSavers-<version>-win32.zip`, med `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr` och `SpaceFlight\license.txt`. Den tidigare ZIP-filen tas bort vid körningens början; ett verifieringsfel förhindrar att ett nytt arkiv skapas.
 
 ## Licens
 
 FlyingSolids tillhandahålls under [MIT-licensen](../license.txt). Copyright © Petr Červinka — FortSoft 2026
+
+
+## FlightCorridor
+
+FlightCorridor erbjuder Flygtur mellan fyra formföränderliga ytor och Flygtur genom en formföränderlig tratt. Tilldela exakt en flygtur till varje bildskärm: välj dess rad och motsvarande alternativknapp. Den första animationen är vald på alla bildskärmar som standard.
+
+`Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](../FlightCorridor/README.sv-SE.md)
+
+## SpaceFlight
+
+SpaceFlight erbjuder „Oändlig böljande yta“ och „Långdistansflygtur — formföränderlig yta“. Tilldela exakt en flygtur till varje bildskärm: välj dess rad och motsvarande alternativknapp. Den första animationen är vald på alla bildskärmar som standard.
+
+`Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.sv-SE.md)

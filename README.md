@@ -1,4 +1,4 @@
-﻿# FlyingSolids
+# FlyingSolids
 
 [Čeština](docs/README.cs-CZ.md) · **English (US)** · [Deutsch](docs/README.de-DE.md) · [Français](docs/README.fr-FR.md) · [Español](docs/README.es-ES.md) · [Italiano](docs/README.it-IT.md) · [Polski](docs/README.pl-PL.md) · [Slovenčina](docs/README.sk-SK.md) · [English (UK)](docs/README.en-GB.md) · [English (Australia)](docs/README.en-AU.md) · [Português](docs/README.pt-PT.md) · [Norsk](docs/README.nb-NO.md) · [Svenska](docs/README.sv-SE.md) · [Suomi](docs/README.fi-FI.md) · [Dansk](docs/README.da-DK.md) · [Íslenska](docs/README.is-IS.md) · [Türkçe](docs/README.tr-TR.md)
 
@@ -6,7 +6,7 @@ FlyingSolids is a native Win32/x86 Direct3D application and Windows screen saver
 
 ## Features
 
-- Two camera modes: **Space observation** and a straight **Fly through space** mode
+- Two camera modes: **Space observation** and a straight **Fly through space** mode. Select one or more displays in the list. Camera mode, object selection, lighting, speeds, size and copy count apply only to the selected displays, and each display remembers its own settings.
 - Independently switchable main, fill, ambient, and rim lighting
 - Independent animation space for every selected display
 - Up to ten copies of each enabled object
@@ -51,8 +51,21 @@ Windows 7 through Windows 11 support all features, including PNG snapshots and M
 
 Open `DispSavers.slnx` in Visual Studio with MSVC v145 and a Windows SDK. Select `Release | x86` and rebuild the solution to produce `Release\FlyingSolids.exe` and `Release\FlyingSolids.scr`. No x64 configuration is provided. Signing is enabled by default for both Release and Debug. In the `FlyingSolids` project properties, on the `Signing` page, enter the name or thumbprint of a valid code-signing certificate with a private key in the current user's `Personal (My)` store. The settings apply to both EXE and SCR and are saved in the Git-ignored `FlyingSolids.vcxproj.user` file. SignTool is located automatically in PATH or the Windows SDK. If you use SimplySign, sign in to SimplySign Desktop before building. The build first signs SCR and adds a mandatory RFC 3161 SHA-256 timestamp from the configured timestamp server, then embeds it in EXE, which is also signed and timestamped. Enter the RFC 3161 timestamp server URL in the `Timestamp server` field. Signing, timestamping, or verification failure stops the build; binaries with existing valid timestamped signatures are not signed again.
 
-Package these build outputs by running `PackageRelease.ps1` without signing parameters. The script uses temporary copies, leaves files in `Release` unchanged, and only verifies existing valid signatures. It creates the single `DispSavers-<version>-win32.zip` archive containing `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, and `FlyingSolids\license.txt`. The previous ZIP is removed at the start of a run; verification failure prevents creation of a new archive.
+Package these build outputs by running `PackageRelease.ps1` without signing parameters. The script uses temporary copies, leaves files in `Release` unchanged, and only verifies existing valid signatures. It creates the single `DispSavers-<version>-win32.zip` archive containing `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr`, and `SpaceFlight\license.txt`. The previous ZIP is removed at the start of a run; verification failure prevents creation of a new archive.
 
 ## License
 
 FlyingSolids is available under the [MIT License](license.txt). Copyright © Petr Červinka — FortSoft 2026
+
+
+## FlightCorridor
+
+FlightCorridor offers Flight between four morphing surfaces and Flight through a morphing funnel. Assign exactly one flight to each display: select its row in the list and choose the corresponding radio button. The first animation is selected on every display by default.
+
+`Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](FlightCorridor/README.md)
+
+## SpaceFlight
+
+SpaceFlight offers „Infinite undulating surface“ and „Long-distance flight — morphing surface“. Assign exactly one flight to each display: select its row in the list and choose the corresponding radio button. The first animation is selected on every display by default.
+
+`Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](SpaceFlight/README.md)

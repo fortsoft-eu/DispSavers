@@ -1,4 +1,4 @@
-﻿# FlyingSolids
+# FlyingSolids
 
 **Čeština** · [English (US)](../README.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Português](README.pt-PT.md) · [Norsk](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Suomi](README.fi-FI.md) · [Dansk](README.da-DK.md) · [Íslenska](README.is-IS.md) · [Türkçe](README.tr-TR.md)
 
@@ -6,7 +6,7 @@ FlyingSolids je nativní aplikace Win32/x86 a spořič obrazovky pro Windows, kt
 
 ## Funkce
 
-- Dva režimy kamery: **Pozorování prostoru** a přímý **Průlet prostorem**
+- Dva režimy kamery: **Pozorování prostoru** a přímý **Průlet prostorem**. V seznamu označte jeden nebo více monitorů. Režim kamery, výběr těles, světla, rychlosti, velikost a počet kopií se nastavují jen pro označené monitory a každý monitor si pamatuje vlastní nastavení.
 - Nezávislé ovládání hlavního a doplňkového světla, základního jasu a přisvětlení obrysů
 - Samostatný animační prostor pro každý vybraný monitor
 - Jedna až deset kopií každého zapnutého tělesa
@@ -51,8 +51,21 @@ Windows 7 až Windows 11 podporují všechny funkce včetně snímků PNG a záz
 
 Otevřete `DispSavers.slnx` ve Visual Studiu s nástroji MSVC v145 a Windows SDK. Zvolte `Release | x86` a znovu sestavte celé řešení; vzniknou `Release\FlyingSolids.exe` a `Release\FlyingSolids.scr`. Konfigurace x64 není k dispozici. Podepisování je ve výchozím stavu zapnuté pro Release i Debug. Ve vlastnostech projektu `FlyingSolids` na stránce `Signing` zadejte jméno nebo otisk platného certifikátu pro podepisování kódu se soukromým klíčem v úložišti aktuálního uživatele `Personal (My)`. Nastavení je společné pro EXE a SCR a ukládá se do souboru `FlyingSolids.vcxproj.user`, který Git ignoruje. SignTool se vyhledá automaticky v PATH nebo ve Windows SDK. Používáte-li SimplySign, před sestavením se přihlaste v SimplySign Desktop. Sestavení nejprve podepíše SCR, přidá povinné časové razítko RFC 3161 se SHA-256 z nastaveného serveru časových razítek a teprve potom jej vloží do EXE, které také podepíše a opatří razítkem. Do pole `Timestamp server` zadejte adresu serveru časových razítek RFC 3161. Chyba podpisu, razítka nebo jejich ověření sestavení zastaví; již platné podepsané soubory s razítkem se znovu nepodepisují.
 
-Takto sestavené soubory zabalte spuštěním `PackageRelease.ps1` bez parametrů podpisu. Skript pracuje s dočasnými kopiemi, nemění soubory v `Release` a existující platné podpisy pouze ověří. Vytvoří jediný archiv `DispSavers-<version>-win32.zip`, který obsahuje `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr` a `FlyingSolids\license.txt`. Předchozí ZIP se odstraní na začátku spuštění; chyba ověření zabrání vytvoření nového archivu.
+Takto sestavené soubory zabalte spuštěním `PackageRelease.ps1` bez parametrů podpisu. Skript pracuje s dočasnými kopiemi, nemění soubory v `Release` a existující platné podpisy pouze ověří. Vytvoří jediný archiv `DispSavers-<version>-win32.zip`, který obsahuje `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr` a `SpaceFlight\license.txt`. Předchozí ZIP se odstraní na začátku spuštění; chyba ověření zabrání vytvoření nového archivu.
 
 ## Licence
 
 FlyingSolids je dostupný pod [licencí MIT](../license.txt). Copyright © Petr Červinka — FortSoft 2026
+
+
+## FlightCorridor
+
+FlightCorridor nabízí Průlet čtyřmi proměnlivými plochami a Průlet proměnlivým trychtýřem. Každému monitoru přiřadíte právě jeden průlet: označte jeho řádek v seznamu a zvolte příslušný přepínač. Ve výchozím stavu je na všech monitorech zvolena první animace.
+
+`Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](../FlightCorridor/README.cs-CZ.md)
+
+## SpaceFlight
+
+SpaceFlight nabízí „Nekonečná vlnící se plocha“ a „Dálkový let — proměnlivá plocha“. Každému monitoru přiřadíte právě jeden průlet: označte jeho řádek v seznamu a zvolte příslušný přepínač. Ve výchozím stavu je na všech monitorech zvolena první animace.
+
+`Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.cs-CZ.md)

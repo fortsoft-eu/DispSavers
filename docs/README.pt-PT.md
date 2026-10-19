@@ -1,4 +1,4 @@
-﻿# FlyingSolids
+# FlyingSolids
 
 [Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · **Português** · [Norsk](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Suomi](README.fi-FI.md) · [Dansk](README.da-DK.md) · [Íslenska](README.is-IS.md) · [Türkçe](README.tr-TR.md)
 
@@ -6,7 +6,7 @@ O FlyingSolids é uma aplicação nativa Win32/x86 com Direct3D e uma proteção
 
 ## Funcionalidades
 
-- **Observação do espaço** e **Voo pelo espaço** em linha reta
+- **Observação do espaço** e **Voo pelo espaço** em linha reta. Selecione um ou mais monitores na lista. O modo de câmara, os objetos, a iluminação, as velocidades, o tamanho e o número de cópias aplicam-se apenas aos monitores selecionados. Cada monitor guarda as suas próprias definições.
 - Controlo independente das luzes principal, de preenchimento, ambiente e dos contornos
 - Cena independente em cada monitor selecionado
 - Uma a dez cópias de cada sólido ativo
@@ -44,8 +44,21 @@ Os sistemas Windows 7 a Windows 11 suportam todas as funcionalidades, incluindo 
 
 Abra `DispSavers.slnx` no Visual Studio com MSVC v145 e um Windows SDK. Selecione `Release | x86` e recompile a solução para criar `Release\FlyingSolids.exe` e `Release\FlyingSolids.scr`. Não existe configuração x64. A assinatura está ativada por predefinição para Release e Debug. Nas propriedades do projeto `FlyingSolids`, página `Signing`, indique o nome ou a impressão digital de um certificado válido de assinatura de código com chave privada no arquivo `Personal (My)` do utilizador atual. As definições aplicam-se ao EXE e ao SCR e são guardadas em `FlyingSolids.vcxproj.user`, ignorado pelo Git. O SignTool é encontrado automaticamente no PATH ou no Windows SDK. Se utilizar SimplySign, inicie sessão no SimplySign Desktop antes da compilação. Primeiro, o SCR é assinado e recebe um carimbo temporal RFC 3161 SHA-256 obrigatório do servidor de carimbos temporais configurado; depois é incorporado no EXE, que também é assinado e carimbado temporalmente. Indique o URL do servidor de carimbos temporais RFC 3161 no campo `Timestamp server`. Uma falha de assinatura, carimbo temporal ou verificação interrompe a compilação; os ficheiros com assinaturas válidas e carimbo temporal não são novamente assinados.
 
-Execute `PackageRelease.ps1` sem parâmetros de assinatura para empacotar estes ficheiros compilados. O script utiliza cópias temporárias, não altera os ficheiros em `Release` e apenas verifica as assinaturas válidas existentes. Cria o único arquivo `DispSavers-<version>-win32.zip`, contendo `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr` e `FlyingSolids\license.txt`. O ZIP anterior é removido no início da execução; uma falha de verificação impede a criação de um novo arquivo.
+Execute `PackageRelease.ps1` sem parâmetros de assinatura para empacotar estes ficheiros compilados. O script utiliza cópias temporárias, não altera os ficheiros em `Release` e apenas verifica as assinaturas válidas existentes. Cria o único arquivo `DispSavers-<version>-win32.zip`, contendo `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr` e `SpaceFlight\license.txt`. O ZIP anterior é removido no início da execução; uma falha de verificação impede a criação de um novo arquivo.
 
 ## Licença
 
 O FlyingSolids é disponibilizado sob a [licença MIT](../license.txt). Copyright © Petr Červinka — FortSoft 2026
+
+
+## FlightCorridor
+
+O FlightCorridor oferece Voo entre quatro superfícies deformáveis e Voo através de um funil deformável. Atribua um único voo a cada monitor: selecione a respetiva linha e o botão de opção correspondente. Por predefinição, a primeira animação está selecionada em todos os monitores.
+
+`Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](../FlightCorridor/README.pt-PT.md)
+
+## SpaceFlight
+
+O SpaceFlight oferece „Superfície ondulante infinita“ e „Voo de longa distância — superfície deformável“. Atribua um único voo a cada monitor: selecione a respetiva linha e o botão de opção correspondente. Por predefinição, a primeira animação está selecionada em todos os monitores.
+
+`Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.pt-PT.md)

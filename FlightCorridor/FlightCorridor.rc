@@ -1,0 +1,174 @@
+// Microsoft Visual C++ generated resource script.
+//
+#pragma code_page(65001)
+
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_READONLY_SYMBOLS
+#include "winres.h"
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Czech (Czech Republic) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CSY)
+LANGUAGE LANG_CZECH, SUBLANG_DEFAULT
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RCDATA
+//
+
+IDR_LICENSE             RCDATA                  "license.txt"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_SETTINGS_PANEL DIALOGEX 0, 0, 0, 0
+STYLE DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN
+EXSTYLE WS_EX_CONTROLPARENT
+BEGIN
+END
+
+
+IDD_ABOUT DIALOGEX 0, 0, 310, 256
+STYLE DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    ICON            "",ID_INFORMATION_ICON,10,10,0,0
+    CONTROL         "",ID_INFORMATION_PRODUCT,"Static",SS_OWNERDRAW | SS_NOPREFIX | SS_NOTIFY | WS_CLIPSIBLINGS,35,6,265,70
+    LTEXT           "",ID_INFORMATION_WEBSITE,35,80,51,12,SS_NOPREFIX | SS_NOTIFY | WS_CLIPSIBLINGS
+    CONTROL         "",ID_INFORMATION_LINK,"SysLink",WS_CLIPSIBLINGS | WS_TABSTOP,90,80,210,12
+    EDITTEXT        ID_INFORMATION_TEXT,10,98,290,128,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_CLIPSIBLINGS | NOT WS_BORDER | WS_VSCROLL | WS_HSCROLL,WS_EX_CLIENTEDGE
+    DEFPUSHBUTTON   "",ID_INFORMATION_CLOSE,250,232,50,14,WS_CLIPSIBLINGS
+END
+
+
+IDD_HELP DIALOGEX 0, 0, 310, 256
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    EDITTEXT        ID_INFORMATION_TEXT,10,10,290,216,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | WS_CLIPSIBLINGS | NOT WS_BORDER | WS_VSCROLL,WS_EX_CLIENTEDGE
+    DEFPUSHBUTTON   "",ID_INFORMATION_CLOSE,250,232,50,14,WS_CLIPSIBLINGS
+    SCROLLBAR       ID_INFORMATION_SIZE_GRIP,300,246,10,10,SBS_SIZEBOXBOTTOMRIGHTALIGN | SBS_SIZEGRIP | WS_CLIPSIBLINGS
+END
+
+
+IDD_RECORDING_SETTINGS DIALOGEX 0, 0, 249, 112
+STYLE DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_CAPTION | WS_SYSMENU
+FONT 9, "Segoe UI", 400, 0, 0x1
+BEGIN
+    CONTROL "", ID_RECORD_VIEWPORT, "Button", BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP, 10, 4, 228, 12
+    CONTROL "", ID_RECORD_TV, "Button", BS_AUTORADIOBUTTON | WS_TABSTOP, 10, 17, 228, 12
+    LTEXT "", ID_RECORD_SIZE_LABEL, 19, 38, 73, 10
+    COMBOBOX ID_RECORD_SIZE, 95, 35, 143, 90, CBS_DROPDOWNLIST | WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    LTEXT "", ID_RECORD_RATE_LABEL, 19, 56, 73, 10
+    COMBOBOX ID_RECORD_RATE, 95, 53, 143, 100, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT "", ID_RECORD_NOTE, 10, 70, 228, 18
+    DEFPUSHBUTTON "", IDOK, 134, 94, 50, 14, WS_GROUP
+    PUSHBUTTON "", IDCANCEL, 188, 94, 50, 14
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_READONLY_SYMBOLS\r\n"
+    "#include ""winres.h""\r\n"
+    "#undef APSTUDIO_READONLY_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CSY)\r\n"
+    "#ifndef FLIGHT_CORRIDOR_SCR_BUILD\r\n"
+    "LANGUAGE LANG_CZECH, SUBLANG_DEFAULT\r\n"
+    "IDR_EMBEDDED_SCREEN_SAVER RCDATA ""FlightCorridor.scr""\r\n"
+    "#endif\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,2,0,0
+ PRODUCTVERSION 1,2,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040504b0"
+        BEGIN
+            VALUE "CompanyName", "FortSoft"
+            VALUE "FileDescription", "FlightCorridor"
+            VALUE "FileVersion", "1.2.0.0"
+            VALUE "InternalName", "FlightCorridor.exe"
+            VALUE "LegalCopyright", "Copyright © Petr Červinka — FortSoft 2026"
+            VALUE "OriginalFilename", "FlightCorridor.exe"
+            VALUE "ProductName", "FlightCorridor"
+            VALUE "ProductVersion", "1.2.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x405, 1200
+    END
+END
+
+#endif    // Czech (Czech Republic) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CSY)
+#ifndef FLIGHT_CORRIDOR_SCR_BUILD
+LANGUAGE LANG_CZECH, SUBLANG_DEFAULT
+IDR_EMBEDDED_SCREEN_SAVER RCDATA "FlightCorridor.scr"
+#endif
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED

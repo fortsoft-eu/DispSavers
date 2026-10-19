@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.1.0.0
+ * Last modified for version 1.2.0.0
  */
 
 #define _USE_MATH_DEFINES
@@ -54,29 +54,17 @@ constexpr unsigned ROUND_SIDES = 120;
 
 /// Adds two mesh-construction vectors component by component.
 static V3 operator+(V3 a, V3 b) {
-    return V3{
-        a.x + b.x,
-        a.y + b.y,
-        a.z + b.z
-    };
+    return V3{ a.x + b.x, a.y + b.y, a.z + b.z };
 }
 
 /// Subtracts two mesh-construction vectors component by component.
 static V3 operator-(V3 a, V3 b) {
-    return V3{
-        a.x - b.x,
-        a.y - b.y,
-        a.z - b.z
-    };
+    return V3{ a.x - b.x, a.y - b.y, a.z - b.z };
 }
 
 /// Multiplies every vector component by a scalar.
 static V3 operator*(V3 a, float s) {
-    return V3{
-        a.x * s,
-        a.y * s,
-        a.z * s
-    };
+    return V3{ a.x * s, a.y * s, a.z * s };
 }
 
 /// Returns the scalar product of two vectors.
@@ -86,11 +74,7 @@ static float Dot(V3 a, V3 b) {
 
 /// Returns the right-handed vector product of two vectors.
 static V3 Cross(V3 a, V3 b) {
-    return V3{
-        a.y * b.z - a.z * b.y,
-        a.z * b.x - a.x * b.z,
-        a.x * b.y - a.y * b.x
-    };
+    return V3{ a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
 }
 
 /// Compares cut-plane points by their polar angles around the stored center.
@@ -108,14 +92,7 @@ static V3 Normalized(V3 value) {
 
 /// Packs a position and normal into one renderable mesh vertex.
 static Vertex Make(V3 p, V3 n) {
-    return Vertex{
-        p.x,
-        p.y,
-        p.z,
-        n.x,
-        n.y,
-        n.z
-    };
+    return Vertex{ p.x, p.y, p.z, n.x, n.y, n.z };
 }
 
 /// Appends a flat-shaded, counter-clockwise triangle.
@@ -125,11 +102,7 @@ static void Triangle(MeshData& mesh, V3 a, V3 b, V3 c) {
     mesh.vertices.push_back(Make(a, n));
     mesh.vertices.push_back(Make(b, n));
     mesh.vertices.push_back(Make(c, n));
-    const std::initializer_list<unsigned> indices{
-        base,
-        base + 1,
-        base + 2
-    };
+    const std::initializer_list<unsigned> indices{ base, base + 1, base + 2 };
     mesh.indices.insert(mesh.indices.end(), indices);
 }
 
@@ -202,46 +175,14 @@ static std::vector<V3> ClipPolygonPlaneMax(const std::vector<V3>& polygon, V3 pl
 
 /// Builds an axis-aligned closed box between two Z planes.
 static void Box(MeshData& mesh, float lower = -1, float upper = 1) {
-    const V3 p000{
-        -1,
-        -1,
-        lower
-    };
-    const V3 p100{
-        1,
-        -1,
-        lower
-    };
-    const V3 p110{
-        1,
-        1,
-        lower
-    };
-    const V3 p010{
-        -1,
-        1,
-        lower
-    };
-    const V3 p001{
-        -1,
-        -1,
-        upper
-    };
-    const V3 p101{
-        1,
-        -1,
-        upper
-    };
-    const V3 p111{
-        1,
-        1,
-        upper
-    };
-    const V3 p011{
-        -1,
-        1,
-        upper
-    };
+    const V3 p000{ -1, -1, lower };
+    const V3 p100{ 1, -1, lower };
+    const V3 p110{ 1, 1, lower };
+    const V3 p010{ -1, 1, lower };
+    const V3 p001{ -1, -1, upper };
+    const V3 p101{ 1, -1, upper };
+    const V3 p111{ 1, 1, upper };
+    const V3 p011{ -1, 1, upper };
     Quad(mesh, p000, p010, p110, p100);
     Quad(mesh, p001, p101, p111, p011);
     Quad(mesh, p000, p001, p011, p010);
@@ -272,14 +213,7 @@ static void GridWithNormals(MeshData& mesh, unsigned columns, unsigned rows,
             const unsigned b = a + 1;
             const unsigned c = a + stride + 1;
             const unsigned d = a + stride;
-            const std::initializer_list<unsigned> indices{
-                a,
-                b,
-                c,
-                a,
-                c,
-                d
-            };
+            const std::initializer_list<unsigned> indices{ a, b, c, a, c, d };
             mesh.indices.insert(mesh.indices.end(), indices);
         }
     }
@@ -287,11 +221,7 @@ static void GridWithNormals(MeshData& mesh, unsigned columns, unsigned rows,
 
 /// Converts cylindrical coordinates around the Y axis to Cartesian coordinates.
 static V3 Radial(float angle, float radius, float y) {
-    return V3{
-        radius * std::cos(angle),
-        y,
-        radius * std::sin(angle)
-    };
+    return V3{ radius * std::cos(angle), y, radius * std::sin(angle) };
 }
 
 /// Builds a flat circular cap perpendicular to the Y axis.
@@ -301,11 +231,7 @@ static void DiscY(MeshData& mesh, unsigned sides, float radius, float y, bool to
         const float a1 = 2.0f * float(M_PI) * (index + 1) / sides;
         const V3 p0 = Radial(a0, radius, y);
         const V3 p1 = Radial(a1, radius, y);
-        const V3 center{
-            0,
-            y,
-            0
-        };
+        const V3 center{ 0, y, 0 };
         if (top) {
             Triangle(mesh, center, p1, p0);
         } else {
@@ -316,16 +242,8 @@ static void DiscY(MeshData& mesh, unsigned sides, float radius, float y, bool to
 
 /// Closes an existing ring with a flat disc, reusing its exact boundary positions and tangent normals.
 static void CloseDiscRing(MeshData& mesh, unsigned ringBase, unsigned sides, float y, bool top) {
-    const V3 center{
-        0,
-        y,
-        0
-    };
-    V3 normal{
-        0,
-        -1,
-        0
-    };
+    const V3 center{ 0, y, 0 };
+    V3 normal{ 0, -1, 0 };
     if (top) {
         normal.y = 1;
     }
@@ -337,11 +255,7 @@ static void CloseDiscRing(MeshData& mesh, unsigned ringBase, unsigned sides, flo
         if (top) {
             std::swap(first, second);
         }
-        const std::initializer_list<unsigned> indices{
-            centerIndex,
-            first,
-            second
-        };
+        const std::initializer_list<unsigned> indices{ centerIndex, first, second };
         mesh.indices.insert(mesh.indices.end(), indices);
     }
 }
@@ -377,58 +291,22 @@ static void RoundedGeometry(float u, float v, SolidKind kind, V3& position, V3& 
         constexpr float height = 1.28f;
         constexpr float taper = 0.20f;
         const float radius = width * latitudeSine * (1.0f - taper * latitudeCosine);
-        position = V3{
-            radius * longitudeCosine,
-            height * latitudeCosine,
-            radius * longitudeSine
-        };
+        position = V3{ radius * longitudeCosine, height * latitudeCosine, radius * longitudeSine };
         const float radiusDerivative = width * (latitudeCosine * (1.0f - taper * latitudeCosine)
             + taper * latitudeSine * latitudeSine);
-        normal = V3{
-            height * latitudeSine * longitudeCosine,
-            radiusDerivative,
-            height * latitudeSine * longitudeSine
-        };
+        normal = V3{ height * latitudeSine * longitudeCosine, radiusDerivative, height * latitudeSine * longitudeSine };
     } else {
-        const V3 unit{
-            latitudeSine * longitudeCosine,
-            latitudeCosine,
-            latitudeSine * longitudeSine
-        };
-        V3 axes{
-            1.0f,
-            1.0f,
-            1.0f
-        };
+        const V3 unit{ latitudeSine * longitudeCosine, latitudeCosine, latitudeSine * longitudeSine };
+        V3 axes{ 1.0f, 1.0f, 1.0f };
         if (kind == SolidKind::Ellipsoid) {
-            axes = V3{
-                0.90f,
-                1.30f,
-                0.65f
-            };
+            axes = V3{ 0.90f, 1.30f, 0.65f };
         } else if (kind == SolidKind::ProlateEllipsoid) {
-            axes = V3{
-                0.62f,
-                1.15f,
-                0.62f
-            };
+            axes = V3{ 0.62f, 1.15f, 0.62f };
         } else if (kind == SolidKind::OblateEllipsoid) {
-            axes = V3{
-                1.15f,
-                0.62f,
-                1.15f
-            };
+            axes = V3{ 1.15f, 0.62f, 1.15f };
         }
-        position = V3{
-            unit.x * axes.x,
-            unit.y * axes.y,
-            unit.z * axes.z
-        };
-        normal = V3{
-            unit.x / axes.x,
-            unit.y / axes.y,
-            unit.z / axes.z
-        };
+        position = V3{ unit.x * axes.x, unit.y * axes.y, unit.z * axes.z };
+        normal = V3{ unit.x / axes.x, unit.y / axes.y, unit.z / axes.z };
     }
 }
 
@@ -457,30 +335,13 @@ static void RoundedObject(MeshData& mesh, SolidKind kind) {
 static void ExactPyramid(MeshData& mesh) {
     const std::array<V3, 4> base{
         {
-            V3{
-                -1,
-                .8f,
-                -1
-            }, V3{
-                1,
-                .8f,
-                -1
-            }, V3{
-                1,
-                .8f,
-                1
-            }, V3{
-                -1,
-                .8f,
-                1
-            }
+            V3{ -1, .8f, -1 },
+            V3{ 1, .8f, -1 },
+            V3{ 1, .8f, 1 },
+            V3{ -1, .8f, 1 }
         }
     };
-    const V3 tip{
-        0,
-        -1.35f,
-        0
-    };
+    const V3 tip{ 0, -1.35f, 0 };
     Quad(mesh, base[0], base[1], base[2], base[3]);
     for (unsigned index = 0; index < 4; index++) {
         Triangle(mesh, base[index], base[(index + 1) % 4], tip);
@@ -495,11 +356,7 @@ static V3 ConePosition(float u, float v) {
 /// Returns the analytic side normal of a right circular cone.
 static V3 ConeNormal(float u, float) {
     const float angle = u * 2.0f * float(M_PI);
-    return V3{
-        std::cos(angle),
-        -1.0f / 2.3f,
-        std::sin(angle)
-    };
+    return V3{ std::cos(angle), -1.0f / 2.3f, std::sin(angle) };
 }
 
 /// Builds a closed right circular cone with analytic side normals.
@@ -513,22 +370,14 @@ static V3 TorusPosition(float u, float v) {
     const float a = 2.0f * float(M_PI) * u;
     const float b = 2.0f * float(M_PI) * v;
     const float radius = .72f + .29f * std::cos(b);
-    return V3{
-        radius * std::cos(a),
-        radius * std::sin(a),
-        .29f * std::sin(b)
-    };
+    return V3{ radius * std::cos(a), radius * std::sin(a), .29f * std::sin(b) };
 }
 
 /// Returns the analytic normal of a ring torus.
 static V3 TorusNormal(float u, float v) {
     const float a = 2.0f * float(M_PI) * u;
     const float b = 2.0f * float(M_PI) * v;
-    return V3{
-        std::cos(b) * std::cos(a),
-        std::cos(b) * std::sin(a),
-        std::sin(b)
-    };
+    return V3{ std::cos(b) * std::cos(a), std::cos(b) * std::sin(a), std::sin(b) };
 }
 
 /// Builds a smooth ring torus from its major and minor circles.
@@ -544,11 +393,7 @@ static V3 FrustumPosition(float u, float v, float topRadius) {
 /// Returns the analytic side normal of a circular cylinder or frustum.
 static V3 FrustumNormal(float u, float, float topRadius) {
     const float angle = u * 2.0f * float(M_PI);
-    return V3{
-        std::cos(angle),
-        (1.0f - topRadius) * .5f,
-        std::sin(angle)
-    };
+    return V3{ std::cos(angle), (1.0f - topRadius) * .5f, std::sin(angle) };
 }
 
 /// Builds a closed right circular cylinder or frustum.
@@ -561,11 +406,7 @@ static void ExactRoundFrustum(MeshData& mesh, float topRadius) {
 /// Returns one unit-radius corner of a regular polygon in the XZ plane.
 static V3 PolygonCorner(unsigned sides, unsigned corner) {
     const float angle = 2.0f * float(M_PI) * (corner % sides) / sides;
-    return V3{
-        std::cos(angle),
-        0,
-        std::sin(angle)
-    };
+    return V3{ std::cos(angle), 0, std::sin(angle) };
 }
 
 /// Builds a closed prism with a regular polygonal base.
@@ -573,36 +414,12 @@ static void ExactPrism(MeshData& mesh, unsigned sides) {
     for (unsigned index = 0; index < sides; index++) {
         const V3 a = PolygonCorner(sides, index);
         const V3 b = PolygonCorner(sides, index + 1);
-        const V3 bottomA{
-            a.x,
-            -1,
-            a.z
-        };
-        const V3 topA{
-            a.x,
-            1,
-            a.z
-        };
-        const V3 topB{
-            b.x,
-            1,
-            b.z
-        };
-        const V3 bottomB{
-            b.x,
-            -1,
-            b.z
-        };
-        const V3 bottomCenter{
-            0,
-            -1,
-            0
-        };
-        const V3 topCenter{
-            0,
-            1,
-            0
-        };
+        const V3 bottomA{ a.x, -1, a.z };
+        const V3 topA{ a.x, 1, a.z };
+        const V3 topB{ b.x, 1, b.z };
+        const V3 bottomB{ b.x, -1, b.z };
+        const V3 bottomCenter{ 0, -1, 0 };
+        const V3 topCenter{ 0, 1, 0 };
         Quad(mesh, bottomA, topA, topB, bottomB);
         Triangle(mesh, bottomCenter, bottomB, bottomA);
         Triangle(mesh, topCenter, topA, topB);
@@ -613,44 +430,18 @@ static void ExactPrism(MeshData& mesh, unsigned sides) {
 static void ExactSquareFrustum(MeshData& mesh) {
     const std::array<V3, 4> bottom{
         {
-            V3{
-                -1,
-                -1,
-                -1
-            }, V3{
-                1,
-                -1,
-                -1
-            }, V3{
-                1,
-                -1,
-                1
-            }, V3{
-                -1,
-                -1,
-                1
-            }
+            V3{ -1, -1, -1 },
+            V3{ 1, -1, -1 },
+            V3{ 1, -1, 1 },
+            V3{ -1, -1, 1 }
         }
     };
     const std::array<V3, 4> top{
         {
-            V3{
-                -.48f,
-                1,
-                -.48f
-            }, V3{
-                .48f,
-                1,
-                -.48f
-            }, V3{
-                .48f,
-                1,
-                .48f
-            }, V3{
-                -.48f,
-                1,
-                .48f
-            }
+            V3{ -.48f, 1, -.48f },
+            V3{ .48f, 1, -.48f },
+            V3{ .48f, 1, .48f },
+            V3{ -.48f, 1, .48f }
         }
     };
     Quad(mesh, bottom[0], bottom[3], bottom[2], bottom[1]);
@@ -682,21 +473,9 @@ static void ExactObliquelyCutCone(MeshData& mesh) {
         const float sine = std::sin(angle);
         const float diagonalDirection = diagonal * (cosine + sine);
         const float topRadius = (apexY - cutHeight) / (height + tilt * diagonalDirection);
-        const V3 bottom{
-            cosine,
-            baseY,
-            sine
-        };
-        const V3 upper{
-            topRadius * cosine,
-            apexY - height * topRadius,
-            topRadius * sine
-        };
-        const V3 sideNormal{
-            cosine,
-            1.0f / height,
-            sine
-        };
+        const V3 bottom{ cosine, baseY, sine };
+        const V3 upper{ topRadius * cosine, apexY - height * topRadius, topRadius * sine };
+        const V3 sideNormal{ cosine, 1.0f / height, sine };
         const V3 normal = Normalized(sideNormal);
         mesh.vertices.push_back(Make(bottom, normal));
         mesh.vertices.push_back(Make(upper, normal));
@@ -706,22 +485,11 @@ static void ExactObliquelyCutCone(MeshData& mesh) {
     }
     for (unsigned index = 0; index < sides; index++) {
         const unsigned bottom = first + 2 * index;
-        const std::initializer_list<unsigned> indices{
-            bottom,
-            bottom + 2,
-            bottom + 3,
-            bottom,
-            bottom + 3,
-            bottom + 1
-        };
+        const std::initializer_list<unsigned> indices{ bottom, bottom + 2, bottom + 3, bottom, bottom + 3, bottom + 1 };
         mesh.indices.insert(mesh.indices.end(), indices);
     }
     DiscY(mesh, sides, 1.0f, baseY, false);
-    const V3 cutNormal{
-        -tilt * diagonal,
-        1.0f,
-        -tilt * diagonal
-    };
+    const V3 cutNormal{ -tilt * diagonal, 1.0f, -tilt * diagonal };
     PlanarFace(mesh, top, cutNormal);
 }
 
@@ -735,30 +503,13 @@ static void ExactObliquelyCutSquarePyramid(MeshData& mesh) {
     constexpr float diagonal = .7071067811865475244f;
     const std::array<V3, 4> bottom{
         {
-            V3{
-                -1,
-                baseY,
-                -1
-            }, V3{
-                1,
-                baseY,
-                -1
-            }, V3{
-                1,
-                baseY,
-                1
-            }, V3{
-                -1,
-                baseY,
-                1
-            }
+            V3{ -1, baseY, -1 },
+            V3{ 1, baseY, -1 },
+            V3{ 1, baseY, 1 },
+            V3{ -1, baseY, 1 }
         }
     };
-    const V3 apex{
-        0,
-        apexY,
-        0
-    };
+    const V3 apex{ 0, apexY, 0 };
     std::array<V3, 4> top{};
     for (unsigned index = 0; index < top.size(); index++) {
         const float diagonalPosition = diagonal * (bottom[index].x + bottom[index].z);
@@ -771,21 +522,13 @@ static void ExactObliquelyCutSquarePyramid(MeshData& mesh) {
         Quad(mesh, bottom[index], top[index], top[next], bottom[next]);
     }
     const std::vector<V3> topPoints(top.begin(), top.end());
-    const V3 cutNormal{
-        -tilt * diagonal,
-        1.0f,
-        -tilt * diagonal
-    };
+    const V3 cutNormal{ -tilt * diagonal, 1.0f, -tilt * diagonal };
     PlanarFace(mesh, topPoints, cutNormal);
 }
 
 /// Returns an analytic side normal for a cone of the supplied height.
 static V3 CutConeNormal(float angle, float height) {
-    return V3{
-        std::cos(angle),
-        1.0f / height,
-        std::sin(angle)
-    };
+    return V3{ std::cos(angle), 1.0f / height, std::sin(angle) };
 }
 
 /// Samples the intact tip above the vertical cone cut.
@@ -834,42 +577,22 @@ static void ExactPerpendicularlyCutCone(MeshData& mesh) {
         const float angle = angleOffset + baseAngle + (2.0f * float(M_PI) - 2.0f * baseAngle) * index / sides;
         base.push_back(Radial(angle, 1.0f, baseY));
     }
-    const V3 baseNormal{
-        0.0f,
-        -1.0f,
-        0.0f
-    };
+    const V3 baseNormal{ 0.0f, -1.0f, 0.0f };
     PlanarFace(mesh, base, baseNormal);
     std::vector<V3> cut;
     cut.reserve(2 * rows + 1);
-    const V3 cutNormal{
-        diagonal,
-        0.0f,
-        diagonal
-    };
-    const V3 cutTangent{
-        -diagonal,
-        0.0f,
-        diagonal
-    };
+    const V3 cutNormal{ diagonal, 0.0f, diagonal };
+    const V3 cutTangent{ -diagonal, 0.0f, diagonal };
     for (unsigned index = 0; index <= rows; index++) {
         const float radius = 1.0f - (1.0f - cutX) * index / rows;
         const float tangentDistance = -std::sqrt(std::max(0.0f, radius * radius - cutX * cutX));
-        const V3 verticalOffset{
-            0.0f,
-            apexY - height * radius,
-            0.0f
-        };
+        const V3 verticalOffset{ 0.0f, apexY - height * radius, 0.0f };
         cut.push_back(cutNormal * cutX + cutTangent * tangentDistance + verticalOffset);
     }
     for (unsigned index = 1; index <= rows; index++) {
         const float radius = cutX + (1.0f - cutX) * index / rows;
         const float tangentDistance = std::sqrt(std::max(0.0f, radius * radius - cutX * cutX));
-        const V3 verticalOffset{
-            0.0f,
-            apexY - height * radius,
-            0.0f
-        };
+        const V3 verticalOffset{ 0.0f, apexY - height * radius, 0.0f };
         cut.push_back(cutNormal * cutX + cutTangent * tangentDistance + verticalOffset);
     }
     PlanarFace(mesh, cut, cutNormal);
@@ -879,66 +602,24 @@ static void ExactPerpendicularlyCutCone(MeshData& mesh) {
 static void ExactPerpendicularlyCutSquarePyramid(MeshData& mesh) {
     constexpr float cutX = .32f;
     constexpr float diagonal = .7071067811865475244f;
-    constexpr V3 cutNormal{
-        diagonal,
-        0.0f,
-        diagonal
-    };
-    constexpr V3 cutTangent{
-        -diagonal,
-        0.0f,
-        diagonal
-    };
+    constexpr V3 cutNormal{ diagonal, 0.0f, diagonal };
+    constexpr V3 cutTangent{ -diagonal, 0.0f, diagonal };
     const std::array<V3, 4> bottom{
         {
-            V3{
-                -1,
-                -1,
-                -1
-            }, V3{
-                1,
-                -1,
-                -1
-            }, V3{
-                1,
-                -1,
-                1
-            }, V3{
-                -1,
-                -1,
-                1
-            }
+            V3{ -1, -1, -1 },
+            V3{ 1, -1, -1 },
+            V3{ 1, -1, 1 },
+            V3{ -1, -1, 1 }
         }
     };
-    const V3 apex{
-        0,
-        1.30f,
-        0
-    };
+    const V3 apex{ 0, 1.30f, 0 };
     const std::array<std::vector<V3>, 5> faces{
         {
-            std::vector<V3>{
-                bottom[0],
-                bottom[3],
-                bottom[2],
-                bottom[1]
-            }, std::vector<V3>{
-                bottom[0],
-                apex,
-                bottom[1]
-            }, std::vector<V3>{
-                bottom[1],
-                apex,
-                bottom[2]
-            }, std::vector<V3>{
-                bottom[2],
-                apex,
-                bottom[3]
-            }, std::vector<V3>{
-                bottom[3],
-                apex,
-                bottom[0]
-            }
+            std::vector<V3>{ bottom[0], bottom[3], bottom[2], bottom[1] },
+            std::vector<V3>{ bottom[0], apex, bottom[1] },
+            std::vector<V3>{ bottom[1], apex, bottom[2] },
+            std::vector<V3>{ bottom[2], apex, bottom[3] },
+            std::vector<V3>{ bottom[3], apex, bottom[0] }
         }
     };
     std::vector<V3> intersections;
@@ -954,10 +635,7 @@ static void ExactPerpendicularlyCutSquarePyramid(MeshData& mesh) {
     if (!intersections.empty()) {
         center = center * (1.0f / static_cast<float>(intersections.size()));
     }
-    const CutPointOrder pointOrder{
-        center,
-        cutTangent
-    };
+    const CutPointOrder pointOrder{ center, cutTangent };
     std::sort(intersections.begin(), intersections.end(), pointOrder);
     PlanarFace(mesh, intersections, cutNormal);
 }
@@ -967,16 +645,8 @@ static void ExactBipyramid(MeshData& mesh, unsigned sides, float height = 1.25f)
     for (unsigned index = 0; index < sides; index++) {
         const V3 a = PolygonCorner(sides, index);
         const V3 b = PolygonCorner(sides, index + 1);
-        const V3 top{
-            0,
-            height,
-            0
-        };
-        const V3 bottom{
-            0,
-            -height,
-            0
-        };
+        const V3 top{ 0, height, 0 };
+        const V3 bottom{ 0, -height, 0 };
         Triangle(mesh, a, b, top);
         Triangle(mesh, b, a, bottom);
     }
@@ -996,11 +666,7 @@ static V3 HemisphereNormal(float u, float v, float, float, float maximumLatitude
 /// Returns one position on a hemisphere or spherical segment.
 static V3 HemispherePosition(float u, float v, float radius, float centerY, float maximumLatitude) {
     const V3 normal = HemisphereNormal(u, v, radius, centerY, maximumLatitude);
-    const V3 center{
-        0,
-        centerY,
-        0
-    };
+    const V3 center{ 0, centerY, 0 };
     return normal * radius + center;
 }
 
@@ -1018,11 +684,7 @@ static void ExactHemisphereOrCap(MeshData& mesh, bool cap) {
 static V3 SphereBand(float u, float v, float firstLatitude, float latitudeRange) {
     const float longitude = u * 2.0f * float(M_PI);
     const float latitude = firstLatitude + latitudeRange * v;
-    return V3{
-        std::cos(longitude) * std::sin(latitude),
-        std::cos(latitude),
-        std::sin(longitude) * std::sin(latitude)
-    };
+    return V3{ std::cos(longitude) * std::sin(latitude), std::cos(latitude), std::sin(longitude) * std::sin(latitude) };
 }
 
 /// Builds a sphere with both poles removed and both openings closed by planes.
@@ -1056,11 +718,7 @@ static V3 ParaboloidPosition(float u, float v) {
 static V3 ParaboloidNormal(float u, float v) {
     const float angle = u * 2.0f * float(M_PI);
     const float radius = v;
-    return V3{
-        4.4f * radius * std::cos(angle),
-        -1.0f,
-        4.4f * radius * std::sin(angle)
-    };
+    return V3{ 4.4f * radius * std::cos(angle), -1.0f, 4.4f * radius * std::sin(angle) };
 }
 
 /// Builds a paraboloid of revolution closed by a planar circular face.
@@ -1137,11 +795,7 @@ static V3 HollowCylinderPosition(float u, float v, float radius, float) {
 /// Returns the outward or inward radial normal of a hollow cylinder.
 static V3 HollowCylinderNormal(float u, float, float, float direction) {
     const float angle = u * 2.0f * float(M_PI);
-    return V3{
-        direction * std::cos(angle),
-        0,
-        direction * std::sin(angle)
-    };
+    return V3{ direction * std::cos(angle), 0, direction * std::sin(angle) };
 }
 
 /// Builds a closed hollow cylinder with outer, inner and annular surfaces.
@@ -1184,8 +838,8 @@ static void RoundedHollowCylinderCapGeometry(float u, float v, float direction, 
         }
         verticalNormal = 0.0f;
     }
-    const float height = direction
-        * (ROUNDED_HOLLOW_CYLINDER_HALF_LENGTH + ROUNDED_HOLLOW_CYLINDER_ROUNDING_RADIUS * verticalNormal);
+    const float height =
+        direction * (ROUNDED_HOLLOW_CYLINDER_HALF_LENGTH + ROUNDED_HOLLOW_CYLINDER_ROUNDING_RADIUS * verticalNormal);
     const float longitude = RoundedSurfaceLongitude(u);
     position = Radial(longitude, radius, height);
     normal = Radial(longitude, radialNormal, direction * verticalNormal);

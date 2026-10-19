@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.1.0.0
+ * Last modified for version 1.2.0.0
  */
 
 #pragma once
@@ -52,11 +52,11 @@ public:
     /// Recreates size-dependent resources for the current client area.
     void Resize(unsigned width, unsigned height);
 
-    /// Reports whether the swap chain exposes a frame-latency wait handle.
-    bool UsesFrameLatencyWait() const;
+    /// Reports whether flip presentation can use the containing output's vertical-blank clock.
+    bool UsesVerticalBlankWait() const;
 
-    /// Waits until the swap chain can accept the next frame.
-    void WaitForNextFrame(DWORD timeoutMilliseconds);
+    /// Consumes the latest refresh, including one during Present; errors use timed legacy pacing.
+    HRESULT WaitForNextFrame();
 
     /// Renders and presents one complete scene snapshot.
     void Draw(const SceneState& scene, bool inspectPixels = false, unsigned syncInterval = 1);

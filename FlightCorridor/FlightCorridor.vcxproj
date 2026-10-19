@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{D8C19A23-A702-4137-94D8-56571F03C498}</ProjectGuid>
+    <RootNamespace>FlightCorridor</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <ShaderCompilerOptions>/Od /Zi</ShaderCompilerOptions>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <ShaderCompilerOptions>/O3 /Ges</ShaderCompilerOptions>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir>$(ProjectDir)..\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
+    <TargetName>FlightCorridor</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AppSettings.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Localization.cpp" />
+    <ClCompile Include="MonitorInfo.cpp" />
+    <ClCompile Include="Mp4Recorder.cpp" />
+    <ClCompile Include="PersistWindowState.cpp" />
+    <ClCompile Include="ProgramIcons.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="SelectionEdit.cpp" />
+    <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="SystemSync.cpp" />
+    <ClCompile Include="SystemTime.cpp" />
+    <ClCompile Include="Wow64Redirection.cpp" />
+    <ClCompile Include="WindowRedrawScope.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AppSettings.h" />
+    <ClInclude Include="Effects.h" />
+    <ClInclude Include="Localization.h" />
+    <ClInclude Include="MonitorInfo.h" />
+    <ClInclude Include="Mp4Recorder.h" />
+    <ClInclude Include="PersistWindowState.h" />
+    <ClInclude Include="ProgramIcons.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Simulation.h" />
+    <ClInclude Include="SelectionEdit.h" />
+    <ClInclude Include="Wow64Redirection.h" />
+    <ClInclude Include="WindowRedrawScope.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="FlightCorridor.hlsl">
+      <Command>set "PATH=$(ExecutablePath)"
+fxc.exe /nologo /T vs_4_0 /E VSMain /Fh "$(IntDir)FlightCorridorVS.h" /Fo "$(IntDir)FlightCorridorVS.cso" /Vn FlightCorridorVertexShader $(ShaderCompilerOptions) "%(FullPath)"
+if errorlevel 1 exit /b %errorlevel%
+fxc.exe /nologo /T ps_4_0 /E PSMain /Fh "$(IntDir)FlightCorridorPS.h" /Fo "$(IntDir)FlightCorridorPS.cso" /Vn FlightCorridorPixelShader $(ShaderCompilerOptions) "%(FullPath)"
+if errorlevel 1 exit /b %errorlevel%
+fxc.exe /nologo /T vs_4_0 /E SolidSurfaceVS /Fh "$(IntDir)FlightCorridorSurfaceVS.h" /Fo "$(IntDir)FlightCorridorSurfaceVS.cso" /Vn FlightCorridorSurfaceVertexShader $(ShaderCompilerOptions) "%(FullPath)"
+if errorlevel 1 exit /b %errorlevel%
+fxc.exe /nologo /T ps_4_0 /E SolidSurfacePS /Fh "$(IntDir)FlightCorridorSurfacePS.h" /Fo "$(IntDir)FlightCorridorSurfacePS.cso" /Vn FlightCorridorSurfacePixelShader $(ShaderCompilerOptions) "%(FullPath)"
+if errorlevel 1 exit /b %errorlevel%</Command>
+      <Message>Compiling shaders from FlightCorridor.hlsl</Message>
+      <Outputs>$(IntDir)FlightCorridorVS.h;$(IntDir)FlightCorridorVS.cso;$(IntDir)FlightCorridorPS.h;$(IntDir)FlightCorridorPS.cso;$(IntDir)FlightCorridorSurfaceVS.h;$(IntDir)FlightCorridorSurfaceVS.cso;$(IntDir)FlightCorridorSurfacePS.h;$(IntDir)FlightCorridorSurfacePS.cso</Outputs>
+      <LinkObjects>false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FlightCorridor.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="FlightCorridor.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="FlightCorridorScr.vcxproj">
+      <Project>{B5377A2D-4E9A-4372-A381-7D3D1FA63F0E}</Project>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="BuildSigning.targets" />
+  </ImportGroup>
+</Project>

@@ -1,4 +1,4 @@
-﻿# FlyingSolids
+# FlyingSolids
 
 [Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Português](README.pt-PT.md) · [Norsk](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Suomi](README.fi-FI.md) · **Dansk** · [Íslenska](README.is-IS.md) · [Türkçe](README.tr-TR.md)
 
@@ -6,7 +6,7 @@ FlyingSolids er et integreret Win32/x86 Direct3D-program og en Windows-pauseskæ
 
 ## Funktioner
 
-- **Rumobservation** og lige **Flyvning gennem rummet**
+- **Rumobservation** og lige **Flyvning gennem rummet**. Vælg en eller flere skærme på listen. Kameratilstand, objekter, belysning, hastigheder, størrelse og antal kopier gælder kun de valgte skærme. Hver skærm husker sine egne indstillinger.
 - Uafhængig styring af hovedlys, udfyldningslys, omgivende lys og konturlys
 - Uafhængig scene på hver valgt skærm
 - En til ti kopier af hvert aktiveret legeme
@@ -44,8 +44,21 @@ Windows 7 til Windows 11 understøtter alle funktioner, herunder PNG-skærmbille
 
 Åbn `DispSavers.slnx` i Visual Studio med MSVC v145 og Windows SDK. Vælg `Release | x86`, og genopbyg løsningen for at oprette `Release\FlyingSolids.exe` og `Release\FlyingSolids.scr`. Der findes ingen x64-konfiguration. Signering er som standard slået til for både Release og Debug. Angiv navnet eller fingeraftrykket for et gyldigt certifikat til kodesignering med en privat nøgle i den aktuelle brugers `Personal (My)`-lager på siden `Signing` i egenskaberne for projektet `FlyingSolids`. Indstillingerne gælder EXE og SCR og gemmes i `FlyingSolids.vcxproj.user`, som Git ignorerer. SignTool findes automatisk i PATH eller Windows SDK. Hvis du bruger SimplySign, skal du logge på SimplySign Desktop før bygget. Først signeres SCR og får et obligatorisk RFC 3161 SHA-256-tidsstempel fra den konfigurerede tidsstempelserver; derefter indlejres det i EXE, som også signeres og tidsstemples. Angiv URL-adressen til RFC 3161-tidsstempelserveren i feltet `Timestamp server`. Fejl ved signering, tidsstempling eller kontrol stopper bygget; filer med gyldige tidsstemplede signaturer signeres ikke igen.
 
-Pak disse byggeoutput ved at køre `PackageRelease.ps1` uden signeringsparametre. Scriptet bruger midlertidige kopier, ændrer ikke filer i `Release` og kontrollerer kun eksisterende gyldige signaturer. Det opretter ét arkiv, `DispSavers-<version>-win32.zip`, med `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr` og `FlyingSolids\license.txt`. Den tidligere ZIP-fil fjernes ved starten af kørslen; en kontrolfejl forhindrer oprettelsen af et nyt arkiv.
+Pak disse byggeoutput ved at køre `PackageRelease.ps1` uden signeringsparametre. Scriptet bruger midlertidige kopier, ændrer ikke filer i `Release` og kontrollerer kun eksisterende gyldige signaturer. Det opretter ét arkiv, `DispSavers-<version>-win32.zip`, med `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr` og `SpaceFlight\license.txt`. Den tidligere ZIP-fil fjernes ved starten af kørslen; en kontrolfejl forhindrer oprettelsen af et nyt arkiv.
 
 ## Licens
 
 FlyingSolids udgives under [MIT-licensen](../license.txt). Copyright © Petr Červinka — FortSoft 2026
+
+
+## FlightCorridor
+
+FlightCorridor tilbyder Flyvetur mellem fire formskiftende flader og Flyvetur gennem en formskiftende tragt. Tildel præcis én flyvetur til hver skærm: vælg dens række og den tilsvarende alternativknap. Den første animation er valgt på alle skærme som standard.
+
+`Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](../FlightCorridor/README.da-DK.md)
+
+## SpaceFlight
+
+SpaceFlight tilbyder „Uendelig bølgende flade“ og „Langdistanceflyvetur — formskiftende flade“. Tildel præcis én flyvetur til hver skærm: vælg dens række og den tilsvarende alternativknap. Den første animation er valgt på alle skærme som standard.
+
+`Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.da-DK.md)

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.2.0.0
  */
 
 #define NOMINMAX
@@ -50,29 +50,17 @@ constexpr float FLIGHT_HALF_HEIGHT = 25.0f;
 
 /// Adds two vectors component by component.
 static Vec3 operator+(Vec3 a, Vec3 b) {
-    return Vec3{
-        a.x + b.x,
-        a.y + b.y,
-        a.z + b.z
-    };
+    return Vec3{ a.x + b.x, a.y + b.y, a.z + b.z };
 }
 
 /// Subtracts two vectors component by component.
 static Vec3 operator-(Vec3 a, Vec3 b) {
-    return Vec3{
-        a.x - b.x,
-        a.y - b.y,
-        a.z - b.z
-    };
+    return Vec3{ a.x - b.x, a.y - b.y, a.z - b.z };
 }
 
 /// Multiplies every vector component by a scalar.
 static Vec3 operator*(Vec3 a, float scalar) {
-    return Vec3{
-        a.x * scalar,
-        a.y * scalar,
-        a.z * scalar
-    };
+    return Vec3{ a.x * scalar, a.y * scalar, a.z * scalar };
 }
 
 /// Divides a vector by a scalar through its reciprocal.
@@ -105,11 +93,7 @@ static float Dot(Vec3 a, Vec3 b) {
 
 /// Returns the right-handed vector product of two vectors.
 static Vec3 Cross(Vec3 a, Vec3 b) {
-    return Vec3{
-        a.y * b.z - a.z * b.y,
-        a.z * b.x - a.x * b.z,
-        a.x * b.y - a.y * b.x
-    };
+    return Vec3{ a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x };
 }
 
 /// Returns the squared vector length without a square-root calculation.
@@ -209,11 +193,7 @@ void Simulation::Reset(unsigned initialSeed) {
     activeBodyCount = SOLID_COUNT;
     copyCount = 1;
     objectScale = 1.0f;
-    cameraPosition = Vec3{
-        0.0f,
-        0.0f,
-        -26.0f
-    };
+    cameraPosition = Vec3{ 0.0f, 0.0f, -26.0f };
     cameraVelocity = Vec3{};
     yaw = 0.0f;
     pitch = 0.0f;
@@ -238,26 +218,14 @@ void Simulation::Step(double seconds, float objectSpeed, float cameraSpeed, bool
     }
     enabledSolids = selectedEnabledSolids & ALL_SOLID_MASK;
     if (cameraFlight && !cameraFlightEnabled) {
-        cameraPosition = Vec3{
-            0.0f,
-            0.0f,
-            -26.0f
-        };
-        cameraVelocity = Vec3{
-            0.0f,
-            0.0f,
-            2.4f * cameraSpeed
-        };
+        cameraPosition = Vec3{ 0.0f, 0.0f, -26.0f };
+        cameraVelocity = Vec3{ 0.0f, 0.0f, 2.4f * cameraSpeed };
         yaw = pitch = roll = 0.0f;
         InitializeFlightBodies(0);
     } else if (cameraFlight && activeBodyCount > previousActiveBodyCount) {
         InitializeFlightBodies(previousActiveBodyCount);
     } else if (!cameraFlight) {
-        cameraPosition = Vec3{
-            0.0f,
-            0.0f,
-            -26.0f
-        };
+        cameraPosition = Vec3{ 0.0f, 0.0f, -26.0f };
         cameraVelocity = Vec3{};
         yaw = pitch = roll = 0.0f;
     }
@@ -329,18 +297,9 @@ void Simulation::ResolveRoomBounds(bool cameraFlight) {
     if (cameraFlight) {
         for (std::size_t index = 0; index < activeBodyCount; index++) {
             Body& body = bodies[index];
-            const float limits[2]{
-                FLIGHT_HALF_WIDTH - body.radius,
-                FLIGHT_HALF_HEIGHT - body.radius
-            };
-            float* position[2]{
-                &body.position.x,
-                &body.position.y
-            };
-            float* velocity[2]{
-                &body.velocity.x,
-                &body.velocity.y
-            };
+            const float limits[2]{ FLIGHT_HALF_WIDTH - body.radius, FLIGHT_HALF_HEIGHT - body.radius };
+            float* position[2]{ &body.position.x, &body.position.y };
+            float* velocity[2]{ &body.velocity.x, &body.velocity.y };
             for (int axis = 0; axis < 2; axis++) {
                 if (*position[axis] < -limits[axis]) {
                     *position[axis] = -limits[axis];
@@ -374,36 +333,12 @@ void Simulation::ResolveRoomBounds(bool cameraFlight) {
         return;
     }
     const float horizontalSlope = PROJECTION_TANGENT * viewportAspect;
-    const Vec3 leftNormal{
-        1.0f,
-        0.0f,
-        horizontalSlope
-    };
-    const Vec3 rightNormal{
-        -1.0f,
-        0.0f,
-        horizontalSlope
-    };
-    const Vec3 bottomNormal{
-        0.0f,
-        1.0f,
-        PROJECTION_TANGENT
-    };
-    const Vec3 topNormal{
-        0.0f,
-        -1.0f,
-        PROJECTION_TANGENT
-    };
-    const Vec3 nearNormal{
-        0.0f,
-        0.0f,
-        1.0f
-    };
-    const Vec3 farNormal{
-        0.0f,
-        0.0f,
-        -1.0f
-    };
+    const Vec3 leftNormal{ 1.0f, 0.0f, horizontalSlope };
+    const Vec3 rightNormal{ -1.0f, 0.0f, horizontalSlope };
+    const Vec3 bottomNormal{ 0.0f, 1.0f, PROJECTION_TANGENT };
+    const Vec3 topNormal{ 0.0f, -1.0f, PROJECTION_TANGENT };
+    const Vec3 nearNormal{ 0.0f, 0.0f, 1.0f };
+    const Vec3 farNormal{ 0.0f, 0.0f, -1.0f };
     const Vec3 planeNormals[]{
         Normalized(leftNormal),
         Normalized(rightNormal),
@@ -412,14 +347,7 @@ void Simulation::ResolveRoomBounds(bool cameraFlight) {
         nearNormal,
         farNormal
     };
-    const float offsets[]{
-        0.0f,
-        0.0f,
-        0.0f,
-        0.0f,
-        STATIC_NEAR_DISTANCE,
-        -STATIC_FAR_DISTANCE
-    };
+    const float offsets[]{ 0.0f, 0.0f, 0.0f, 0.0f, STATIC_NEAR_DISTANCE, -STATIC_FAR_DISTANCE };
     for (std::size_t index = 0; index < activeBodyCount; index++) {
         Body& body = bodies[index];
         Vec3 viewPosition = body.position - cameraPosition;
@@ -459,11 +387,7 @@ void Simulation::ResolveSolidCollisions(std::uint32_t selectedEnabledSolids) {
                 continue;
             }
             if (distanceSquared < 1.0e-8f) {
-                delta = Vec3{
-                    1.0f,
-                    0.0f,
-                    0.0f
-                };
+                delta = Vec3{ 1.0f, 0.0f, 0.0f };
                 distanceSquared = 1.0f;
             }
             const float distance = std::sqrt(distanceSquared);
@@ -507,16 +431,10 @@ void Simulation::ResolveCameraPathCollisions(float seconds, float objectSpeed, f
         Vec3 normal{};
         if (radialSquared < 1.0e-8f) {
             const float angle = goldenAngle * static_cast<float>(index + 1) + seed * 0.001f;
-            normal = Vec3{
-                std::cos(angle),
-                std::sin(angle), 0.0f
-            };
+            normal = Vec3{ std::cos(angle), std::sin(angle), 0.0f };
         } else {
             const float inverseRadius = 1.0f / std::sqrt(radialSquared);
-            normal = Vec3{
-                body.position.x * inverseRadius,
-                body.position.y * inverseRadius, 0.0f
-            };
+            normal = Vec3{ body.position.x * inverseRadius, body.position.y * inverseRadius, 0.0f };
         }
         const float radialDistance = std::sqrt(std::max(radialSquared, 0.0f));
         const float remaining = desiredRadius - radialDistance;
@@ -556,11 +474,7 @@ void Simulation::InitializeFlightBodies(std::size_t firstBody) {
 /// Advances the forward-flight camera along one constant central rail without targeting, turning, pitching, rolling
 /// or lateral avoidance.
 void Simulation::UpdateCamera(float seconds, float cameraSpeed) {
-    cameraVelocity = Vec3{
-        0.0f,
-        0.0f,
-        2.4f * cameraSpeed
-    };
+    cameraVelocity = Vec3{ 0.0f, 0.0f, 2.4f * cameraSpeed };
     cameraPosition += cameraVelocity * seconds;
     cameraPosition.x = 0.0f;
     cameraPosition.y = 0.0f;
@@ -570,36 +484,20 @@ void Simulation::UpdateCamera(float seconds, float cameraSpeed) {
 /// Copies mutable physics state into the immutable renderer-facing snapshot.
 void Simulation::PublishState() {
     for (std::size_t i = 0; i < activeBodyCount; i++) {
-        state.solids[i] = SolidState{
-            bodies[i].position,
-            bodies[i].rotation
-        };
+        state.solids[i] = SolidState{ bodies[i].position, bodies[i].rotation };
     }
     state.solidCount = activeBodyCount;
     state.objectScale = objectScale;
     const float cosPitch = std::cos(pitch);
-    Vec3 forward{
-        std::sin(yaw) * cosPitch,
-        std::sin(pitch),
-        std::cos(yaw) * cosPitch
-    };
-    const Vec3 worldUp{
-        0.0f,
-        1.0f,
-        0.0f
-    };
+    Vec3 forward{ std::sin(yaw) * cosPitch, std::sin(pitch), std::cos(yaw) * cosPitch };
+    const Vec3 worldUp{ 0.0f, 1.0f, 0.0f };
     Vec3 right = Normalized(Cross(worldUp, forward));
     Vec3 up = Normalized(Cross(forward, right));
     const float cosRoll = std::cos(roll);
     const float sinRoll = std::sin(roll);
     const Vec3 rolledRight = right * cosRoll + up * sinRoll;
     const Vec3 rolledUp = up * cosRoll - right * sinRoll;
-    state.camera = CameraState{
-        cameraPosition,
-        rolledRight,
-        rolledUp,
-        forward
-    };
+    state.camera = CameraState{ cameraPosition, rolledRight, rolledUp, forward };
     state.enabledSolids = enabledSolids;
     state.cameraFlight = cameraFlightEnabled;
 }

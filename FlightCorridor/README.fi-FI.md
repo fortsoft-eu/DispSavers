@@ -1,0 +1,29 @@
+# FlightCorridor
+
+[Čeština](README.cs-CZ.md) · [English (US)](README.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Português](README.pt-PT.md) · [Norsk](README.nb-NO.md) · [Svenska](README.sv-SE.md) · **Suomi** · [Dansk](README.da-DK.md) · [Íslenska](README.is-IS.md) · [Türkçe](README.tr-TR.md)
+
+FlightCorridor tarjoaa Lento neljän muuntuvan pinnan välissä ja Lento muuntuvan suppilon läpi -animaatiot. Määritä kullekin näytölle täsmälleen yksi lento: valitse näytön rivi ja vastaava valintanappi. Ensimmäinen animaatio on oletusarvoisesti valittuna kaikilla näytöillä. Tekstuuri on oletusarvoisesti käytössä; poista Tekstuuri-valinta, jos haluat näyttää valitut näytöt rautalankamallina. Jos valitset useita rivejä, valinta koskee kaikkia näitä näyttöjä. Liukusäädin asettaa animaation nopeuden välille 0–1600 %. Oletuskäynnistyksessä EXE ottaa käyttöön vain ensisijaisen animaationäytön, näytönsäästäjä kaikki näytöt. Jokainen näyttö piirretään omalla virkistystaajuudellaan. Asetukset tallennetaan erikseen sovellukselle ja näytönsäästäjälle. Kameran vapaa pyörintä kääntää näkymää pehmeästi kaikkiin suuntiin valituilla näytöillä; toiminto on oletusarvoisesti pois käytöstä. Pysähdykset ja suunnanvaihdot hidastaa kameran pyörintää tasaisesti satunnaisin väliajoin, pysäyttää sen hetkeksi ja käynnistää sen vastakkaiseen suuntaan. Valinta on käytettävissä kameran vapaan pyörinnän ollessa käytössä ja on oletuksena pois käytöstä; lento jatkuu.
+
+## Sovellus
+
+`FlightCorridor.exe`
+
+Luettelosta voi valita useita näyttöjä; kaksoisnapsautus vaihtaa rivin tilaa ja kaikkien näyttöjen valinnan voi poistaa. Jokaisella näytöllä on itsenäinen näkymä. Tilannekuva tallentaa PNG:n ja tallennuspainike käynnistää tai lopettaa MP4:n. Keskeytä pysäyttää animaation. Sovellus asentaa tai poistaa myös sisäisen näytönsäästäjän. Asetukset tallennetaan jatkuvasti. Sovelluksesta voi olla käynnissä vain yksi instanssi. Uusi käynnistys palauttaa pienennetyn ohjausikkunan ja tuo sen etualalle. Siirry säätimien välillä Tab- ja Vaihto+Tab-näppäimillä; Alt ja alleviivattu kirjain aktivoivat komennon. Esc sulkee aktiivisen Ohje- tai Tietoja-ikkunan; ohjausikkunassa se sulkee sovelluksen. Estä näytönsäästäjä animaation aikana estää Windowsin näytönsäästäjän käynnistymisen vain silloin, kun animaatio on todella näkyvissä eikä sitä ole keskeytetty.
+
+Tilannekuvat ja tallenteet käyttävät ensimmäistä aktiivista animaationäyttöä, eivät kaikkien näyttöjen yhdistettyä kuvaa. PNG käyttää Kuvat-kansiota ja MP4 Videot-kansiota; jos niitä ei ole, käytetään Tiedostot-kansiota. Tallennusasetukset-painikkeella valitaan Viewport tai TV. Viewport säilyttää animaationäytön koon ja virkistystaajuuden, enintään 60 kuvaa sekunnissa. TV tarjoaa tarkkuudet 1920 × 1080, 1440 × 1080 ja 1280 × 720 kuvasuhteella 16:9 sekä taajuudet 50, 25, 59.94 (60000/1001) ja 29.97 (30000/1001) kuvaa sekunnissa. Kuvasuhde säilyy; TV käyttää progressiivista BT.709-videota rajatulla alueella ja 4:2:0-näytteistyksellä. Tarkkuus ja kuvataajuus ovat valittavissa vain TV-tilassa. Tallennusasetukset-ikkunan voi pienentää, eikä se estä muiden sovellusikkunoiden käyttöä. OK tallentaa valinnat seuraavaa MP4-tallennusta varten; Peruuta tai Esc hylkää vahvistamattomat muutokset. Tallennettavan näytön valintaa ei voi poistaa tallennuksen aikana; muiden näyttöjen muutokset eivät pysäytä tallennusta. Sovelluksen sulkeminen tallennuksen aikana vaatii vahvistuksen, sillä myös tallennus päättyy.
+
+Windows 7–Windows 11 tukevat kaikkia toimintoja, myös PNG-tilannekuvia ja MP4-tallennusta. Sovelluksen suorittaminen Windows Vista SP2:ssa edellyttää päivitysten KB971512 ja KB2117917 asentamista. MP4-tallennus ei toimi Vistassa nykyisessä versiossa.
+
+## Näytönsäästäjä
+
+`FlightCorridor.scr`
+
+Ota esikatselu käyttöön käynnistää koko näytön esikatselun kaikilla näytöillä. Asetusikkuna pysyy avoinna, ja muutokset näkyvät heti. OK tallentaa asetukset ja Peruuta hylkää muutokset. Esc tai hiiren liike lopettaa koko näytön säästäjän. Siirry säätimien välillä Tab- ja Vaihto+Tab-näppäimillä; Alt ja alleviivattu kirjain aktivoivat komennon. Esc asetuksissa vastaa Peruuta-painiketta; Ohje- tai Tietoja-ikkunassa se sulkee vain kyseisen ikkunan.
+
+Tuettuja käyttöjärjestelmiä ovat Windows 7–Windows 11. Sovelluksen suorittaminen Windows Vista SP2:ssa edellyttää päivitysten KB971512 ja KB2117917 asentamista.
+
+## Kääntäminen
+
+Avaa `DispSavers.slnx` Visual Studiossa käyttäen MSVC v145:tä ja Windows SDK:ta. Valitse `Release | x86` ja kokoa ratkaisu uudelleen, jolloin syntyvät `Release\FlightCorridor.exe` ja `Release\FlightCorridor.scr`. x64-kokoonpanoa ei ole. Allekirjoitus on oletuksena käytössä sekä Release- että Debug-kokoonpanossa. Anna `FlightCorridor`-projektin ominaisuuksien `Signing`-sivulla nykyisen käyttäjän `Personal (My)`-varastossa olevan voimassa olevan koodin allekirjoitusvarmenteen nimi tai sormenjälki; varmenteella on oltava yksityinen avain. Asetukset koskevat EXE- ja SCR-tiedostoja, ja ne tallennetaan Gitin ohittamaan `FlightCorridor.vcxproj.user`-tiedostoon. SignTool etsitään automaattisesti PATH-muuttujasta tai Windows SDK:sta. Jos käytät SimplySignia, kirjaudu SimplySign Desktopiin ennen koontia. Ensin SCR allekirjoitetaan ja siihen lisätään pakollinen RFC 3161 SHA-256 -aikaleima määritetyltä aikaleimapalvelimelta; sen jälkeen SCR upotetaan EXE-tiedostoon, joka myös allekirjoitetaan ja aikaleimataan. Anna RFC 3161 -aikaleimapalvelimen URL-osoite `Timestamp server`-kenttään. Allekirjoituksen, aikaleiman tai tarkistuksen virhe keskeyttää koonnin; kelvollisesti allekirjoitettuja ja aikaleimattuja tiedostoja ei allekirjoiteta uudelleen.
+
+[MIT License](license.txt) — Copyright © Petr Červinka — FortSoft 2026

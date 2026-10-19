@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.1.0.0
+ * Last modified for version 1.2.0.0
  */
 
 #pragma once
@@ -33,20 +33,20 @@
 enum class AppLanguage : int {
     Czech,
     EnglishUs,
+    EnglishUk,
+    EnglishAu,
     German,
     French,
     Spanish,
     Italian,
+    Portuguese,
     Polish,
     Slovak,
-    EnglishUk,
-    EnglishAu,
-    Portuguese,
+    Danish,
+    Finnish,
+    Icelandic,
     Norwegian,
     Swedish,
-    Finnish,
-    Danish,
-    Icelandic,
     Turkish,
     Count
 };
@@ -228,6 +228,9 @@ const wchar_t* AboutPlatformLabel(AppLanguage language);
 
 /// Returns the localized website label.
 const wchar_t* AboutWebsiteLabel(AppLanguage language);
+
+/// Returns the localized About website tooltip.
+const wchar_t* AboutVisitTooltipText(AppLanguage language);
 
 /// Returns the localized context command that opens the product website.
 const wchar_t* OpenInBrowserText(AppLanguage language);

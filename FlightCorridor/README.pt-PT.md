@@ -1,0 +1,29 @@
+# FlightCorridor
+
+[Čeština](README.cs-CZ.md) · [English (US)](README.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · **Português** · [Norsk](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Suomi](README.fi-FI.md) · [Dansk](README.da-DK.md) · [Íslenska](README.is-IS.md) · [Türkçe](README.tr-TR.md)
+
+O FlightCorridor oferece Voo entre quatro superfícies deformáveis e Voo através de um funil deformável. Atribua um único voo a cada monitor: selecione a respetiva linha e o botão de opção correspondente. Por predefinição, a primeira animação está selecionada em todos os monitores. A textura está ativa por predefinição; desmarque Textura para mostrar os monitores selecionados em modelo de arame. Com várias linhas selecionadas, a escolha aplica-se a todos esses monitores. O controlo deslizante define a velocidade da animação entre 0 e 1600 %. No arranque predefinido, EXE ativa apenas o monitor de animação principal, enquanto a proteção de ecrã ativa todos os monitores. Cada monitor é desenhado à sua própria frequência de atualização. As definições são guardadas separadamente para a aplicação e a proteção de ecrã. Rotação livre da câmara ativa uma rotação suave da vista em todas as direções nos monitores selecionados; está desativada por predefinição. Paragens e inversões de sentido abranda gradualmente a rotação da câmara em intervalos aleatórios, interrompe-a brevemente e retoma-a no sentido oposto. A opção está disponível com a rotação livre da câmara ativa e está desativada por predefinição; o voo continua.
+
+## Aplicação
+
+`FlightCorridor.exe`
+
+Selecione vários monitores; um duplo clique alterna uma linha e todos podem ser desmarcados. Cada monitor usa uma cena independente. Captura guarda PNG e o botão de gravação inicia ou termina MP4. Pausa para a animação. A aplicação também instala ou desinstala a proteção de ecrã incorporada. As definições são guardadas continuamente. A aplicação só pode ter uma instância em execução. Um novo arranque restaura a janela de controlo minimizada e coloca-a em primeiro plano. Use Tab e Shift+Tab para passar entre controlos; Alt e a letra sublinhada ativam um comando. Esc fecha a janela ativa de Ajuda ou Acerca de; na janela de controlo, termina a aplicação. Bloquear proteção de ecrã durante a animação impede o início da proteção de ecrã do Windows apenas enquanto a animação está efetivamente visível e não está em pausa.
+
+As capturas e gravações usam o primeiro monitor de animação ativo, não uma imagem conjunta de todos os monitores. PNG usa Imagens, MP4 Vídeos; se essas pastas não existirem, usa-se Documentos. O botão Definições de gravação permite escolher Viewport ou TV. Viewport conserva as dimensões e a frequência de atualização do monitor de animação, até 60 fotogramas por segundo. TV oferece 1920 × 1080, 1440 × 1080 ou 1280 × 720 no formato 16:9, a 50, 25, 59.94 (60000/1001) ou 29.97 (30000/1001) fotogramas por segundo. A proporção da imagem é mantida; TV usa vídeo progressivo BT.709 com intervalo limitado e amostragem 4:2:0. A resolução e a frequência só estão disponíveis no modo TV. A janela Definições de gravação pode ser minimizada e não bloqueia as outras janelas da aplicação. OK guarda as escolhas para a próxima gravação MP4; Cancelar ou Esc descarta as alterações não confirmadas. O monitor gravado não pode ser desmarcado durante a gravação; as alterações aos outros monitores não a interrompem. Fechar a aplicação durante uma gravação exige confirmação, pois também termina a gravação.
+
+Os sistemas Windows 7 a Windows 11 suportam todas as funcionalidades, incluindo capturas PNG e gravação MP4. Para executar a aplicação no Windows Vista SP2, é necessário instalar as atualizações KB971512 e KB2117917. A gravação MP4 não funciona no Vista na versão atual.
+
+## Proteção de ecrã
+
+`FlightCorridor.scr`
+
+Ativar pré-visualização inicia uma pré-visualização em ecrã inteiro em todos os monitores e permite ajustes em tempo real. OK guarda as definições e Cancelar descarta-as. Esc ou o movimento do rato termina a proteção em ecrã inteiro. Use Tab e Shift+Tab para passar entre controlos; Alt e a letra sublinhada ativam um comando. Esc nas definições equivale a Cancelar; na Ajuda ou em Acerca de, fecha apenas essa janela.
+
+São suportados os sistemas Windows 7 a Windows 11. Para executar a aplicação no Windows Vista SP2, é necessário instalar as atualizações KB971512 e KB2117917.
+
+## Compilação
+
+Abra `DispSavers.slnx` no Visual Studio com MSVC v145 e um Windows SDK. Selecione `Release | x86` e recompile a solução para criar `Release\FlightCorridor.exe` e `Release\FlightCorridor.scr`. Não existe configuração x64. A assinatura está ativada por predefinição para Release e Debug. Nas propriedades do projeto `FlightCorridor`, página `Signing`, indique o nome ou a impressão digital de um certificado válido de assinatura de código com chave privada no arquivo `Personal (My)` do utilizador atual. As definições aplicam-se ao EXE e ao SCR e são guardadas em `FlightCorridor.vcxproj.user`, ignorado pelo Git. O SignTool é encontrado automaticamente no PATH ou no Windows SDK. Se utilizar SimplySign, inicie sessão no SimplySign Desktop antes da compilação. Primeiro, o SCR é assinado e recebe um carimbo temporal RFC 3161 SHA-256 obrigatório do servidor de carimbos temporais configurado; depois é incorporado no EXE, que também é assinado e carimbado temporalmente. Indique o URL do servidor de carimbos temporais RFC 3161 no campo `Timestamp server`. Uma falha de assinatura, carimbo temporal ou verificação interrompe a compilação; os ficheiros com assinaturas válidas e carimbo temporal não são novamente assinados.
+
+[MIT License](license.txt) — Copyright © Petr Červinka — FortSoft 2026

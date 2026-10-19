@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -89,8 +89,10 @@
     <ClCompile Include="Localization.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeshBuilder.cpp" />
+    <ClCompile Include="MonitorInfo.cpp" />
     <ClCompile Include="Mp4Recorder.cpp" />
     <ClCompile Include="ProgramIcons.cpp" />
+    <ClCompile Include="PersistWindowState.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SelectionEdit.cpp" />
     <ClCompile Include="Simulation.cpp" />
@@ -104,8 +106,10 @@
     <ClInclude Include="Effects.h" />
     <ClInclude Include="Localization.h" />
     <ClInclude Include="MeshBuilder.h" />
+    <ClInclude Include="MonitorInfo.h" />
     <ClInclude Include="Mp4Recorder.h" />
     <ClInclude Include="ProgramIcons.h" />
+    <ClInclude Include="PersistWindowState.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="SelectionEdit.h" />

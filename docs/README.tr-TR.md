@@ -1,4 +1,4 @@
-﻿# FlyingSolids
+# FlyingSolids
 
 [Čeština](README.cs-CZ.md) · [English (US)](../README.md) · [Deutsch](README.de-DE.md) · [Français](README.fr-FR.md) · [Español](README.es-ES.md) · [Italiano](README.it-IT.md) · [Polski](README.pl-PL.md) · [Slovenčina](README.sk-SK.md) · [English (UK)](README.en-GB.md) · [English (Australia)](README.en-AU.md) · [Português](README.pt-PT.md) · [Norsk](README.nb-NO.md) · [Svenska](README.sv-SE.md) · [Suomi](README.fi-FI.md) · [Dansk](README.da-DK.md) · [Íslenska](README.is-IS.md) · **Türkçe**
 
@@ -6,7 +6,7 @@ FlyingSolids, aydınlatılmış katı üç boyutlu geometrik nesneler gösteren 
 
 ## Özellikler
 
-- **Uzayı gözlemleme** ve doğrusal **Uzayda uçuş** kipleri
+- **Uzayı gözlemleme** ve doğrusal **Uzayda uçuş** kipleri. Listeden bir veya daha fazla ekran seçin. Kamera modu, nesneler, aydınlatma, hızlar, boyut ve kopya sayısı yalnızca seçili ekranlara uygulanır. Her ekran kendi ayarlarını hatırlar.
 - Ana ışık, dolgu ışığı, ortam ışığı ve kenar aydınlatmasının bağımsız kontrolü
 - Seçilen her monitörde bağımsız sahne
 - Etkin nesne başına bir ile on kopya
@@ -44,8 +44,21 @@ Windows 7 ile Windows 11 arasındaki sürümler, PNG anlık görüntüler ve MP4
 
 `DispSavers.slnx` dosyasını MSVC v145 ve Windows SDK bulunan Visual Studio’da açın. `Release | x86` seçin ve çözümü yeniden derleyerek `Release\FlyingSolids.exe` ve `Release\FlyingSolids.scr` dosyalarını oluşturun. x64 yapılandırması yoktur. İmzalama hem Release hem de Debug için varsayılan olarak etkindir. `FlyingSolids` projesinin özelliklerindeki `Signing` sayfasında, geçerli kullanıcının `Personal (My)` deposunda özel anahtarı bulunan geçerli bir kod imzalama sertifikasının adını veya parmak izini girin. Ayarlar EXE ve SCR için ortaktır ve Git’in yok saydığı `FlyingSolids.vcxproj.user` dosyasına kaydedilir. SignTool, PATH veya Windows SDK içinde otomatik olarak bulunur. SimplySign kullanıyorsanız derlemeden önce SimplySign Desktop’ta oturum açın. Önce SCR imzalanır ve ayarlanan zaman damgası sunucusundan zorunlu bir RFC 3161 SHA-256 zaman damgası alır; ardından EXE’ye gömülür. EXE de imzalanır ve zaman damgası alır. RFC 3161 zaman damgası sunucusunun URL adresini `Timestamp server` alanına girin. İmzalama, zaman damgası veya doğrulama hatası derlemeyi durdurur; geçerli ve zaman damgalı imzaya sahip dosyalar yeniden imzalanmaz.
 
-Bu derleme çıktılarını paketlemek için `PackageRelease.ps1` dosyasını imzalama parametreleri olmadan çalıştırın. Betik geçici kopyalar kullanır, `Release` içindeki dosyaları değiştirmez ve yalnızca mevcut geçerli imzaları doğrular. `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr` ve `FlyingSolids\license.txt` içeren tek `DispSavers-<version>-win32.zip` arşivini oluşturur. Önceki ZIP çalıştırmanın başında silinir; doğrulama hatası yeni bir arşiv oluşturulmasını engeller.
+Bu derleme çıktılarını paketlemek için `PackageRelease.ps1` dosyasını imzalama parametreleri olmadan çalıştırın. Betik geçici kopyalar kullanır, `Release` içindeki dosyaları değiştirmez ve yalnızca mevcut geçerli imzaları doğrular. `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr` ve `SpaceFlight\license.txt` içeren tek `DispSavers-<version>-win32.zip` arşivini oluşturur. Önceki ZIP çalıştırmanın başında silinir; doğrulama hatası yeni bir arşiv oluşturulmasını engeller.
 
 ## Lisans
 
 FlyingSolids [MIT Lisansı](../license.txt) ile sunulur. Copyright © Petr Červinka — FortSoft 2026
+
+
+## FlightCorridor
+
+FlightCorridor, Biçim değiştiren dört yüzey arasında uçuş ve Biçim değiştiren bir huninin içinden uçuş seçeneklerini sunar. Her monitöre tam olarak bir uçuş atayın: monitörün satırını ve ilgili seçenek düğmesini seçin. Varsayılan olarak tüm monitörlerde ilk animasyon seçilidir.
+
+`Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](../FlightCorridor/README.tr-TR.md)
+
+## SpaceFlight
+
+SpaceFlight, „Sonsuz dalgalanan yüzey“ ve „Uzun mesafeli uçuş — biçim değiştiren yüzey“ seçeneklerini sunar. Her monitöre tam olarak bir uçuş atayın: monitörün satırını ve ilgili seçenek düğmesini seçin. Varsayılan olarak tüm monitörlerde ilk animasyon seçilidir.
+
+`Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.tr-TR.md)
