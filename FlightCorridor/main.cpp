@@ -225,10 +225,10 @@ constexpr int ANIMATION_TAB_CHECKBOX_IDS[]{
     ID_MONITOR_TEXTURE,
     ID_CAMERA_TUMBLING,
     ID_CAMERA_REVERSALS,
-    ID_MAIN_LIGHT,
-    ID_FILL_LIGHT,
     ID_AMBIENT_LIGHT,
-    ID_RIM_LIGHT
+    ID_RIM_LIGHT,
+    ID_MAIN_LIGHT,
+    ID_FILL_LIGHT
 };
 constexpr AnimationSliderControl ANIMATION_SLIDERS[]{
     { ID_OBJECT_SPEED, ID_OBJECT_SPEED_LABEL, AnimationProperty::ObjectSpeed }
@@ -237,17 +237,17 @@ constexpr AnimationControl ANIMATION_CHECKBOXES[]{
     { ID_MONITOR_TEXTURE, AnimationProperty::Textured },
     { ID_CAMERA_TUMBLING, AnimationProperty::CameraTumbling },
     { ID_CAMERA_REVERSALS, AnimationProperty::CameraReversals, AnimationProperty::CameraTumbling },
-    { ID_MAIN_LIGHT, AnimationProperty::MainLight, AnimationProperty::Textured },
-    { ID_FILL_LIGHT, AnimationProperty::FillLight, AnimationProperty::Textured },
     { ID_AMBIENT_LIGHT, AnimationProperty::AmbientLight, AnimationProperty::Textured },
-    { ID_RIM_LIGHT, AnimationProperty::RimLight, AnimationProperty::Textured }
+    { ID_RIM_LIGHT, AnimationProperty::RimLight, AnimationProperty::Textured },
+    { ID_MAIN_LIGHT, AnimationProperty::MainLight, AnimationProperty::Textured },
+    { ID_FILL_LIGHT, AnimationProperty::FillLight, AnimationProperty::Textured }
 };
 constexpr SettingsControlAlignment ANIMATION_CONTROL_ALIGNMENTS[]{
     { ID_MONITOR_TEXTURE, ID_EFFECT_FIRST },
     { ID_CAMERA_TUMBLING, ID_EFFECT_FIRST + 1 },
-    { ID_MAIN_LIGHT, ID_MONITOR_TEXTURE },
-    { ID_FILL_LIGHT, ID_CAMERA_TUMBLING },
-    { ID_AMBIENT_LIGHT, ID_CAMERA_REVERSALS }
+    { ID_AMBIENT_LIGHT, ID_MONITOR_TEXTURE },
+    { ID_RIM_LIGHT, ID_CAMERA_TUMBLING },
+    { ID_MAIN_LIGHT, ID_CAMERA_REVERSALS }
 };
 
 /// Stable source metadata and displayed values of one monitor-list item.
@@ -2089,10 +2089,10 @@ static void ApplyAnimationCaptions(HWND window, const SettingsWindowData& data) 
     SetDlgItemTextW(window, ID_MONITOR_TEXTURE, FilledSurfaceText(data.language));
     SetDlgItemTextW(window, ID_CAMERA_TUMBLING, CameraTumblingText(data.language));
     SetDlgItemTextW(window, ID_CAMERA_REVERSALS, CameraReversalsText(data.language));
-    SetDlgItemTextW(window, ID_MAIN_LIGHT, MainLightText(data.language));
-    SetDlgItemTextW(window, ID_FILL_LIGHT, FillLightText(data.language));
     SetDlgItemTextW(window, ID_AMBIENT_LIGHT, AmbientLightText(data.language));
     SetDlgItemTextW(window, ID_RIM_LIGHT, RimLightText(data.language));
+    SetDlgItemTextW(window, ID_MAIN_LIGHT, MainLightText(data.language));
+    SetDlgItemTextW(window, ID_FILL_LIGHT, FillLightText(data.language));
     SetDlgItemTextW(window, ID_EFFECTS_GROUP, strings.flightEffects);
     for (std::size_t index = 0; index < EFFECT_COUNT; index++) {
         SetDlgItemTextW(window, ID_EFFECT_FIRST + static_cast<int>(index), strings.effects[index]);
@@ -4731,14 +4731,14 @@ static int CreateAnimationControls(HWND window, int top) {
         effectsTop + 22 + 2 * rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_CAMERA_REVERSALS), nullptr,
         nullptr);
     CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[2],
-        effectsTop + 22, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_MAIN_LIGHT), nullptr, nullptr);
+        effectsTop + 22, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_AMBIENT_LIGHT), nullptr, nullptr);
     CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[2],
-        effectsTop + 22 + rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_FILL_LIGHT), nullptr, nullptr);
+        effectsTop + 22 + rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_RIM_LIGHT), nullptr, nullptr);
     CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[2],
-        effectsTop + 22 + 2 * rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_AMBIENT_LIGHT), nullptr,
+        effectsTop + 22 + 2 * rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_MAIN_LIGHT), nullptr,
         nullptr);
     CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[2],
-        effectsTop + 22 + 3 * rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_RIM_LIGHT), nullptr,
+        effectsTop + 22 + 3 * rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_FILL_LIGHT), nullptr,
         nullptr);
     return actionButtonsTop;
 }

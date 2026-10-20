@@ -234,15 +234,15 @@ constexpr AnimationSliderControl ANIMATION_SLIDERS[]{
     { ID_OBJECT_SIZE, ID_OBJECT_SIZE_LABEL, AnimationProperty::ObjectSize }
 };
 constexpr AnimationControl ANIMATION_CHECKBOXES[]{
-    { ID_MAIN_LIGHT, AnimationProperty::MainLight },
-    { ID_FILL_LIGHT, AnimationProperty::FillLight },
     { ID_AMBIENT_LIGHT, AnimationProperty::AmbientLight },
-    { ID_RIM_LIGHT, AnimationProperty::RimLight }
+    { ID_RIM_LIGHT, AnimationProperty::RimLight },
+    { ID_MAIN_LIGHT, AnimationProperty::MainLight },
+    { ID_FILL_LIGHT, AnimationProperty::FillLight }
 };
 constexpr SettingsControlAlignment ANIMATION_CONTROL_ALIGNMENTS[]{
     { ID_AMBIENT_LIGHT, ID_CAMERA_STATIC },
-    { ID_MAIN_LIGHT, ID_CAMERA_STATIC },
     { ID_RIM_LIGHT, ID_CAMERA_FLIGHT },
+    { ID_MAIN_LIGHT, ID_CAMERA_STATIC },
     { ID_FILL_LIGHT, ID_CAMERA_FLIGHT }
 };
 
@@ -2094,10 +2094,10 @@ static void ApplyAnimationCaptions(HWND window, const SettingsWindowData& data) 
     const LocalizedText& strings = Text(data.language);
     SetDlgItemTextW(window, ID_CAMERA_STATIC, strings.observeSpace);
     SetDlgItemTextW(window, ID_CAMERA_FLIGHT, strings.flyThroughSpace);
-    SetDlgItemTextW(window, ID_MAIN_LIGHT, strings.mainLight);
-    SetDlgItemTextW(window, ID_FILL_LIGHT, strings.fillLight);
     SetDlgItemTextW(window, ID_AMBIENT_LIGHT, AmbientLightText(data.language));
     SetDlgItemTextW(window, ID_RIM_LIGHT, RimLightText(data.language));
+    SetDlgItemTextW(window, ID_MAIN_LIGHT, strings.mainLight);
+    SetDlgItemTextW(window, ID_FILL_LIGHT, strings.fillLight);
     SetDlgItemTextW(window, ID_SOLIDS_GROUP, strings.solidObjects);
     for (std::size_t index = 0; index < SOLID_COUNT; index++) {
         SetDlgItemTextW(window, ID_SOLID_FIRST + static_cast<int>(index), strings.solids[index]);
