@@ -2,10 +2,22 @@
   <Configurations>
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="FlyingSolids/FlyingSolids.vcxproj" Id="bd7f6079-1029-4b8a-9743-756c7991d204" />
-  <Project Path="FlyingSolids/FlyingSolidsScr.vcxproj" Id="a9c08e34-7800-4af9-95d4-0f72642810d5" />
-  <Project Path="FlightCorridor/FlightCorridor.vcxproj" Id="d8c19a23-a702-4137-94d8-56571f03c498" />
-  <Project Path="FlightCorridor/FlightCorridorScr.vcxproj" Id="b5377a2d-4e9a-4372-a381-7d3d1fa63f0e" />
-  <Project Path="SpaceFlight/SpaceFlight.vcxproj" Id="e7ef957e-1bf8-4e6d-98e7-49262368d346" />
-  <Project Path="SpaceFlight/SpaceFlightScr.vcxproj" Id="f49c80ef-7f09-4a75-9165-c958016aa6fd" />
+  <Folder Name="/FlyingSolids/">
+    <Project Path="FlyingSolids/FlyingSolids.vcxproj" Id="bd7f6079-1029-4b8a-9743-756c7991d204" />
+    <Project Path="FlyingSolids/FlyingSolidsScr.vcxproj" Id="a9c08e34-7800-4af9-95d4-0f72642810d5" />
+  </Folder>
+  <Folder Name="/FlightCorridor/">
+    <Project Path="FlightCorridor/FlightCorridor.vcxproj" Id="d8c19a23-a702-4137-94d8-56571f03c498" />
+    <Project Path="FlightCorridor/FlightCorridorScr.vcxproj" Id="b5377a2d-4e9a-4372-a381-7d3d1fa63f0e" />
+  </Folder>
+  <Folder Name="/SpaceFlight/">
+    <Project Path="SpaceFlight/SpaceFlight.vcxproj" Id="e7ef957e-1bf8-4e6d-98e7-49262368d346" />
+    <Project Path="SpaceFlight/SpaceFlightScr.vcxproj" Id="f49c80ef-7f09-4a75-9165-c958016aa6fd" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="BuildSigning.ps1" />
+    <File Path="BuildSigning.targets" />
+    <File Path="BuildSigning.xml" />
+    <File Path="PackageRelease.ps1" />
+  </Folder>
 </Solution>

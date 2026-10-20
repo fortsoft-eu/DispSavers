@@ -131,17 +131,21 @@ float CorridorHalfWidth(float z) {
 /// Bends the local flight into a circular arc and transports cross-sections along its tangent.
 /// Zero curvature is the exact original route; axial rotation changes wall orientation independently of tumbling.
 float3 BendCorridor(float3 relative) {
-    float curvature = length(corridorShape.xy);
-    if (curvature > 0.000001) {
-        float2 direction = corridorShape.xy / curvature;
-        float angle = curvature * relative.z;
-        float sine, cosine;
-        sincos(angle, sine, cosine);
-        float halfSine = sin(angle * 0.5);
-        float along = dot(relative.xy, direction);
-        relative = float3(relative.xy + direction * (2.0 * halfSine * halfSine / curvature + along * (cosine - 1.0)),
-            sine / curvature - along * sine);
+    float squaredAngle = dot(corridorShape.xy, corridorShape.xy) * relative.z * relative.z;
+    float sinc;
+    float cosc;
+    if (squaredAngle < 0.01) {
+        sinc = 1.0 - squaredAngle / 6.0 + squaredAngle * squaredAngle / 120.0;
+        cosc = 0.5 - squaredAngle / 24.0 + squaredAngle * squaredAngle / 720.0;
+    } else {
+        float angle = sqrt(squaredAngle);
+        sinc = sin(angle) / angle;
+        float halfSinc = sin(angle * 0.5) / angle;
+        cosc = 2.0 * halfSinc * halfSinc;
     }
+    float crossSection = 1.0 - dot(corridorShape.xy, relative.xy);
+    relative = float3(relative.xy + corridorShape.xy * (relative.z * relative.z * cosc * crossSection),
+        relative.z * sinc * crossSection);
     float rollSine, rollCosine;
     sincos(corridorShape.z, rollSine, rollCosine);
     return float3(relative.x * rollCosine - relative.y * rollSine,
@@ -402,12 +406,12 @@ float4 SolidFlightSample(float2 uv, uint patch,
     float4 position;
     float halfFov;
     if (effect == 22) {
-        position = CorridorSurfaceSample(uv.x * 2.0 - 1.0,
-            uv.y * 2.0 * FLIGHT_HALF_DEPTH_INDEX - FLIGHT_HALF_DEPTH_INDEX, patch, fade, phase);
+        position = CorridorSurfaceSample(uv.x * 2.0 - 1.0, uv.y * 2.0 * FLIGHT_HALF_DEPTH_INDEX - FLIGHT_HALF_DEPTH_INDEX,
+            patch, fade, phase);
         halfFov = 0.62;
     } else {
-        position = FunnelSurfaceSample(uv.x * 2.0 * PI,
-            uv.y * 2.0 * FLIGHT_HALF_DEPTH_INDEX - FLIGHT_HALF_DEPTH_INDEX, fade, phase, chamber);
+        position = FunnelSurfaceSample(uv.x * 2.0 * PI, uv.y * 2.0 * FLIGHT_HALF_DEPTH_INDEX - FLIGHT_HALF_DEPTH_INDEX,
+            fade, phase, chamber);
         halfFov = 0.66;
     }
     view = float3(position.x * (resolution.x / resolution.y) * tan(halfFov), position.y * tan(halfFov), position.w);

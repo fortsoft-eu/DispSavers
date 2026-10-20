@@ -52,10 +52,10 @@ public:
     /// Recreates size-dependent resources for the current client area.
     void Resize(unsigned width, unsigned height);
 
-    /// Reports whether flip presentation can use the containing output's vertical-blank clock.
+    /// Reports native output-clock or swap-chain readiness pacing for the current presentation path.
     bool UsesVerticalBlankWait() const;
 
-    /// Consumes the latest refresh, including one during Present; errors use timed legacy pacing.
+    /// Waits for the output clock and presentation capacity together; errors retain timed legacy pacing.
     HRESULT WaitForNextFrame();
 
     /// Renders and presents one complete scene snapshot.

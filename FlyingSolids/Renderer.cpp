@@ -36,10 +36,6 @@
 #include <exception>
 #include <thread>
 #include <cstdint>
-#include <cstdio>
-#include <cwchar>
-#include <new>
-#include <string>
 #include <vector>
 #include <d3d11.h>
 #include <dxgi1_3.h>
@@ -164,7 +160,7 @@ struct OutputFramePacer {
     }
 
     /// Consumes the latest refresh, coalescing delayed notifications instead of waiting another full period.
-    HRESULT Wait(DWORD timeoutMilliseconds) {
+    HRESULT Wait(DWORD timeoutMilliseconds, HANDLE frameReady = nullptr) {
         HRESULT status = result.load(std::memory_order_acquire);
         if (FAILED(status)) {
             return status;
@@ -172,7 +168,12 @@ struct OutputFramePacer {
         if (!readyEvent) {
             return E_FAIL;
         }
-        const DWORD waited = WaitForSingleObject(readyEvent, timeoutMilliseconds);
+        const HANDLE handles[]{ readyEvent, frameReady };
+        const DWORD waited = WaitForMultipleObjects(frameReady ? 2 : 1, handles, TRUE, timeoutMilliseconds);
+        status = result.load(std::memory_order_acquire);
+        if (FAILED(status)) {
+            return status;
+        }
         if (waited != WAIT_OBJECT_0) {
             status = waited == WAIT_TIMEOUT ? DXGI_ERROR_WAIT_TIMEOUT : HRESULT_FROM_WIN32(GetLastError());
             if (SUCCEEDED(status)) {
@@ -219,177 +220,14 @@ struct OutputFramePacer {
     std::atomic<HRESULT> result{ E_ABORT };
 };
 
-/// One frame's CPU timing and unmodified DXGI statistics; statistics may be unavailable or disjoint.
-struct FrameTimingSample {
-    unsigned long long frame = 0;
-    LONGLONG waitStarted = 0;
-    LONGLONG waitFinished = 0;
-    LONGLONG drawStarted = 0;
-    LONGLONG presentStarted = 0;
-    LONGLONG presentFinished = 0;
-    DWORD waitResult = S_OK;
-    unsigned waitSource = 0;
-    unsigned waitFailures = 0;
-    HRESULT presentResult = S_OK;
-    HRESULT submittedResult = E_FAIL;
-    UINT submitted = 0;
-    HRESULT statisticsResult = E_FAIL;
-    DXGI_FRAME_STATISTICS statistics{};
-    float animationTime = 0.0f;
-    std::uint32_t enabledEffects = 0;
-    unsigned syncInterval = 0;
-    bool recording = false;
-};
-
-/// Optional bounded diagnostics, enabled only by FrameTiming.enabled beside the executable.
-/// Records in memory during animation and writes CSV only when this renderer is destroyed.
-struct FrameTimingCapture {
-    /// Initializes diagnostics without opening files or changing presentation behaviour.
-    void Initialize(HWND window, const wchar_t* product) {
-        wchar_t module[MAX_PATH]{};
-        const DWORD length = GetModuleFileNameW(nullptr, module, static_cast<DWORD>(std::size(module)));
-        if (length == 0 || length >= std::size(module)) {
-            return;
-        }
-        const std::wstring modulePath(module, length);
-        const std::size_t separator = modulePath.find_last_of(L"\\/");
-        if (separator == std::wstring::npos) {
-            return;
-        }
-        const std::wstring marker = modulePath.substr(0, separator + 1) + L"FrameTiming.enabled";
-        const DWORD attributes = GetFileAttributesW(marker.c_str());
-        if (attributes == INVALID_FILE_ATTRIBUTES || (attributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-            return;
-        }
-        LARGE_INTEGER counterFrequency{};
-        if (!QueryPerformanceFrequency(&counterFrequency) || counterFrequency.QuadPart <= 0) {
-            return;
-        }
-        wchar_t directory[MAX_PATH]{};
-        const DWORD directoryLength = GetTempPathW(static_cast<DWORD>(std::size(directory)), directory);
-        if (directoryLength == 0 || directoryLength >= std::size(directory)) {
-            return;
-        }
-        MONITORINFOEXW monitor{};
-        monitor.cbSize = sizeof(monitor);
-        wchar_t device[CCHDEVICENAME] = L"Unknown";
-        if (GetMonitorInfoW(MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST), &monitor)) {
-            wcscpy_s(device, monitor.szDevice);
-        }
-        for (wchar_t& value : device) {
-            if (value == L'\\' || value == L'.' || value == L':') {
-                value = L'_';
-            }
-        }
-        wchar_t output[MAX_PATH]{};
-        const int written = _snwprintf_s(output, std::size(output), _TRUNCATE,
-            L"%lsDispSavers-Timing-%ls-%lu-%llu-%ls.csv", directory, product, GetCurrentProcessId(),
-            static_cast<unsigned long long>(GetTickCount64()), device);
-        if (written < 0) {
-            return;
-        }
-        try {
-            path = output;
-            samples.resize(18000);
-            frequency = counterFrequency.QuadPart;
-        } catch (const std::bad_alloc&) {
-            samples.clear();
-            path.clear();
-        }
-    }
-
-    /// Does not read the clock when diagnostic capture is disabled.
-    LONGLONG Tick() const {
-        if (samples.empty()) {
-            return 0;
-        }
-        LARGE_INTEGER ticks{};
-        QueryPerformanceCounter(&ticks);
-        return ticks.QuadPart;
-    }
-
-    /// Retains the native output-wait result without modifying or replacing that wait.
-    void Wait(LONGLONG started, HRESULT result) {
-        if (!samples.empty()) {
-            pending.waitStarted = started;
-            pending.waitFinished = Tick();
-            pending.waitResult = static_cast<DWORD>(result);
-            pending.waitSource = 2;
-            if (FAILED(result)) {
-                pending.waitFailures++;
-            }
-        }
-    }
-
-    /// Records raw statistics only; no flush, wait, frame correction or disk I/O is performed here.
-    void Frame(IDXGISwapChain* swapChain, float time, std::uint32_t effects, bool recording,
-            unsigned interval, LONGLONG drawStarted, LONGLONG presentStarted, HRESULT result) {
-        if (samples.empty()) {
-            return;
-        }
-        pending.presentFinished = Tick();
-        pending.frame = ++frameCount;
-        pending.drawStarted = drawStarted;
-        pending.presentStarted = presentStarted;
-        pending.presentResult = result;
-        pending.submittedResult = swapChain->GetLastPresentCount(&pending.submitted);
-        pending.statisticsResult = swapChain->GetFrameStatistics(&pending.statistics);
-        pending.animationTime = time;
-        pending.enabledEffects = effects;
-        pending.syncInterval = interval;
-        pending.recording = recording;
-        samples[next] = pending;
-        next = (next + 1) % samples.size();
-        count = std::min(count + 1, samples.size());
-        pending = FrameTimingSample{};
-    }
-
-    /// Saves the last bounded set of frames in chronological order after rendering has stopped.
-    void Save() const {
-        if (count == 0) {
-            return;
-        }
-        FILE* file = nullptr;
-        if (_wfopen_s(&file, path.c_str(), L"wt") != 0 || !file) {
-            return;
-        }
-        std::fputs("QpcFrequency,Frame,WaitStart,WaitEnd,DrawStart,PresentStart,PresentEnd,WaitResult,"
-            "WaitFailures,PresentResult,SubmittedResult,SubmittedId,StatsResult,PresentedId,"
-            "PresentedRefresh,SyncRefresh,SyncQpc,AnimationTime,EnabledEffects,SyncInterval,Recording,WaitSource\n", file);
-        const std::size_t first = count == samples.size() ? next : 0;
-        for (std::size_t index = 0; index < count; index++) {
-            const FrameTimingSample& sample = samples[(first + index) % samples.size()];
-            std::fprintf(file,
-                "%lld,%llu,%lld,%lld,%lld,%lld,%lld,%lu,%u,0x%08lX,0x%08lX,%u,0x%08lX,%u,%u,%u,%lld,%.9g,%u,%u,%u,%u\n",
-                frequency, sample.frame, sample.waitStarted, sample.waitFinished, sample.drawStarted,
-                sample.presentStarted, sample.presentFinished, sample.waitResult, sample.waitFailures,
-                static_cast<unsigned long>(sample.presentResult),
-                static_cast<unsigned long>(sample.submittedResult), sample.submitted,
-                static_cast<unsigned long>(sample.statisticsResult), sample.statistics.PresentCount,
-                sample.statistics.PresentRefreshCount, sample.statistics.SyncRefreshCount,
-                sample.statistics.SyncQPCTime.QuadPart, static_cast<double>(sample.animationTime),
-                sample.enabledEffects, sample.syncInterval, static_cast<unsigned>(sample.recording),
-                sample.waitSource);
-        }
-        std::fclose(file);
-    }
-
-    /// Allocated only when explicitly enabled; all frame samples remain private to this renderer.
-    std::vector<FrameTimingSample> samples;
-    std::wstring path;
-    LONGLONG frequency = 0;
-    std::size_t next = 0;
-    std::size_t count = 0;
-    unsigned long long frameCount = 0;
-    FrameTimingSample pending;
-};
-
 /// Private Direct3D pipeline and capture state.
 struct Renderer::Impl {
-    /// Saves optional diagnostics after the render worker has stopped.
+    /// Stops output pacing before releasing presentation resources.
     ~Impl() {
         outputPacer.Stop();
-        frameTiming.Save();
+        if (frameLatencyWaitableObject) {
+            CloseHandle(frameLatencyWaitableObject);
+        }
     }
 
     /// Creates the device, swap chain, shaders, buffers, meshes and pipeline states.
@@ -434,11 +272,22 @@ struct Renderer::Impl {
             flip.Scaling = DXGI_SCALING_STRETCH;
             flip.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
             flip.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
-            flip.Flags = 0;
+            flip.Flags = DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
             ComPtr<IDXGISwapChain1> flipChain;
             result = factory2->CreateSwapChainForHwnd(device.Get(), window, &flip, nullptr, nullptr, &flipChain);
+            if (FAILED(result)) {
+                flip.Flags = 0;
+                result = factory2->CreateSwapChainForHwnd(device.Get(), window, &flip, nullptr, nullptr, &flipChain);
+            }
             if (SUCCEEDED(result) && SUCCEEDED(flipChain.As(&swapChain))) {
                 flipPresentation = true;
+                swapChainFlags = flip.Flags;
+                if (flip.Flags & DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT) {
+                    ComPtr<IDXGISwapChain2> swapChain2;
+                    if (SUCCEEDED(swapChain.As(&swapChain2)) && SUCCEEDED(swapChain2->SetMaximumFrameLatency(2))) {
+                        frameLatencyWaitableObject = swapChain2->GetFrameLatencyWaitableObject();
+                    }
+                }
             }
         }
         if (!swapChain) {
@@ -458,14 +307,16 @@ struct Renderer::Impl {
         }
         factory->MakeWindowAssociation(window, DXGI_MWA_NO_ALT_ENTER);
         ComPtr<IDXGIDevice1> latencyDevice;
-        if (SUCCEEDED(device.As(&latencyDevice))) {
+        if (!frameLatencyWaitableObject && SUCCEEDED(device.As(&latencyDevice))) {
             latencyDevice->SetMaximumFrameLatency(2);
         }
         if (flipPresentation) {
             ComPtr<IDXGIOutput> output;
             DXGI_OUTPUT_DESC description{};
-            if (SUCCEEDED(swapChain->GetContainingOutput(&output)) && output
-                    && SUCCEEDED(output->GetDesc(&description)) && description.AttachedToDesktop
+            if (SUCCEEDED(swapChain->GetContainingOutput(&output))
+                    && output
+                    && SUCCEEDED(output->GetDesc(&description))
+                    && description.AttachedToDesktop
                     && description.Monitor == MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST)) {
                 pacingOutput = output;
             }
@@ -549,11 +400,7 @@ struct Renderer::Impl {
         if (FAILED(device->CreateDepthStencilState(&depth, &depthState))) {
             return false;
         }
-        const bool initialized = CreateTargets();
-        if (initialized) {
-            frameTiming.Initialize(window, L"FlyingSolids");
-        }
-        return initialized;
+        return CreateTargets();
     }
 
     /// Recreates render and depth targets from the current swap-chain back buffer.
@@ -599,7 +446,7 @@ struct Renderer::Impl {
         renderTarget.Reset();
         depthView.Reset();
         backBuffer.Reset();
-        if (SUCCEEDED(swapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, 0))) {
+        if (SUCCEEDED(swapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, swapChainFlags))) {
             CreateTargets();
         }
     }
@@ -613,13 +460,7 @@ struct Renderer::Impl {
             snapshotScene = scene;
             hasSnapshotScene = true;
         }
-        const LONGLONG drawStarted = presentFrame ? frameTiming.Tick() : 0;
-        constexpr float background[]{
-            0.0f,
-            0.0f,
-            0.0f,
-            1.0f
-        };
+        constexpr float background[]{ 0.0f, 0.0f, 0.0f, 1.0f };
         context->ClearRenderTargetView(renderTarget.Get(), background);
         context->ClearDepthStencilView(depthView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
         ID3D11RenderTargetView* target = renderTarget.Get();
@@ -707,12 +548,9 @@ struct Renderer::Impl {
             InspectPixels();
         }
         if (presentFrame) {
-            const LONGLONG presentStarted = frameTiming.Tick();
-            const unsigned interval = !outputFrameReady && syncInterval != 0 ? 1U : 0U;
+            const unsigned interval = (!outputFrameReady || frameLatencyWaitableObject) && syncInterval != 0 ? 1U : 0U;
             outputFrameReady = false;
-            const HRESULT result = swapChain->Present(interval, 0);
-            frameTiming.Frame(swapChain.Get(), 0.0f, scene.enabledSolids, recorder.IsRecording(),
-                interval, drawStarted, presentStarted, result);
+            swapChain->Present(interval, 0);
         }
     }
 
@@ -843,15 +681,14 @@ struct Renderer::Impl {
         return SUCCEEDED(result);
     }
 
-    /// Optional diagnostics never influence the simulation clock or presentation decisions.
-    FrameTimingCapture frameTiming;
-
     /// Device and presentation resources
     ComPtr<ID3D11Device> device;
     ComPtr<ID3D11DeviceContext> context;
+    HANDLE frameLatencyWaitableObject = nullptr;
     ComPtr<IDXGISwapChain> swapChain;
     ComPtr<IDXGIOutput> pacingOutput;
     OutputFramePacer outputPacer;
+    UINT swapChainFlags = 0;
     bool outputFrameReady = false;
 
     /// Size-dependent render targets
@@ -915,22 +752,28 @@ void Renderer::Resize(unsigned width, unsigned height) {
 
 /// Reports availability of the actual output's vertical-blank clock.
 bool Renderer::UsesVerticalBlankWait() const {
-    return impl->pacingOutput != nullptr;
+    return impl->pacingOutput != nullptr || impl->frameLatencyWaitableObject != nullptr;
 }
 
 /// Consumes the latest output refresh, including one that occurred while Present was blocking.
 HRESULT Renderer::WaitForNextFrame() {
     impl->outputFrameReady = false;
-    const LONGLONG started = impl->frameTiming.Tick();
     HRESULT result = S_OK;
     if (impl->pacingOutput) {
         if (!impl->outputPacer.Started() && !impl->outputPacer.Start(impl->pacingOutput.Get())) {
             result = E_FAIL;
         } else {
-            result = impl->outputPacer.Wait(50);
+            result = impl->outputPacer.Wait(50, impl->frameLatencyWaitableObject);
+        }
+    } else if (impl->frameLatencyWaitableObject) {
+        const DWORD waited = WaitForSingleObject(impl->frameLatencyWaitableObject, 50);
+        if (waited != WAIT_OBJECT_0) {
+            result = waited == WAIT_TIMEOUT ? DXGI_ERROR_WAIT_TIMEOUT : HRESULT_FROM_WIN32(GetLastError());
+            if (SUCCEEDED(result)) {
+                result = E_FAIL;
+            }
         }
     }
-    impl->frameTiming.Wait(started, result);
     impl->outputFrameReady = SUCCEEDED(result) && impl->pacingOutput != nullptr;
     if (FAILED(result)) {
         impl->pacingOutput.Reset();
