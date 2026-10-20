@@ -13,7 +13,7 @@
 #define ID_INFORMATION_PRODUCT          1502
 #define ID_INFORMATION_WEBSITE          1503
 #define ID_INFORMATION_LINK             1504
-#define ID_INFORMATION_SIZE_GRIP         1505
+#define ID_INFORMATION_SIZE_GRIP        1505
 #define ID_INFORMATION_CLOSE            IDOK
 #define ID_RECORD_VIEWPORT              1701
 #define ID_RECORD_TV                    1702

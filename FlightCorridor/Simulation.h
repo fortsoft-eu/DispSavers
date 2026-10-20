@@ -32,8 +32,8 @@
 /// Neutral defaults reproduce the original flight; each simulation supplies independent random variations.
 struct MotionParameters {
     std::array<float, 4> phases{};
-    std::array<float, 4> waves{1.0f, 1.0f, 1.0f, 1.0f};
-    std::array<float, 4> camera{1.0f, 1.0f, 1.0f, 1.0f};
+    std::array<float, 4> waves{ 1.0f, 1.0f, 1.0f, 1.0f };
+    std::array<float, 4> camera{ 1.0f, 1.0f, 1.0f, 1.0f };
     std::array<float, 4> pathPhases{};
 };
 
@@ -41,9 +41,9 @@ struct MotionParameters {
 struct SceneState {
     float animationTime = 0.0f;
     MotionParameters motion;
-    std::array<float, 4> cameraRotation{0.0f, 0.0f, 0.0f, 1.0f};
+    std::array<float, 4> cameraRotation{ 0.0f, 0.0f, 0.0f, 1.0f };
     std::array<float, 4> corridorShape{};
-    std::array<std::uint32_t, 4> wallPalettes{0, 1, 2, 3};
+    std::array<std::uint32_t, 4> wallPalettes{ 0, 1, 2, 3 };
     std::uint32_t enabledEffects = 1U;
     bool corridorFilled = false;
     bool funnelFilled = false;
@@ -132,7 +132,7 @@ private:
     double tumblingDirection = 1.0;
     double tumblingResumeFrom = 0.0;
     bool cameraReversalsEnabled = false;
-    std::array<double, 4> cameraOrientation{0.0, 0.0, 0.0, 1.0};
+    std::array<double, 4> cameraOrientation{ 0.0, 0.0, 0.0, 1.0 };
     std::array<double, 3> tumblingFrom{};
     std::array<double, 3> tumblingTo{};
     double tumblingTime = 0.0;

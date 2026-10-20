@@ -67,6 +67,14 @@ constexpr std::size_t MONITOR_SETTINGS_RESERVED_FIELDS = 1;
 using MonitorSettingsRecord =
     std::array<DWORD, 1 + static_cast<std::size_t>(AnimationProperty::Count) + MONITOR_SETTINGS_RESERVED_FIELDS>;
 
+/// Numeric monitor preferences represented by the animation sliders.
+constexpr AnimationProperty NUMERIC_ANIMATION_PROPERTIES[]{
+    AnimationProperty::ObjectSpeed,
+    AnimationProperty::CameraSpeed,
+    AnimationProperty::CopyCount,
+    AnimationProperty::ObjectSize
+};
+
 /// Returns the registry branch assigned to a settings profile.
 static const wchar_t* RegistryPath(SettingsProfile profile) {
     return profile == SettingsProfile::ScreenSaver ? SCREEN_SAVER_REGISTRY_PATH : STANDALONE_REGISTRY_PATH;
@@ -193,7 +201,25 @@ MonitorAnimation& AppSettings::AnimationForMonitor(const std::wstring& device) {
     return monitorAnimations.try_emplace(device).first->second;
 }
 
-/// Reports differing values without substituting values from unselected monitors.
+/// Chooses the most frequent selected-monitor value, resolving equal counts by the lowest numeric value.
+static std::uint32_t MostFrequentMonitorValue(AppSettings& settings, const std::vector<std::wstring>& devices,
+        AnimationProperty property) {
+    std::map<std::uint32_t, std::size_t> frequencies;
+    for (const std::wstring& device : devices) {
+        frequencies[settings.AnimationForMonitor(device).Value(property)]++;
+    }
+    std::uint32_t value = 0;
+    std::size_t count = 0;
+    for (const auto& entry : frequencies) {
+        if (entry.second > count) {
+            value = entry.first;
+            count = entry.second;
+        }
+    }
+    return value;
+}
+
+/// Reports differing values and chooses the most frequent selected value for each numeric property.
 MonitorSelection AppSettings::SelectionForMonitors(const std::vector<std::wstring>& devices) {
     MonitorSelection result;
     for (const std::wstring& device : devices) {
@@ -209,6 +235,11 @@ MonitorSelection AppSettings::SelectionForMonitors(const std::vector<std::wstrin
             if (result.values.Value(property) != animation.Value(property)) {
                 result.mixedProperties |= 1U << index;
             }
+        }
+    }
+    if (result.available) {
+        for (const AnimationProperty property : NUMERIC_ANIMATION_PROPERTIES) {
+            result.values.SetValue(property, MostFrequentMonitorValue(*this, devices, property));
         }
     }
     return result;

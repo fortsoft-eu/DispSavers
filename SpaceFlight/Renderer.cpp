@@ -308,18 +308,19 @@ struct Renderer::Impl {
                 pacingOutput = output;
             }
         }
-        const bool vertexShaderFailed = FAILED(device->CreateVertexShader(SpaceFlightVertexShader,
-            sizeof(SpaceFlightVertexShader), nullptr, &vertexShader));
-        const bool shaderCreationFailed = vertexShaderFailed || FAILED(device->CreatePixelShader(SpaceFlightPixelShader,
-            sizeof(SpaceFlightPixelShader), nullptr, &pixelShader));
+        const bool shaderCreationFailed =
+            FAILED(device->CreateVertexShader(SpaceFlightVertexShader,
+                sizeof(SpaceFlightVertexShader), nullptr, &vertexShader))
+            || FAILED(device->CreatePixelShader(SpaceFlightPixelShader,
+                sizeof(SpaceFlightPixelShader), nullptr, &pixelShader));
         if (shaderCreationFailed) {
             return false;
         }
         const bool surfaceShaderCreationFailed =
-            FAILED(device->CreateVertexShader(SpaceFlightSurfaceVertexShader, sizeof(SpaceFlightSurfaceVertexShader),
-                nullptr, &surfaceVertexShader))
-            || FAILED(device->CreatePixelShader(SpaceFlightSurfacePixelShader, sizeof(SpaceFlightSurfacePixelShader),
-                nullptr, &surfacePixelShader));
+            FAILED(device->CreateVertexShader(SpaceFlightSurfaceVertexShader,
+                sizeof(SpaceFlightSurfaceVertexShader), nullptr, &surfaceVertexShader))
+            || FAILED(device->CreatePixelShader(SpaceFlightSurfacePixelShader,
+                sizeof(SpaceFlightSurfacePixelShader), nullptr, &surfacePixelShader));
         if (surfaceShaderCreationFailed) {
             return false;
         }

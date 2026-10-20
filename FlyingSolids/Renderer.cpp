@@ -321,10 +321,11 @@ struct Renderer::Impl {
                 pacingOutput = output;
             }
         }
-        const bool vertexShaderFailed = FAILED(device->CreateVertexShader(FlyingSolidsVertexShader,
-            sizeof(FlyingSolidsVertexShader), nullptr, &vertexShader));
-        const bool shaderCreationFailed = vertexShaderFailed || FAILED(device->CreatePixelShader(FlyingSolidsPixelShader,
-            sizeof(FlyingSolidsPixelShader), nullptr, &pixelShader));
+        const bool shaderCreationFailed =
+            FAILED(device->CreateVertexShader(FlyingSolidsVertexShader,
+                sizeof(FlyingSolidsVertexShader), nullptr, &vertexShader))
+            || FAILED(device->CreatePixelShader(FlyingSolidsPixelShader,
+                sizeof(FlyingSolidsPixelShader), nullptr, &pixelShader));
         if (shaderCreationFailed) {
             return false;
         }

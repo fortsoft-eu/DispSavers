@@ -312,10 +312,11 @@ struct Renderer::Impl {
                 pacingOutput = output;
             }
         }
-        const bool vertexShaderFailed = FAILED(device->CreateVertexShader(FlightCorridorVertexShader,
-            sizeof(FlightCorridorVertexShader), nullptr, &vertexShader));
-        const bool shaderCreationFailed = vertexShaderFailed || FAILED(device->CreatePixelShader(FlightCorridorPixelShader,
-            sizeof(FlightCorridorPixelShader), nullptr, &pixelShader));
+        const bool shaderCreationFailed =
+            FAILED(device->CreateVertexShader(FlightCorridorVertexShader,
+                sizeof(FlightCorridorVertexShader), nullptr, &vertexShader))
+            || FAILED(device->CreatePixelShader(FlightCorridorPixelShader,
+                sizeof(FlightCorridorPixelShader), nullptr, &pixelShader));
         if (shaderCreationFailed) {
             return false;
         }

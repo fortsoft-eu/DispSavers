@@ -28,6 +28,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "AppSettings.h"
 #include "Localization.h"
+#include "MixedControls.h"
 #include "ProgramIcons.h"
 #include "PersistWindowState.h"
 #include "Renderer.h"
@@ -94,14 +95,15 @@ constexpr wchar_t SCREEN_SAVER_ACTIVE_VALUE_NAME[] = L"ScreenSaveActive";
 
 /// Settings-window layout and animation constants
 constexpr int SETTINGS_WIDTH = 945;
-constexpr int SCREEN_SAVER_SETTINGS_HEIGHT = 455;
-constexpr int APPLICATION_SETTINGS_HEIGHT = 475;
+constexpr int SCREEN_SAVER_SETTINGS_HEIGHT = 433;
+constexpr int APPLICATION_SETTINGS_HEIGHT = 453;
 constexpr int PUSH_BUTTON_HEIGHT = 28;
 constexpr int ABOUT_ICON_SIZE = 32;
 constexpr int ABOUT_LARGE_ICON_SIZE = 48;
 constexpr int ABOUT_LARGE_ICON_DPI = 130;
 constexpr int ABOUT_WEB_GAP_DLU = 8;
 constexpr int RECORDING_COMBO_WIDTH_DLU = 130;
+constexpr int COMBO_BOX_MAX_VISIBLE_ITEMS = 13;
 constexpr int MONITOR_COLUMN_COUNT = 8;
 constexpr double SYSTEM_PREVIEW_SPEED_MULTIPLIER = 64.0;
 constexpr wchar_t NO_ANIMATION_MONITORS[] = L"{none}";
@@ -206,6 +208,12 @@ struct AnimationSliderControl {
     AnimationProperty property;
 };
 
+struct AnimationCheckboxPlacement {
+    int id;
+    int column;
+    int row;
+};
+
 /// Text-bearing controls that share one rendered baseline.
 struct SettingsControlAlignment {
     int control;
@@ -233,6 +241,7 @@ constexpr int ANIMATION_TAB_CHECKBOX_IDS[]{
 constexpr AnimationSliderControl ANIMATION_SLIDERS[]{
     { ID_OBJECT_SPEED, ID_OBJECT_SPEED_LABEL, AnimationProperty::ObjectSpeed }
 };
+constexpr int OPAQUE_SETTINGS_LABEL_IDS[]{ ID_EFFECTS_GROUP, ID_MONITOR_GROUP };
 constexpr AnimationControl ANIMATION_CHECKBOXES[]{
     { ID_MONITOR_TEXTURE, AnimationProperty::Textured },
     { ID_CAMERA_TUMBLING, AnimationProperty::CameraTumbling },
@@ -242,12 +251,21 @@ constexpr AnimationControl ANIMATION_CHECKBOXES[]{
     { ID_MAIN_LIGHT, AnimationProperty::MainLight, AnimationProperty::Textured },
     { ID_FILL_LIGHT, AnimationProperty::FillLight, AnimationProperty::Textured }
 };
+constexpr AnimationCheckboxPlacement ANIMATION_CHECKBOX_PLACEMENTS[]{
+    { ID_MONITOR_TEXTURE, 0, 0 },
+    { ID_CAMERA_TUMBLING, 0, 1 },
+    { ID_CAMERA_REVERSALS, 0, 2 },
+    { ID_AMBIENT_LIGHT, 1, 0 },
+    { ID_RIM_LIGHT, 1, 1 },
+    { ID_MAIN_LIGHT, 2, 0 },
+    { ID_FILL_LIGHT, 2, 1 }
+};
 constexpr SettingsControlAlignment ANIMATION_CONTROL_ALIGNMENTS[]{
-    { ID_MONITOR_TEXTURE, ID_EFFECT_FIRST },
-    { ID_CAMERA_TUMBLING, ID_EFFECT_FIRST + 1 },
+    { ID_EFFECTS_GROUP, ID_OBJECT_SPEED_LABEL },
     { ID_AMBIENT_LIGHT, ID_MONITOR_TEXTURE },
     { ID_RIM_LIGHT, ID_CAMERA_TUMBLING },
-    { ID_MAIN_LIGHT, ID_CAMERA_REVERSALS }
+    { ID_MAIN_LIGHT, ID_MONITOR_TEXTURE },
+    { ID_FILL_LIGHT, ID_CAMERA_TUMBLING }
 };
 
 /// Stable source metadata and displayed values of one monitor-list item.
@@ -327,6 +345,7 @@ struct SettingsControlState {
     std::optional<UINT> check;
     std::optional<LONG> position;
     std::optional<std::wstring> caption;
+    std::optional<bool> mixed;
 };
 
 /// Mutable state owned by one settings window.
@@ -458,6 +477,8 @@ static void UpdateSettingsTextControlLayout(HWND parent);
 
 /// Aligns settings text baselines using CalClock's native control-metric calculation.
 static void UpdateSettingsControlMetrics(HWND window);
+
+static void UpdateComboBoxDropDownSize(HWND combo);
 
 /// Updates the language and presentation mode of all open information windows.
 static void RefreshInformationWindows(AppLanguage language, bool appMode);
@@ -640,6 +661,20 @@ static bool HasReadyPrimarySurface() {
     RenderSurface* surface = PrimarySurface();
     return surface && surface->renderer && surface->renderedFrames.load(std::memory_order_relaxed) != 0
         && !surface->stopRequested.load(std::memory_order_relaxed);
+}
+
+/// Reports whether any animation surface can accept a global pause or resume command.
+static bool HasReadyAnimationSurface() {
+    if (!app) {
+        return false;
+    }
+    for (const std::unique_ptr<RenderSurface>& surface : app->surfaces) {
+        if (surface->renderer && surface->renderedFrames.load(std::memory_order_relaxed) != 0
+                && !surface->stopRequested.load(std::memory_order_relaxed)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /// Reports whether a top-level window is shown on the current virtual desktop and is not minimized.
@@ -1217,6 +1252,9 @@ static void ApplySettingsControlStates(std::vector<SettingsControlState> states)
         if (state.position && static_cast<LONG>(SendMessageW(state.window, TBM_GETPOS, 0, 0)) == *state.position) {
             state.position.reset();
         }
+        if (state.mixed && MixedControls::IsMixed(state.window) == *state.mixed) {
+            state.mixed.reset();
+        }
         if (state.caption) {
             const int length = GetWindowTextLengthW(state.window);
             std::wstring current(static_cast<std::size_t>(length) + 1, L'\0');
@@ -1228,7 +1266,7 @@ static void ApplySettingsControlStates(std::vector<SettingsControlState> states)
                 state.caption.reset();
             }
         }
-        if (!state.enabled && !state.check && !state.position && !state.caption) {
+        if (!state.enabled && !state.check && !state.position && !state.caption && !state.mixed) {
             state.window = nullptr;
             continue;
         }
@@ -1238,6 +1276,9 @@ static void ApplySettingsControlStates(std::vector<SettingsControlState> states)
         if (!state.window) {
             continue;
         }
+        if (state.mixed) {
+            MixedControls::SetMixed(state.window, *state.mixed);
+        }
         if (state.enabled) {
             EnableWindow(state.window, *state.enabled);
         }
@@ -1245,7 +1286,7 @@ static void ApplySettingsControlStates(std::vector<SettingsControlState> states)
             SendMessageW(state.window, BM_SETCHECK, *state.check, 0);
         }
         if (state.position) {
-            SendMessageW(state.window, TBM_SETPOS, FALSE, *state.position);
+            SendMessageW(state.window, TBM_SETPOS, TRUE, *state.position);
         }
         if (state.caption) {
             SetWindowTextW(state.window, state.caption->c_str());
@@ -1258,15 +1299,27 @@ static void AppendSettingsActionButtonStates(HWND window, const SettingsWindowDa
         const MonitorSelection& selection, std::vector<SettingsControlState>& states) {
     const bool mixed = selection.IsMixed(ANIMATION_ENABLED_PROPERTY);
     const std::uint32_t enabled = selection.values.Value(ANIMATION_ENABLED_PROPERTY);
-    states.push_back(SettingsControlState{ GetDlgItem(window, ID_ALL_ANIMATIONS),
-        selection.available && (enabled != ALL_ANIMATION_MASK || mixed) });
-    states.push_back(SettingsControlState{ GetDlgItem(window, ID_NO_ANIMATIONS),
-        selection.available && (enabled != 0 || mixed) });
+    states.push_back(SettingsControlState{
+        GetDlgItem(window, ID_ALL_ANIMATIONS),
+        selection.available && (enabled != ALL_ANIMATION_MASK || mixed),
+        std::nullopt,
+        std::nullopt,
+        std::nullopt,
+        selection.available && mixed
+    });
+    states.push_back(SettingsControlState{
+        GetDlgItem(window, ID_NO_ANIMATIONS),
+        selection.available && (enabled != 0 || mixed),
+        std::nullopt,
+        std::nullopt,
+        std::nullopt,
+        selection.available && mixed
+    });
     if (data.appMode) {
         const bool animationReady = HasReadyPrimarySurface();
         states.push_back(SettingsControlState{ GetDlgItem(window, ID_RECORD_TOGGLE), animationReady });
         states.push_back(SettingsControlState{ GetDlgItem(window, ID_SNAPSHOT), animationReady });
-        states.push_back(SettingsControlState{ GetDlgItem(window, ID_PAUSE), animationReady });
+        states.push_back(SettingsControlState{ GetDlgItem(window, ID_PAUSE), HasReadyAnimationSurface() });
     }
 }
 
@@ -1898,6 +1951,23 @@ static void RememberSelectedAnimationMonitors(SettingsWindowData& data, const st
     data.settings->SaveWindowPositions();
 }
 
+/// Appends selected monitor row names to the localized settings title without changing output checkboxes.
+static void UpdateSettingsWindowCaption(HWND window, const SettingsWindowData& data,
+        const std::vector<std::size_t>& selected) {
+    const LocalizedText& strings = Text(data.language);
+    std::wstring caption = data.appMode ? strings.controlTitle : strings.settingsTitle;
+    bool first = true;
+    for (const std::size_t index : selected) {
+        if (index >= data.monitorListEntries.size() || data.monitorListEntries[index].text[0].empty()) {
+            continue;
+        }
+        caption += first ? L" — " : L", ";
+        caption += data.monitorListEntries[index].text[0];
+        first = false;
+    }
+    SetWindowTextIfChanged(GetAncestor(window, GA_ROOT), caption);
+}
+
 /// Prepares the complete selected-monitor state before changing or repainting any controls.
 static void UpdateMonitorAnimationControls(HWND window, SettingsWindowData& data) {
     data.monitorSelectionUpdatePending = false;
@@ -1906,12 +1976,20 @@ static void UpdateMonitorAnimationControls(HWND window, SettingsWindowData& data
     RememberSelectedAnimationMonitors(data, selected);
     const MonitorSelection selection = data.settings->SelectionForMonitors(data.selectedAnimationDevices);
     std::vector<SettingsControlState> states;
+    states.push_back(SettingsControlState{ GetDlgItem(window, ID_ANIMATION_GROUP), selection.available });
     for (std::size_t index = 0; index < std::size(ANIMATION_RADIO_IDS); index++) {
         HWND radio = GetDlgItem(window, ANIMATION_RADIO_IDS[index]);
         const bool checked = selection.available
             && !selection.IsMixed(ANIMATION_RADIO_PROPERTY)
             && selection.values.Value(ANIMATION_RADIO_PROPERTY) == index;
-        states.push_back(SettingsControlState{ radio, selection.available, checked ? BST_CHECKED : BST_UNCHECKED });
+        states.push_back(SettingsControlState{
+            radio,
+            selection.available,
+            checked ? BST_CHECKED : BST_UNCHECKED,
+            std::nullopt,
+            std::nullopt,
+            selection.available && selection.IsMixed(ANIMATION_RADIO_PROPERTY)
+        });
     }
     for (const AnimationControl& control : ANIMATION_CHECKBOXES) {
         HWND checkbox = GetDlgItem(window, control.id);
@@ -1923,7 +2001,13 @@ static void UpdateMonitorAnimationControls(HWND window, SettingsWindowData& data
             const UINT state = selection.available && selection.IsMixed(control.property)
                 ? BST_INDETERMINATE
                 : selection.available && selection.values.Value(control.property) != 0 ? BST_CHECKED : BST_UNCHECKED;
-            states.push_back(SettingsControlState{ checkbox, enabled, state });
+            states.push_back(SettingsControlState{
+                checkbox,
+                enabled,
+                state,
+                std::nullopt,
+                std::nullopt
+            });
         }
     }
     AppendAnimationObjectControlStates(window, selection, states);
@@ -1933,12 +2017,14 @@ static void UpdateMonitorAnimationControls(HWND window, SettingsWindowData& data
             slider,
             selection.available,
             std::nullopt,
-            static_cast<LONG>(selection.values.Value(control.property))
+            static_cast<LONG>(selection.values.Value(control.property)),
+            std::nullopt,
+            selection.available && selection.IsMixed(control.property)
         });
         HWND label = GetDlgItem(window, control.labelId);
         states.push_back(SettingsControlState{
             label,
-            std::nullopt,
+            selection.available,
             std::nullopt,
             std::nullopt,
             AnimationSliderCaption(label, data, selection, control)
@@ -1949,6 +2035,7 @@ static void UpdateMonitorAnimationControls(HWND window, SettingsWindowData& data
     data.updating = true;
     ApplySettingsControlStates(std::move(states));
     data.updating = updating;
+    UpdateSettingsWindowCaption(window, data, selected);
     UpdateScreenSaverInhibition();
 }
 
@@ -2103,9 +2190,6 @@ static void ApplyAnimationCaptions(HWND window, const SettingsWindowData& data) 
 static void ApplyLocalizedCaptions(HWND window, SettingsWindowData& data) {
     const LocalizedText& strings = Text(data.language);
     data.updating = true;
-    SetWindowTextW(GetAncestor(window, GA_ROOT), data.appMode
-        ? strings.controlTitle
-        : strings.settingsTitle);
     window = SettingsContentWindow(window);
     SetDlgItemTextW(window, ID_LANGUAGE_LABEL, strings.language);
     if (data.appMode) {
@@ -2383,6 +2467,7 @@ static void AlignSettingsLabel(HWND label, HWND reference) {
 /// Aligns mixed settings rows after the shared font, theme, DPI or native control metrics change.
 static void UpdateSettingsControlMetrics(HWND window) {
     window = SettingsContentWindow(window);
+    UpdateComboBoxDropDownSize(GetDlgItem(window, ID_LANGUAGE));
     AlignSettingsControl(GetDlgItem(window, ID_LANGUAGE_LABEL), GetDlgItem(window, ID_LANGUAGE));
     AlignSettingsControl(GetDlgItem(window, ID_PREVENT_SCREEN_SAVER), GetDlgItem(window, ID_LANGUAGE));
     for (const SettingsControlAlignment& alignment : ANIMATION_CONTROL_ALIGNMENTS) {
@@ -2724,6 +2809,10 @@ static SettingsControlLayer GetSettingsControlLayer(HWND control) {
     wchar_t className[32]{};
     GetClassNameW(control, className, static_cast<int>(std::size(className)));
     if (_wcsicmp(className, L"STATIC") == 0) {
+        if ((GetWindowLongPtrW(control, GWL_STYLE) & SS_TYPEMASK) == SS_ETCHEDHORZ
+                || (GetWindowLongPtrW(control, GWL_EXSTYLE) & WS_EX_STATICEDGE) != 0) {
+            return SettingsControlLayer::Foreground;
+        }
         return SettingsControlLayer::Label;
     }
     if (_wcsicmp(className, L"BUTTON") == 0) {
@@ -2897,12 +2986,15 @@ static void UpdateSettingsTextControlLayout(HWND parent) {
             const int id = GetDlgCtrlID(control);
             const bool sliderLabel = std::any_of(std::begin(ANIMATION_SLIDERS), std::end(ANIMATION_SLIDERS),
                 [id](const AnimationSliderControl& control) { return control.labelId == id; });
+            const bool opaqueLabel = sliderLabel
+                || std::find(std::begin(OPAQUE_SETTINGS_LABEL_IDS), std::end(OPAQUE_SETTINGS_LABEL_IDS), id)
+                    != std::end(OPAQUE_SETTINGS_LABEL_IDS);
             LONG_PTR style = GetWindowLongPtrW(control, GWL_STYLE);
             style |= WS_CLIPSIBLINGS;
             if (layer == SettingsControlLayer::Label) {
                 style |= SS_LEFTNOWORDWRAP;
                 const LONG_PTR extended = GetWindowLongPtrW(control, GWL_EXSTYLE);
-                SetWindowLongPtrW(control, GWL_EXSTYLE, sliderLabel
+                SetWindowLongPtrW(control, GWL_EXSTYLE, opaqueLabel
                     ? extended & ~WS_EX_TRANSPARENT
                     : extended | WS_EX_TRANSPARENT);
             }
@@ -4186,15 +4278,16 @@ static LRESULT CALLBACK ComboBoxDropDownSubclassProc(HWND window, UINT msg, WPAR
 }
 
 /// Measures current items in the dropdown font immediately before opening, adding borders, padding, and scrollbar space.
-/// Keeps the dropdown at least as wide as its combo and installs work-area positioning support.
-static void UpdateComboBoxDropDownWidth(HWND combo) {
+/// Limits the list to 13 visible items and keeps it at least as wide as its combo within the monitor work area.
+static void UpdateComboBoxDropDownSize(HWND combo) {
     if (combo == nullptr) {
         return;
     }
+    SendMessageW(GetSettingsComboBox(combo), CB_SETMINVISIBLE, COMBO_BOX_MAX_VISIBLE_ITEMS, 0);
     COMBOBOXINFO information = {};
     information.cbSize = sizeof(information);
     HWND list = combo;
-    if (GetComboBoxInfo(combo, &information) && information.hwndList != nullptr) {
+    if (GetComboBoxInfo(GetSettingsComboBox(combo), &information) && information.hwndList != nullptr) {
         list = information.hwndList;
         SetWindowSubclass(information.hwndList, ComboBoxDropDownSubclassProc, COMBO_BOX_DROPDOWN_SUBCLASS_ID,
             reinterpret_cast<DWORD_PTR>(combo));
@@ -4338,8 +4431,8 @@ static SIZE LayoutRecordingSettings(HWND window) {
     AlignSettingsLabel(GetDlgItem(window, ID_RECORD_SIZE_LABEL), GetDlgItem(window, ID_RECORD_SIZE));
     AlignSettingsLabel(GetDlgItem(window, ID_RECORD_RATE_LABEL), GetDlgItem(window, ID_RECORD_RATE));
     AlignSettingsButton(GetDlgItem(window, IDCANCEL), GetDlgItem(window, IDOK));
-    UpdateComboBoxDropDownWidth(GetDlgItem(window, ID_RECORD_SIZE));
-    UpdateComboBoxDropDownWidth(GetDlgItem(window, ID_RECORD_RATE));
+    UpdateComboBoxDropDownSize(GetDlgItem(window, ID_RECORD_SIZE));
+    UpdateComboBoxDropDownSize(GetDlgItem(window, ID_RECORD_RATE));
     const SIZE size{ width, buttonsTop + buttonHeight + bottomMargin };
     return size;
 }
@@ -4460,7 +4553,7 @@ static INT_PTR CALLBACK RecordingSettingsProc(HWND window, UINT msg, WPARAM wPar
             }
             if (HIWORD(wParam) == CBN_DROPDOWN
                     && (LOWORD(wParam) == ID_RECORD_SIZE || LOWORD(wParam) == ID_RECORD_RATE)) {
-                UpdateComboBoxDropDownWidth(reinterpret_cast<HWND>(lParam));
+                UpdateComboBoxDropDownSize(reinterpret_cast<HWND>(lParam));
                 return TRUE;
             }
             switch (LOWORD(wParam)) {
@@ -4700,47 +4793,69 @@ static void CreateSettingsMonitorList(HWND window, const SettingsWindowData& dat
     SetWindowSubclass(monitorList, MonitorListSubclassProc, ID_MONITOR_LIST, 0);
 }
 
-/// Creates this project's animation controls with their established positions and dimensions.
-static int CreateAnimationControls(HWND window, int top) {
+/// Creates three option columns at the established FlyingSolids positions below the full-width radio buttons.
+static int CreateAnimationCheckboxControls(HWND window, int top, int rowHeight) {
+    constexpr int columnX[]{ 24, 320, 617 };
+    constexpr int checkboxWidth = 288;
+    int rows = 0;
+    for (const AnimationCheckboxPlacement& placement : ANIMATION_CHECKBOX_PLACEMENTS) {
+        const int columnLeft = columnX[placement.column];
+        const int rowTop = top + placement.row * rowHeight;
+        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE,
+            columnLeft, rowTop, checkboxWidth, rowHeight + 1, window, reinterpret_cast<HMENU>(placement.id), nullptr,
+            nullptr);
+        rows = std::max(rows, placement.row + 1);
+    }
+    return top + rows * rowHeight;
+}
+
+/// Places animation choices beside the speed slider and three columns of options below their shared separator.
+static int CreateAnimationControls(HWND window, int top, int contentWidth) {
     constexpr int contentMargin = 18;
     constexpr int sliderWidth = 435;
-    constexpr int columnX[]{ 24, 360, 617 };
+    constexpr int rightSliderX = 476;
+    constexpr int radioLeft = rightSliderX;
     CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, contentMargin, top + 28, sliderWidth, 22, window,
         reinterpret_cast<HMENU>(ID_OBJECT_SPEED_LABEL), nullptr, nullptr);
     HWND objectSlider = CreateWindowExW(0, TRACKBAR_CLASSW, L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | TBS_AUTOTICKS,
         contentMargin, top + 50, sliderWidth, 34, window, reinterpret_cast<HMENU>(ID_OBJECT_SPEED), nullptr, nullptr);
     SendMessageW(objectSlider, TBM_SETRANGE, TRUE, MAKELONG(0, 1600));
     SendMessageW(objectSlider, TBM_SETTICFREQ, 100, 0);
-    const int effectsTop = top + 88;
-    CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, contentMargin, effectsTop, 435, 22, window,
+    const int effectsTop = top + 28;
+    CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, rightSliderX, effectsTop, sliderWidth, 22, window,
         reinterpret_cast<HMENU>(ID_EFFECTS_GROUP), nullptr, nullptr);
     constexpr int rowHeight = 20;
-    const int actionButtonsTop = effectsTop + 22 + (static_cast<int>(EFFECT_COUNT) + 2) * rowHeight + 7;
+    const int radioWidth = std::max(1, contentWidth - contentMargin - radioLeft);
     for (std::size_t index = 0; index < EFFECT_COUNT; index++) {
         const int rowTop = effectsTop + 22 + static_cast<int>(index) * rowHeight;
         const DWORD style = WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | (index == 0 ? WS_TABSTOP | WS_GROUP : 0U);
-        CreateWindowExW(0, L"BUTTON", L"", style, columnX[0], rowTop, sliderWidth, 21, window,
+        CreateWindowExW(0, L"BUTTON", L"", style, radioLeft, rowTop, radioWidth, rowHeight + 1, window,
             reinterpret_cast<HMENU>(ID_EFFECT_FIRST + index), nullptr, nullptr);
     }
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[1],
-        effectsTop + 22, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_MONITOR_TEXTURE), nullptr, nullptr);
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[1],
-        effectsTop + 22 + rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_CAMERA_TUMBLING), nullptr,
-        nullptr);
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[1],
-        effectsTop + 22 + 2 * rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_CAMERA_REVERSALS), nullptr,
-        nullptr);
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[2],
-        effectsTop + 22, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_AMBIENT_LIGHT), nullptr, nullptr);
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[2],
-        effectsTop + 22 + rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_RIM_LIGHT), nullptr, nullptr);
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[2],
-        effectsTop + 22 + 2 * rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_MAIN_LIGHT), nullptr,
-        nullptr);
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[2],
-        effectsTop + 22 + 3 * rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_FILL_LIGHT), nullptr,
-        nullptr);
-    return actionButtonsTop;
+    constexpr int separatorHeight = 2;
+    constexpr int separatorGap = 8;
+    const int separatorTop = effectsTop + 22 + static_cast<int>(EFFECT_COUNT) * rowHeight + separatorGap;
+    CreateWindowExW(WS_EX_STATICEDGE, L"STATIC", L"", WS_CHILD | WS_VISIBLE, contentMargin, separatorTop,
+        std::max(1, contentWidth - 2 * contentMargin), separatorHeight, window, nullptr, nullptr, nullptr);
+    const int optionsTop = separatorTop + separatorHeight + separatorGap;
+    return CreateAnimationCheckboxControls(window, optionsTop, rowHeight) + 7;
+}
+
+/// Attaches mixed-value feedback to sliders, radio buttons and per-monitor action buttons only.
+static bool AttachMixedSettingsControls(HWND window) {
+    std::vector<int> ids{ ID_ALL_ANIMATIONS, ID_NO_ANIMATIONS };
+    for (const AnimationSliderControl& control : ANIMATION_SLIDERS) {
+        ids.push_back(control.id);
+    }
+    for (const int id : ANIMATION_RADIO_IDS) {
+        ids.push_back(id);
+    }
+    for (const int id : ids) {
+        if (!MixedControls::Attach(GetDlgItem(window, id))) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /// Creates and initializes the standalone and screen-saver settings controls.
@@ -4771,7 +4886,8 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
     }
     CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, 18, top, 196, 22, window,
         reinterpret_cast<HMENU>(ID_LANGUAGE_LABEL), nullptr, nullptr);
-    HWND languageCombo = CreateWindowExW(0, WC_COMBOBOXW, L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | CBS_DROPDOWNLIST,
+    HWND languageCombo = CreateWindowExW(0, WC_COMBOBOXW, L"",
+        WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_TABSTOP | CBS_DROPDOWNLIST,
         171, top - 4, 274, 400, window, reinterpret_cast<HMENU>(ID_LANGUAGE), nullptr, nullptr);
     if (data->appMode) {
         CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX, rightSliderX, top,
@@ -4783,7 +4899,8 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
         SendMessageW(languageCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(Text(language).languageName));
     }
     SendMessageW(languageCombo, CB_SETCURSEL, LanguageIndex(data->language), 0);
-    const int actionButtonsTop = CreateAnimationControls(window, top);
+    const int actionButtonsTop = CreateAnimationControls(window, top, data->contentWidth);
+
     CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, data->appMode ? 14 : 24, actionButtonsTop,
         150, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_ALL_ANIMATIONS), nullptr, nullptr);
     CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, data->appMode ? 171 : 181, actionButtonsTop,
@@ -4867,6 +4984,9 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
         buttonX += confirmationButtonWidth + screenSaverButtonGap;
         CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, buttonX, screenSaverButtonsTop,
             confirmationButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_CANCEL), nullptr, nullptr);
+    }
+    if (!AttachMixedSettingsControls(window)) {
+        return -1;
     }
     ApplyLocalizedCaptions(settingsWindow, *data);
     ApplySystemDialogFont(settingsWindow, *data);
@@ -5114,6 +5234,10 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             break;
         case WM_COMMAND:
             if (data) {
+                if (LOWORD(wParam) == ID_LANGUAGE && HIWORD(wParam) == CBN_DROPDOWN) {
+                    UpdateComboBoxDropDownSize(reinterpret_cast<HWND>(lParam));
+                    return 0;
+                }
                 if (LOWORD(wParam) == ID_CANCEL && data->appMode) {
                     SendMessageW(window, WM_CLOSE, 0, 0);
                     return 0;
@@ -5203,6 +5327,27 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             }
             break;
         case WM_NOTIFY:
+            if (data) {
+                const NMHDR* notification = reinterpret_cast<NMHDR*>(lParam);
+                if (notification->code == NM_CUSTOMDRAW && MixedControls::IsMixed(notification->hwndFrom)) {
+                    return MixedControls::CustomDraw(*reinterpret_cast<const NMCUSTOMDRAW*>(lParam));
+                }
+                for (const AnimationSliderControl& control : ANIMATION_SLIDERS) {
+                    if (notification->idFrom != static_cast<UINT_PTR>(control.id)) {
+                        continue;
+                    }
+                    if (notification->code == NM_CLICK
+                            && data->settings
+                            && !data->updating
+                            && MixedControls::IsMixed(notification->hwndFrom)) {
+                        const auto value =
+                            static_cast<std::uint32_t>(SendMessageW(notification->hwndFrom, TBM_GETPOS, 0, 0));
+                        SetSelectedMonitorValue(window, *data, control.property, value);
+                        return 0;
+                    }
+                    break;
+                }
+            }
             if (reinterpret_cast<NMHDR*>(lParam)->idFrom == ID_MONITOR_LIST
                     && reinterpret_cast<NMHDR*>(lParam)->code == NM_CUSTOMDRAW) {
                 NMLVCUSTOMDRAW* customDraw = reinterpret_cast<NMLVCUSTOMDRAW*>(lParam);

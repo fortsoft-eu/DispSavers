@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="AppSettings.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MixedControls.cpp" />
     <ClCompile Include="Localization.cpp" />
     <ClCompile Include="MeshBuilder.cpp" />
     <ClCompile Include="MonitorInfo.cpp" />
@@ -103,6 +104,7 @@
     <ClInclude Include="AppSettings.h" />
     <ClInclude Include="Effects.h" />
     <ClInclude Include="Localization.h" />
+    <ClInclude Include="MixedControls.h" />
     <ClInclude Include="MeshBuilder.h" />
     <ClInclude Include="MonitorInfo.h" />
     <ClInclude Include="Mp4Recorder.h" />
