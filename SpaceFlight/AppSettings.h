@@ -46,10 +46,14 @@ enum class AnimationProperty {
     ObjectSpeed,
     Effect,
     Textured,
+    SurfaceWaves,
     CameraTumbling,
     CameraReversals,
+    MainLight,
+    FillLight,
+    AmbientLight,
+    RimLight,
     EnabledEffects,
-    PreventScreenSaver,
     Count
 };
 
@@ -57,11 +61,15 @@ enum class AnimationProperty {
 struct MonitorAnimation {
     EffectKind effect = EffectKind::InfiniteSurface;
     bool textured = true;
+    bool surfaceWaves = true;
     bool cameraTumbling = true;
     bool cameraReversals = true;
+    bool mainLight = true;
+    bool fillLight = false;
+    bool ambientLight = true;
+    bool rimLight = true;
     int objectSpeedPercent = 100;
     std::uint32_t enabledEffects = ALL_EFFECT_MASK;
-    bool preventScreenSaver = false;
 
     /// Reads one animation property without changing the stored preferences.
     std::uint32_t Value(AnimationProperty property) const;
@@ -93,6 +101,7 @@ struct AppSettings {
     std::wstring animationMonitorDevice;
     std::wstring selectedAnimationMonitors;
     bool allAnimationMonitorsSelected = true;
+    bool preventScreenSaver = false;
     int controlWindowX = std::numeric_limits<int>::min();
     int controlWindowY = std::numeric_limits<int>::min();
     PersistWindowStateData helpWindowState;

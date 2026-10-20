@@ -2881,11 +2881,13 @@ constexpr std::array<const wchar_t*, 4> RECORDING_RATE_TEXTS = {
 /// Help and About text
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"FlightCorridor: Průlet čtyřmi proměnlivými plochami; Průlet proměnlivým trychtýřem. Každému monitoru "
-    L"přiřaďte právě jednu animaci. Textura přepíná mezi texturovanými plochami a drátěným modelem. "
-    L"Převalování kamery pomalu mění směr pohledu ve všech třech rozměrech. Zastavování a změny směru "
-    L"přidává náhodné zpomalování, pauzy a změny směru otáčení; dopředný pohyb pokračuje. Rychlost animace "
-    L"je 0–1600 %. Každý monitor má nezávislou náhodnou scénu a vykreslování podle své obnovovací "
-    L"frekvence.\r\n\r\nOznačení řádků určuje, které monitory právě nastavujete; není totožné se zatržítky "
+    L"přiřaďte právě jednu animaci. Textura přepíná mezi texturovanými plochami a drátěným modelem. Volná "
+    L"rotace kamery pomalu mění směr pohledu ve všech třech rozměrech. Volba „Pauzy a obraty“ přidává "
+    L"náhodné zpomalování, pauzy a změny směru otáčení; dopředný pohyb pokračuje. Rychlost animace je 0–1600 "
+    L"%. Každý monitor má nezávislou náhodnou scénu a vykreslování podle své obnovovací frekvence. Hlavní "
+    L"světlo, doplňkové světlo, základní jas a přisvětlení obrysů lze pro označené monitory zapínat "
+    L"nezávisle. Osvětlení se používá jen u texturovaných ploch.\r\n\r\nOznačení řádků určuje, které "
+    L"monitory právě nastavujete; není totožné se zatržítky "
     L"zapínajícími animační výstupy. Ctrl+A označí všechny monitory, Ctrl a Shift umožňují upravit "
     L"označení. Všechny animační volby a jezdce platí pro označené monitory. Označení se pamatuje zvlášť "
     L"pro EXE a SCR. Pokud byly označené všechny monitory, označí se i nově připojené.\r\n\r\nV seznamu lze "
@@ -2911,11 +2913,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"včetně snímků PNG a záznamu MP4. Pro spuštění aplikace ve Windows Vista SP2 je nutné nainstalovat "
     L"aktualizace KB971512 a KB2117917. Záznam MP4 na Vistě v současné verzi nefunguje.",
     L"FlightCorridor: Flight between four morphing surfaces; Flight through a morphing funnel. Assign "
-    L"exactly one animation to each display. Texture switches between textured surfaces and wireframe. "
-    L"Camera tumbling slowly changes the viewing direction in all three dimensions. Stops and reversals "
-    L"adds randomized braking, pauses, and reversals of the rotation; forward flight continues. Animation "
-    L"speed ranges from 0–1600%. Every display has an independent randomized scene rendered at its own "
-    L"refresh rate.\r\n\r\nRow selection determines which displays you are editing; it is separate from the "
+    L"exactly one animation to each display. Texture switches between textured surfaces and wireframe. Free "
+    L"camera rotation slowly changes the viewing direction in all three dimensions. The Pauses and reversals "
+    L"option adds randomized braking, pauses, and reversals of the rotation; forward flight continues. "
+    L"Animation speed ranges from 0–1600%. Every display has an independent randomized scene rendered at its "
+    L"own refresh rate. Main light, fill light, ambient light, and rim light can be switched independently "
+    L"for the selected displays. Lighting applies only to textured surfaces.\r\n\r\nRow selection determines "
+    L"which displays you are editing; it is separate from the "
     L"checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the "
     L"selection. All animation options and sliders apply to the selected displays. The selection is "
     L"remembered separately for EXE and SCR. If all displays were selected, newly connected displays join "
@@ -2942,11 +2946,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"recording. To run the application on Windows Vista SP2, you must install updates KB971512 and "
     L"KB2117917. MP4 recording does not work on Vista in the current version.",
     L"FlightCorridor: Flight between four morphing surfaces; Flight through a morphing funnel. Assign "
-    L"exactly one animation to each display. Texture switches between textured surfaces and wireframe. "
-    L"Camera tumbling slowly changes the viewing direction in all three dimensions. Stops and reversals "
-    L"adds randomised braking, pauses and reversals of the rotation; forward flight continues. Animation "
-    L"speed ranges from 0–1600%. Every display has an independent randomised scene rendered at its own "
-    L"refresh rate.\r\n\r\nRow selection determines which displays you are editing; it is separate from the "
+    L"exactly one animation to each display. Texture switches between textured surfaces and wireframe. Free "
+    L"camera rotation slowly changes the viewing direction in all three dimensions. The Pauses and reversals "
+    L"option adds randomised braking, pauses and reversals of the rotation; forward flight continues. "
+    L"Animation speed ranges from 0–1600%. Every display has an independent randomised scene rendered at its "
+    L"own refresh rate. Main light, fill light, ambient light and rim light can be switched independently "
+    L"for the selected displays. Lighting applies only to textured surfaces.\r\n\r\nRow selection determines "
+    L"which displays you are editing; it is separate from the "
     L"checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the "
     L"selection. All animation options and sliders apply to the selected displays. The selection is "
     L"remembered separately for EXE and SCR. If all displays were selected, newly connected displays join "
@@ -2973,11 +2979,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"recording. To run the application on Windows Vista SP2, you must install updates KB971512 and "
     L"KB2117917. MP4 recording does not work on Vista in the current version.",
     L"FlightCorridor: Flight between four morphing surfaces; Flight through a morphing funnel. Assign "
-    L"exactly one animation to each display. Texture switches between textured surfaces and wireframe. "
-    L"Camera tumbling slowly changes the viewing direction in all three dimensions. Stops and reversals "
-    L"adds randomised braking, pauses and reversals of the rotation; forward flight continues. Animation "
-    L"speed ranges from 0–1600%. Every display has an independent randomised scene rendered at its own "
-    L"refresh rate.\r\n\r\nRow selection determines which displays you are editing; it is separate from the "
+    L"exactly one animation to each display. Texture switches between textured surfaces and wireframe. Free "
+    L"camera rotation slowly changes the viewing direction in all three dimensions. The Pauses and reversals "
+    L"option adds randomised braking, pauses and reversals of the rotation; forward flight continues. "
+    L"Animation speed ranges from 0–1600%. Every display has an independent randomised scene rendered at its "
+    L"own refresh rate. Main light, fill light, ambient light and rim light can be switched independently "
+    L"for the selected displays. Lighting applies only to textured surfaces.\r\n\r\nRow selection determines "
+    L"which displays you are editing; it is separate from the "
     L"checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the "
     L"selection. All animation options and sliders apply to the selected displays. The selection is "
     L"remembered separately for EXE and SCR. If all displays were selected, newly connected displays join "
@@ -3005,11 +3013,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"KB2117917. MP4 recording does not work on Vista in the current version.",
     L"FlightCorridor: Flug zwischen vier veränderlichen Flächen; Flug durch einen veränderlichen Trichter. "
     L"Weisen Sie jedem Monitor genau eine Animation zu. Textur wechselt zwischen texturierten Flächen und "
-    L"Drahtgittermodell. Die taumelnde Kamera verändert die Blickrichtung langsam in allen drei "
-    L"Dimensionen. Stopps und Richtungswechsel ergänzt zufälliges Abbremsen, Pausen und Wechsel der "
+    L"Drahtgittermodell. Die freie Kameradrehung verändert die Blickrichtung langsam in allen drei "
+    L"Dimensionen. Die Option „Pausen und Umkehr“ ergänzt zufälliges Abbremsen, Pausen und Wechsel der "
     L"Drehrichtung; der Vorwärtsflug läuft weiter. Die Animationsgeschwindigkeit beträgt 0–1600 %. Jeder "
     L"Monitor besitzt eine unabhängige zufällige Szene und wird mit seiner eigenen Bildwiederholrate "
-    L"angesteuert.\r\n\r\nDie Zeilenauswahl bestimmt, welche Monitore Sie bearbeiten; sie ist von den "
+    L"angesteuert. Hauptlicht, Fülllicht, Umgebungslicht und Konturlicht lassen sich für die ausgewählten "
+    L"Monitore unabhängig schalten. Die Beleuchtung gilt nur für texturierte Flächen.\r\n\r\nDie "
+    L"Zeilenauswahl bestimmt, welche Monitore Sie bearbeiten; sie ist von den "
     L"Kontrollkästchen zum Einschalten der Animationsausgabe getrennt. Strg+A wählt alle Monitore, Strg und "
     L"Umschalt ändern die Auswahl. Alle Animationsoptionen und Regler gelten für die ausgewählten Monitore. "
     L"Die Auswahl wird für EXE und SCR getrennt gespeichert. Waren alle Monitore ausgewählt, werden auch "
@@ -3039,12 +3049,15 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"alle Funktionen einschließlich PNG-Schnappschüssen und MP4-Aufnahmen. Zum Ausführen der Anwendung "
     L"unter Windows Vista SP2 müssen die Updates KB971512 und KB2117917 installiert werden. MP4-Aufnahmen "
     L"funktionieren unter Vista in der aktuellen Version nicht.",
-    L"FlightCorridor: Vol entre quatre surfaces déformables; Vol dans un entonnoir déformable. Attribuez "
-    L"une seule animation à chaque écran. Texture alterne entre surfaces texturées et modèle filaire. La "
-    L"rotation libre de la caméra change lentement la direction du regard dans les trois dimensions. Arrêts "
-    L"et changements de sens ajoute des ralentissements, pauses et inversions aléatoires de la rotation ; "
-    L"le vol vers l’avant continue. La vitesse va de 0 à 1600 %. Chaque écran possède une scène aléatoire "
-    L"indépendante, rendue à sa propre fréquence de rafraîchissement.\r\n\r\nLa sélection des lignes "
+    L"FlightCorridor: Vol entre quatre surfaces déformables; Vol dans un entonnoir déformable. Attribuez une "
+    L"seule animation à chaque écran. Texture alterne entre surfaces texturées et modèle filaire. La "
+    L"rotation libre de la caméra change lentement la direction du regard dans les trois dimensions. "
+    L"L’option « Pauses et inversions » ajoute des ralentissements, pauses et inversions aléatoires de la "
+    L"rotation ; le vol vers l’avant continue. La vitesse va de 0 à 1600 %. Chaque écran possède une scène "
+    L"aléatoire indépendante, rendue à sa propre fréquence de rafraîchissement. La lumière principale, la "
+    L"lumière d’appoint, l’éclairage ambiant et l’éclairage des contours se règlent indépendamment pour les "
+    L"écrans sélectionnés. L’éclairage ne concerne que les surfaces texturées.\r\n\r\nLa sélection des "
+    L"lignes "
     L"détermine les écrans à configurer ; elle est distincte des cases qui activent les sorties "
     L"d’animation. Ctrl+A sélectionne tous les écrans ; Ctrl et Maj modifient la sélection. Toutes les "
     L"options et tous les curseurs d’animation concernent les écrans sélectionnés. La sélection est "
@@ -3075,12 +3088,14 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"charge toutes les fonctions, y compris les captures PNG et l’enregistrement MP4. Pour exécuter "
     L"l’application sous Windows Vista SP2, il est nécessaire d’installer les mises à jour KB971512 et "
     L"KB2117917. L’enregistrement MP4 ne fonctionne pas sous Vista dans la version actuelle.",
-    L"FlightCorridor: Vuelo entre cuatro superficies deformables; Vuelo por un embudo deformable. Asigne "
-    L"una sola animación a cada pantalla. Textura alterna entre superficies texturizadas y modelo de "
-    L"alambre. El giro libre de la cámara cambia lentamente la dirección de la vista en las tres "
-    L"dimensiones. Paradas y cambios de sentido añade frenadas, pausas e inversiones aleatorias del giro; "
-    L"el vuelo hacia delante continúa. La velocidad va del 0 al 1600 %. Cada pantalla tiene una escena "
-    L"aleatoria independiente y se renderiza a su propia frecuencia de actualización.\r\n\r\nLa selección "
+    L"FlightCorridor: Vuelo entre cuatro superficies deformables; Vuelo por un embudo deformable. Asigne una "
+    L"sola animación a cada pantalla. Textura alterna entre superficies texturizadas y modelo de alambre. El "
+    L"giro libre de la cámara cambia lentamente la dirección de la vista en las tres dimensiones. La opción "
+    L"«Pausas e inversiones» añade frenadas, pausas e inversiones aleatorias del giro; el vuelo hacia "
+    L"delante continúa. La velocidad va del 0 al 1600 %. Cada pantalla tiene una escena aleatoria "
+    L"independiente y se renderiza a su propia frecuencia de actualización. La luz principal, la luz de "
+    L"relleno, la luz ambiental y la iluminación de contornos se activan por separado para las pantallas "
+    L"seleccionadas. La iluminación solo se aplica a las superficies texturizadas.\r\n\r\nLa selección "
     L"de filas determina qué pantallas se están configurando; es independiente de las casillas que activan "
     L"las salidas de animación. Ctrl+A selecciona todas; Ctrl y Mayús modifican la selección. Todas las "
     L"opciones y los controles deslizantes de animación se aplican a las pantallas seleccionadas. La "
@@ -3112,9 +3127,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"FlightCorridor: Volo tra quattro superfici deformabili; Volo attraverso un imbuto deformabile. "
     L"Assegnare una sola animazione a ogni schermo. Texture alterna superfici con texture e modello a "
     L"reticolo. La rotazione libera della telecamera cambia lentamente la direzione dello sguardo nelle tre "
-    L"dimensioni. Arresti e inversioni aggiunge rallentamenti, pause e inversioni casuali della rotazione; "
-    L"il volo in avanti continua. La velocità va da 0 a 1600%. Ogni schermo ha una scena casuale "
-    L"indipendente, renderizzata alla propria frequenza di aggiornamento.\r\n\r\nLa selezione delle righe "
+    L"dimensioni. L’opzione «Pause e inversioni» aggiunge rallentamenti, pause e inversioni casuali della "
+    L"rotazione; il volo in avanti continua. La velocità va da 0 a 1600%. Ogni schermo ha una scena casuale "
+    L"indipendente, renderizzata alla propria frequenza di aggiornamento. La luce principale, la luce di "
+    L"riempimento, la luce ambientale e l’illuminazione dei contorni si attivano separatamente per gli "
+    L"schermi selezionati. L’illuminazione si applica solo alle superfici con texture.\r\n\r\nLa selezione "
+    L"delle righe "
     L"determina quali schermi si stanno configurando ed è distinta dalle caselle che attivano le uscite di "
     L"animazione. Ctrl+A seleziona tutti gli schermi; Ctrl e Maiusc modificano la selezione. Tutte le "
     L"opzioni e i cursori dell’animazione riguardano gli schermi selezionati. La selezione viene "
@@ -3146,10 +3164,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"KB971512 e KB2117917. La registrazione MP4 non funziona in Vista nella versione attuale.",
     L"FlightCorridor: Voo entre quatro superfícies deformáveis; Voo através de um funil deformável. Atribua "
     L"uma única animação a cada ecrã. Textura alterna entre superfícies texturadas e modelo em arame. A "
-    L"rotação livre da câmara muda lentamente a direção da vista nas três dimensões. Paragens e inversões "
-    L"de sentido acrescenta desacelerações, pausas e inversões aleatórias da rotação; o voo para a frente "
+    L"rotação livre da câmara muda lentamente a direção da vista nas três dimensões. A opção «Pausas e "
+    L"inversões» acrescenta desacelerações, pausas e inversões aleatórias da rotação; o voo para a frente "
     L"continua. A velocidade vai de 0 a 1600%. Cada ecrã tem uma cena aleatória independente, apresentada à "
-    L"sua própria frequência de atualização.\r\n\r\nA seleção das linhas determina os ecrãs a configurar e "
+    L"sua própria frequência de atualização. A luz principal, a luz de preenchimento, a luz ambiente e a "
+    L"iluminação dos contornos podem ser ativadas separadamente nos monitores selecionados. A iluminação "
+    L"aplica-se apenas às superfícies com textura.\r\n\r\nA seleção das linhas determina os ecrãs a "
+    L"configurar e "
     L"é independente das caixas que ativam as saídas de animação. Ctrl+A seleciona todos os ecrãs; Ctrl e "
     L"Shift alteram a seleção. Todas as opções e controlos deslizantes da animação aplicam-se aos ecrãs "
     L"selecionados. A seleção é guardada separadamente para EXE e SCR. Se todos estavam selecionados, os "
@@ -3176,12 +3197,14 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"gravação.\r\n\r\nOs sistemas Windows 7 a Windows 11 suportam todas as funcionalidades, incluindo "
     L"capturas PNG e gravação MP4. Para executar a aplicação no Windows Vista SP2, é necessário instalar as "
     L"atualizações KB971512 e KB2117917. A gravação MP4 não funciona no Vista na versão atual.",
-    L"FlightCorridor: Przelot między czterema zmiennymi powierzchniami; Przelot przez zmienny lejek. "
-    L"Każdemu monitorowi przypisz dokładnie jedną animację. Tekstura przełącza powierzchnie z teksturą i "
-    L"model szkieletowy. Swobodne obracanie kamery powoli zmienia kierunek widoku we wszystkich trzech "
-    L"wymiarach. Zatrzymania i zmiany kierunku dodają losowe zwalnianie, pauzy i odwracanie obrotu; lot do "
-    L"przodu trwa nadal. Prędkość wynosi 0–1600%. Każdy monitor ma niezależną losową scenę wyświetlaną z "
-    L"własną częstotliwością odświeżania.\r\n\r\nZaznaczenie wierszy określa konfigurowane monitory i jest "
+    L"FlightCorridor: Przelot między czterema zmiennymi powierzchniami; Przelot przez zmienny lejek. Każdemu "
+    L"monitorowi przypisz dokładnie jedną animację. Tekstura przełącza powierzchnie z teksturą i model "
+    L"szkieletowy. Swobodne obracanie kamery powoli zmienia kierunek widoku we wszystkich trzech wymiarach. "
+    L"Przerwy i nawroty dodają losowe zwalnianie, pauzy i odwracanie obrotu; lot do przodu trwa nadal. "
+    L"Prędkość wynosi 0–1600%. Każdy monitor ma niezależną losową scenę wyświetlaną z własną częstotliwością "
+    L"odświeżania. Światło główne, światło wypełniające, światło otoczenia i oświetlenie konturów można "
+    L"przełączać niezależnie dla zaznaczonych monitorów. Oświetlenie dotyczy tylko powierzchni z "
+    L"teksturą.\r\n\r\nZaznaczenie wierszy określa konfigurowane monitory i jest "
     L"niezależne od pól wyboru włączających wyjścia animacji. Ctrl+A zaznacza wszystkie monitory; Ctrl i "
     L"Shift zmieniają zaznaczenie. Wszystkie opcje i suwaki animacji dotyczą zaznaczonych monitorów. "
     L"Zaznaczenie jest zapamiętywane osobno dla EXE i SCR. Jeśli zaznaczone były wszystkie monitory, nowe "
@@ -3209,11 +3232,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"nagrywanie MP4. Do uruchomienia aplikacji w systemie Windows Vista SP2 konieczne jest zainstalowanie "
     L"aktualizacji KB971512 i KB2117917. Nagrywanie MP4 nie działa w Vista w obecnej wersji.",
     L"FlightCorridor: Prelet štyrmi premenlivými plochami; Prelet premenlivým lievikom. Každému monitoru "
-    L"priraďte práve jednu animáciu. Textúra prepína medzi textúrovanými plochami a drôteným modelom. "
-    L"Prevaľovanie kamery pomaly mení smer pohľadu vo všetkých troch rozmeroch. Zastavovanie a zmeny smeru "
-    L"pridáva náhodné spomaľovanie, prestávky a zmeny smeru otáčania; dopredný pohyb pokračuje. Rýchlosť je "
-    L"0–1600 %. Každý monitor má nezávislú náhodnú scénu vykresľovanú podľa vlastnej obnovovacej "
-    L"frekvencie.\r\n\r\nOznačenie riadkov určuje, ktoré monitory práve nastavujete; je nezávislé od "
+    L"priraďte práve jednu animáciu. Textúra prepína medzi textúrovanými plochami a drôteným modelom. Voľná "
+    L"rotácia kamery pomaly mení smer pohľadu vo všetkých troch rozmeroch. Voľba „Pauzy a obraty“ pridáva "
+    L"náhodné spomaľovanie, prestávky a zmeny smeru otáčania; dopredný pohyb pokračuje. Rýchlosť je 0–1600 "
+    L"%. Každý monitor má nezávislú náhodnú scénu vykresľovanú podľa vlastnej obnovovacej frekvencie. Hlavné "
+    L"svetlo, doplnkové svetlo, základný jas a prisvetlenie obrysov možno pre označené monitory zapínať "
+    L"nezávisle. Osvetlenie sa používa len pri textúrovaných plochách.\r\n\r\nOznačenie riadkov určuje, "
+    L"ktoré monitory práve nastavujete; je nezávislé od "
     L"políčok zapínajúcich animačné výstupy. Ctrl+A označí všetky monitory, Ctrl a Shift upravujú "
     L"označenie. Všetky animačné voľby a posuvníky platia pre označené monitory. Označenie sa pamätá zvlášť "
     L"pre EXE a SCR. Ak boli označené všetky monitory, označia sa aj novopripojené.\r\n\r\nV zozname možno "
@@ -3241,10 +3266,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"nefunguje.",
     L"FlightCorridor: Flyvetur mellem fire formskiftende flader; Flyvetur gennem en formskiftende tragt. "
     L"Tildel præcis én animation til hver skærm. Tekstur skifter mellem teksturerede flader og trådmodel. "
-    L"Frit roterende kamera ændrer langsomt synsretningen i alle tre dimensioner. Stop og retningsskift "
+    L"Frit roterende kamera ændrer langsomt synsretningen i alle tre dimensioner. Pauser og vendinger "
     L"tilføjer tilfældige opbremsninger, pauser og ændringer af rotationsretningen; flyvningen fremad "
     L"fortsætter. Hastigheden er 0–1600 %. Hver skærm har en uafhængig tilfældig scene, der gengives med "
-    L"dens egen opdateringsfrekvens.\r\n\r\nMarkeringen af rækker bestemmer, hvilke skærme du indstiller, "
+    L"dens egen opdateringsfrekvens. Hovedlys, udfyldningslys, omgivende lys og konturlys kan slås til og "
+    L"fra uafhængigt for de valgte skærme. Belysningen gælder kun teksturerede "
+    L"overflader.\r\n\r\nMarkeringen af rækker bestemmer, hvilke skærme du indstiller, "
     L"og er adskilt fra afkrydsningsfelterne, der aktiverer animationsoutput. Ctrl+A markerer alle skærme; "
     L"Ctrl og Skift ændrer markeringen. Alle animationsvalg og skydere gælder de markerede skærme. "
     L"Markeringen huskes separat for EXE og SCR. Hvis alle skærme var markeret, medtages også nye "
@@ -3271,12 +3298,14 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"funktioner, herunder PNG-skærmbilleder og MP4-optagelse. For at køre programmet på Windows Vista SP2 "
     L"skal opdateringerne KB971512 og KB2117917 installeres. MP4-optagelse fungerer ikke på Vista i den "
     L"aktuelle version.",
-    L"FlightCorridor: Lento neljän muuntuvan pinnan välissä; Lento muuntuvan suppilon läpi. Valitse "
-    L"kullekin näytölle yksi animaatio. Tekstuuri vaihtaa teksturoitujen pintojen ja rautalankamallin "
-    L"välillä. Kameran vapaa pyörintä muuttaa katselusuuntaa hitaasti kaikissa kolmessa ulottuvuudessa. "
-    L"Pysähdykset ja suunnanvaihdot lisää satunnaisia hidastuksia, taukoja ja pyörimissuunnan vaihtoja; "
-    L"lento eteenpäin jatkuu. Nopeus on 0–1600%. Jokaisella näytöllä on itsenäinen satunnainen näkymä, joka "
-    L"piirretään sen omalla virkistystaajuudella.\r\n\r\nRivien valinta määrää muokattavat näytöt ja on "
+    L"FlightCorridor: Lento neljän muuntuvan pinnan välissä; Lento muuntuvan suppilon läpi. Valitse kullekin "
+    L"näytölle yksi animaatio. Tekstuuri vaihtaa teksturoitujen pintojen ja rautalankamallin välillä. "
+    L"Kameran vapaa pyörintä muuttaa katselusuuntaa hitaasti kaikissa kolmessa ulottuvuudessa. Tauot ja "
+    L"suunnanvaihdot lisäävät satunnaisia hidastuksia, taukoja ja pyörimissuunnan vaihtoja; lento eteenpäin "
+    L"jatkuu. Nopeus on 0–1600%. Jokaisella näytöllä on itsenäinen satunnainen näkymä, joka piirretään sen "
+    L"omalla virkistystaajuudella. Päävalo, täytevalo, ympäristövalo ja reunavalo voidaan kytkeä erikseen "
+    L"valituille näytöille. Valaistus koskee vain teksturoituja pintoja.\r\n\r\nRivien valinta määrää "
+    L"muokattavat näytöt ja on "
     L"erillinen animaatioulostulon valintaruuduista. Ctrl+A valitsee kaikki näytöt; Ctrl ja Vaihto "
     L"muuttavat valintaa. Kaikki animaatioasetukset ja liukusäätimet koskevat valittuja näyttöjä. Valinta "
     L"muistetaan erikseen EXE- ja SCR-tiloissa. Jos kaikki näytöt olivat valittuina, myös uudet näytöt "
@@ -3306,10 +3335,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"versiossa.",
     L"FlightCorridor: Flug milli fjögurra breytilegra flata; Flug í gegnum breytilega trekt. Veldu "
     L"nákvæmlega eina hreyfimynd fyrir hvern skjá. Áferð skiptir milli áferðarlagðra flata og víragrindar. "
-    L"Frjáls snúningur myndavélar breytir sjónstefnunni hægt í öllum þremur víddum. Stopp og stefnuskipti "
-    L"bætir við tilviljanakenndri hægingu, hléum og breytingum á snúningsstefnu; flug áfram heldur áfram. "
-    L"Hraðinn er 0–1600%. Hver skjár hefur sjálfstæða tilviljanakennda senu sem er teiknuð á eigin "
-    L"endurnýjunartíðni.\r\n\r\nVal lína ákvarðar hvaða skjám er verið að breyta og er óháð gátreitunum sem "
+    L"Frjáls snúningur myndavélar breytir sjónstefnunni hægt í öllum þremur víddum. Valkosturinn „Hlé og "
+    L"stefnuskipti“ bætir við tilviljanakenndri hægingu, hléum og breytingum á snúningsstefnu; flug áfram "
+    L"heldur áfram. Hraðinn er 0–1600%. Hver skjár hefur sjálfstæða tilviljanakennda senu sem er teiknuð á "
+    L"eigin endurnýjunartíðni. Aðalljós, fylliljós, umhverfislýsing og útlínulýsing eru stillt óháð hvert "
+    L"öðru fyrir valda skjái. Lýsingin á aðeins við um áferðarfleti.\r\n\r\nVal lína ákvarðar hvaða skjám er "
+    L"verið að breyta og er óháð gátreitunum sem "
     L"kveikja á hreyfimyndaúttaki. Ctrl+A velur alla skjái; Ctrl og Shift breyta valinu. Allir valkostir og "
     L"sleðar hreyfimynda gilda fyrir valda skjái. Valið er munað sérstaklega fyrir EXE og SCR. Ef allir "
     L"skjáir voru valdir bætast nýir skjáir einnig við valið.\r\n\r\nVelja má marga skjái; tvísmellur "
@@ -3335,12 +3366,14 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"upptökuna.\r\n\r\nWindows 7 til Windows 11 styðja alla eiginleika, þar á meðal PNG-skjámyndir og "
     L"MP4-upptöku. Til að keyra forritið á Windows Vista SP2 þarf að setja upp uppfærslurnar KB971512 og "
     L"KB2117917. MP4-upptaka virkar ekki í Vista í núverandi útgáfu.",
-    L"FlightCorridor: Flytur mellom fire formendrende flater; Flytur gjennom en formendrende trakt. "
-    L"Tilordne nøyaktig én animasjon til hver skjerm. Tekstur veksler mellom teksturerte flater og "
-    L"trådmodell. Fritt roterende kamera endrer synsretningen langsomt i alle tre dimensjoner. Stopp og "
-    L"retningsendringer legger til tilfeldige oppbremsinger, pauser og endringer i rotasjonsretningen; "
-    L"flyvningen fremover fortsetter. Hastigheten er 0–1600 %. Hver skjerm har en uavhengig tilfeldig scene "
-    L"som gjengis ved dens egen oppdateringsfrekvens.\r\n\r\nMarkeringen av rader bestemmer hvilke skjermer "
+    L"FlightCorridor: Flytur mellom fire formendrende flater; Flytur gjennom en formendrende trakt. Tilordne "
+    L"nøyaktig én animasjon til hver skjerm. Tekstur veksler mellom teksturerte flater og trådmodell. Fritt "
+    L"roterende kamera endrer synsretningen langsomt i alle tre dimensjoner. Pauser og vendinger legger til "
+    L"tilfeldige oppbremsinger, pauser og endringer i rotasjonsretningen; flyvningen fremover fortsetter. "
+    L"Hastigheten er 0–1600 %. Hver skjerm har en uavhengig tilfeldig scene som gjengis ved dens egen "
+    L"oppdateringsfrekvens. Hovedlys, utfyllingslys, omgivelseslys og konturlys kan slås av og på uavhengig "
+    L"for de valgte skjermene. Belysningen gjelder bare teksturerte flater.\r\n\r\nMarkeringen av rader "
+    L"bestemmer hvilke skjermer "
     L"du redigerer, og er atskilt fra avkrysningsboksene som aktiverer animasjonsutgangen. Ctrl+A markerer "
     L"alle skjermer; Ctrl og Skift endrer markeringen. Alle animasjonsvalg og glidebrytere gjelder de "
     L"markerte skjermene. Markeringen huskes separat for EXE og SCR. Hvis alle skjermer var markert, "
@@ -3369,10 +3402,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"fungerer ikke på Vista i den gjeldende versjonen.",
     L"FlightCorridor: Flygtur mellan fyra formföränderliga ytor; Flygtur genom en formföränderlig tratt. "
     L"Tilldela varje skärm exakt en animering. Textur växlar mellan texturerade ytor och trådmodell. Fritt "
-    L"roterande kamera ändrar långsamt blickriktningen i alla tre dimensioner. Stopp och riktningsbyten "
-    L"lägger till slumpmässiga inbromsningar, pauser och byten av rotationsriktning; flygningen framåt "
-    L"fortsätter. Hastigheten är 0–1600 %. Varje skärm har en oberoende slumpmässig scen som återges med "
-    L"dess egen uppdateringsfrekvens.\r\n\r\nMarkeringen av rader avgör vilka skärmar du redigerar och är "
+    L"roterande kamera ändrar långsamt blickriktningen i alla tre dimensioner. Pauser och vändningar lägger "
+    L"till slumpmässiga inbromsningar, pauser och byten av rotationsriktning; flygningen framåt fortsätter. "
+    L"Hastigheten är 0–1600 %. Varje skärm har en oberoende slumpmässig scen som återges med dess egen "
+    L"uppdateringsfrekvens. Huvudljus, fyllnadsljus, omgivningsljus och konturljus kan slås på och av "
+    L"oberoende för de valda skärmarna. Belysningen gäller bara texturerade ytor.\r\n\r\nMarkeringen av "
+    L"rader avgör vilka skärmar du redigerar och är "
     L"skild från kryssrutorna som aktiverar animationsutgångarna. Ctrl+A markerar alla skärmar; Ctrl och "
     L"Skift ändrar markeringen. Alla animationsalternativ och reglage gäller de markerade skärmarna. "
     L"Markeringen sparas separat för EXE och SCR. Om alla skärmar var markerade inkluderas även nya "
@@ -3401,10 +3436,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"KB2117917 installeras. MP4-inspelning fungerar inte på Vista i den aktuella versionen.",
     L"FlightCorridor: Biçim değiştiren dört yüzey arasında uçuş; Biçim değiştiren bir huninin içinden uçuş. "
     L"Her ekrana tam bir animasyon atayın. Doku, dokulu yüzeyler ile tel kafes modeli arasında geçiş yapar. "
-    L"Serbest kamera dönüşü bakış yönünü üç boyutta yavaşça değiştirir. Duraklamalar ve yön değişimleri, "
-    L"dönüşe rastgele yavaşlamalar, duraklamalar ve ters yön değişimleri ekler; ileri uçuş devam eder. Hız "
-    L"0–1600% aralığındadır. Her ekranın kendi yenileme hızında çizilen bağımsız rastgele bir sahnesi "
-    L"vardır.\r\n\r\nSatır seçimi, hangi ekranların düzenlendiğini belirler; animasyon çıkışlarını açan "
+    L"Serbest kamera dönüşü bakış yönünü üç boyutta yavaşça değiştirir. Duraklama ve ters dönüş, dönüşe "
+    L"rastgele yavaşlamalar, duraklamalar ve ters yön değişimleri ekler; ileri uçuş devam eder. Hız 0–1600% "
+    L"aralığındadır. Her ekranın kendi yenileme hızında çizilen bağımsız rastgele bir sahnesi vardır. Ana "
+    L"ışık, dolgu ışığı, ortam ışığı ve kenar aydınlatması seçili ekranlar için ayrı ayrı açılıp "
+    L"kapatılabilir. Aydınlatma yalnızca dokulu yüzeylere uygulanır.\r\n\r\nSatır seçimi, hangi ekranların "
+    L"düzenlendiğini belirler; animasyon çıkışlarını açan "
     L"onay kutularından ayrıdır. Ctrl+A tüm ekranları seçer; Ctrl ve Shift seçimi değiştirir. Tüm animasyon "
     L"seçenekleri ve kaydırıcılar seçili ekranlara uygulanır. Seçim EXE ve SCR için ayrı saklanır. Tüm "
     L"ekranlar seçiliyse sonradan bağlanan ekranlar da seçime katılır.\r\n\r\nListede birden çok monitör "
@@ -3434,9 +3471,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Riistvarakiirendusega lend muutuvate pindade vahel. Lend nelja muutuva pinna vahel; Lend läbi muutuva "
     L"lehtri. Valige igale kuvarile täpselt üks animatsioon. Tekstuuri märkeruut vahetab tekstuuriga pinna "
     L"ja traatmudeli vahel. Kaamera vaba pöörlemine muudab vaatesuunda aeglaselt kõigis kolmes mõõtmes. "
-    L"Peatumised ja suunavahetused lisab sellele juhuslikke aeglustusi, pause ja pöörlemissuuna muutusi; "
-    L"edasilend jätkub. Kiirus on seatav vahemikus 0–1600%. Igal kuvaril on oma sõltumatu juhuslik stseen "
-    L"ja värskendussagedusele vastav renderdus.\r\n\r\nValige loendis üks või mitu kuvaririda. Ctrl+A valib "
+    L"Pausid ja pöördumised lisavad sellele juhuslikke aeglustusi, pause ja pöörlemissuuna muutusi; "
+    L"edasilend jätkub. Kiirus on seatav vahemikus 0–1600%. Igal kuvaril on oma sõltumatu juhuslik stseen ja "
+    L"värskendussagedusele vastav renderdus. Põhivalgust, täitevalgust, ümbritsevat valgust ja "
+    L"kontuurivalgust saab valitud kuvaritel eraldi sisse ja välja lülitada. Valgustus kehtib ainult "
+    L"tekstuuriga pindadele.\r\n\r\nValige loendis üks või mitu kuvaririda. Ctrl+A valib "
     L"kõik read; Ctrl ja Shift võimaldavad valikut muuta. Animatsiooni juhtnupud ja liugurid mõjutavad "
     L"ainult valitud kuvarite sätteid, mitte kogu rakendust. Rea valimine ja selle märkeruuduga väljundi "
     L"lubamine on eri toimingud. Valik jäetakse rakenduse ja ekraanisäästja jaoks eraldi meelde. Kui varem "
@@ -3461,10 +3500,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Eitilt idir dromchlaí athraitheacha le luasghéarú crua-earraí. Eitilt idir ceithre dhromchla "
     L"athraitheacha; Eitilt trí thonnadóir athraitheach. Roghnaigh beochan amháin do gach monatóir. "
     L"Athraíonn Uigeacht idir dromchla uigeachtaithe agus samhail sreangfhráma. Rothlaíonn rothlú saor an "
-    L"cheamara an radharc go mall sna trí thoise. Cuireann Stadanna agus aisiompuithe coscánú, sosanna agus "
+    L"cheamara an radharc go mall sna trí thoise. Cuireann Sosanna agus aisiompuithe coscánú, sosanna agus "
     L"athruithe treo randamacha leis an rothlú; leanann an eitilt chun tosaigh. Tá luas 0–1600% ar fáil. Tá "
     L"radharc randamach neamhspleách ag gach monatóir agus déantar rindreáil de réir a ráta athnuachana "
-    L"féin.\r\n\r\nRoghnaigh ró amháin nó níos mó sa liosta monatóirí. Roghnaíonn Ctrl+A gach ró; úsáid "
+    L"féin. Is féidir an príomhsholas, an solas líonta, an solas comhthimpeallach agus an solas imill a "
+    L"athrú go neamhspleách do na taispeántais roghnaithe. Ní bhaineann an soilsiú ach le dromchlaí "
+    L"uigeachtaithe.\r\n\r\nRoghnaigh ró amháin nó níos mó sa liosta monatóirí. Roghnaíonn Ctrl+A gach ró; "
+    L"úsáid "
     L"Ctrl agus Shift chun an roghnú a athrú. Ní athraíonn rialuithe agus sleamhnáin na beochana ach "
     L"socruithe na monatóirí roghnaithe. Ní hionann ró a roghnú agus aschur an mhonatóra a chumasú lena "
     L"bhosca seiceála. Cuimhnítear an roghnú ar leith don fheidhmchlár agus don spárálaí. Má bhí gach "
@@ -3488,13 +3530,15 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"nuashonruithe KB971512 agus KB2117917 a shuiteáil; ní oibríonn taifeadadh MP4 ar Vista. Teastaíonn "
     L"tacaíocht Direct3D 11, agus Media Foundation agus ionchódóir H.264 le haghaidh MP4. Tá an comhéadan "
     L"agus an doiciméadú ar fáil i 36 teanga.",
-    L"Aparatine įranga spartinamas skrydis tarp kintančių paviršių. Skrydis tarp keturių kintančių "
-    L"paviršių; Skrydis kintančiu piltuvu. Kiekvienam monitoriui pasirinkite vieną animaciją. Tekstūros "
-    L"langelis perjungia tekstūruotą paviršių ir vielinį modelį. Laisvas kameros sukimasis lėtai keičia "
-    L"žiūrėjimo kryptį visose trijose dimensijose. Sustojimai ir krypties keitimai prideda atsitiktinį "
-    L"lėtėjimą, pauzes ir sukimosi krypties keitimą; skrydis pirmyn tęsiasi. Galimas 0–1600% greitis. "
-    L"Kiekvienas monitorius turi nepriklausomą atsitiktinę sceną, atvaizduojamą jo atnaujinimo "
-    L"dažniu.\r\n\r\nMonitorių sąraše pasirinkite vieną ar kelias eilutes. Ctrl+A pasirenka visas, o Ctrl "
+    L"Aparatine įranga spartinamas skrydis tarp kintančių paviršių. Skrydis tarp keturių kintančių paviršių; "
+    L"Skrydis kintančiu piltuvu. Kiekvienam monitoriui pasirinkite vieną animaciją. Tekstūros langelis "
+    L"perjungia tekstūruotą paviršių ir vielinį modelį. Laisvas kameros sukimasis lėtai keičia žiūrėjimo "
+    L"kryptį visose trijose dimensijose. Pauzės ir apsisukimai prideda atsitiktinį lėtėjimą, pauzes ir "
+    L"sukimosi krypties keitimą; skrydis pirmyn tęsiasi. Galimas 0–1600% greitis. Kiekvienas monitorius turi "
+    L"nepriklausomą atsitiktinę sceną, atvaizduojamą jo atnaujinimo dažniu. Pagrindinę, užpildančią, "
+    L"aplinkos ir kontūrinę šviesą galima atskirai įjungti pasirinktiems ekranams. Apšvietimas taikomas tik "
+    L"tekstūruotiems paviršiams.\r\n\r\nMonitorių sąraše pasirinkite vieną ar kelias eilutes. Ctrl+A "
+    L"pasirenka visas, o Ctrl "
     L"ir Shift leidžia keisti pasirinkimą. Animacijos valdikliai ir slankikliai keičia tik pasirinktų "
     L"monitorių nuostatas. Eilutės pasirinkimas nėra tas pats, kas animacijos išvesties įjungimas jos "
     L"žymimuoju langeliu. Pasirinkimas atskirai įsimenamas programai ir užsklandai. Jei buvo pasirinkti "
@@ -3518,9 +3562,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Aparatūras paātrināts lidojums starp mainīgām virsmām. Lidojums starp četrām mainīgām virsmām; "
     L"Lidojums caur mainīgu piltuvi. Katram monitoram izvēlieties tieši vienu animāciju. Tekstūras rūtiņa "
     L"pārslēdz teksturētu virsmu un stiepļu modeli. Brīva kameras rotācija lēnām maina skatiena virzienu "
-    L"visās trijās dimensijās. Apstāšanās un virziena maiņa pievieno nejaušu palēninājumu, pauzes un "
-    L"rotācijas virziena maiņu; lidojums uz priekšu turpinās. Pieejams ātrums 0–1600%. Katram monitoram ir "
-    L"neatkarīga nejauša aina, ko renderē tā atsvaidzināšanas frekvencē.\r\n\r\nMonitoru sarakstā atlasiet "
+    L"visās trijās dimensijās. Pauzes un virzienmaiņa pievieno nejaušu palēninājumu, pauzes un rotācijas "
+    L"virziena maiņu; lidojums uz priekšu turpinās. Pieejams ātrums 0–1600%. Katram monitoram ir neatkarīga "
+    L"nejauša aina, ko renderē tā atsvaidzināšanas frekvencē. Pamata, aizpildošo, apkārtējo un kontūru "
+    L"gaismu atlasītajiem monitoriem var ieslēgt neatkarīgi. Apgaismojums attiecas tikai uz teksturētām "
+    L"virsmām.\r\n\r\nMonitoru sarakstā atlasiet "
     L"vienu vai vairākas rindas. Ctrl+A atlasa visas, bet Ctrl un Shift ļauj mainīt atlasi. Animācijas "
     L"vadīklas un slīdņi maina tikai atlasīto monitoru iestatījumus. Rindas atlasīšana nav tas pats, kas "
     L"animācijas izvades ieslēgšana ar izvēles rūtiņu. Atlase tiek atsevišķi atcerēta lietotnei un "
@@ -3545,10 +3591,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Hardveresen gyorsított repülés változó felületek között. Repülés négy változó felület között; Repülés "
     L"változó tölcsérben. Monitoronként pontosan egy animáció választható. A Textúra jelölőnégyzet a "
     L"textúrázott felület és a drótváz között vált. A kamera szabad forgása lassan változtatja a nézetet "
-    L"mindhárom dimenzióban. A Megállások és irányváltások véletlenszerű lassításokat, szüneteket és "
-    L"forgásirányváltásokat ad hozzá; az előrehaladás folytatódik. A sebesség 0–1600%. Minden monitor "
-    L"önálló véletlenszerű jelenetet kap, saját frissítési gyakoriságához igazodó "
-    L"megjelenítéssel.\r\n\r\nJelöljön ki egy vagy több sort a monitorok listájában. A Ctrl+A mindet "
+    L"mindhárom dimenzióban. A Szünetek és irányváltás véletlenszerű lassításokat, szüneteket és "
+    L"forgásirányváltásokat ad hozzá; az előrehaladás folytatódik. A sebesség 0–1600%. Minden monitor önálló "
+    L"véletlenszerű jelenetet kap, saját frissítési gyakoriságához igazodó megjelenítéssel. A főfény, a "
+    L"derítőfény, a környezeti fény és a peremfény külön kapcsolható a kijelölt monitorokon. A világítás "
+    L"csak a textúrázott felületekre vonatkozik.\r\n\r\nJelöljön ki egy vagy több sort a monitorok "
+    L"listájában. A Ctrl+A mindet "
     L"kijelöli; a Ctrl és a Shift módosítja a kijelölést. Az animáció vezérlői és csúszkái csak a kijelölt "
     L"monitorok beállításait változtatják. A sor kijelölése és az animációs kimenet jelölőnégyzetes "
     L"engedélyezése külön művelet. A kijelölést az alkalmazás és a képernyőkímélő külön megjegyzi. Ha "
@@ -3575,9 +3623,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Titjira bejn uċuħ li jinbidlu aċċellerata bil-ħardwer. Titjira bejn erba’ uċuħ li jinbidlu; Titjira "
     L"f’lembut li jinbidel. Agħżel animazzjoni waħda biss għal kull moniter. Nisġa taqleb bejn wiċċ b’nisġa "
     L"u mudell bil-wireframe. Ir-rotazzjoni libera tal-kamera tbiddel id-direzzjoni tal-ħarsa bil-mod "
-    L"fit-tliet dimensjonijiet. Waqfiet u bidliet fid-direzzjoni żżid deċelerazzjonijiet, pawżi u treġġigħ "
-    L"lura tar-rotazzjoni b’mod każwali; it-titjira ’l quddiem tkompli. Il-veloċità hija 0–1600%. Kull "
-    L"moniter għandu xena każwali indipendenti li tintwera bir-rata ta’ aġġornament tiegħu.\r\n\r\nAgħżel "
+    L"fit-tliet dimensjonijiet. L-għażla Pawżi u bidliet fid-direzzjoni żżid deċelerazzjonijiet, pawżi u "
+    L"treġġigħ lura tar-rotazzjoni b’mod każwali; it-titjira ’l quddiem tkompli. Il-veloċità hija 0–1600%. "
+    L"Kull moniter għandu xena każwali indipendenti li tintwera bir-rata ta’ aġġornament tiegħu. Id-dawl "
+    L"prinċipali, id-dawl ta’ mili, id-dawl ambjentali u d-dawl tal-kontorn jistgħu jinxtegħlu separatament "
+    L"għall-iskrins magħżula. Id-dawl japplika biss għall-uċuħ bit-tessut.\r\n\r\nAgħżel "
     L"ringiela waħda jew aktar fil-lista tal-moniters. Ctrl+A jagħżilhom kollha; Ctrl u Shift ibiddlu "
     L"l-għażla. Il-kontrolli u s-sliders tal-animazzjoni jibdlu biss is-settings tal-moniters magħżula. "
     L"L-għażla ta’ ringiela hija differenti mill-attivazzjoni tal-output permezz tal-kaxxa tal-marka. "
@@ -3601,13 +3651,15 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"SP2 għandhom jiġu installati l-aġġornamenti KB971512 u KB2117917; ir-reġistrazzjoni MP4 ma taħdimx "
     L"fuq Vista. Huwa meħtieġ Direct3D 11 u, għall-MP4, Media Foundation u encoder H.264. L-interface u "
     L"d-dokumentazzjoni huma disponibbli f’36 lingwa.",
-    L"Hardwareversnelde vlucht tussen vervormende oppervlakken. Vlucht tussen vier vervormende "
-    L"oppervlakken; Vlucht door een vervormende trechter. Kies precies één animatie per beeldscherm. "
-    L"Textuur schakelt tussen een getextureerd oppervlak en een draadmodel. Vrije camerarotatie verandert "
-    L"de kijkrichting langzaam in alle drie dimensies. Stops en richtingswisselingen voegt willekeurige "
-    L"vertragingen, pauzes en omkeringen van de rotatie toe; de voorwaartse vlucht gaat door. De snelheid "
-    L"is instelbaar op 0–1600%. Elk beeldscherm heeft een onafhankelijke willekeurige scène en wordt op "
-    L"zijn eigen vernieuwingsfrequentie aangestuurd.\r\n\r\nSelecteer één of meer beeldschermrijen in de "
+    L"Hardwareversnelde vlucht tussen vervormende oppervlakken. Vlucht tussen vier vervormende oppervlakken; "
+    L"Vlucht door een vervormende trechter. Kies precies één animatie per beeldscherm. Textuur schakelt "
+    L"tussen een getextureerd oppervlak en een draadmodel. Vrije camerarotatie verandert de kijkrichting "
+    L"langzaam in alle drie dimensies. De optie Pauzes en omkeren voegt willekeurige vertragingen, pauzes en "
+    L"omkeringen van de rotatie toe; de voorwaartse vlucht gaat door. De snelheid is instelbaar op 0–1600%. "
+    L"Elk beeldscherm heeft een onafhankelijke willekeurige scène en wordt op zijn eigen "
+    L"vernieuwingsfrequentie aangestuurd. Hoofdlicht, invullicht, omgevingslicht en randlicht kunnen "
+    L"onafhankelijk worden geschakeld voor de geselecteerde beeldschermen. De verlichting geldt alleen voor "
+    L"oppervlakken met textuur.\r\n\r\nSelecteer één of meer beeldschermrijen in de "
     L"lijst. Ctrl+A selecteert alles; met Ctrl en Shift past u de selectie aan. Animatieknoppen en "
     L"schuifregelaars wijzigen alleen de instellingen van de geselecteerde beeldschermen. Een rij "
     L"selecteren is iets anders dan de animatie-uitvoer inschakelen met het selectievakje. De selectie "
@@ -3635,9 +3687,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Zbor între suprafețe deformabile accelerat hardware. Zbor între patru suprafețe deformabile; Zbor "
     L"printr-o pâlnie deformabilă. Alegeți exact o animație pentru fiecare monitor. Textură comută între "
     L"suprafața texturată și modelul de sârmă. Rotirea liberă a camerei schimbă lent direcția privirii în "
-    L"toate cele trei dimensiuni. Opriri și inversări de sens adaugă încetiniri, pauze și inversări ale "
-    L"rotației la intervale aleatorii; zborul înainte continuă. Viteza este 0–1600%. Fiecare monitor are o "
-    L"scenă aleatorie independentă, randată la propria rată de reîmprospătare.\r\n\r\nSelectați unul sau "
+    L"toate cele trei dimensiuni. Pauze și inversări adaugă încetiniri, pauze și inversări ale rotației la "
+    L"intervale aleatorii; zborul înainte continuă. Viteza este 0–1600%. Fiecare monitor are o scenă "
+    L"aleatorie independentă, randată la propria rată de reîmprospătare. Lumina principală, lumina de "
+    L"umplere, lumina ambiantă și lumina de contur pot fi comutate separat pentru ecranele selectate. "
+    L"Iluminarea se aplică doar suprafețelor texturate.\r\n\r\nSelectați unul sau "
     L"mai multe rânduri din lista monitoarelor. Ctrl+A le selectează pe toate; Ctrl și Shift modifică "
     L"selecția. Comenzile și glisoarele animației schimbă numai setările monitoarelor selectate. Selectarea "
     L"unui rând diferă de activarea ieșirii prin caseta sa de selectare. Selecția este reținută separat "
@@ -3664,10 +3718,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Πτήση ανάμεσα σε μεταβαλλόμενες επιφάνειες με επιτάχυνση υλικού. Πτήση ανάμεσα σε τέσσερις "
     L"μεταβαλλόμενες επιφάνειες; Πτήση μέσα από μεταβαλλόμενη χοάνη. Επιλέξτε ακριβώς μία κίνηση ανά οθόνη. "
     L"Η Υφή εναλλάσσει επιφάνεια με υφή και συρμάτινο μοντέλο. Η ελεύθερη περιστροφή κάμερας αλλάζει αργά "
-    L"την κατεύθυνση θέασης και στις τρεις διαστάσεις. Οι Στάσεις και αντιστροφές προσθέτουν τυχαίες "
-    L"επιβραδύνσεις, παύσεις και αντιστροφές περιστροφής, ενώ η πτήση προς τα εμπρός συνεχίζεται. Η "
-    L"ταχύτητα είναι 0–1600%. Κάθε οθόνη διαθέτει ανεξάρτητη τυχαία σκηνή που αποδίδεται στον δικό της "
-    L"ρυθμό ανανέωσης.\r\n\r\nΕπιλέξτε μία ή περισσότερες γραμμές στη λίστα οθονών. Το Ctrl+A επιλέγει "
+    L"την κατεύθυνση θέασης και στις τρεις διαστάσεις. Οι Παύσεις και αντιστροφές προσθέτουν τυχαίες "
+    L"επιβραδύνσεις, παύσεις και αντιστροφές περιστροφής, ενώ η πτήση προς τα εμπρός συνεχίζεται. Η ταχύτητα "
+    L"είναι 0–1600%. Κάθε οθόνη διαθέτει ανεξάρτητη τυχαία σκηνή που αποδίδεται στον δικό της ρυθμό "
+    L"ανανέωσης. Ο κύριος φωτισμός, ο φωτισμός πλήρωσης, ο περιβάλλων φωτισμός και ο φωτισμός περιγράμματος "
+    L"ρυθμίζονται ανεξάρτητα για τις επιλεγμένες οθόνες. Ο φωτισμός εφαρμόζεται μόνο σε επιφάνειες με "
+    L"υφή.\r\n\r\nΕπιλέξτε μία ή περισσότερες γραμμές στη λίστα οθονών. Το Ctrl+A επιλέγει "
     L"όλες, ενώ τα Ctrl και Shift αλλάζουν την επιλογή. Τα χειριστήρια και τα ρυθμιστικά της κίνησης "
     L"αλλάζουν μόνο τις ρυθμίσεις των επιλεγμένων οθονών. Η επιλογή γραμμής διαφέρει από την ενεργοποίηση "
     L"εξόδου μέσω του πλαισίου ελέγχου της. Η επιλογή αποθηκεύεται χωριστά για την εφαρμογή και την "
@@ -3694,9 +3750,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Hardverski ubrzan let između promjenjivih površina. Let između četiri promjenjive površine; Let kroz "
     L"promjenjivi lijevak. Za svaki monitor odaberite tačno jednu animaciju. Tekstura mijenja prikaz između "
     L"teksturirane površine i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda u sve "
-    L"tri dimenzije. Zaustavljanja i promjene smjera dodaju nasumično usporavanje, pauze i promjene smjera "
-    L"rotacije; let naprijed se nastavlja. Brzina je 0–1600%. Svaki monitor ima nezavisnu nasumičnu scenu "
-    L"koja se prikazuje prema njegovoj frekvenciji osvježavanja.\r\n\r\nOdaberite jedan ili više redova u "
+    L"tri dimenzije. Pauze i obrati dodaju nasumično usporavanje, pauze i promjene smjera rotacije; let "
+    L"naprijed se nastavlja. Brzina je 0–1600%. Svaki monitor ima nezavisnu nasumičnu scenu koja se "
+    L"prikazuje prema njegovoj frekvenciji osvježavanja. Glavno svjetlo, dopunsko svjetlo, ambijentalno "
+    L"svjetlo i konturno svjetlo mogu se zasebno uključivati za odabrane monitore. Osvjetljenje se "
+    L"primjenjuje samo na teksturirane površine.\r\n\r\nOdaberite jedan ili više redova u "
     L"listi monitora. Ctrl+A odabire sve; Ctrl i Shift mijenjaju odabir. Kontrole i klizači animacije "
     L"mijenjaju samo postavke odabranih monitora. Odabir reda nije isto što i uključivanje izlaza njegovom "
     L"kućicom. Odabir se pamti odvojeno za aplikaciju i čuvar ekrana. Ako su prethodno bili odabrani svi "
@@ -3720,9 +3778,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Hardverski ubrzan let između promjenjivih ploha. Let između četiriju promjenjivih ploha; Let kroz "
     L"promjenjivi lijevak. Za svaki zaslon odaberite točno jednu animaciju. Tekstura mijenja prikaz između "
     L"teksturirane plohe i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda u sve tri "
-    L"dimenzije. Zaustavljanja i promjene smjera dodaju nasumično usporavanje, stanke i promjene smjera "
-    L"rotacije; let naprijed se nastavlja. Brzina je 0–1600%. Svaki zaslon ima neovisnu nasumičnu scenu "
-    L"koja se prikazuje prema njegovoj frekvenciji osvježavanja.\r\n\r\nOdaberite jedan ili više redaka na "
+    L"dimenzije. Pauze i obrati dodaju nasumično usporavanje, stanke i promjene smjera rotacije; let "
+    L"naprijed se nastavlja. Brzina je 0–1600%. Svaki zaslon ima neovisnu nasumičnu scenu koja se prikazuje "
+    L"prema njegovoj frekvenciji osvježavanja. Glavno svjetlo, dopunsko svjetlo, ambijentalno svjetlo i "
+    L"konturno svjetlo mogu se zasebno uključivati za odabrane monitore. Osvjetljenje se primjenjuje samo na "
+    L"teksturirane površine.\r\n\r\nOdaberite jedan ili više redaka na "
     L"popisu zaslona. Ctrl+A odabire sve; Ctrl i Shift mijenjaju odabir. Kontrole i klizači animacije "
     L"mijenjaju samo postavke odabranih zaslona. Odabir retka nije isto što i uključivanje izlaza njegovim "
     L"potvrdnim okvirom. Odabir se pamti odvojeno za aplikaciju i čuvar zaslona. Ako su prethodno bili "
@@ -3746,9 +3806,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Strojno pospešen let med spreminjajočimi se ploskvami. Let med štirimi spreminjajočimi se ploskvami; "
     L"Let skozi spreminjajoči se lijak. Za vsak zaslon izberite natanko eno animacijo. Tekstura preklaplja "
     L"med teksturirano ploskvijo in žičnim modelom. Prosto vrtenje kamere počasi spreminja smer pogleda v "
-    L"vseh treh razsežnostih. Ustavljanja in spremembe smeri dodajo naključne upočasnitve, premore in "
-    L"obrate smeri vrtenja; let naprej se nadaljuje. Hitrost je 0–1600%. Vsak zaslon ima neodvisen "
-    L"naključen prizor, ki se izrisuje z njegovo hitrostjo osveževanja.\r\n\r\nNa seznamu zaslonov izberite "
+    L"vseh treh razsežnostih. Premori in obrati dodajo naključne upočasnitve, premore in obrate smeri "
+    L"vrtenja; let naprej se nadaljuje. Hitrost je 0–1600%. Vsak zaslon ima neodvisen naključen prizor, ki "
+    L"se izrisuje z njegovo hitrostjo osveževanja. Glavno svetlobo, dopolnilno svetlobo, okoljsko svetlobo "
+    L"in obrobno svetlobo je mogoče neodvisno vklapljati za izbrane zaslone. Osvetlitev velja samo za "
+    L"teksturirane površine.\r\n\r\nNa seznamu zaslonov izberite "
     L"eno ali več vrstic. Ctrl+A izbere vse, Ctrl in Shift pa spreminjata izbor. Kontrolniki in drsniki "
     L"animacije spreminjajo samo nastavitve izbranih zaslonov. Izbira vrstice ni isto kot vklop izhoda z "
     L"njenim potrditvenim poljem. Izbor se ločeno shrani za program in ohranjevalnik. Če so bili izbrani "
@@ -3769,12 +3831,14 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"funkcije. Za Windows Vista SP2 morate namestiti posodobitvi KB971512 in KB2117917; snemanje MP4 v "
     L"Visti ne deluje. Potrebna je podpora Direct3D 11, za MP4 pa še Media Foundation in kodirnik H.264. "
     L"Vmesnik in dokumentacija sta na voljo v 36 jezikih.",
-    L"Hardverski ubrzan let između promjenljivih površina. Let između četiri promjenljive površine; Let "
-    L"kroz promjenljivi lijevak. Za svaki monitor izaberite tačno jednu animaciju. Tekstura mijenja prikaz "
-    L"između teksturisane površine i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda "
-    L"u sve tri dimenzije. Zaustavljanja i promjene smjera dodaju nasumično usporavanje, pauze i promjene "
-    L"smjera rotacije; let naprijed se nastavlja. Brzina je 0–1600%. Svaki monitor ima nezavisnu nasumičnu "
-    L"scenu koja se prikazuje prema njegovoj frekvenciji osvježavanja.\r\n\r\nIzaberite jedan ili više "
+    L"Hardverski ubrzan let između promjenljivih površina. Let između četiri promjenljive površine; Let kroz "
+    L"promjenljivi lijevak. Za svaki monitor izaberite tačno jednu animaciju. Tekstura mijenja prikaz između "
+    L"teksturisane površine i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda u sve "
+    L"tri dimenzije. Pauze i obrati dodaju nasumično usporavanje, pauze i promjene smjera rotacije; let "
+    L"naprijed se nastavlja. Brzina je 0–1600%. Svaki monitor ima nezavisnu nasumičnu scenu koja se "
+    L"prikazuje prema njegovoj frekvenciji osvježavanja. Glavno svjetlo, dopunsko svjetlo, ambijentalno "
+    L"svjetlo i konturno svjetlo mogu se zasebno uključivati za odabrane monitore. Osvjetljenje se "
+    L"primjenjuje samo na teksturirane površine.\r\n\r\nIzaberite jedan ili više "
     L"redova u listi monitora. Ctrl+A bira sve; Ctrl i Shift mijenjaju izbor. Kontrole i klizači animacije "
     L"mijenjaju samo podešavanja izabranih monitora. Izbor reda nije isto što i uključivanje izlaza "
     L"njegovom kućicom. Izbor se pamti odvojeno za aplikaciju i čuvar ekrana. Ako su prethodno bili "
@@ -3795,12 +3859,14 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"sve funkcije. Za Windows Vista SP2 morate instalirati ažuriranja KB971512 i KB2117917; MP4 snimanje "
     L"na Visti ne radi. Potreban je Direct3D 11, a za MP4 i Media Foundation i H.264 koder. Interfejs i "
     L"dokumentacija dostupni su na 36 jezika.",
-    L"Апаратна паскораны палёт паміж зменлівымі паверхнямі. Палёт паміж чатырма зменлівымі паверхнямі; "
-    L"Палёт праз зменлівую варонку. Для кожнага манітора выберыце роўна адну анімацыю. Тэкстура пераключае "
+    L"Апаратна паскораны палёт паміж зменлівымі паверхнямі. Палёт паміж чатырма зменлівымі паверхнямі; Палёт "
+    L"праз зменлівую варонку. Для кожнага манітора выберыце роўна адну анімацыю. Тэкстура пераключае "
     L"тэкстураваную паверхню і каркасную мадэль. Свабоднае кручэнне камеры павольна змяняе напрамак погляду "
-    L"ва ўсіх трох вымярэннях. Спыненні і змены напрамку дадаюць выпадковыя запаволенні, паўзы і змены "
-    L"напрамку кручэння; палёт наперад працягваецца. Хуткасць — 0–1600%. Кожны манітор мае незалежную "
-    L"выпадковую сцэну з вывадам паводле ўласнай частаты абнаўлення.\r\n\r\nВыберыце адзін або некалькі "
+    L"ва ўсіх трох вымярэннях. Паўзы і развароты дадаюць выпадковыя запаволенні, паўзы і змены напрамку "
+    L"кручэння; палёт наперад працягваецца. Хуткасць — 0–1600%. Кожны манітор мае незалежную выпадковую "
+    L"сцэну з вывадам паводле ўласнай частаты абнаўлення. Асноўнае, запаўняльнае, фонавае і контурнае святло "
+    L"можна пераключаць незалежна для выбраных манітораў. Асвятленне дзейнічае толькі на тэкстураваных "
+    L"паверхнях.\r\n\r\nВыберыце адзін або некалькі "
     L"радкоў у спісе манітораў. Ctrl+A выбірае ўсе; Ctrl і Shift змяняюць выбар. Элементы кіравання і "
     L"паўзункі анімацыі змяняюць толькі налады выбраных манітораў. Выбар радка і ўключэнне вываду яго "
     L"сцяжком — розныя дзеянні. Выбар асобна захоўваецца для праграмы і застаўкі. Калі раней былі выбраны "
@@ -3824,9 +3890,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Хардуерно ускорен полет между променящи се повърхнини. Полет между четири променящи се повърхнини; "
     L"Полет през променяща се фуния. Изберете точно една анимация за всеки монитор. Текстура превключва "
     L"между текстурирана повърхнина и телен модел. Свободното въртене на камерата бавно променя посоката на "
-    L"погледа в трите измерения. Спирания и обръщания на посоката добавя случайни забавяния, паузи и "
-    L"обръщания на въртенето; полетът напред продължава. Скоростта е 0–1600%. Всеки монитор има независима "
-    L"случайна сцена, изобразявана с неговата честота на опресняване.\r\n\r\nИзберете един или повече "
+    L"погледа в трите измерения. Опцията „Паузи и обръщания“ добавя случайни забавяния, паузи и обръщания на "
+    L"въртенето; полетът напред продължава. Скоростта е 0–1600%. Всеки монитор има независима случайна "
+    L"сцена, изобразявана с неговата честота на опресняване. Основната, запълващата, околната и контурната "
+    L"светлина се включват независимо за избраните монитори. Осветлението се прилага само към текстурираните "
+    L"повърхности.\r\n\r\nИзберете един или повече "
     L"редове в списъка с монитори. Ctrl+A избира всички; Ctrl и Shift променят избора. Контролите и "
     L"плъзгачите на анимацията променят само настройките на избраните монитори. Избирането на ред и "
     L"включването на изхода чрез отметката му са различни действия. Изборът се запомня отделно за "
@@ -3850,11 +3918,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Direct3D 11, а за MP4 също Media Foundation и H.264 кодер. Интерфейсът и документацията са налични на "
     L"36 езика.",
     L"Хардверски забрзан лет меѓу променливи површини. Лет меѓу четири променливи површини; Лет низ "
-    L"променлива инка. За секој монитор изберете точно една анимација. Текстура менува текстурирана "
-    L"површина и жичен модел. Слободното вртење на камерата полека го менува погледот во сите три димензии. "
-    L"Запирања и промени на насоката додава случајни забавувања, паузи и промени на насоката на вртење; "
-    L"летот напред продолжува. Брзината е 0–1600%. Секој монитор има независна случајна сцена што се "
-    L"прикажува со неговата стапка на освежување.\r\n\r\nИзберете еден или повеќе редови во списокот на "
+    L"променлива инка. За секој монитор изберете точно една анимација. Текстура менува текстурирана површина "
+    L"и жичен модел. Слободното вртење на камерата полека го менува погледот во сите три димензии. Опцијата "
+    L"„Паузи и пресврти“ додава случајни забавувања, паузи и промени на насоката на вртење; летот напред "
+    L"продолжува. Брзината е 0–1600%. Секој монитор има независна случајна сцена што се прикажува со "
+    L"неговата стапка на освежување. Главното, дополнителното, амбиенталното и контурното светло може да се "
+    L"вклучуваат одделно за избраните монитори. Осветлувањето важи само за текстурираните "
+    L"површини.\r\n\r\nИзберете еден или повеќе редови во списокот на "
     L"монитори. Ctrl+A ги избира сите; Ctrl и Shift го менуваат изборот. Контролите и лизгачите на "
     L"анимацијата ги менуваат само поставките на избраните монитори. Избирањето ред и вклучувањето на "
     L"излезот преку неговото поле се различни дејства. Изборот се памети одделно за апликацијата и чуварот. "
@@ -3879,9 +3949,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Хардверски убрзан лет између променљивих површи. Лет између четири променљиве површи; Лет кроз "
     L"променљиви левак. За сваки монитор изаберите тачно једну анимацију. Текстура мења приказ између "
     L"текстурисане површи и жичаног модела. Слободно окретање камере полако мења смер погледа у све три "
-    L"димензије. Заустављања и промене смера додају насумично успоравање, паузе и промене смера ротације; "
-    L"лет напред се наставља. Брзина је 0–1600%. Сваки монитор има независну насумичну сцену која се "
-    L"приказује према његовој учестаности освежавања.\r\n\r\nИзаберите један или више редова у листи "
+    L"димензије. Паузе и обрти додају насумично успоравање, паузе и промене смера ротације; лет напред се "
+    L"наставља. Брзина је 0–1600%. Сваки монитор има независну насумичну сцену која се приказује према "
+    L"његовој учестаности освежавања. Главно, допунско, амбијентално и контурно светло могу се засебно "
+    L"укључивати за изабране мониторе. Осветљење важи само за текстуриране површине.\r\n\r\nИзаберите један "
+    L"или више редова у листи "
     L"монитора. Ctrl+A бира све; Ctrl и Shift мењају избор. Контроле и клизачи анимације мењају само "
     L"подешавања изабраних монитора. Избор реда није исто што и укључивање излаза његовим пољем за потврду. "
     L"Избор се памти одвојено за апликацију и чувар екрана. Ако су претходно били изабрани сви монитори, "
@@ -3904,9 +3976,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Апаратно прискорений політ між мінливими поверхнями. Політ між чотирма мінливими поверхнями; Політ "
     L"крізь мінливу лійку. Для кожного монітора виберіть рівно одну анімацію. Текстура перемикає "
     L"текстуровану поверхню та каркасну модель. Вільне обертання камери повільно змінює напрямок погляду в "
-    L"усіх трьох вимірах. Зупинки та зміни напрямку додають випадкові уповільнення, паузи та зміни напрямку "
+    L"усіх трьох вимірах. Паузи та зміни напрямку додають випадкові уповільнення, паузи та зміни напрямку "
     L"обертання; політ уперед триває. Швидкість — 0–1600%. Кожен монітор має незалежну випадкову сцену з "
-    L"виведенням відповідно до власної частоти оновлення.\r\n\r\nВиберіть один або кілька рядків у списку "
+    L"виведенням відповідно до власної частоти оновлення. Основне, заповнювальне, фонове та контурне світло "
+    L"можна незалежно перемикати для вибраних моніторів. Освітлення діє лише на текстурованих "
+    L"поверхнях.\r\n\r\nВиберіть один або кілька рядків у списку "
     L"моніторів. Ctrl+A вибирає всі; Ctrl і Shift змінюють вибір. Елементи керування й повзунки анімації "
     L"змінюють лише налаштування вибраних моніторів. Вибір рядка та ввімкнення виведення його прапорцем — "
     L"різні дії. Вибір зберігається окремо для програми й заставки. Якщо раніше були вибрані всі монітори, "
@@ -3930,10 +4004,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
     L"Аппаратно ускоренный полёт между меняющимися поверхностями. Полёт между четырьмя меняющимися "
     L"поверхностями; Полёт сквозь меняющуюся воронку. Для каждого монитора выберите ровно одну анимацию. "
     L"Текстура переключает текстурированную поверхность и каркасную модель. Свободное вращение камеры "
-    L"медленно меняет направление взгляда во всех трёх измерениях. Остановки и смены направления добавляют "
+    L"медленно меняет направление взгляда во всех трёх измерениях. Паузы и смены направления добавляют "
     L"случайные замедления, паузы и изменения направления вращения; полёт вперёд продолжается. Скорость — "
     L"0–1600%. Каждый монитор имеет независимую случайную сцену с выводом согласно собственной частоте "
-    L"обновления.\r\n\r\nВыберите одну или несколько строк в списке мониторов. Ctrl+A выбирает все; Ctrl и "
+    L"обновления. Основной, заполняющий, фоновый и контурный свет можно независимо переключать для выбранных "
+    L"мониторов. Освещение применяется только к текстурированным поверхностям.\r\n\r\nВыберите одну или "
+    L"несколько строк в списке мониторов. Ctrl+A выбирает все; Ctrl и "
     L"Shift изменяют выбор. Элементы управления и ползунки анимации изменяют только настройки выбранных "
     L"мониторов. Выбор строки и включение вывода её флажком — разные действия. Выбор сохраняется отдельно "
     L"для приложения и заставки. Если раньше были выбраны все мониторы, в выбор включаются и вновь "
@@ -3958,11 +4034,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> APPLICATION_HELP_TEXTS = {
 
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"FlightCorridor: Průlet čtyřmi proměnlivými plochami; Průlet proměnlivým trychtýřem. Každému monitoru "
-    L"přiřaďte právě jednu animaci. Textura přepíná mezi texturovanými plochami a drátěným modelem. "
-    L"Převalování kamery pomalu mění směr pohledu ve všech třech rozměrech. Zastavování a změny směru "
-    L"přidává náhodné zpomalování, pauzy a změny směru otáčení; dopředný pohyb pokračuje. Rychlost animace "
-    L"je 0–1600 %. Každý monitor má nezávislou náhodnou scénu a vykreslování podle své obnovovací "
-    L"frekvence.\r\n\r\nOznačení řádků určuje, které monitory právě nastavujete; není totožné se zatržítky "
+    L"přiřaďte právě jednu animaci. Textura přepíná mezi texturovanými plochami a drátěným modelem. Volná "
+    L"rotace kamery pomalu mění směr pohledu ve všech třech rozměrech. Volba „Pauzy a obraty“ přidává "
+    L"náhodné zpomalování, pauzy a změny směru otáčení; dopředný pohyb pokračuje. Rychlost animace je 0–1600 "
+    L"%. Každý monitor má nezávislou náhodnou scénu a vykreslování podle své obnovovací frekvence. Hlavní "
+    L"světlo, doplňkové světlo, základní jas a přisvětlení obrysů lze pro označené monitory zapínat "
+    L"nezávisle. Osvětlení se používá jen u texturovaných ploch.\r\n\r\nOznačení řádků určuje, které "
+    L"monitory právě nastavujete; není totožné se zatržítky "
     L"zapínajícími animační výstupy. Ctrl+A označí všechny monitory, Ctrl a Shift umožňují upravit "
     L"označení. Všechny animační volby a jezdce platí pro označené monitory. Označení se pamatuje zvlášť "
     L"pro EXE a SCR. Pokud byly označené všechny monitory, označí se i nově připojené.\r\n\r\nZapnout "
@@ -3973,11 +4051,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"pouze toto okno.\r\n\r\nPodporovány jsou systémy Windows 7 až Windows 11. Pro spuštění aplikace ve "
     L"Windows Vista SP2 je nutné nainstalovat aktualizace KB971512 a KB2117917.",
     L"FlightCorridor: Flight between four morphing surfaces; Flight through a morphing funnel. Assign "
-    L"exactly one animation to each display. Texture switches between textured surfaces and wireframe. "
-    L"Camera tumbling slowly changes the viewing direction in all three dimensions. Stops and reversals "
-    L"adds randomized braking, pauses, and reversals of the rotation; forward flight continues. Animation "
-    L"speed ranges from 0–1600%. Every display has an independent randomized scene rendered at its own "
-    L"refresh rate.\r\n\r\nRow selection determines which displays you are editing; it is separate from the "
+    L"exactly one animation to each display. Texture switches between textured surfaces and wireframe. Free "
+    L"camera rotation slowly changes the viewing direction in all three dimensions. The Pauses and reversals "
+    L"option adds randomized braking, pauses, and reversals of the rotation; forward flight continues. "
+    L"Animation speed ranges from 0–1600%. Every display has an independent randomized scene rendered at its "
+    L"own refresh rate. Main light, fill light, ambient light, and rim light can be switched independently "
+    L"for the selected displays. Lighting applies only to textured surfaces.\r\n\r\nRow selection determines "
+    L"which displays you are editing; it is separate from the "
     L"checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the "
     L"selection. All animation options and sliders apply to the selected displays. The selection is "
     L"remembered separately for EXE and SCR. If all displays were selected, newly connected displays join "
@@ -3988,11 +4068,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"in Help or About, it closes only that window.\r\n\r\nWindows 7 through Windows 11 are supported. To "
     L"run the application on Windows Vista SP2, you must install updates KB971512 and KB2117917.",
     L"FlightCorridor: Flight between four morphing surfaces; Flight through a morphing funnel. Assign "
-    L"exactly one animation to each display. Texture switches between textured surfaces and wireframe. "
-    L"Camera tumbling slowly changes the viewing direction in all three dimensions. Stops and reversals "
-    L"adds randomised braking, pauses and reversals of the rotation; forward flight continues. Animation "
-    L"speed ranges from 0–1600%. Every display has an independent randomised scene rendered at its own "
-    L"refresh rate.\r\n\r\nRow selection determines which displays you are editing; it is separate from the "
+    L"exactly one animation to each display. Texture switches between textured surfaces and wireframe. Free "
+    L"camera rotation slowly changes the viewing direction in all three dimensions. The Pauses and reversals "
+    L"option adds randomised braking, pauses and reversals of the rotation; forward flight continues. "
+    L"Animation speed ranges from 0–1600%. Every display has an independent randomised scene rendered at its "
+    L"own refresh rate. Main light, fill light, ambient light and rim light can be switched independently "
+    L"for the selected displays. Lighting applies only to textured surfaces.\r\n\r\nRow selection determines "
+    L"which displays you are editing; it is separate from the "
     L"checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the "
     L"selection. All animation options and sliders apply to the selected displays. The selection is "
     L"remembered separately for EXE and SCR. If all displays were selected, newly connected displays join "
@@ -4004,11 +4086,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"11 are supported. To run the application on Windows Vista SP2, you must install updates KB971512 and "
     L"KB2117917.",
     L"FlightCorridor: Flight between four morphing surfaces; Flight through a morphing funnel. Assign "
-    L"exactly one animation to each display. Texture switches between textured surfaces and wireframe. "
-    L"Camera tumbling slowly changes the viewing direction in all three dimensions. Stops and reversals "
-    L"adds randomised braking, pauses and reversals of the rotation; forward flight continues. Animation "
-    L"speed ranges from 0–1600%. Every display has an independent randomised scene rendered at its own "
-    L"refresh rate.\r\n\r\nRow selection determines which displays you are editing; it is separate from the "
+    L"exactly one animation to each display. Texture switches between textured surfaces and wireframe. Free "
+    L"camera rotation slowly changes the viewing direction in all three dimensions. The Pauses and reversals "
+    L"option adds randomised braking, pauses and reversals of the rotation; forward flight continues. "
+    L"Animation speed ranges from 0–1600%. Every display has an independent randomised scene rendered at its "
+    L"own refresh rate. Main light, fill light, ambient light and rim light can be switched independently "
+    L"for the selected displays. Lighting applies only to textured surfaces.\r\n\r\nRow selection determines "
+    L"which displays you are editing; it is separate from the "
     L"checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the "
     L"selection. All animation options and sliders apply to the selected displays. The selection is "
     L"remembered separately for EXE and SCR. If all displays were selected, newly connected displays join "
@@ -4021,11 +4105,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"KB2117917.",
     L"FlightCorridor: Flug zwischen vier veränderlichen Flächen; Flug durch einen veränderlichen Trichter. "
     L"Weisen Sie jedem Monitor genau eine Animation zu. Textur wechselt zwischen texturierten Flächen und "
-    L"Drahtgittermodell. Die taumelnde Kamera verändert die Blickrichtung langsam in allen drei "
-    L"Dimensionen. Stopps und Richtungswechsel ergänzt zufälliges Abbremsen, Pausen und Wechsel der "
+    L"Drahtgittermodell. Die freie Kameradrehung verändert die Blickrichtung langsam in allen drei "
+    L"Dimensionen. Die Option „Pausen und Umkehr“ ergänzt zufälliges Abbremsen, Pausen und Wechsel der "
     L"Drehrichtung; der Vorwärtsflug läuft weiter. Die Animationsgeschwindigkeit beträgt 0–1600 %. Jeder "
     L"Monitor besitzt eine unabhängige zufällige Szene und wird mit seiner eigenen Bildwiederholrate "
-    L"angesteuert.\r\n\r\nDie Zeilenauswahl bestimmt, welche Monitore Sie bearbeiten; sie ist von den "
+    L"angesteuert. Hauptlicht, Fülllicht, Umgebungslicht und Konturlicht lassen sich für die ausgewählten "
+    L"Monitore unabhängig schalten. Die Beleuchtung gilt nur für texturierte Flächen.\r\n\r\nDie "
+    L"Zeilenauswahl bestimmt, welche Monitore Sie bearbeiten; sie ist von den "
     L"Kontrollkästchen zum Einschalten der Animationsausgabe getrennt. Strg+A wählt alle Monitore, Strg und "
     L"Umschalt ändern die Auswahl. Alle Animationsoptionen und Regler gelten für die ausgewählten Monitore. "
     L"Die Auswahl wird für EXE und SCR getrennt gespeichert. Waren alle Monitore ausgewählt, werden auch "
@@ -4036,12 +4122,15 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Esc im Einstellungsdialog entspricht Abbrechen; in der Hilfe oder im Infofenster schließt es nur "
     L"dieses Fenster.\r\n\r\nUnterstützt werden Windows 7 bis Windows 11. Zum Ausführen der Anwendung unter "
     L"Windows Vista SP2 müssen die Updates KB971512 und KB2117917 installiert werden.",
-    L"FlightCorridor: Vol entre quatre surfaces déformables; Vol dans un entonnoir déformable. Attribuez "
-    L"une seule animation à chaque écran. Texture alterne entre surfaces texturées et modèle filaire. La "
-    L"rotation libre de la caméra change lentement la direction du regard dans les trois dimensions. Arrêts "
-    L"et changements de sens ajoute des ralentissements, pauses et inversions aléatoires de la rotation ; "
-    L"le vol vers l’avant continue. La vitesse va de 0 à 1600 %. Chaque écran possède une scène aléatoire "
-    L"indépendante, rendue à sa propre fréquence de rafraîchissement.\r\n\r\nLa sélection des lignes "
+    L"FlightCorridor: Vol entre quatre surfaces déformables; Vol dans un entonnoir déformable. Attribuez une "
+    L"seule animation à chaque écran. Texture alterne entre surfaces texturées et modèle filaire. La "
+    L"rotation libre de la caméra change lentement la direction du regard dans les trois dimensions. "
+    L"L’option « Pauses et inversions » ajoute des ralentissements, pauses et inversions aléatoires de la "
+    L"rotation ; le vol vers l’avant continue. La vitesse va de 0 à 1600 %. Chaque écran possède une scène "
+    L"aléatoire indépendante, rendue à sa propre fréquence de rafraîchissement. La lumière principale, la "
+    L"lumière d’appoint, l’éclairage ambiant et l’éclairage des contours se règlent indépendamment pour les "
+    L"écrans sélectionnés. L’éclairage ne concerne que les surfaces texturées.\r\n\r\nLa sélection des "
+    L"lignes "
     L"détermine les écrans à configurer ; elle est distincte des cases qui activent les sorties "
     L"d’animation. Ctrl+A sélectionne tous les écrans ; Ctrl et Maj modifient la sélection. Toutes les "
     L"options et tous les curseurs d’animation concernent les écrans sélectionnés. La sélection est "
@@ -4053,12 +4142,14 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"équivaut à Annuler ; dans l’aide ou À propos, cette touche ferme uniquement cette "
     L"fenêtre.\r\n\r\nWindows 7 à Windows 11 sont pris en charge. Pour exécuter l’application sous Windows "
     L"Vista SP2, il est nécessaire d’installer les mises à jour KB971512 et KB2117917.",
-    L"FlightCorridor: Vuelo entre cuatro superficies deformables; Vuelo por un embudo deformable. Asigne "
-    L"una sola animación a cada pantalla. Textura alterna entre superficies texturizadas y modelo de "
-    L"alambre. El giro libre de la cámara cambia lentamente la dirección de la vista en las tres "
-    L"dimensiones. Paradas y cambios de sentido añade frenadas, pausas e inversiones aleatorias del giro; "
-    L"el vuelo hacia delante continúa. La velocidad va del 0 al 1600 %. Cada pantalla tiene una escena "
-    L"aleatoria independiente y se renderiza a su propia frecuencia de actualización.\r\n\r\nLa selección "
+    L"FlightCorridor: Vuelo entre cuatro superficies deformables; Vuelo por un embudo deformable. Asigne una "
+    L"sola animación a cada pantalla. Textura alterna entre superficies texturizadas y modelo de alambre. El "
+    L"giro libre de la cámara cambia lentamente la dirección de la vista en las tres dimensiones. La opción "
+    L"«Pausas e inversiones» añade frenadas, pausas e inversiones aleatorias del giro; el vuelo hacia "
+    L"delante continúa. La velocidad va del 0 al 1600 %. Cada pantalla tiene una escena aleatoria "
+    L"independiente y se renderiza a su propia frecuencia de actualización. La luz principal, la luz de "
+    L"relleno, la luz ambiental y la iluminación de contornos se activan por separado para las pantallas "
+    L"seleccionadas. La iluminación solo se aplica a las superficies texturizadas.\r\n\r\nLa selección "
     L"de filas determina qué pantallas se están configurando; es independiente de las casillas que activan "
     L"las salidas de animación. Ctrl+A selecciona todas; Ctrl y Mayús modifican la selección. Todas las "
     L"opciones y los controles deslizantes de animación se aplican a las pantallas seleccionadas. La "
@@ -4073,9 +4164,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"FlightCorridor: Volo tra quattro superfici deformabili; Volo attraverso un imbuto deformabile. "
     L"Assegnare una sola animazione a ogni schermo. Texture alterna superfici con texture e modello a "
     L"reticolo. La rotazione libera della telecamera cambia lentamente la direzione dello sguardo nelle tre "
-    L"dimensioni. Arresti e inversioni aggiunge rallentamenti, pause e inversioni casuali della rotazione; "
-    L"il volo in avanti continua. La velocità va da 0 a 1600%. Ogni schermo ha una scena casuale "
-    L"indipendente, renderizzata alla propria frequenza di aggiornamento.\r\n\r\nLa selezione delle righe "
+    L"dimensioni. L’opzione «Pause e inversioni» aggiunge rallentamenti, pause e inversioni casuali della "
+    L"rotazione; il volo in avanti continua. La velocità va da 0 a 1600%. Ogni schermo ha una scena casuale "
+    L"indipendente, renderizzata alla propria frequenza di aggiornamento. La luce principale, la luce di "
+    L"riempimento, la luce ambientale e l’illuminazione dei contorni si attivano separatamente per gli "
+    L"schermi selezionati. L’illuminazione si applica solo alle superfici con texture.\r\n\r\nLa selezione "
+    L"delle righe "
     L"determina quali schermi si stanno configurando ed è distinta dalle caselle che attivano le uscite di "
     L"animazione. Ctrl+A seleziona tutti gli schermi; Ctrl e Maiusc modificano la selezione. Tutte le "
     L"opzioni e i cursori dell’animazione riguardano gli schermi selezionati. La selezione viene "
@@ -4089,10 +4183,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"installare gli aggiornamenti KB971512 e KB2117917.",
     L"FlightCorridor: Voo entre quatro superfícies deformáveis; Voo através de um funil deformável. Atribua "
     L"uma única animação a cada ecrã. Textura alterna entre superfícies texturadas e modelo em arame. A "
-    L"rotação livre da câmara muda lentamente a direção da vista nas três dimensões. Paragens e inversões "
-    L"de sentido acrescenta desacelerações, pausas e inversões aleatórias da rotação; o voo para a frente "
+    L"rotação livre da câmara muda lentamente a direção da vista nas três dimensões. A opção «Pausas e "
+    L"inversões» acrescenta desacelerações, pausas e inversões aleatórias da rotação; o voo para a frente "
     L"continua. A velocidade vai de 0 a 1600%. Cada ecrã tem uma cena aleatória independente, apresentada à "
-    L"sua própria frequência de atualização.\r\n\r\nA seleção das linhas determina os ecrãs a configurar e "
+    L"sua própria frequência de atualização. A luz principal, a luz de preenchimento, a luz ambiente e a "
+    L"iluminação dos contornos podem ser ativadas separadamente nos monitores selecionados. A iluminação "
+    L"aplica-se apenas às superfícies com textura.\r\n\r\nA seleção das linhas determina os ecrãs a "
+    L"configurar e "
     L"é independente das caixas que ativam as saídas de animação. Ctrl+A seleciona todos os ecrãs; Ctrl e "
     L"Shift alteram a seleção. Todas as opções e controlos deslizantes da animação aplicam-se aos ecrãs "
     L"selecionados. A seleção é guardada separadamente para EXE e SCR. Se todos estavam selecionados, os "
@@ -4103,12 +4200,14 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Cancelar; na Ajuda ou em Acerca de, fecha apenas essa janela.\r\n\r\nSão suportados os sistemas "
     L"Windows 7 a Windows 11. Para executar a aplicação no Windows Vista SP2, é necessário instalar as "
     L"atualizações KB971512 e KB2117917.",
-    L"FlightCorridor: Przelot między czterema zmiennymi powierzchniami; Przelot przez zmienny lejek. "
-    L"Każdemu monitorowi przypisz dokładnie jedną animację. Tekstura przełącza powierzchnie z teksturą i "
-    L"model szkieletowy. Swobodne obracanie kamery powoli zmienia kierunek widoku we wszystkich trzech "
-    L"wymiarach. Zatrzymania i zmiany kierunku dodają losowe zwalnianie, pauzy i odwracanie obrotu; lot do "
-    L"przodu trwa nadal. Prędkość wynosi 0–1600%. Każdy monitor ma niezależną losową scenę wyświetlaną z "
-    L"własną częstotliwością odświeżania.\r\n\r\nZaznaczenie wierszy określa konfigurowane monitory i jest "
+    L"FlightCorridor: Przelot między czterema zmiennymi powierzchniami; Przelot przez zmienny lejek. Każdemu "
+    L"monitorowi przypisz dokładnie jedną animację. Tekstura przełącza powierzchnie z teksturą i model "
+    L"szkieletowy. Swobodne obracanie kamery powoli zmienia kierunek widoku we wszystkich trzech wymiarach. "
+    L"Przerwy i nawroty dodają losowe zwalnianie, pauzy i odwracanie obrotu; lot do przodu trwa nadal. "
+    L"Prędkość wynosi 0–1600%. Każdy monitor ma niezależną losową scenę wyświetlaną z własną częstotliwością "
+    L"odświeżania. Światło główne, światło wypełniające, światło otoczenia i oświetlenie konturów można "
+    L"przełączać niezależnie dla zaznaczonych monitorów. Oświetlenie dotyczy tylko powierzchni z "
+    L"teksturą.\r\n\r\nZaznaczenie wierszy określa konfigurowane monitory i jest "
     L"niezależne od pól wyboru włączających wyjścia animacji. Ctrl+A zaznacza wszystkie monitory; Ctrl i "
     L"Shift zmieniają zaznaczenie. Wszystkie opcje i suwaki animacji dotyczą zaznaczonych monitorów. "
     L"Zaznaczenie jest zapamiętywane osobno dla EXE i SCR. Jeśli zaznaczone były wszystkie monitory, nowe "
@@ -4120,11 +4219,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"systemy od Windows 7 do Windows 11. Do uruchomienia aplikacji w systemie Windows Vista SP2 konieczne "
     L"jest zainstalowanie aktualizacji KB971512 i KB2117917.",
     L"FlightCorridor: Prelet štyrmi premenlivými plochami; Prelet premenlivým lievikom. Každému monitoru "
-    L"priraďte práve jednu animáciu. Textúra prepína medzi textúrovanými plochami a drôteným modelom. "
-    L"Prevaľovanie kamery pomaly mení smer pohľadu vo všetkých troch rozmeroch. Zastavovanie a zmeny smeru "
-    L"pridáva náhodné spomaľovanie, prestávky a zmeny smeru otáčania; dopredný pohyb pokračuje. Rýchlosť je "
-    L"0–1600 %. Každý monitor má nezávislú náhodnú scénu vykresľovanú podľa vlastnej obnovovacej "
-    L"frekvencie.\r\n\r\nOznačenie riadkov určuje, ktoré monitory práve nastavujete; je nezávislé od "
+    L"priraďte práve jednu animáciu. Textúra prepína medzi textúrovanými plochami a drôteným modelom. Voľná "
+    L"rotácia kamery pomaly mení smer pohľadu vo všetkých troch rozmeroch. Voľba „Pauzy a obraty“ pridáva "
+    L"náhodné spomaľovanie, prestávky a zmeny smeru otáčania; dopredný pohyb pokračuje. Rýchlosť je 0–1600 "
+    L"%. Každý monitor má nezávislú náhodnú scénu vykresľovanú podľa vlastnej obnovovacej frekvencie. Hlavné "
+    L"svetlo, doplnkové svetlo, základný jas a prisvetlenie obrysov možno pre označené monitory zapínať "
+    L"nezávisle. Osvetlenie sa používa len pri textúrovaných plochách.\r\n\r\nOznačenie riadkov určuje, "
+    L"ktoré monitory práve nastavujete; je nezávislé od "
     L"políčok zapínajúcich animačné výstupy. Ctrl+A označí všetky monitory, Ctrl a Shift upravujú "
     L"označenie. Všetky animačné voľby a posuvníky platia pre označené monitory. Označenie sa pamätá zvlášť "
     L"pre EXE a SCR. Ak boli označené všetky monitory, označia sa aj novopripojené.\r\n\r\nZapnúť náhľad "
@@ -4137,10 +4238,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"KB971512 a KB2117917.",
     L"FlightCorridor: Flyvetur mellem fire formskiftende flader; Flyvetur gennem en formskiftende tragt. "
     L"Tildel præcis én animation til hver skærm. Tekstur skifter mellem teksturerede flader og trådmodel. "
-    L"Frit roterende kamera ændrer langsomt synsretningen i alle tre dimensioner. Stop og retningsskift "
+    L"Frit roterende kamera ændrer langsomt synsretningen i alle tre dimensioner. Pauser og vendinger "
     L"tilføjer tilfældige opbremsninger, pauser og ændringer af rotationsretningen; flyvningen fremad "
     L"fortsætter. Hastigheden er 0–1600 %. Hver skærm har en uafhængig tilfældig scene, der gengives med "
-    L"dens egen opdateringsfrekvens.\r\n\r\nMarkeringen af rækker bestemmer, hvilke skærme du indstiller, "
+    L"dens egen opdateringsfrekvens. Hovedlys, udfyldningslys, omgivende lys og konturlys kan slås til og "
+    L"fra uafhængigt for de valgte skærme. Belysningen gælder kun teksturerede "
+    L"overflader.\r\n\r\nMarkeringen af rækker bestemmer, hvilke skærme du indstiller, "
     L"og er adskilt fra afkrydsningsfelterne, der aktiverer animationsoutput. Ctrl+A markerer alle skærme; "
     L"Ctrl og Skift ændrer markeringen. Alle animationsvalg og skydere gælder de markerede skærme. "
     L"Markeringen huskes separat for EXE og SCR. Hvis alle skærme var markeret, medtages også nye "
@@ -4151,12 +4254,14 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"svarer til Annuller; i Hjælp eller Om lukker det kun dette vindue.\r\n\r\nWindows 7 til Windows 11 "
     L"understøttes. For at køre programmet på Windows Vista SP2 skal opdateringerne KB971512 og KB2117917 "
     L"installeres.",
-    L"FlightCorridor: Lento neljän muuntuvan pinnan välissä; Lento muuntuvan suppilon läpi. Valitse "
-    L"kullekin näytölle yksi animaatio. Tekstuuri vaihtaa teksturoitujen pintojen ja rautalankamallin "
-    L"välillä. Kameran vapaa pyörintä muuttaa katselusuuntaa hitaasti kaikissa kolmessa ulottuvuudessa. "
-    L"Pysähdykset ja suunnanvaihdot lisää satunnaisia hidastuksia, taukoja ja pyörimissuunnan vaihtoja; "
-    L"lento eteenpäin jatkuu. Nopeus on 0–1600%. Jokaisella näytöllä on itsenäinen satunnainen näkymä, joka "
-    L"piirretään sen omalla virkistystaajuudella.\r\n\r\nRivien valinta määrää muokattavat näytöt ja on "
+    L"FlightCorridor: Lento neljän muuntuvan pinnan välissä; Lento muuntuvan suppilon läpi. Valitse kullekin "
+    L"näytölle yksi animaatio. Tekstuuri vaihtaa teksturoitujen pintojen ja rautalankamallin välillä. "
+    L"Kameran vapaa pyörintä muuttaa katselusuuntaa hitaasti kaikissa kolmessa ulottuvuudessa. Tauot ja "
+    L"suunnanvaihdot lisäävät satunnaisia hidastuksia, taukoja ja pyörimissuunnan vaihtoja; lento eteenpäin "
+    L"jatkuu. Nopeus on 0–1600%. Jokaisella näytöllä on itsenäinen satunnainen näkymä, joka piirretään sen "
+    L"omalla virkistystaajuudella. Päävalo, täytevalo, ympäristövalo ja reunavalo voidaan kytkeä erikseen "
+    L"valituille näytöille. Valaistus koskee vain teksturoituja pintoja.\r\n\r\nRivien valinta määrää "
+    L"muokattavat näytöt ja on "
     L"erillinen animaatioulostulon valintaruuduista. Ctrl+A valitsee kaikki näytöt; Ctrl ja Vaihto "
     L"muuttavat valintaa. Kaikki animaatioasetukset ja liukusäätimet koskevat valittuja näyttöjä. Valinta "
     L"muistetaan erikseen EXE- ja SCR-tiloissa. Jos kaikki näytöt olivat valittuina, myös uudet näytöt "
@@ -4169,10 +4274,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"edellyttää päivitysten KB971512 ja KB2117917 asentamista.",
     L"FlightCorridor: Flug milli fjögurra breytilegra flata; Flug í gegnum breytilega trekt. Veldu "
     L"nákvæmlega eina hreyfimynd fyrir hvern skjá. Áferð skiptir milli áferðarlagðra flata og víragrindar. "
-    L"Frjáls snúningur myndavélar breytir sjónstefnunni hægt í öllum þremur víddum. Stopp og stefnuskipti "
-    L"bætir við tilviljanakenndri hægingu, hléum og breytingum á snúningsstefnu; flug áfram heldur áfram. "
-    L"Hraðinn er 0–1600%. Hver skjár hefur sjálfstæða tilviljanakennda senu sem er teiknuð á eigin "
-    L"endurnýjunartíðni.\r\n\r\nVal lína ákvarðar hvaða skjám er verið að breyta og er óháð gátreitunum sem "
+    L"Frjáls snúningur myndavélar breytir sjónstefnunni hægt í öllum þremur víddum. Valkosturinn „Hlé og "
+    L"stefnuskipti“ bætir við tilviljanakenndri hægingu, hléum og breytingum á snúningsstefnu; flug áfram "
+    L"heldur áfram. Hraðinn er 0–1600%. Hver skjár hefur sjálfstæða tilviljanakennda senu sem er teiknuð á "
+    L"eigin endurnýjunartíðni. Aðalljós, fylliljós, umhverfislýsing og útlínulýsing eru stillt óháð hvert "
+    L"öðru fyrir valda skjái. Lýsingin á aðeins við um áferðarfleti.\r\n\r\nVal lína ákvarðar hvaða skjám er "
+    L"verið að breyta og er óháð gátreitunum sem "
     L"kveikja á hreyfimyndaúttaki. Ctrl+A velur alla skjái; Ctrl og Shift breyta valinu. Allir valkostir og "
     L"sleðar hreyfimynda gilda fyrir valda skjái. Valið er munað sérstaklega fyrir EXE og SCR. Ef allir "
     L"skjáir voru valdir bætast nýir skjáir einnig við valið.\r\n\r\nVirkja forskoðun ræsir forskoðun á "
@@ -4182,12 +4289,14 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"stillingum jafngildir Hætta við; í Hjálp eða Um lokar það aðeins þeim glugga.\r\n\r\nWindows 7 til "
     L"Windows 11 eru studd. Til að keyra forritið á Windows Vista SP2 þarf að setja upp uppfærslurnar "
     L"KB971512 og KB2117917.",
-    L"FlightCorridor: Flytur mellom fire formendrende flater; Flytur gjennom en formendrende trakt. "
-    L"Tilordne nøyaktig én animasjon til hver skjerm. Tekstur veksler mellom teksturerte flater og "
-    L"trådmodell. Fritt roterende kamera endrer synsretningen langsomt i alle tre dimensjoner. Stopp og "
-    L"retningsendringer legger til tilfeldige oppbremsinger, pauser og endringer i rotasjonsretningen; "
-    L"flyvningen fremover fortsetter. Hastigheten er 0–1600 %. Hver skjerm har en uavhengig tilfeldig scene "
-    L"som gjengis ved dens egen oppdateringsfrekvens.\r\n\r\nMarkeringen av rader bestemmer hvilke skjermer "
+    L"FlightCorridor: Flytur mellom fire formendrende flater; Flytur gjennom en formendrende trakt. Tilordne "
+    L"nøyaktig én animasjon til hver skjerm. Tekstur veksler mellom teksturerte flater og trådmodell. Fritt "
+    L"roterende kamera endrer synsretningen langsomt i alle tre dimensjoner. Pauser og vendinger legger til "
+    L"tilfeldige oppbremsinger, pauser og endringer i rotasjonsretningen; flyvningen fremover fortsetter. "
+    L"Hastigheten er 0–1600 %. Hver skjerm har en uavhengig tilfeldig scene som gjengis ved dens egen "
+    L"oppdateringsfrekvens. Hovedlys, utfyllingslys, omgivelseslys og konturlys kan slås av og på uavhengig "
+    L"for de valgte skjermene. Belysningen gjelder bare teksturerte flater.\r\n\r\nMarkeringen av rader "
+    L"bestemmer hvilke skjermer "
     L"du redigerer, og er atskilt fra avkrysningsboksene som aktiverer animasjonsutgangen. Ctrl+A markerer "
     L"alle skjermer; Ctrl og Skift endrer markeringen. Alle animasjonsvalg og glidebrytere gjelder de "
     L"markerte skjermene. Markeringen huskes separat for EXE og SCR. Hvis alle skjermer var markert, "
@@ -4200,10 +4309,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"KB2117917 installeres.",
     L"FlightCorridor: Flygtur mellan fyra formföränderliga ytor; Flygtur genom en formföränderlig tratt. "
     L"Tilldela varje skärm exakt en animering. Textur växlar mellan texturerade ytor och trådmodell. Fritt "
-    L"roterande kamera ändrar långsamt blickriktningen i alla tre dimensioner. Stopp och riktningsbyten "
-    L"lägger till slumpmässiga inbromsningar, pauser och byten av rotationsriktning; flygningen framåt "
-    L"fortsätter. Hastigheten är 0–1600 %. Varje skärm har en oberoende slumpmässig scen som återges med "
-    L"dess egen uppdateringsfrekvens.\r\n\r\nMarkeringen av rader avgör vilka skärmar du redigerar och är "
+    L"roterande kamera ändrar långsamt blickriktningen i alla tre dimensioner. Pauser och vändningar lägger "
+    L"till slumpmässiga inbromsningar, pauser och byten av rotationsriktning; flygningen framåt fortsätter. "
+    L"Hastigheten är 0–1600 %. Varje skärm har en oberoende slumpmässig scen som återges med dess egen "
+    L"uppdateringsfrekvens. Huvudljus, fyllnadsljus, omgivningsljus och konturljus kan slås på och av "
+    L"oberoende för de valda skärmarna. Belysningen gäller bara texturerade ytor.\r\n\r\nMarkeringen av "
+    L"rader avgör vilka skärmar du redigerar och är "
     L"skild från kryssrutorna som aktiverar animationsutgångarna. Ctrl+A markerar alla skärmar; Ctrl och "
     L"Skift ändrar markeringen. Alla animationsalternativ och reglage gäller de markerade skärmarna. "
     L"Markeringen sparas separat för EXE och SCR. Om alla skärmar var markerade inkluderas även nya "
@@ -4216,10 +4327,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"och KB2117917 installeras.",
     L"FlightCorridor: Biçim değiştiren dört yüzey arasında uçuş; Biçim değiştiren bir huninin içinden uçuş. "
     L"Her ekrana tam bir animasyon atayın. Doku, dokulu yüzeyler ile tel kafes modeli arasında geçiş yapar. "
-    L"Serbest kamera dönüşü bakış yönünü üç boyutta yavaşça değiştirir. Duraklamalar ve yön değişimleri, "
-    L"dönüşe rastgele yavaşlamalar, duraklamalar ve ters yön değişimleri ekler; ileri uçuş devam eder. Hız "
-    L"0–1600% aralığındadır. Her ekranın kendi yenileme hızında çizilen bağımsız rastgele bir sahnesi "
-    L"vardır.\r\n\r\nSatır seçimi, hangi ekranların düzenlendiğini belirler; animasyon çıkışlarını açan "
+    L"Serbest kamera dönüşü bakış yönünü üç boyutta yavaşça değiştirir. Duraklama ve ters dönüş, dönüşe "
+    L"rastgele yavaşlamalar, duraklamalar ve ters yön değişimleri ekler; ileri uçuş devam eder. Hız 0–1600% "
+    L"aralığındadır. Her ekranın kendi yenileme hızında çizilen bağımsız rastgele bir sahnesi vardır. Ana "
+    L"ışık, dolgu ışığı, ortam ışığı ve kenar aydınlatması seçili ekranlar için ayrı ayrı açılıp "
+    L"kapatılabilir. Aydınlatma yalnızca dokulu yüzeylere uygulanır.\r\n\r\nSatır seçimi, hangi ekranların "
+    L"düzenlendiğini belirler; animasyon çıkışlarını açan "
     L"onay kutularından ayrıdır. Ctrl+A tüm ekranları seçer; Ctrl ve Shift seçimi değiştirir. Tüm animasyon "
     L"seçenekleri ve kaydırıcılar seçili ekranlara uygulanır. Seçim EXE ve SCR için ayrı saklanır. Tüm "
     L"ekranlar seçiliyse sonradan bağlanan ekranlar da seçime katılır.\r\n\r\nÖnizlemeyi etkinleştir tüm "
@@ -4233,9 +4346,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Riistvarakiirendusega lend muutuvate pindade vahel. Lend nelja muutuva pinna vahel; Lend läbi muutuva "
     L"lehtri. Valige igale kuvarile täpselt üks animatsioon. Tekstuuri märkeruut vahetab tekstuuriga pinna "
     L"ja traatmudeli vahel. Kaamera vaba pöörlemine muudab vaatesuunda aeglaselt kõigis kolmes mõõtmes. "
-    L"Peatumised ja suunavahetused lisab sellele juhuslikke aeglustusi, pause ja pöörlemissuuna muutusi; "
-    L"edasilend jätkub. Kiirus on seatav vahemikus 0–1600%. Igal kuvaril on oma sõltumatu juhuslik stseen "
-    L"ja värskendussagedusele vastav renderdus.\r\n\r\nValige loendis üks või mitu kuvaririda. Ctrl+A valib "
+    L"Pausid ja pöördumised lisavad sellele juhuslikke aeglustusi, pause ja pöörlemissuuna muutusi; "
+    L"edasilend jätkub. Kiirus on seatav vahemikus 0–1600%. Igal kuvaril on oma sõltumatu juhuslik stseen ja "
+    L"värskendussagedusele vastav renderdus. Põhivalgust, täitevalgust, ümbritsevat valgust ja "
+    L"kontuurivalgust saab valitud kuvaritel eraldi sisse ja välja lülitada. Valgustus kehtib ainult "
+    L"tekstuuriga pindadele.\r\n\r\nValige loendis üks või mitu kuvaririda. Ctrl+A valib "
     L"kõik read; Ctrl ja Shift võimaldavad valikut muuta. Animatsiooni juhtnupud ja liugurid mõjutavad "
     L"ainult valitud kuvarite sätteid, mitte kogu rakendust. Rea valimine ja selle märkeruuduga väljundi "
     L"lubamine on eri toimingud. Valik jäetakse rakenduse ja ekraanisäästja jaoks eraldi meelde. Kui varem "
@@ -4249,10 +4364,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Eitilt idir dromchlaí athraitheacha le luasghéarú crua-earraí. Eitilt idir ceithre dhromchla "
     L"athraitheacha; Eitilt trí thonnadóir athraitheach. Roghnaigh beochan amháin do gach monatóir. "
     L"Athraíonn Uigeacht idir dromchla uigeachtaithe agus samhail sreangfhráma. Rothlaíonn rothlú saor an "
-    L"cheamara an radharc go mall sna trí thoise. Cuireann Stadanna agus aisiompuithe coscánú, sosanna agus "
+    L"cheamara an radharc go mall sna trí thoise. Cuireann Sosanna agus aisiompuithe coscánú, sosanna agus "
     L"athruithe treo randamacha leis an rothlú; leanann an eitilt chun tosaigh. Tá luas 0–1600% ar fáil. Tá "
     L"radharc randamach neamhspleách ag gach monatóir agus déantar rindreáil de réir a ráta athnuachana "
-    L"féin.\r\n\r\nRoghnaigh ró amháin nó níos mó sa liosta monatóirí. Roghnaíonn Ctrl+A gach ró; úsáid "
+    L"féin. Is féidir an príomhsholas, an solas líonta, an solas comhthimpeallach agus an solas imill a "
+    L"athrú go neamhspleách do na taispeántais roghnaithe. Ní bhaineann an soilsiú ach le dromchlaí "
+    L"uigeachtaithe.\r\n\r\nRoghnaigh ró amháin nó níos mó sa liosta monatóirí. Roghnaíonn Ctrl+A gach ró; "
+    L"úsáid "
     L"Ctrl agus Shift chun an roghnú a athrú. Ní athraíonn rialuithe agus sleamhnáin na beochana ach "
     L"socruithe na monatóirí roghnaithe. Ní hionann ró a roghnú agus aschur an mhonatóra a chumasú lena "
     L"bhosca seiceála. Cuimhnítear an roghnú ar leith don fheidhmchlár agus don spárálaí. Má bhí gach "
@@ -4264,13 +4382,15 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"shuiteáil; ní oibríonn taifeadadh MP4 ar Vista. Teastaíonn tacaíocht Direct3D 11, agus Media "
     L"Foundation agus ionchódóir H.264 le haghaidh MP4. Tá an comhéadan agus an doiciméadú ar fáil i 36 "
     L"teanga.",
-    L"Aparatine įranga spartinamas skrydis tarp kintančių paviršių. Skrydis tarp keturių kintančių "
-    L"paviršių; Skrydis kintančiu piltuvu. Kiekvienam monitoriui pasirinkite vieną animaciją. Tekstūros "
-    L"langelis perjungia tekstūruotą paviršių ir vielinį modelį. Laisvas kameros sukimasis lėtai keičia "
-    L"žiūrėjimo kryptį visose trijose dimensijose. Sustojimai ir krypties keitimai prideda atsitiktinį "
-    L"lėtėjimą, pauzes ir sukimosi krypties keitimą; skrydis pirmyn tęsiasi. Galimas 0–1600% greitis. "
-    L"Kiekvienas monitorius turi nepriklausomą atsitiktinę sceną, atvaizduojamą jo atnaujinimo "
-    L"dažniu.\r\n\r\nMonitorių sąraše pasirinkite vieną ar kelias eilutes. Ctrl+A pasirenka visas, o Ctrl "
+    L"Aparatine įranga spartinamas skrydis tarp kintančių paviršių. Skrydis tarp keturių kintančių paviršių; "
+    L"Skrydis kintančiu piltuvu. Kiekvienam monitoriui pasirinkite vieną animaciją. Tekstūros langelis "
+    L"perjungia tekstūruotą paviršių ir vielinį modelį. Laisvas kameros sukimasis lėtai keičia žiūrėjimo "
+    L"kryptį visose trijose dimensijose. Pauzės ir apsisukimai prideda atsitiktinį lėtėjimą, pauzes ir "
+    L"sukimosi krypties keitimą; skrydis pirmyn tęsiasi. Galimas 0–1600% greitis. Kiekvienas monitorius turi "
+    L"nepriklausomą atsitiktinę sceną, atvaizduojamą jo atnaujinimo dažniu. Pagrindinę, užpildančią, "
+    L"aplinkos ir kontūrinę šviesą galima atskirai įjungti pasirinktiems ekranams. Apšvietimas taikomas tik "
+    L"tekstūruotiems paviršiams.\r\n\r\nMonitorių sąraše pasirinkite vieną ar kelias eilutes. Ctrl+A "
+    L"pasirenka visas, o Ctrl "
     L"ir Shift leidžia keisti pasirinkimą. Animacijos valdikliai ir slankikliai keičia tik pasirinktų "
     L"monitorių nuostatas. Eilutės pasirinkimas nėra tas pats, kas animacijos išvesties įjungimas jos "
     L"žymimuoju langeliu. Pasirinkimas atskirai įsimenamas programai ir užsklandai. Jei buvo pasirinkti "
@@ -4284,9 +4404,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Aparatūras paātrināts lidojums starp mainīgām virsmām. Lidojums starp četrām mainīgām virsmām; "
     L"Lidojums caur mainīgu piltuvi. Katram monitoram izvēlieties tieši vienu animāciju. Tekstūras rūtiņa "
     L"pārslēdz teksturētu virsmu un stiepļu modeli. Brīva kameras rotācija lēnām maina skatiena virzienu "
-    L"visās trijās dimensijās. Apstāšanās un virziena maiņa pievieno nejaušu palēninājumu, pauzes un "
-    L"rotācijas virziena maiņu; lidojums uz priekšu turpinās. Pieejams ātrums 0–1600%. Katram monitoram ir "
-    L"neatkarīga nejauša aina, ko renderē tā atsvaidzināšanas frekvencē.\r\n\r\nMonitoru sarakstā atlasiet "
+    L"visās trijās dimensijās. Pauzes un virzienmaiņa pievieno nejaušu palēninājumu, pauzes un rotācijas "
+    L"virziena maiņu; lidojums uz priekšu turpinās. Pieejams ātrums 0–1600%. Katram monitoram ir neatkarīga "
+    L"nejauša aina, ko renderē tā atsvaidzināšanas frekvencē. Pamata, aizpildošo, apkārtējo un kontūru "
+    L"gaismu atlasītajiem monitoriem var ieslēgt neatkarīgi. Apgaismojums attiecas tikai uz teksturētām "
+    L"virsmām.\r\n\r\nMonitoru sarakstā atlasiet "
     L"vienu vai vairākas rindas. Ctrl+A atlasa visas, bet Ctrl un Shift ļauj mainīt atlasi. Animācijas "
     L"vadīklas un slīdņi maina tikai atlasīto monitoru iestatījumus. Rindas atlasīšana nav tas pats, kas "
     L"animācijas izvades ieslēgšana ar izvēles rūtiņu. Atlase tiek atsevišķi atcerēta lietotnei un "
@@ -4300,10 +4422,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Hardveresen gyorsított repülés változó felületek között. Repülés négy változó felület között; Repülés "
     L"változó tölcsérben. Monitoronként pontosan egy animáció választható. A Textúra jelölőnégyzet a "
     L"textúrázott felület és a drótváz között vált. A kamera szabad forgása lassan változtatja a nézetet "
-    L"mindhárom dimenzióban. A Megállások és irányváltások véletlenszerű lassításokat, szüneteket és "
-    L"forgásirányváltásokat ad hozzá; az előrehaladás folytatódik. A sebesség 0–1600%. Minden monitor "
-    L"önálló véletlenszerű jelenetet kap, saját frissítési gyakoriságához igazodó "
-    L"megjelenítéssel.\r\n\r\nJelöljön ki egy vagy több sort a monitorok listájában. A Ctrl+A mindet "
+    L"mindhárom dimenzióban. A Szünetek és irányváltás véletlenszerű lassításokat, szüneteket és "
+    L"forgásirányváltásokat ad hozzá; az előrehaladás folytatódik. A sebesség 0–1600%. Minden monitor önálló "
+    L"véletlenszerű jelenetet kap, saját frissítési gyakoriságához igazodó megjelenítéssel. A főfény, a "
+    L"derítőfény, a környezeti fény és a peremfény külön kapcsolható a kijelölt monitorokon. A világítás "
+    L"csak a textúrázott felületekre vonatkozik.\r\n\r\nJelöljön ki egy vagy több sort a monitorok "
+    L"listájában. A Ctrl+A mindet "
     L"kijelöli; a Ctrl és a Shift módosítja a kijelölést. Az animáció vezérlői és csúszkái csak a kijelölt "
     L"monitorok beállításait változtatják. A sor kijelölése és az animációs kimenet jelölőnégyzetes "
     L"engedélyezése külön művelet. A kijelölést az alkalmazás és a képernyőkímélő külön megjegyzi. Ha "
@@ -4318,9 +4442,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Titjira bejn uċuħ li jinbidlu aċċellerata bil-ħardwer. Titjira bejn erba’ uċuħ li jinbidlu; Titjira "
     L"f’lembut li jinbidel. Agħżel animazzjoni waħda biss għal kull moniter. Nisġa taqleb bejn wiċċ b’nisġa "
     L"u mudell bil-wireframe. Ir-rotazzjoni libera tal-kamera tbiddel id-direzzjoni tal-ħarsa bil-mod "
-    L"fit-tliet dimensjonijiet. Waqfiet u bidliet fid-direzzjoni żżid deċelerazzjonijiet, pawżi u treġġigħ "
-    L"lura tar-rotazzjoni b’mod każwali; it-titjira ’l quddiem tkompli. Il-veloċità hija 0–1600%. Kull "
-    L"moniter għandu xena każwali indipendenti li tintwera bir-rata ta’ aġġornament tiegħu.\r\n\r\nAgħżel "
+    L"fit-tliet dimensjonijiet. L-għażla Pawżi u bidliet fid-direzzjoni żżid deċelerazzjonijiet, pawżi u "
+    L"treġġigħ lura tar-rotazzjoni b’mod każwali; it-titjira ’l quddiem tkompli. Il-veloċità hija 0–1600%. "
+    L"Kull moniter għandu xena każwali indipendenti li tintwera bir-rata ta’ aġġornament tiegħu. Id-dawl "
+    L"prinċipali, id-dawl ta’ mili, id-dawl ambjentali u d-dawl tal-kontorn jistgħu jinxtegħlu separatament "
+    L"għall-iskrins magħżula. Id-dawl japplika biss għall-uċuħ bit-tessut.\r\n\r\nAgħżel "
     L"ringiela waħda jew aktar fil-lista tal-moniters. Ctrl+A jagħżilhom kollha; Ctrl u Shift ibiddlu "
     L"l-għażla. Il-kontrolli u s-sliders tal-animazzjoni jibdlu biss is-settings tal-moniters magħżula. "
     L"L-għażla ta’ ringiela hija differenti mill-attivazzjoni tal-output permezz tal-kaxxa tal-marka. "
@@ -4333,13 +4459,15 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"KB971512 u KB2117917; ir-reġistrazzjoni MP4 ma taħdimx fuq Vista. Huwa meħtieġ Direct3D 11 u, "
     L"għall-MP4, Media Foundation u encoder H.264. L-interface u d-dokumentazzjoni huma disponibbli f’36 "
     L"lingwa.",
-    L"Hardwareversnelde vlucht tussen vervormende oppervlakken. Vlucht tussen vier vervormende "
-    L"oppervlakken; Vlucht door een vervormende trechter. Kies precies één animatie per beeldscherm. "
-    L"Textuur schakelt tussen een getextureerd oppervlak en een draadmodel. Vrije camerarotatie verandert "
-    L"de kijkrichting langzaam in alle drie dimensies. Stops en richtingswisselingen voegt willekeurige "
-    L"vertragingen, pauzes en omkeringen van de rotatie toe; de voorwaartse vlucht gaat door. De snelheid "
-    L"is instelbaar op 0–1600%. Elk beeldscherm heeft een onafhankelijke willekeurige scène en wordt op "
-    L"zijn eigen vernieuwingsfrequentie aangestuurd.\r\n\r\nSelecteer één of meer beeldschermrijen in de "
+    L"Hardwareversnelde vlucht tussen vervormende oppervlakken. Vlucht tussen vier vervormende oppervlakken; "
+    L"Vlucht door een vervormende trechter. Kies precies één animatie per beeldscherm. Textuur schakelt "
+    L"tussen een getextureerd oppervlak en een draadmodel. Vrije camerarotatie verandert de kijkrichting "
+    L"langzaam in alle drie dimensies. De optie Pauzes en omkeren voegt willekeurige vertragingen, pauzes en "
+    L"omkeringen van de rotatie toe; de voorwaartse vlucht gaat door. De snelheid is instelbaar op 0–1600%. "
+    L"Elk beeldscherm heeft een onafhankelijke willekeurige scène en wordt op zijn eigen "
+    L"vernieuwingsfrequentie aangestuurd. Hoofdlicht, invullicht, omgevingslicht en randlicht kunnen "
+    L"onafhankelijk worden geschakeld voor de geselecteerde beeldschermen. De verlichting geldt alleen voor "
+    L"oppervlakken met textuur.\r\n\r\nSelecteer één of meer beeldschermrijen in de "
     L"lijst. Ctrl+A selecteert alles; met Ctrl en Shift past u de selectie aan. Animatieknoppen en "
     L"schuifregelaars wijzigen alleen de instellingen van de geselecteerde beeldschermen. Een rij "
     L"selecteren is iets anders dan de animatie-uitvoer inschakelen met het selectievakje. De selectie "
@@ -4354,9 +4482,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Zbor între suprafețe deformabile accelerat hardware. Zbor între patru suprafețe deformabile; Zbor "
     L"printr-o pâlnie deformabilă. Alegeți exact o animație pentru fiecare monitor. Textură comută între "
     L"suprafața texturată și modelul de sârmă. Rotirea liberă a camerei schimbă lent direcția privirii în "
-    L"toate cele trei dimensiuni. Opriri și inversări de sens adaugă încetiniri, pauze și inversări ale "
-    L"rotației la intervale aleatorii; zborul înainte continuă. Viteza este 0–1600%. Fiecare monitor are o "
-    L"scenă aleatorie independentă, randată la propria rată de reîmprospătare.\r\n\r\nSelectați unul sau "
+    L"toate cele trei dimensiuni. Pauze și inversări adaugă încetiniri, pauze și inversări ale rotației la "
+    L"intervale aleatorii; zborul înainte continuă. Viteza este 0–1600%. Fiecare monitor are o scenă "
+    L"aleatorie independentă, randată la propria rată de reîmprospătare. Lumina principală, lumina de "
+    L"umplere, lumina ambiantă și lumina de contur pot fi comutate separat pentru ecranele selectate. "
+    L"Iluminarea se aplică doar suprafețelor texturate.\r\n\r\nSelectați unul sau "
     L"mai multe rânduri din lista monitoarelor. Ctrl+A le selectează pe toate; Ctrl și Shift modifică "
     L"selecția. Comenzile și glisoarele animației schimbă numai setările monitoarelor selectate. Selectarea "
     L"unui rând diferă de activarea ieșirii prin caseta sa de selectare. Selecția este reținută separat "
@@ -4371,10 +4501,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Πτήση ανάμεσα σε μεταβαλλόμενες επιφάνειες με επιτάχυνση υλικού. Πτήση ανάμεσα σε τέσσερις "
     L"μεταβαλλόμενες επιφάνειες; Πτήση μέσα από μεταβαλλόμενη χοάνη. Επιλέξτε ακριβώς μία κίνηση ανά οθόνη. "
     L"Η Υφή εναλλάσσει επιφάνεια με υφή και συρμάτινο μοντέλο. Η ελεύθερη περιστροφή κάμερας αλλάζει αργά "
-    L"την κατεύθυνση θέασης και στις τρεις διαστάσεις. Οι Στάσεις και αντιστροφές προσθέτουν τυχαίες "
-    L"επιβραδύνσεις, παύσεις και αντιστροφές περιστροφής, ενώ η πτήση προς τα εμπρός συνεχίζεται. Η "
-    L"ταχύτητα είναι 0–1600%. Κάθε οθόνη διαθέτει ανεξάρτητη τυχαία σκηνή που αποδίδεται στον δικό της "
-    L"ρυθμό ανανέωσης.\r\n\r\nΕπιλέξτε μία ή περισσότερες γραμμές στη λίστα οθονών. Το Ctrl+A επιλέγει "
+    L"την κατεύθυνση θέασης και στις τρεις διαστάσεις. Οι Παύσεις και αντιστροφές προσθέτουν τυχαίες "
+    L"επιβραδύνσεις, παύσεις και αντιστροφές περιστροφής, ενώ η πτήση προς τα εμπρός συνεχίζεται. Η ταχύτητα "
+    L"είναι 0–1600%. Κάθε οθόνη διαθέτει ανεξάρτητη τυχαία σκηνή που αποδίδεται στον δικό της ρυθμό "
+    L"ανανέωσης. Ο κύριος φωτισμός, ο φωτισμός πλήρωσης, ο περιβάλλων φωτισμός και ο φωτισμός περιγράμματος "
+    L"ρυθμίζονται ανεξάρτητα για τις επιλεγμένες οθόνες. Ο φωτισμός εφαρμόζεται μόνο σε επιφάνειες με "
+    L"υφή.\r\n\r\nΕπιλέξτε μία ή περισσότερες γραμμές στη λίστα οθονών. Το Ctrl+A επιλέγει "
     L"όλες, ενώ τα Ctrl και Shift αλλάζουν την επιλογή. Τα χειριστήρια και τα ρυθμιστικά της κίνησης "
     L"αλλάζουν μόνο τις ρυθμίσεις των επιλεγμένων οθονών. Η επιλογή γραμμής διαφέρει από την ενεργοποίηση "
     L"εξόδου μέσω του πλαισίου ελέγχου της. Η επιλογή αποθηκεύεται χωριστά για την εφαρμογή και την "
@@ -4389,9 +4521,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Hardverski ubrzan let između promjenjivih površina. Let između četiri promjenjive površine; Let kroz "
     L"promjenjivi lijevak. Za svaki monitor odaberite tačno jednu animaciju. Tekstura mijenja prikaz između "
     L"teksturirane površine i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda u sve "
-    L"tri dimenzije. Zaustavljanja i promjene smjera dodaju nasumično usporavanje, pauze i promjene smjera "
-    L"rotacije; let naprijed se nastavlja. Brzina je 0–1600%. Svaki monitor ima nezavisnu nasumičnu scenu "
-    L"koja se prikazuje prema njegovoj frekvenciji osvježavanja.\r\n\r\nOdaberite jedan ili više redova u "
+    L"tri dimenzije. Pauze i obrati dodaju nasumično usporavanje, pauze i promjene smjera rotacije; let "
+    L"naprijed se nastavlja. Brzina je 0–1600%. Svaki monitor ima nezavisnu nasumičnu scenu koja se "
+    L"prikazuje prema njegovoj frekvenciji osvježavanja. Glavno svjetlo, dopunsko svjetlo, ambijentalno "
+    L"svjetlo i konturno svjetlo mogu se zasebno uključivati za odabrane monitore. Osvjetljenje se "
+    L"primjenjuje samo na teksturirane površine.\r\n\r\nOdaberite jedan ili više redova u "
     L"listi monitora. Ctrl+A odabire sve; Ctrl i Shift mijenjaju odabir. Kontrole i klizači animacije "
     L"mijenjaju samo postavke odabranih monitora. Odabir reda nije isto što i uključivanje izlaza njegovom "
     L"kućicom. Odabir se pamti odvojeno za aplikaciju i čuvar ekrana. Ako su prethodno bili odabrani svi "
@@ -4404,9 +4538,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Hardverski ubrzan let između promjenjivih ploha. Let između četiriju promjenjivih ploha; Let kroz "
     L"promjenjivi lijevak. Za svaki zaslon odaberite točno jednu animaciju. Tekstura mijenja prikaz između "
     L"teksturirane plohe i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda u sve tri "
-    L"dimenzije. Zaustavljanja i promjene smjera dodaju nasumično usporavanje, stanke i promjene smjera "
-    L"rotacije; let naprijed se nastavlja. Brzina je 0–1600%. Svaki zaslon ima neovisnu nasumičnu scenu "
-    L"koja se prikazuje prema njegovoj frekvenciji osvježavanja.\r\n\r\nOdaberite jedan ili više redaka na "
+    L"dimenzije. Pauze i obrati dodaju nasumično usporavanje, stanke i promjene smjera rotacije; let "
+    L"naprijed se nastavlja. Brzina je 0–1600%. Svaki zaslon ima neovisnu nasumičnu scenu koja se prikazuje "
+    L"prema njegovoj frekvenciji osvježavanja. Glavno svjetlo, dopunsko svjetlo, ambijentalno svjetlo i "
+    L"konturno svjetlo mogu se zasebno uključivati za odabrane monitore. Osvjetljenje se primjenjuje samo na "
+    L"teksturirane površine.\r\n\r\nOdaberite jedan ili više redaka na "
     L"popisu zaslona. Ctrl+A odabire sve; Ctrl i Shift mijenjaju odabir. Kontrole i klizači animacije "
     L"mijenjaju samo postavke odabranih zaslona. Odabir retka nije isto što i uključivanje izlaza njegovim "
     L"potvrdnim okvirom. Odabir se pamti odvojeno za aplikaciju i čuvar zaslona. Ako su prethodno bili "
@@ -4419,9 +4555,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Strojno pospešen let med spreminjajočimi se ploskvami. Let med štirimi spreminjajočimi se ploskvami; "
     L"Let skozi spreminjajoči se lijak. Za vsak zaslon izberite natanko eno animacijo. Tekstura preklaplja "
     L"med teksturirano ploskvijo in žičnim modelom. Prosto vrtenje kamere počasi spreminja smer pogleda v "
-    L"vseh treh razsežnostih. Ustavljanja in spremembe smeri dodajo naključne upočasnitve, premore in "
-    L"obrate smeri vrtenja; let naprej se nadaljuje. Hitrost je 0–1600%. Vsak zaslon ima neodvisen "
-    L"naključen prizor, ki se izrisuje z njegovo hitrostjo osveževanja.\r\n\r\nNa seznamu zaslonov izberite "
+    L"vseh treh razsežnostih. Premori in obrati dodajo naključne upočasnitve, premore in obrate smeri "
+    L"vrtenja; let naprej se nadaljuje. Hitrost je 0–1600%. Vsak zaslon ima neodvisen naključen prizor, ki "
+    L"se izrisuje z njegovo hitrostjo osveževanja. Glavno svetlobo, dopolnilno svetlobo, okoljsko svetlobo "
+    L"in obrobno svetlobo je mogoče neodvisno vklapljati za izbrane zaslone. Osvetlitev velja samo za "
+    L"teksturirane površine.\r\n\r\nNa seznamu zaslonov izberite "
     L"eno ali več vrstic. Ctrl+A izbere vse, Ctrl in Shift pa spreminjata izbor. Kontrolniki in drsniki "
     L"animacije spreminjajo samo nastavitve izbranih zaslonov. Izbira vrstice ni isto kot vklop izhoda z "
     L"njenim potrditvenim poljem. Izbor se ločeno shrani za program in ohranjevalnik. Če so bili izbrani "
@@ -4431,12 +4569,14 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"miške.\r\n\r\nWindows 7–11 podpira vse funkcije. Za Windows Vista SP2 morate namestiti posodobitvi "
     L"KB971512 in KB2117917; snemanje MP4 v Visti ne deluje. Potrebna je podpora Direct3D 11, za MP4 pa še "
     L"Media Foundation in kodirnik H.264. Vmesnik in dokumentacija sta na voljo v 36 jezikih.",
-    L"Hardverski ubrzan let između promjenljivih površina. Let između četiri promjenljive površine; Let "
-    L"kroz promjenljivi lijevak. Za svaki monitor izaberite tačno jednu animaciju. Tekstura mijenja prikaz "
-    L"između teksturisane površine i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda "
-    L"u sve tri dimenzije. Zaustavljanja i promjene smjera dodaju nasumično usporavanje, pauze i promjene "
-    L"smjera rotacije; let naprijed se nastavlja. Brzina je 0–1600%. Svaki monitor ima nezavisnu nasumičnu "
-    L"scenu koja se prikazuje prema njegovoj frekvenciji osvježavanja.\r\n\r\nIzaberite jedan ili više "
+    L"Hardverski ubrzan let između promjenljivih površina. Let između četiri promjenljive površine; Let kroz "
+    L"promjenljivi lijevak. Za svaki monitor izaberite tačno jednu animaciju. Tekstura mijenja prikaz između "
+    L"teksturisane površine i žičanog modela. Slobodno okretanje kamere polako mijenja smjer pogleda u sve "
+    L"tri dimenzije. Pauze i obrati dodaju nasumično usporavanje, pauze i promjene smjera rotacije; let "
+    L"naprijed se nastavlja. Brzina je 0–1600%. Svaki monitor ima nezavisnu nasumičnu scenu koja se "
+    L"prikazuje prema njegovoj frekvenciji osvježavanja. Glavno svjetlo, dopunsko svjetlo, ambijentalno "
+    L"svjetlo i konturno svjetlo mogu se zasebno uključivati za odabrane monitore. Osvjetljenje se "
+    L"primjenjuje samo na teksturirane površine.\r\n\r\nIzaberite jedan ili više "
     L"redova u listi monitora. Ctrl+A bira sve; Ctrl i Shift mijenjaju izbor. Kontrole i klizači animacije "
     L"mijenjaju samo podešavanja izabranih monitora. Izbor reda nije isto što i uključivanje izlaza "
     L"njegovom kućicom. Izbor se pamti odvojeno za aplikaciju i čuvar ekrana. Ako su prethodno bili "
@@ -4446,12 +4586,14 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"pomjeranjem miša.\r\n\r\nWindows 7–11 podržava sve funkcije. Za Windows Vista SP2 morate instalirati "
     L"ažuriranja KB971512 i KB2117917; MP4 snimanje na Visti ne radi. Potreban je Direct3D 11, a za MP4 i "
     L"Media Foundation i H.264 koder. Interfejs i dokumentacija dostupni su na 36 jezika.",
-    L"Апаратна паскораны палёт паміж зменлівымі паверхнямі. Палёт паміж чатырма зменлівымі паверхнямі; "
-    L"Палёт праз зменлівую варонку. Для кожнага манітора выберыце роўна адну анімацыю. Тэкстура пераключае "
+    L"Апаратна паскораны палёт паміж зменлівымі паверхнямі. Палёт паміж чатырма зменлівымі паверхнямі; Палёт "
+    L"праз зменлівую варонку. Для кожнага манітора выберыце роўна адну анімацыю. Тэкстура пераключае "
     L"тэкстураваную паверхню і каркасную мадэль. Свабоднае кручэнне камеры павольна змяняе напрамак погляду "
-    L"ва ўсіх трох вымярэннях. Спыненні і змены напрамку дадаюць выпадковыя запаволенні, паўзы і змены "
-    L"напрамку кручэння; палёт наперад працягваецца. Хуткасць — 0–1600%. Кожны манітор мае незалежную "
-    L"выпадковую сцэну з вывадам паводле ўласнай частаты абнаўлення.\r\n\r\nВыберыце адзін або некалькі "
+    L"ва ўсіх трох вымярэннях. Паўзы і развароты дадаюць выпадковыя запаволенні, паўзы і змены напрамку "
+    L"кручэння; палёт наперад працягваецца. Хуткасць — 0–1600%. Кожны манітор мае незалежную выпадковую "
+    L"сцэну з вывадам паводле ўласнай частаты абнаўлення. Асноўнае, запаўняльнае, фонавае і контурнае святло "
+    L"можна пераключаць незалежна для выбраных манітораў. Асвятленне дзейнічае толькі на тэкстураваных "
+    L"паверхнях.\r\n\r\nВыберыце адзін або некалькі "
     L"радкоў у спісе манітораў. Ctrl+A выбірае ўсе; Ctrl і Shift змяняюць выбар. Элементы кіравання і "
     L"паўзункі анімацыі змяняюць толькі налады выбраных манітораў. Выбар радка і ўключэнне вываду яго "
     L"сцяжком — розныя дзеянні. Выбар асобна захоўваецца для праграмы і застаўкі. Калі раней былі выбраны "
@@ -4465,9 +4607,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Хардуерно ускорен полет между променящи се повърхнини. Полет между четири променящи се повърхнини; "
     L"Полет през променяща се фуния. Изберете точно една анимация за всеки монитор. Текстура превключва "
     L"между текстурирана повърхнина и телен модел. Свободното въртене на камерата бавно променя посоката на "
-    L"погледа в трите измерения. Спирания и обръщания на посоката добавя случайни забавяния, паузи и "
-    L"обръщания на въртенето; полетът напред продължава. Скоростта е 0–1600%. Всеки монитор има независима "
-    L"случайна сцена, изобразявана с неговата честота на опресняване.\r\n\r\nИзберете един или повече "
+    L"погледа в трите измерения. Опцията „Паузи и обръщания“ добавя случайни забавяния, паузи и обръщания на "
+    L"въртенето; полетът напред продължава. Скоростта е 0–1600%. Всеки монитор има независима случайна "
+    L"сцена, изобразявана с неговата честота на опресняване. Основната, запълващата, околната и контурната "
+    L"светлина се включват независимо за избраните монитори. Осветлението се прилага само към текстурираните "
+    L"повърхности.\r\n\r\nИзберете един или повече "
     L"редове в списъка с монитори. Ctrl+A избира всички; Ctrl и Shift променят избора. Контролите и "
     L"плъзгачите на анимацията променят само настройките на избраните монитори. Избирането на ред и "
     L"включването на изхода чрез отметката му са различни действия. Изборът се запомня отделно за "
@@ -4479,11 +4623,13 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"KB2117917; записът на MP4 не работи във Vista. Изисква се поддръжка на Direct3D 11, а за MP4 също "
     L"Media Foundation и H.264 кодер. Интерфейсът и документацията са налични на 36 езика.",
     L"Хардверски забрзан лет меѓу променливи површини. Лет меѓу четири променливи површини; Лет низ "
-    L"променлива инка. За секој монитор изберете точно една анимација. Текстура менува текстурирана "
-    L"површина и жичен модел. Слободното вртење на камерата полека го менува погледот во сите три димензии. "
-    L"Запирања и промени на насоката додава случајни забавувања, паузи и промени на насоката на вртење; "
-    L"летот напред продолжува. Брзината е 0–1600%. Секој монитор има независна случајна сцена што се "
-    L"прикажува со неговата стапка на освежување.\r\n\r\nИзберете еден или повеќе редови во списокот на "
+    L"променлива инка. За секој монитор изберете точно една анимација. Текстура менува текстурирана површина "
+    L"и жичен модел. Слободното вртење на камерата полека го менува погледот во сите три димензии. Опцијата "
+    L"„Паузи и пресврти“ додава случајни забавувања, паузи и промени на насоката на вртење; летот напред "
+    L"продолжува. Брзината е 0–1600%. Секој монитор има независна случајна сцена што се прикажува со "
+    L"неговата стапка на освежување. Главното, дополнителното, амбиенталното и контурното светло може да се "
+    L"вклучуваат одделно за избраните монитори. Осветлувањето важи само за текстурираните "
+    L"површини.\r\n\r\nИзберете еден или повеќе редови во списокот на "
     L"монитори. Ctrl+A ги избира сите; Ctrl и Shift го менуваат изборот. Контролите и лизгачите на "
     L"анимацијата ги менуваат само поставките на избраните монитори. Избирањето ред и вклучувањето на "
     L"излезот преку неговото поле се различни дејства. Изборот се памети одделно за апликацијата и чуварот. "
@@ -4497,9 +4643,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Хардверски убрзан лет између променљивих површи. Лет између четири променљиве површи; Лет кроз "
     L"променљиви левак. За сваки монитор изаберите тачно једну анимацију. Текстура мења приказ између "
     L"текстурисане површи и жичаног модела. Слободно окретање камере полако мења смер погледа у све три "
-    L"димензије. Заустављања и промене смера додају насумично успоравање, паузе и промене смера ротације; "
-    L"лет напред се наставља. Брзина је 0–1600%. Сваки монитор има независну насумичну сцену која се "
-    L"приказује према његовој учестаности освежавања.\r\n\r\nИзаберите један или више редова у листи "
+    L"димензије. Паузе и обрти додају насумично успоравање, паузе и промене смера ротације; лет напред се "
+    L"наставља. Брзина је 0–1600%. Сваки монитор има независну насумичну сцену која се приказује према "
+    L"његовој учестаности освежавања. Главно, допунско, амбијентално и контурно светло могу се засебно "
+    L"укључивати за изабране мониторе. Осветљење важи само за текстуриране површине.\r\n\r\nИзаберите један "
+    L"или више редова у листи "
     L"монитора. Ctrl+A бира све; Ctrl и Shift мењају избор. Контроле и клизачи анимације мењају само "
     L"подешавања изабраних монитора. Избор реда није исто што и укључивање излаза његовим пољем за потврду. "
     L"Избор се памти одвојено за апликацију и чувар екрана. Ако су претходно били изабрани сви монитори, "
@@ -4512,9 +4660,11 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Апаратно прискорений політ між мінливими поверхнями. Політ між чотирма мінливими поверхнями; Політ "
     L"крізь мінливу лійку. Для кожного монітора виберіть рівно одну анімацію. Текстура перемикає "
     L"текстуровану поверхню та каркасну модель. Вільне обертання камери повільно змінює напрямок погляду в "
-    L"усіх трьох вимірах. Зупинки та зміни напрямку додають випадкові уповільнення, паузи та зміни напрямку "
+    L"усіх трьох вимірах. Паузи та зміни напрямку додають випадкові уповільнення, паузи та зміни напрямку "
     L"обертання; політ уперед триває. Швидкість — 0–1600%. Кожен монітор має незалежну випадкову сцену з "
-    L"виведенням відповідно до власної частоти оновлення.\r\n\r\nВиберіть один або кілька рядків у списку "
+    L"виведенням відповідно до власної частоти оновлення. Основне, заповнювальне, фонове та контурне світло "
+    L"можна незалежно перемикати для вибраних моніторів. Освітлення діє лише на текстурованих "
+    L"поверхнях.\r\n\r\nВиберіть один або кілька рядків у списку "
     L"моніторів. Ctrl+A вибирає всі; Ctrl і Shift змінюють вибір. Елементи керування й повзунки анімації "
     L"змінюють лише налаштування вибраних моніторів. Вибір рядка та ввімкнення виведення його прапорцем — "
     L"різні дії. Вибір зберігається окремо для програми й заставки. Якщо раніше були вибрані всі монітори, "
@@ -4527,10 +4677,12 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> SCREEN_SAVER_HELP_TEXTS = {
     L"Аппаратно ускоренный полёт между меняющимися поверхностями. Полёт между четырьмя меняющимися "
     L"поверхностями; Полёт сквозь меняющуюся воронку. Для каждого монитора выберите ровно одну анимацию. "
     L"Текстура переключает текстурированную поверхность и каркасную модель. Свободное вращение камеры "
-    L"медленно меняет направление взгляда во всех трёх измерениях. Остановки и смены направления добавляют "
+    L"медленно меняет направление взгляда во всех трёх измерениях. Паузы и смены направления добавляют "
     L"случайные замедления, паузы и изменения направления вращения; полёт вперёд продолжается. Скорость — "
     L"0–1600%. Каждый монитор имеет независимую случайную сцену с выводом согласно собственной частоте "
-    L"обновления.\r\n\r\nВыберите одну или несколько строк в списке мониторов. Ctrl+A выбирает все; Ctrl и "
+    L"обновления. Основной, заполняющий, фоновый и контурный свет можно независимо переключать для выбранных "
+    L"мониторов. Освещение применяется только к текстурированным поверхностям.\r\n\r\nВыберите одну или "
+    L"несколько строк в списке мониторов. Ctrl+A выбирает все; Ctrl и "
     L"Shift изменяют выбор. Элементы управления и ползунки анимации изменяют только настройки выбранных "
     L"мониторов. Выбор строки и включение вывода её флажком — разные действия. Выбор сохраняется отдельно "
     L"для приложения и заставки. Если раньше были выбраны все мониторы, в выбор включаются и вновь "
@@ -4663,17 +4815,17 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> FILLED_SURFACE_TEXTS = {
 
 /// Per-monitor switch for continuous camera rotation in all three dimensions.
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> CAMERA_TUMBLING_TEXTS = {
-    L"Převalování kamery",
-    L"Camera tumbling",
-    L"Camera tumbling",
-    L"Camera tumbling",
-    L"Taumelnde Kamera",
+    L"Volná rotace kamery",
+    L"Free camera rotation",
+    L"Free camera rotation",
+    L"Free camera rotation",
+    L"Freie Kameradrehung",
     L"Rotation libre de la caméra",
     L"Giro libre de la cámara",
     L"Rotazione libera della telecamera",
     L"Rotação livre da câmara",
     L"Swobodne obracanie kamery",
-    L"Prevaľovanie kamery",
+    L"Voľná rotácia kamery",
     L"Frit roterende kamera",
     L"Kameran vapaa pyörintä",
     L"Frjáls snúningur myndavélar",
@@ -4703,42 +4855,200 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> CAMERA_TUMBLING_TEXTS = {
 
 /// Per-monitor switch for gradual stops and reversals of camera tumbling.
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> CAMERA_REVERSALS_TEXTS = {
-    L"Zastavování a změny směru",
-    L"Stops and reversals",
-    L"Stops and reversals",
-    L"Stops and reversals",
-    L"Stopps und Richtungswechsel",
-    L"Arrêts et changements de sens",
-    L"Paradas y cambios de sentido",
-    L"Arresti e inversioni",
-    L"Paragens e inversões de sentido",
-    L"Zatrzymania i zmiany kierunku",
-    L"Zastavovanie a zmeny smeru",
-    L"Stop og retningsskift",
-    L"Pysähdykset ja suunnanvaihdot",
-    L"Stopp og stefnuskipti",
-    L"Stopp og retningsendringer",
-    L"Stopp och riktningsbyten",
-    L"Duraklamalar ve yön değişimleri",
-    L"Peatumised ja suunavahetused",
-    L"Stadanna agus aisiompuithe",
-    L"Sustojimai ir krypties keitimai",
-    L"Apstāšanās un virziena maiņa",
-    L"Megállások és irányváltások",
-    L"Waqfiet u bidliet fid-direzzjoni",
-    L"Stops en richtingswisselingen",
-    L"Opriri și inversări de sens",
-    L"Στάσεις και αντιστροφές",
-    L"Zaustavljanja i promjene smjera",
-    L"Zaustavljanja i promjene smjera",
-    L"Ustavljanja in spremembe smeri",
-    L"Zaustavljanja i promjene smjera",
-    L"Спыненні і змены напрамку",
-    L"Спирания и обръщания на посоката",
-    L"Запирања и промени на насоката",
-    L"Заустављања и промене смера",
-    L"Зупинки та зміни напрямку",
-    L"Остановки и смены направления"
+    L"Pauzy a obraty",
+    L"Pauses and reversals",
+    L"Pauses and reversals",
+    L"Pauses and reversals",
+    L"Pausen und Umkehr",
+    L"Pauses et inversions",
+    L"Pausas e inversiones",
+    L"Pause e inversioni",
+    L"Pausas e inversões",
+    L"Przerwy i nawroty",
+    L"Pauzy a obraty",
+    L"Pauser og vendinger",
+    L"Tauot ja suunnanvaihdot",
+    L"Hlé og stefnuskipti",
+    L"Pauser og vendinger",
+    L"Pauser och vändningar",
+    L"Duraklama ve ters dönüş",
+    L"Pausid ja pöördumised",
+    L"Sosanna agus aisiompuithe",
+    L"Pauzės ir apsisukimai",
+    L"Pauzes un virzienmaiņa",
+    L"Szünetek és irányváltás",
+    L"Pawżi u bidliet fid-direzzjoni",
+    L"Pauzes en omkeren",
+    L"Pauze și inversări",
+    L"Παύσεις και αντιστροφές",
+    L"Pauze i obrati",
+    L"Pauze i obrati",
+    L"Premori in obrati",
+    L"Pauze i obrati",
+    L"Паўзы і развароты",
+    L"Паузи и обръщания",
+    L"Паузи и пресврти",
+    L"Паузе и обрти",
+    L"Паузи та зміни напрямку",
+    L"Паузы и смены направления"
+};
+
+/// Per-monitor main-light captions shared with FlyingSolids.
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> MAIN_LIGHT_TEXTS = {
+    L"Hlavní světlo",
+    L"Main light",
+    L"Main light",
+    L"Main light",
+    L"Hauptlicht",
+    L"Éclairage principal",
+    L"Luz principal",
+    L"Luce principale",
+    L"Luz principal",
+    L"Światło główne",
+    L"Hlavné svetlo",
+    L"Hovedlys",
+    L"Päävalo",
+    L"Aðalljós",
+    L"Hovedlys",
+    L"Huvudljus",
+    L"Ana ışık",
+    L"Põhivalgus",
+    L"Príomhsholas",
+    L"Pagrindinė šviesa",
+    L"Galvenā gaisma",
+    L"Főfény",
+    L"Dawl ewlieni",
+    L"Hoofdlicht",
+    L"Lumină principală",
+    L"Κύριος φωτισμός",
+    L"Glavno svjetlo",
+    L"Glavno svjetlo",
+    L"Glavna svetloba",
+    L"Glavno svjetlo",
+    L"Асноўнае святло",
+    L"Основна светлина",
+    L"Главно светло",
+    L"Главно светло",
+    L"Основне світло",
+    L"Основной свет"
+};
+
+/// Per-monitor fill-light captions shared with FlyingSolids.
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> FILL_LIGHT_TEXTS = {
+    L"Doplňkové světlo",
+    L"Fill light",
+    L"Fill light",
+    L"Fill light",
+    L"Aufhelllicht",
+    L"Éclairage d’appoint",
+    L"Luz de relleno",
+    L"Luce di riempimento",
+    L"Luz de preenchimento",
+    L"Światło wypełniające",
+    L"Doplnkové svetlo",
+    L"Udfyldningslys",
+    L"Täytevalo",
+    L"Fylliljós",
+    L"Utfyllingslys",
+    L"Upplättningsljus",
+    L"Dolgu ışığı",
+    L"Täitevalgus",
+    L"Solas líonta",
+    L"Užpildanti šviesa",
+    L"Papildu gaisma",
+    L"Derítőfény",
+    L"Dawl ta’ mili",
+    L"Invullicht",
+    L"Lumină de umplere",
+    L"Φωτισμός πλήρωσης",
+    L"Dopunsko svjetlo",
+    L"Dopunsko svjetlo",
+    L"Dopolnilna svetloba",
+    L"Dopunsko svjetlo",
+    L"Запаўняльнае святло",
+    L"Запълваща светлина",
+    L"Дополнително светло",
+    L"Допунско светло",
+    L"Заповнювальне світло",
+    L"Заполняющий свет"
+};
+
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> AMBIENT_LIGHT_TEXTS = {
+    L"Základní jas",
+    L"Ambient light",
+    L"Ambient light",
+    L"Ambient light",
+    L"Umgebungslicht",
+    L"Éclairage ambiant",
+    L"Luz ambiental",
+    L"Luce ambientale",
+    L"Luz ambiente",
+    L"Światło otoczenia",
+    L"Základný jas",
+    L"Omgivende lys",
+    L"Ympäristövalo",
+    L"Umhverfislýsing",
+    L"Omgivelseslys",
+    L"Omgivningsljus",
+    L"Ortam ışığı",
+    L"Ümbritsev valgus",
+    L"Solas comhthimpeallach",
+    L"Aplinkos šviesa",
+    L"Apkārtējā gaisma",
+    L"Környezeti fény",
+    L"Dawl ambjentali",
+    L"Omgevingslicht",
+    L"Lumină ambiantă",
+    L"Περιβάλλων φωτισμός",
+    L"Ambijentalno svjetlo",
+    L"Ambijentalno svjetlo",
+    L"Okoljska svetloba",
+    L"Ambijentalno svjetlo",
+    L"Фонавае святло",
+    L"Околна светлина",
+    L"Амбиентално светло",
+    L"Амбијентално светло",
+    L"Фонове світло",
+    L"Фоновый свет"
+};
+
+constexpr std::array<const wchar_t*, LANGUAGE_COUNT> RIM_LIGHT_TEXTS = {
+    L"Přisvětlení obrysů",
+    L"Rim light",
+    L"Rim light",
+    L"Rim light",
+    L"Konturlicht",
+    L"Éclairage des contours",
+    L"Iluminación de contornos",
+    L"Illuminazione dei contorni",
+    L"Iluminação dos contornos",
+    L"Oświetlenie konturów",
+    L"Prisvetlenie obrysov",
+    L"Konturlys",
+    L"Reunavalo",
+    L"Útlínulýsing",
+    L"Konturlys",
+    L"Konturljus",
+    L"Kenar aydınlatması",
+    L"Kontuurivalgus",
+    L"Solas imill",
+    L"Kontūrinė šviesa",
+    L"Kontūru gaisma",
+    L"Peremfény",
+    L"Dawl tal-kontorn",
+    L"Randlicht",
+    L"Lumină de contur",
+    L"Φωτισμός περιγράμματος",
+    L"Konturno svjetlo",
+    L"Konturno svjetlo",
+    L"Obrobna svetloba",
+    L"Konturno svjetlo",
+    L"Контурнае святло",
+    L"Контурна светлина",
+    L"Контурно светло",
+    L"Контурно светло",
+    L"Контурне світло",
+    L"Контурный свет"
 };
 
 /// Returns localized recording-settings captions for a validated language.
@@ -5019,6 +5329,26 @@ const wchar_t* CopyUrlText(AppLanguage language) {
 /// Returns the localized copy-product-information command.
 const wchar_t* CopyInformationText(AppLanguage language) {
     return COPY_INFORMATION_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+}
+
+/// Returns the selected monitors' main-light option in the selected language.
+const wchar_t* MainLightText(AppLanguage language) {
+    return MAIN_LIGHT_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+}
+
+/// Returns the selected monitors' fill-light option in the selected language.
+const wchar_t* FillLightText(AppLanguage language) {
+    return FILL_LIGHT_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+}
+
+/// Returns the selected monitors' ambient-light option in the selected language.
+const wchar_t* AmbientLightText(AppLanguage language) {
+    return AMBIENT_LIGHT_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+}
+
+/// Returns the selected monitors' rim-light option in the selected language.
+const wchar_t* RimLightText(AppLanguage language) {
+    return RIM_LIGHT_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the selected monitors' texture option in the selected language.

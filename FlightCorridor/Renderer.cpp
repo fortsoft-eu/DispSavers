@@ -65,12 +65,14 @@ struct alignas(16) FrameConstants {
     std::array<float, 4> cameraRotation;
     std::array<float, 4> corridorShape;
     std::array<std::uint32_t, 4> wallPalettes;
+    std::array<float, 4> lightSettings;
 };
 static_assert(offsetof(FrameConstants, motion) == 16);
 static_assert(offsetof(FrameConstants, cameraRotation) == 80);
 static_assert(offsetof(FrameConstants, corridorShape) == 96);
 static_assert(offsetof(FrameConstants, wallPalettes) == 112);
-static_assert(sizeof(FrameConstants) == 128);
+static_assert(offsetof(FrameConstants, lightSettings) == 128);
+static_assert(sizeof(FrameConstants) == 144);
 
 /// Source effect constants, matching the original FSSaver shader.
 struct alignas(16) DrawConstants {
@@ -468,6 +470,12 @@ struct Renderer::Impl {
         viewport.MaxDepth = 1.0f;
         context->RSSetViewports(1, &viewport);
         context->IASetInputLayout(nullptr);
+        const std::array<float, 4> lightSettings{
+            scene.mainLight ? 1.0f : 0.0f,
+            scene.fillLight ? 0.35f : 0.0f,
+            scene.ambientLight ? 0.12f : 0.0f,
+            scene.rimLight ? 0.12f : 0.0f
+        };
         const FrameConstants frame{
             static_cast<float>(width),
             static_cast<float>(height),
@@ -476,7 +484,8 @@ struct Renderer::Impl {
             scene.motion,
             scene.cameraRotation,
             scene.corridorShape,
-            scene.wallPalettes
+            scene.wallPalettes,
+            lightSettings
         };
         context->UpdateSubresource(frameBuffer.Get(), 0, nullptr, &frame, 0, 0);
         ID3D11Buffer* frameConstant = frameBuffer.Get();

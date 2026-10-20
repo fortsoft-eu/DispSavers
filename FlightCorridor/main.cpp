@@ -93,8 +93,8 @@ constexpr wchar_t SCREEN_SAVER_ACTIVE_VALUE_NAME[] = L"ScreenSaveActive";
 
 /// Settings-window layout and animation constants
 constexpr int SETTINGS_WIDTH = 945;
-constexpr int SCREEN_SAVER_SETTINGS_HEIGHT = 435;
-constexpr int APPLICATION_SETTINGS_HEIGHT = 455;
+constexpr int SCREEN_SAVER_SETTINGS_HEIGHT = 455;
+constexpr int APPLICATION_SETTINGS_HEIGHT = 475;
 constexpr int PUSH_BUTTON_HEIGHT = 28;
 constexpr int ABOUT_ICON_SIZE = 32;
 constexpr int ABOUT_LARGE_ICON_SIZE = 48;
@@ -177,6 +177,10 @@ enum ControlId {
     ID_CAMERA_TUMBLING = 1161,
     ID_PREVENT_SCREEN_SAVER = 1162,
     ID_CAMERA_REVERSALS = 1163,
+    ID_MAIN_LIGHT = 1165,
+    ID_FILL_LIGHT,
+    ID_AMBIENT_LIGHT,
+    ID_RIM_LIGHT,
     ID_EFFECT_FIRST = 1200,
     ID_INSTALL_POLL_TIMER = 1400,
     ID_STATUS_RESET_TIMER,
@@ -215,7 +219,10 @@ constexpr AnimationProperty ANIMATION_RADIO_PROPERTY = AnimationProperty::Effect
 constexpr AnimationProperty ANIMATION_ENABLED_PROPERTY = AnimationProperty::EnabledEffects;
 constexpr std::uint32_t ALL_ANIMATION_MASK = ALL_EFFECT_MASK;
 constexpr int ANIMATION_RADIO_IDS[]{ ID_EFFECT_FIRST, ID_EFFECT_FIRST + 1 };
-constexpr int ANIMATION_TAB_CHECKBOX_IDS[]{ ID_MONITOR_TEXTURE, ID_CAMERA_TUMBLING, ID_CAMERA_REVERSALS };
+constexpr int ANIMATION_TAB_CHECKBOX_IDS[]{
+    ID_MONITOR_TEXTURE, ID_CAMERA_TUMBLING, ID_CAMERA_REVERSALS,
+    ID_MAIN_LIGHT, ID_FILL_LIGHT, ID_AMBIENT_LIGHT, ID_RIM_LIGHT
+};
 constexpr AnimationSliderControl ANIMATION_SLIDERS[]{
     { ID_OBJECT_SPEED, ID_OBJECT_SPEED_LABEL, AnimationProperty::ObjectSpeed }
 };
@@ -223,11 +230,17 @@ constexpr AnimationControl ANIMATION_CHECKBOXES[]{
     { ID_MONITOR_TEXTURE, AnimationProperty::Textured },
     { ID_CAMERA_TUMBLING, AnimationProperty::CameraTumbling },
     { ID_CAMERA_REVERSALS, AnimationProperty::CameraReversals, AnimationProperty::CameraTumbling },
-    { ID_PREVENT_SCREEN_SAVER, AnimationProperty::PreventScreenSaver }
+    { ID_MAIN_LIGHT, AnimationProperty::MainLight, AnimationProperty::Textured },
+    { ID_FILL_LIGHT, AnimationProperty::FillLight, AnimationProperty::Textured },
+    { ID_AMBIENT_LIGHT, AnimationProperty::AmbientLight, AnimationProperty::Textured },
+    { ID_RIM_LIGHT, AnimationProperty::RimLight, AnimationProperty::Textured }
 };
 constexpr SettingsControlAlignment ANIMATION_CONTROL_ALIGNMENTS[]{
     { ID_MONITOR_TEXTURE, ID_EFFECT_FIRST },
-    { ID_CAMERA_TUMBLING, ID_EFFECT_FIRST + 1 }
+    { ID_CAMERA_TUMBLING, ID_EFFECT_FIRST + 1 },
+    { ID_MAIN_LIGHT, ID_MONITOR_TEXTURE },
+    { ID_FILL_LIGHT, ID_CAMERA_TUMBLING },
+    { ID_AMBIENT_LIGHT, ID_CAMERA_REVERSALS }
 };
 
 /// Stable source metadata and displayed values of one monitor-list item.
@@ -708,6 +721,7 @@ static bool IsAnimationWindowVisible(HWND window) {
 static bool ShouldInhibitScreenSaver() {
     if (!app
             || app->mode != RunMode::Application
+            || !app->settings.preventScreenSaver
             || app->paused.load(std::memory_order_relaxed)
             || app->closing.load(std::memory_order_relaxed)
             || !IsAnimationDesktopVisible()) {
@@ -715,7 +729,7 @@ static bool ShouldInhibitScreenSaver() {
     }
     for (const std::unique_ptr<RenderSurface>& surface : app->surfaces) {
         const MonitorAnimation& animation = app->settings.AnimationForMonitor(surface->monitorDevice);
-        if (animation.preventScreenSaver && animation.Value(ANIMATION_ENABLED_PROPERTY) != 0 && surface->renderer
+        if (animation.Value(ANIMATION_ENABLED_PROPERTY) != 0 && surface->renderer
                 && surface->renderedFrames.load(std::memory_order_relaxed) != 0
                 && !surface->stopRequested.load(std::memory_order_relaxed)
                 && IsAnimationWindowVisible(surface->window)) {
@@ -1950,6 +1964,10 @@ static void ApplyAnimationCaptions(HWND window, const SettingsWindowData& data) 
     SetDlgItemTextW(window, ID_MONITOR_TEXTURE, FilledSurfaceText(data.language));
     SetDlgItemTextW(window, ID_CAMERA_TUMBLING, CameraTumblingText(data.language));
     SetDlgItemTextW(window, ID_CAMERA_REVERSALS, CameraReversalsText(data.language));
+    SetDlgItemTextW(window, ID_MAIN_LIGHT, MainLightText(data.language));
+    SetDlgItemTextW(window, ID_FILL_LIGHT, FillLightText(data.language));
+    SetDlgItemTextW(window, ID_AMBIENT_LIGHT, AmbientLightText(data.language));
+    SetDlgItemTextW(window, ID_RIM_LIGHT, RimLightText(data.language));
     SetDlgItemTextW(window, ID_EFFECTS_GROUP, strings.flightEffects);
     for (std::size_t index = 0; index < EFFECT_COUNT; index++) {
         SetDlgItemTextW(window, ID_EFFECT_FIRST + static_cast<int>(index), strings.effects[index]);
@@ -1967,6 +1985,10 @@ static void ApplyLocalizedCaptions(HWND window, SettingsWindowData& data) {
     SetDlgItemTextW(window, ID_LANGUAGE_LABEL, strings.language);
     if (data.appMode) {
         SetDlgItemTextW(window, ID_PREVENT_SCREEN_SAVER, PreventScreenSaverText(data.language));
+        if (data.settings) {
+            SendDlgItemMessageW(window, ID_PREVENT_SCREEN_SAVER, BM_SETCHECK,
+                data.settings->preventScreenSaver ? BST_CHECKED : BST_UNCHECKED, 0);
+        }
     }
     ApplyAnimationCaptions(window, data);
     SetDlgItemTextW(window, ID_ALL_ANIMATIONS, strings.enableAll);
@@ -2100,6 +2122,10 @@ static void RenderSurfaceLoop(Application* app, RenderSurface* surface) {
             scene.cameraRotation = { 0.0f, 0.0f, 0.0f, 1.0f };
         }
         scene.enabledEffects = enabled;
+        scene.mainLight = animation.mainLight;
+        scene.fillLight = animation.fillLight;
+        scene.ambientLight = animation.ambientLight;
+        scene.rimLight = animation.rimLight;
         scene.corridorFilled = animation.textured;
         scene.funnelFilled = scene.corridorFilled;
         DrawSurface(*surface, scene, inspect);
@@ -4553,8 +4579,7 @@ static void CreateSettingsMonitorList(HWND window, const SettingsWindowData& dat
 static int CreateAnimationControls(HWND window, int top) {
     constexpr int contentMargin = 18;
     constexpr int sliderWidth = 435;
-    constexpr int rightSliderX = 476;
-    constexpr int columnX[]{ 24, 320, 617 };
+    constexpr int columnX[]{ 24, 360, 617 };
     CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, contentMargin, top + 28, sliderWidth, 22, window,
         reinterpret_cast<HMENU>(ID_OBJECT_SPEED_LABEL), nullptr, nullptr);
     HWND objectSlider = CreateWindowExW(0, TRACKBAR_CLASSW, L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | TBS_AUTOTICKS,
@@ -4565,20 +4590,32 @@ static int CreateAnimationControls(HWND window, int top) {
     CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, contentMargin, effectsTop, 435, 22, window,
         reinterpret_cast<HMENU>(ID_EFFECTS_GROUP), nullptr, nullptr);
     constexpr int rowHeight = 20;
-    const int actionButtonsTop = effectsTop + 22 + (static_cast<int>(EFFECT_COUNT) + 1) * rowHeight + 7;
+    const int actionButtonsTop = effectsTop + 22 + (static_cast<int>(EFFECT_COUNT) + 2) * rowHeight + 7;
     for (std::size_t index = 0; index < EFFECT_COUNT; index++) {
         const int rowTop = effectsTop + 22 + static_cast<int>(index) * rowHeight;
         const DWORD style = WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | (index == 0 ? WS_TABSTOP | WS_GROUP : 0U);
         CreateWindowExW(0, L"BUTTON", L"", style, columnX[0], rowTop, sliderWidth, 21, window,
             reinterpret_cast<HMENU>(ID_EFFECT_FIRST + index), nullptr, nullptr);
     }
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, rightSliderX,
+    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[1],
         effectsTop + 22, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_MONITOR_TEXTURE), nullptr, nullptr);
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, rightSliderX,
+    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[1],
         effectsTop + 22 + rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_CAMERA_TUMBLING), nullptr,
         nullptr);
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, rightSliderX,
+    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[1],
         effectsTop + 22 + 2 * rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_CAMERA_REVERSALS),
+        nullptr, nullptr);
+    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[2],
+        effectsTop + 22, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_MAIN_LIGHT),
+        nullptr, nullptr);
+    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[2],
+        effectsTop + 22 + rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_FILL_LIGHT),
+        nullptr, nullptr);
+    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[2],
+        effectsTop + 22 + 2 * rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_AMBIENT_LIGHT),
+        nullptr, nullptr);
+    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnX[2],
+        effectsTop + 22 + 3 * rowHeight, sliderWidth, 21, window, reinterpret_cast<HMENU>(ID_RIM_LIGHT),
         nullptr, nullptr);
     return actionButtonsTop;
 }
@@ -4614,7 +4651,7 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
     HWND languageCombo = CreateWindowExW(0, WC_COMBOBOXW, L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | CBS_DROPDOWNLIST,
         171, top - 4, 274, 400, window, reinterpret_cast<HMENU>(ID_LANGUAGE), nullptr, nullptr);
     if (data->appMode) {
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_3STATE, rightSliderX, top,
+        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX, rightSliderX, top,
             checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_PREVENT_SCREEN_SAVER), nullptr, nullptr);
         SetTimer(settingsWindow, ID_SCREEN_SAVER_CHECK_TIMER, SCREEN_SAVER_CHECK_INTERVAL, nullptr);
     }
@@ -4986,6 +5023,14 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 }
                 if (data->appMode && app) {
                     switch (LOWORD(wParam)) {
+                        case ID_PREVENT_SCREEN_SAVER:
+                            if (data->settings) {
+                                data->settings->preventScreenSaver = SendDlgItemMessageW(controls,
+                                    ID_PREVENT_SCREEN_SAVER, BM_GETCHECK, 0, 0) == BST_CHECKED;
+                                data->settings->Save();
+                                UpdateScreenSaverInhibition();
+                            }
+                            return 0;
                         case ID_RECORD_TOGGLE:
                             if (PrimaryIsRecording()) {
                                 StopRecording();

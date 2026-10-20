@@ -235,8 +235,7 @@ constexpr AnimationControl ANIMATION_CHECKBOXES[]{
     { ID_MAIN_LIGHT, AnimationProperty::MainLight },
     { ID_FILL_LIGHT, AnimationProperty::FillLight },
     { ID_AMBIENT_LIGHT, AnimationProperty::AmbientLight },
-    { ID_RIM_LIGHT, AnimationProperty::RimLight },
-    { ID_PREVENT_SCREEN_SAVER, AnimationProperty::PreventScreenSaver }
+    { ID_RIM_LIGHT, AnimationProperty::RimLight }
 };
 constexpr SettingsControlAlignment ANIMATION_CONTROL_ALIGNMENTS[]{
     { ID_AMBIENT_LIGHT, ID_CAMERA_STATIC },
@@ -722,6 +721,7 @@ static bool IsAnimationWindowVisible(HWND window) {
 static bool ShouldInhibitScreenSaver() {
     if (!app
             || app->mode != RunMode::Application
+            || !app->settings.preventScreenSaver
             || app->paused.load(std::memory_order_relaxed)
             || app->closing.load(std::memory_order_relaxed)
             || !IsAnimationDesktopVisible()) {
@@ -729,7 +729,7 @@ static bool ShouldInhibitScreenSaver() {
     }
     for (const std::unique_ptr<RenderSurface>& surface : app->surfaces) {
         const MonitorAnimation& animation = app->settings.AnimationForMonitor(surface->monitorDevice);
-        if (animation.preventScreenSaver && animation.Value(ANIMATION_ENABLED_PROPERTY) != 0 && surface->renderer
+        if (animation.Value(ANIMATION_ENABLED_PROPERTY) != 0 && surface->renderer
                 && surface->renderedFrames.load(std::memory_order_relaxed) != 0
                 && !surface->stopRequested.load(std::memory_order_relaxed)
                 && IsAnimationWindowVisible(surface->window)) {
@@ -1996,6 +1996,10 @@ static void ApplyLocalizedCaptions(HWND window, SettingsWindowData& data) {
     SetDlgItemTextW(window, ID_LANGUAGE_LABEL, strings.language);
     if (data.appMode) {
         SetDlgItemTextW(window, ID_PREVENT_SCREEN_SAVER, PreventScreenSaverText(data.language));
+        if (data.settings) {
+            SendDlgItemMessageW(window, ID_PREVENT_SCREEN_SAVER, BM_SETCHECK,
+                data.settings->preventScreenSaver ? BST_CHECKED : BST_UNCHECKED, 0);
+        }
     }
     ApplyAnimationCaptions(window, data);
     SetDlgItemTextW(window, ID_ALL_ANIMATIONS, strings.enableAll);
@@ -4683,7 +4687,7 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
     HWND languageCombo = CreateWindowExW(0, WC_COMBOBOXW, L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | CBS_DROPDOWNLIST,
         171, top - 4, 274, 400, window, reinterpret_cast<HMENU>(ID_LANGUAGE), nullptr, nullptr);
     if (data->appMode) {
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_3STATE, rightSliderX, top,
+        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX, rightSliderX, top,
             checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_PREVENT_SCREEN_SAVER), nullptr, nullptr);
         SetTimer(settingsWindow, ID_SCREEN_SAVER_CHECK_TIMER, SCREEN_SAVER_CHECK_INTERVAL, nullptr);
     }
@@ -5059,6 +5063,14 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 }
                 if (data->appMode && app) {
                     switch (LOWORD(wParam)) {
+                        case ID_PREVENT_SCREEN_SAVER:
+                            if (data->settings) {
+                                data->settings->preventScreenSaver = SendDlgItemMessageW(controls,
+                                    ID_PREVENT_SCREEN_SAVER, BM_GETCHECK, 0, 0) == BST_CHECKED;
+                                data->settings->Save();
+                                UpdateScreenSaverInhibition();
+                            }
+                            return 0;
                         case ID_RECORD_TOGGLE:
                             if (PrimaryIsRecording()) {
                                 StopRecording();

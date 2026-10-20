@@ -59,10 +59,13 @@ constexpr wchar_t LANGUAGE_VALUE_NAME[] = L"Language";
 constexpr wchar_t RECORDING_TV_VALUE_NAME[] = L"RecordingTV";
 constexpr wchar_t RECORDING_RESOLUTION_VALUE_NAME[] = L"RecordingResolution";
 constexpr wchar_t RECORDING_RATE_VALUE_NAME[] = L"RecordingRate";
+constexpr wchar_t PREVENT_SCREEN_SAVER_VALUE_NAME[] = L"PreventScreenSaver";
 
-/// Versioned DWORD sequence, independent of compiler padding and native bool representation.
+/// Versioned DWORD sequence with one reserved trailing field, independent of compiler padding.
 constexpr DWORD MONITOR_SETTINGS_VERSION = 1;
-using MonitorSettingsRecord = std::array<DWORD, 1 + static_cast<std::size_t>(AnimationProperty::Count)>;
+constexpr std::size_t MONITOR_SETTINGS_RESERVED_FIELDS = 1;
+using MonitorSettingsRecord =
+    std::array<DWORD, 1 + static_cast<std::size_t>(AnimationProperty::Count) + MONITOR_SETTINGS_RESERVED_FIELDS>;
 
 /// Returns the registry branch assigned to a settings profile.
 static const wchar_t* RegistryPath(SettingsProfile profile) {
@@ -131,7 +134,6 @@ std::uint32_t MonitorAnimation::Value(AnimationProperty property) const {
         case AnimationProperty::AmbientLight: return ambientLight;
         case AnimationProperty::RimLight: return rimLight;
         case AnimationProperty::EnabledSolids: return enabledSolids;
-        case AnimationProperty::PreventScreenSaver: return preventScreenSaver;
         default: throw std::invalid_argument("Unknown animation property");
     }
 }
@@ -168,9 +170,6 @@ void MonitorAnimation::SetValue(AnimationProperty property, std::uint32_t value)
             break;
         case AnimationProperty::EnabledSolids:
             enabledSolids = value & ALL_SOLID_MASK;
-            break;
-        case AnimationProperty::PreventScreenSaver:
-            preventScreenSaver = value != 0;
             break;
         default:
             throw std::invalid_argument("Unknown animation property");
@@ -238,10 +237,10 @@ void AppSettings::SetMonitorSolid(const std::vector<std::wstring>& devices, unsi
 
 /// Rejects the entire record rather than repairing individual values or trying an older format.
 static bool ValidMonitorSettingsRecord(const MonitorSettingsRecord& value) {
-    if (value[0] != MONITOR_SETTINGS_VERSION) {
+    if (value[0] != MONITOR_SETTINGS_VERSION || value.back() > 1U) {
         return false;
     }
-    for (std::size_t index = 1; index < value.size(); index++) {
+    for (std::size_t index = 1; index <= static_cast<std::size_t>(AnimationProperty::Count); index++) {
         const AnimationProperty property = static_cast<AnimationProperty>(index - 1);
         const DWORD setting = value[index];
         switch (property) {
@@ -302,7 +301,7 @@ static void ReadMonitorAnimations(HKEY profile, AppSettings& settings) {
                     continue;
                 }
                 MonitorAnimation animation;
-                for (std::size_t property = 0; property < value.size() - 1; property++) {
+                for (std::size_t property = 0; property < static_cast<std::size_t>(AnimationProperty::Count); property++) {
                     animation.SetValue(static_cast<AnimationProperty>(property), value[property + 1]);
                 }
                 settings.monitorAnimations.emplace(std::wstring(name.data(), length), animation);
@@ -325,7 +324,7 @@ static void WriteMonitorAnimations(HKEY profile, const AppSettings& settings) {
     for (const auto& entry : settings.monitorAnimations) {
         MonitorSettingsRecord value{};
         value[0] = MONITOR_SETTINGS_VERSION;
-        for (std::size_t property = 0; property < value.size() - 1; property++) {
+        for (std::size_t property = 0; property < static_cast<std::size_t>(AnimationProperty::Count); property++) {
             value[property + 1] = entry.second.Value(static_cast<AnimationProperty>(property));
         }
         RegSetValueExW(key, entry.first.c_str(), 0, REG_BINARY, reinterpret_cast<const BYTE*>(value.data()),
@@ -362,6 +361,7 @@ void AppSettings::Load(SettingsProfile selectedProfile) {
         recordingSettingsY = ReadValue(key, RECORDING_SETTINGS_Y_VALUE_NAME, recordingSettingsY);
         language = ReadValue(key, LANGUAGE_VALUE_NAME, language);
         if (profile == SettingsProfile::Standalone) {
+            preventScreenSaver = ReadValue(key, PREVENT_SCREEN_SAVER_VALUE_NAME, preventScreenSaver ? 1 : 0) == 1;
             recording.television = ReadValue(key, RECORDING_TV_VALUE_NAME, recording.television ? 1 : 0) != 0;
             recording.resolution = std::clamp(ReadValue(key, RECORDING_RESOLUTION_VALUE_NAME, recording.resolution), 0, 2);
             recording.rate = std::clamp(ReadValue(key, RECORDING_RATE_VALUE_NAME, recording.rate), 0, 3);
@@ -452,6 +452,9 @@ void AppSettings::Save() const {
     RegSetValueExW(key, LANGUAGE_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&languageValue), sizeof(languageValue));
     if (profile == SettingsProfile::Standalone) {
+        const DWORD preventScreenSaverValue = preventScreenSaver ? 1U : 0U;
+        RegSetValueExW(key, PREVENT_SCREEN_SAVER_VALUE_NAME, 0, REG_DWORD,
+            reinterpret_cast<const BYTE*>(&preventScreenSaverValue), sizeof(preventScreenSaverValue));
         const DWORD recordingTvValue = recording.television ? 1U : 0U;
         const DWORD recordingResolutionValue = static_cast<DWORD>(recording.resolution);
         const DWORD recordingRateValue = static_cast<DWORD>(recording.rate);

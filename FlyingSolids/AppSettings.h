@@ -53,7 +53,6 @@ enum class AnimationProperty {
     AmbientLight,
     RimLight,
     EnabledSolids,
-    PreventScreenSaver,
     Count
 };
 
@@ -69,8 +68,6 @@ struct MonitorAnimation {
     bool ambientLight = true;
     bool rimLight = true;
     std::uint32_t enabledSolids = ALL_SOLID_MASK;
-
-    bool preventScreenSaver = false;
 
     /// Reads or validates one animation property without changing other properties.
     std::uint32_t Value(AnimationProperty property) const;
@@ -97,6 +94,7 @@ struct AppSettings {
     std::wstring animationMonitorDevice;
     std::wstring selectedAnimationMonitors;
     bool allAnimationMonitorsSelected = true;
+    bool preventScreenSaver = false;
     int controlWindowX = std::numeric_limits<int>::min();
     int controlWindowY = std::numeric_limits<int>::min();
     PersistWindowStateData helpWindowState;

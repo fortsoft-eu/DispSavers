@@ -246,8 +246,23 @@ const wchar_t* CopyInformationText(AppLanguage language);
 /// Returns the selected monitors' texture checkbox caption.
 const wchar_t* FilledSurfaceText(AppLanguage language);
 
+/// Returns the selected monitors' surface-waves checkbox caption.
+const wchar_t* SurfaceWavesText(AppLanguage language);
+
 /// Returns the selected monitors' free camera-tumbling option.
 const wchar_t* CameraTumblingText(AppLanguage language);
 
 /// Returns the selected monitors’ optional camera stops and reversals caption.
 const wchar_t* CameraReversalsText(AppLanguage language);
+
+/// Returns the selected monitors' main-light checkbox caption.
+const wchar_t* MainLightText(AppLanguage language);
+
+/// Returns the selected monitors' fill-light checkbox caption.
+const wchar_t* FillLightText(AppLanguage language);
+
+/// Returns the selected monitors' ambient-light checkbox caption.
+const wchar_t* AmbientLightText(AppLanguage language);
+
+/// Returns the selected monitors' rim-light checkbox caption.
+const wchar_t* RimLightText(AppLanguage language);

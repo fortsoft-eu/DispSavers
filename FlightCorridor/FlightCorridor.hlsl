@@ -39,6 +39,7 @@ cbuffer FrameConstants : register(b0) {
     float4 cameraRotation;
     float4 corridorShape;
     uint4 wallPalettes;
+    float4 lightSettings;
 };
 
 cbuffer EffectConstants : register(b1) {
@@ -339,15 +340,25 @@ float4 ExpandingFunnelPosition(uint segment, uint endpoint, out float fade, out 
     return FunnelSurfaceSample(angle, pathIndex, fade, colorPhase, chamberAmount);
 }
 
-/// Original FSSaver LitMaterial calculation.
+/// Shades textured surfaces with independently enabled main, fill, ambient and rim illumination.
 float3 LitMaterial(float3 baseColor, float3 normal, float3 viewPosition, float materialBrightness) {
     float3 lightDirection = normalize(float3(-0.72, 0.48, -1.0));
     float3 viewDirection = normalize(-viewPosition);
-    float3 halfVector = normalize(lightDirection + viewDirection);
-    float diffuse = saturate(dot(normal, lightDirection));
-    float specular = pow(saturate(dot(normal, halfVector)), 28.0);
+    float diffuse = 0.0;
+    float specular = 0.0;
+    if (lightSettings.x != 0.0) {
+        float3 halfVector = normalize(lightDirection + viewDirection);
+        diffuse = saturate(dot(normal, lightDirection)) * lightSettings.x;
+        specular = pow(saturate(dot(normal, halfVector)), 28.0) * lightSettings.x;
+    }
+    if (lightSettings.y != 0.0) {
+        float3 fillDirection = normalize(float3(-lightDirection.x, -lightDirection.y, lightDirection.z));
+        float3 halfVector = normalize(fillDirection + viewDirection);
+        diffuse += saturate(dot(normal, fillDirection)) * lightSettings.y;
+        specular += pow(saturate(dot(normal, halfVector)), 28.0) * lightSettings.y;
+    }
     float rim = pow(saturate(1.0 - abs(dot(normal, viewDirection))), 2.0);
-    float illumination = 0.16 + 0.78 * diffuse + 0.12 * rim;
+    float illumination = lightSettings.z + 0.78 * diffuse + lightSettings.w * rim;
     return saturate(baseColor * materialBrightness * illumination + specular * 0.48);
 }
 

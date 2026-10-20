@@ -59,6 +59,7 @@ constexpr wchar_t LANGUAGE_VALUE_NAME[] = L"Language";
 constexpr wchar_t RECORDING_TV_VALUE_NAME[] = L"RecordingTV";
 constexpr wchar_t RECORDING_RESOLUTION_VALUE_NAME[] = L"RecordingResolution";
 constexpr wchar_t RECORDING_RATE_VALUE_NAME[] = L"RecordingRate";
+constexpr wchar_t PREVENT_SCREEN_SAVER_VALUE_NAME[] = L"PreventScreenSaver";
 
 /// Returns the registry branch assigned to a settings profile.
 static const wchar_t* RegistryPath(SettingsProfile profile) {
@@ -122,8 +123,11 @@ std::uint32_t MonitorAnimation::Value(AnimationProperty property) const {
         case AnimationProperty::Textured: return textured;
         case AnimationProperty::CameraTumbling: return cameraTumbling;
         case AnimationProperty::CameraReversals: return cameraReversals;
+        case AnimationProperty::MainLight: return mainLight;
+        case AnimationProperty::FillLight: return fillLight;
+        case AnimationProperty::AmbientLight: return ambientLight;
+        case AnimationProperty::RimLight: return rimLight;
         case AnimationProperty::EnabledEffects: return enabledEffects;
-        case AnimationProperty::PreventScreenSaver: return preventScreenSaver;
         default: throw std::invalid_argument("Unknown animation property");
     }
 }
@@ -146,11 +150,20 @@ void MonitorAnimation::SetValue(AnimationProperty property, std::uint32_t value)
         case AnimationProperty::CameraReversals:
             cameraReversals = value != 0;
             break;
+        case AnimationProperty::MainLight:
+            mainLight = value != 0;
+            break;
+        case AnimationProperty::FillLight:
+            fillLight = value != 0;
+            break;
+        case AnimationProperty::AmbientLight:
+            ambientLight = value != 0;
+            break;
+        case AnimationProperty::RimLight:
+            rimLight = value != 0;
+            break;
         case AnimationProperty::EnabledEffects:
             enabledEffects = (value & ALL_EFFECT_MASK) != 0 ? ALL_EFFECT_MASK : 0U;
-            break;
-        case AnimationProperty::PreventScreenSaver:
-            preventScreenSaver = value != 0;
             break;
         default:
             throw std::invalid_argument("Unknown animation property");
@@ -164,9 +177,15 @@ bool MonitorSelection::IsMixed(AnimationProperty property) const {
 
 /// Packs effect and switch values without changing the separately stored numeric speed.
 std::uint32_t MonitorAnimation::Packed() const {
-    return static_cast<std::uint32_t>(effect) | (textured ? 2U : 0U) | (cameraTumbling ? 4U : 0U)
-        | (cameraReversals ? 8U : 0U) | (enabledEffects == 0 ? 16U : 0U)
-        | (preventScreenSaver ? 32U : 0U);
+    return static_cast<std::uint32_t>(effect)
+        | (textured ? 2U : 0U)
+        | (cameraTumbling ? 4U : 0U)
+        | (cameraReversals ? 8U : 0U)
+        | (enabledEffects == 0 ? 16U : 0U)
+        | (mainLight ? 0U : 64U)
+        | (fillLight ? 128U : 0U)
+        | (ambientLight ? 0U : 256U)
+        | (rimLight ? 0U : 512U);
 }
 
 /// Assigns the first textured flight to every device, preserving saved and disconnected-display choices.
@@ -232,15 +251,19 @@ static void ReadMonitorAnimations(HKEY profile, AppSettings& settings) {
             if (result == ERROR_NO_MORE_ITEMS) {
                 break;
             }
-            if (result == ERROR_SUCCESS && type == REG_DWORD && size == sizeof(value) && value <= 63U && length != 0) {
+            if (result == ERROR_SUCCESS && type == REG_DWORD && size == sizeof(value)
+                    && value <= 1023U && length != 0) {
                 MonitorAnimation animation{
                     static_cast<EffectKind>(value & 1U),
                     (value & 2U) != 0,
                     (value & 4U) != 0,
                     (value & 8U) != 0,
+                    (value & 64U) == 0,
+                    (value & 128U) != 0,
+                    (value & 256U) == 0,
+                    (value & 512U) == 0,
                     100,
-                    (value & 16U) != 0 ? 0U : ALL_EFFECT_MASK,
-                    (value & 32U) != 0
+                    (value & 16U) != 0 ? 0U : ALL_EFFECT_MASK
                 };
                 const std::wstring device(name.data(), length);
                 if (speeds) {
@@ -315,6 +338,7 @@ void AppSettings::Load(SettingsProfile selectedProfile) {
         recordingSettingsY = ReadValue(key, RECORDING_SETTINGS_Y_VALUE_NAME, recordingSettingsY);
         language = ReadValue(key, LANGUAGE_VALUE_NAME, language);
         if (profile == SettingsProfile::Standalone) {
+            preventScreenSaver = ReadValue(key, PREVENT_SCREEN_SAVER_VALUE_NAME, preventScreenSaver ? 1 : 0) == 1;
             recording.television = ReadValue(key, RECORDING_TV_VALUE_NAME, recording.television ? 1 : 0) != 0;
             recording.resolution = std::clamp(ReadValue(key, RECORDING_RESOLUTION_VALUE_NAME, recording.resolution), 0, 2);
             recording.rate = std::clamp(ReadValue(key, RECORDING_RATE_VALUE_NAME, recording.rate), 0, 3);
@@ -404,6 +428,9 @@ void AppSettings::Save() const {
     RegSetValueExW(key, LANGUAGE_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&languageValue), sizeof(languageValue));
     if (profile == SettingsProfile::Standalone) {
+        const DWORD preventScreenSaverValue = preventScreenSaver ? 1U : 0U;
+        RegSetValueExW(key, PREVENT_SCREEN_SAVER_VALUE_NAME, 0, REG_DWORD,
+            reinterpret_cast<const BYTE*>(&preventScreenSaverValue), sizeof(preventScreenSaverValue));
         const DWORD recordingTvValue = recording.television ? 1U : 0U;
         const DWORD recordingResolutionValue = static_cast<DWORD>(recording.resolution);
         const DWORD recordingRateValue = static_cast<DWORD>(recording.rate);

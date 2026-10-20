@@ -45,6 +45,11 @@ struct SceneState {
     std::uint32_t enabledEffects = 1U;
     bool infiniteSurfaceFilled = false;
     bool morphingSurfaceFilled = false;
+    bool surfaceWaves = true;
+    bool mainLight = true;
+    bool fillLight = false;
+    bool ambientLight = true;
+    bool rimLight = true;
 };
 
 /// Owns this monitor's flight clock, cryptographic entropy and smoothly changing scene parameters.
