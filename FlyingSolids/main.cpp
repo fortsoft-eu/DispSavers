@@ -57,6 +57,7 @@
 #include <limits>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <string>
 #include <thread>
 #include <vector>
@@ -111,6 +112,7 @@ constexpr UINT RESTORE_SETTINGS_FOCUS = WM_APP + 2;
 constexpr UINT ACTIVATE_APPLICATION_WINDOW = WM_APP + 3;
 constexpr UINT UPDATE_SETTINGS_ACTION_BUTTONS = WM_APP + 4;
 constexpr UINT UPDATE_SETTINGS_CONTROL_METRICS = WM_APP + 5;
+constexpr UINT UPDATE_MONITOR_ANIMATION_CONTROLS = WM_APP + 6;
 constexpr UINT_PTR ABOUT_CONTROL_SUBCLASS = 0xF503;
 constexpr UINT_PTR INFORMATION_TEXT_SUBCLASS_ID = 0xF504;
 constexpr UINT_PTR COMBO_BOX_DROPDOWN_SUBCLASS_ID = 0xF505;
@@ -314,6 +316,15 @@ struct Application {
     bool uninstallingScreenSaver = false;
 };
 
+/// Prepared native control values applied together after the complete monitor selection is known.
+struct SettingsControlState {
+    HWND window = nullptr;
+    std::optional<bool> enabled;
+    std::optional<UINT> check;
+    std::optional<LONG> position;
+    std::optional<std::wstring> caption;
+};
+
 /// Mutable state owned by one settings window.
 struct SettingsWindowData {
     /// Settings model and monitor topology
@@ -326,6 +337,7 @@ struct SettingsWindowData {
     bool monitorSortAscending = true;
     bool monitorColumnsInitialized = false;
     bool monitorSelectionInitialized = false;
+    bool monitorSelectionUpdatePending = false;
 
     /// Window resources
     HFONT systemDialogFont = nullptr;
@@ -1184,6 +1196,76 @@ static void ShowTransientStatus(const wchar_t* text) {
     SetTimer(app->controlWindow, ID_STATUS_RESET_TIMER, 10000, nullptr);
 }
 
+/// Applies only changed values while keeping every affected control unpainted until the batch is complete.
+static void ApplySettingsControlStates(std::vector<SettingsControlState> states) {
+    std::vector<std::unique_ptr<WindowRedrawScope>> redraw;
+    redraw.reserve(states.size());
+    for (SettingsControlState& state : states) {
+        if (!state.window) {
+            continue;
+        }
+        if (state.enabled && static_cast<bool>(IsWindowEnabled(state.window)) == *state.enabled) {
+            state.enabled.reset();
+        }
+        if (state.check && static_cast<UINT>(SendMessageW(state.window, BM_GETCHECK, 0, 0)) == *state.check) {
+            state.check.reset();
+        }
+        if (state.position && static_cast<LONG>(SendMessageW(state.window, TBM_GETPOS, 0, 0)) == *state.position) {
+            state.position.reset();
+        }
+        if (state.caption) {
+            const int length = GetWindowTextLengthW(state.window);
+            std::wstring current(static_cast<std::size_t>(length) + 1, L'\0');
+            if (length > 0) {
+                GetWindowTextW(state.window, current.data(), length + 1);
+            }
+            current.resize(static_cast<std::size_t>(length));
+            if (current == *state.caption) {
+                state.caption.reset();
+            }
+        }
+        if (!state.enabled && !state.check && !state.position && !state.caption) {
+            state.window = nullptr;
+            continue;
+        }
+        redraw.push_back(std::make_unique<WindowRedrawScope>(state.window));
+    }
+    for (const SettingsControlState& state : states) {
+        if (!state.window) {
+            continue;
+        }
+        if (state.enabled) {
+            EnableWindow(state.window, *state.enabled);
+        }
+        if (state.check) {
+            SendMessageW(state.window, BM_SETCHECK, *state.check, 0);
+        }
+        if (state.position) {
+            SendMessageW(state.window, TBM_SETPOS, FALSE, *state.position);
+        }
+        if (state.caption) {
+            SetWindowTextW(state.window, state.caption->c_str());
+        }
+    }
+}
+
+/// Prepares action-button availability without changing or painting any native controls.
+static void AppendSettingsActionButtonStates(HWND window, const SettingsWindowData& data,
+        const MonitorSelection& selection, std::vector<SettingsControlState>& states) {
+    const bool mixed = selection.IsMixed(ANIMATION_ENABLED_PROPERTY);
+    const std::uint32_t enabled = selection.values.Value(ANIMATION_ENABLED_PROPERTY);
+    states.push_back(SettingsControlState{ GetDlgItem(window, ID_ALL_ANIMATIONS),
+        selection.available && (enabled != ALL_ANIMATION_MASK || mixed) });
+    states.push_back(SettingsControlState{ GetDlgItem(window, ID_NO_ANIMATIONS),
+        selection.available && (enabled != 0 || mixed) });
+    if (data.appMode) {
+        const bool animationReady = HasReadyPrimarySurface();
+        states.push_back(SettingsControlState{ GetDlgItem(window, ID_RECORD_TOGGLE), animationReady });
+        states.push_back(SettingsControlState{ GetDlgItem(window, ID_SNAPSHOT), animationReady });
+        states.push_back(SettingsControlState{ GetDlgItem(window, ID_PAUSE), animationReady });
+    }
+}
+
 /// Enables only settings actions that can change the current state or operate on a rendered animation.
 static void UpdateSettingsActionButtons(HWND window) {
     UpdateScreenSaverInhibition();
@@ -1193,18 +1275,10 @@ static void UpdateSettingsActionButtons(HWND window) {
     if (!data || !data->settings) {
         return;
     }
-    const HWND controls = SettingsContentWindow(window);
     const MonitorSelection selection = data->settings->SelectionForMonitors(data->selectedAnimationDevices);
-    const bool mixed = selection.IsMixed(ANIMATION_ENABLED_PROPERTY);
-    const std::uint32_t enabled = selection.values.Value(ANIMATION_ENABLED_PROPERTY);
-    EnableWindow(GetDlgItem(controls, ID_ALL_ANIMATIONS), selection.available && (enabled != ALL_ANIMATION_MASK || mixed));
-    EnableWindow(GetDlgItem(controls, ID_NO_ANIMATIONS), selection.available && (enabled != 0 || mixed));
-    if (data->appMode) {
-        const bool animationReady = HasReadyPrimarySurface();
-        EnableWindow(GetDlgItem(controls, ID_RECORD_TOGGLE), animationReady);
-        EnableWindow(GetDlgItem(controls, ID_SNAPSHOT), animationReady);
-        EnableWindow(GetDlgItem(controls, ID_PAUSE), animationReady);
-    }
+    std::vector<SettingsControlState> states;
+    AppendSettingsActionButtonStates(SettingsContentWindow(window), *data, selection, states);
+    ApplySettingsControlStates(std::move(states));
 }
 
 /// Synchronizes the record button caption and enabled settings actions with the current animation state.
@@ -1506,6 +1580,21 @@ static const wchar_t* AnimationSliderFormat(AnimationProperty property, AppLangu
     }
 }
 
+/// Formats one slider caption without changing or painting its native label.
+static std::wstring AnimationSliderCaption(HWND label, const SettingsWindowData& data, const MonitorSelection& selection,
+        const AnimationSliderControl& control) {
+    std::wstring caption = AnimationSliderFormat(control.property, data.language);
+    if (!selection.available || selection.IsMixed(control.property)) {
+        const std::size_t number = caption.find(L"%d");
+        if (number != std::wstring::npos) {
+            caption.replace(number, 2, L"—");
+        }
+    }
+    wchar_t text[96]{};
+    swprintf_s(text, caption.c_str(), static_cast<int>(selection.values.Value(control.property)));
+    return PreserveControlMnemonic(label, text);
+}
+
 /// Updates one slider caption with its current localized numeric value.
 static void UpdateSliderLabel(HWND window, const SettingsWindowData& data, int sliderId) {
     window = SettingsContentWindow(window);
@@ -1514,17 +1603,8 @@ static void UpdateSliderLabel(HWND window, const SettingsWindowData& data, int s
             continue;
         }
         const MonitorSelection selection = data.settings->SelectionForMonitors(data.selectedAnimationDevices);
-        std::wstring caption = AnimationSliderFormat(control.property, data.language);
-        if (!selection.available || selection.IsMixed(control.property)) {
-            const std::size_t number = caption.find(L"%d");
-            if (number != std::wstring::npos) {
-                caption.replace(number, 2, L"—");
-            }
-        }
-        wchar_t text[96]{};
-        swprintf_s(text, caption.c_str(), static_cast<int>(selection.values.Value(control.property)));
         HWND label = GetDlgItem(window, control.labelId);
-        SetWindowTextIfChanged(label, PreserveControlMnemonic(label, text));
+        SetWindowTextIfChanged(label, AnimationSliderCaption(label, data, selection, control));
         return;
     }
 }
@@ -1781,15 +1861,26 @@ static std::vector<std::size_t> SelectedAnimationMonitorIndices(HWND list, const
     return selected;
 }
 
-/// Updates only the object switches belonging to this project's animation.
-static void UpdateAnimationObjectControls(HWND window, const MonitorSelection& selection) {
+/// Reads the current row selection without repainting controls or persisting transient intermediate selections.
+static std::vector<std::size_t> UpdateSelectedAnimationDevices(HWND window, SettingsWindowData& data) {
+    window = SettingsContentWindow(window);
+    const std::vector<std::size_t> selected = SelectedAnimationMonitorIndices(GetDlgItem(window, ID_MONITOR_LIST), data);
+    data.selectedAnimationDevices.clear();
+    for (const std::size_t index : selected) {
+        data.selectedAnimationDevices.push_back(data.monitors[index].device);
+    }
+    return selected;
+}
+
+/// Prepares only the object switches belonging to this project's animation.
+static void AppendAnimationObjectControlStates(HWND window, const MonitorSelection& selection,
+        std::vector<SettingsControlState>& states) {
     for (unsigned index = 0; index < SOLID_COUNT; index++) {
         HWND checkbox = GetDlgItem(window, ID_SOLID_FIRST + index);
-        EnableWindow(checkbox, selection.available);
         const UINT state = selection.available && (selection.mixedSolids & 1U << index) != 0
             ? BST_INDETERMINATE
             : selection.available && (selection.values.enabledSolids & 1U << index) != 0 ? BST_CHECKED : BST_UNCHECKED;
-        SendMessageW(checkbox, BM_SETCHECK, state, 0);
+        states.push_back(SettingsControlState{ checkbox, selection.available, state });
     }
 }
 
@@ -1798,8 +1889,11 @@ static void RememberSelectedAnimationMonitors(SettingsWindowData& data, const st
     if (data.updating || !data.monitorSelectionInitialized || !data.settings) {
         return;
     }
-    const std::wstring devices = selected.empty() ? NO_ANIMATION_MONITORS : JoinMonitorDevices(data.monitors, selected);
-    const bool allSelected = data.monitors.empty() ? data.settings->allAnimationMonitorsSelected
+    const std::wstring devices = selected.empty()
+        ? NO_ANIMATION_MONITORS
+        : JoinMonitorDevices(data.monitors, selected);
+    const bool allSelected = data.monitors.empty()
+        ? data.settings->allAnimationMonitorsSelected
         : selected.size() == data.monitors.size();
     if (devices == data.settings->selectedAnimationMonitors
             && allSelected == data.settings->allAnimationMonitorsSelected) {
@@ -1810,46 +1904,70 @@ static void RememberSelectedAnimationMonitors(SettingsWindowData& data, const st
     data.settings->SaveWindowPositions();
 }
 
-/// Displays all selected monitors' animation preferences, including mixed checkbox and numeric states.
+/// Prepares the complete selected-monitor state before changing or repainting any controls.
 static void UpdateMonitorAnimationControls(HWND window, SettingsWindowData& data) {
+    data.monitorSelectionUpdatePending = false;
     window = SettingsContentWindow(window);
-    const std::vector<std::size_t> selected = SelectedAnimationMonitorIndices(GetDlgItem(window, ID_MONITOR_LIST), data);
-    data.selectedAnimationDevices.clear();
-    for (const std::size_t index : selected) {
-        data.selectedAnimationDevices.push_back(data.monitors[index].device);
-    }
+    const std::vector<std::size_t> selected = UpdateSelectedAnimationDevices(window, data);
     RememberSelectedAnimationMonitors(data, selected);
     const MonitorSelection selection = data.settings->SelectionForMonitors(data.selectedAnimationDevices);
-    const bool updating = data.updating;
-    data.updating = true;
+    std::vector<SettingsControlState> states;
     for (std::size_t index = 0; index < std::size(ANIMATION_RADIO_IDS); index++) {
         HWND radio = GetDlgItem(window, ANIMATION_RADIO_IDS[index]);
-        EnableWindow(radio, selection.available);
-        const bool checked = selection.available && !selection.IsMixed(ANIMATION_RADIO_PROPERTY)
+        const bool checked = selection.available
+            && !selection.IsMixed(ANIMATION_RADIO_PROPERTY)
             && selection.values.Value(ANIMATION_RADIO_PROPERTY) == index;
-        SendMessageW(radio, BM_SETCHECK, checked ? BST_CHECKED : BST_UNCHECKED, 0);
+        states.push_back(SettingsControlState{ radio, selection.available, checked ? BST_CHECKED : BST_UNCHECKED });
     }
     for (const AnimationControl& control : ANIMATION_CHECKBOXES) {
         HWND checkbox = GetDlgItem(window, control.id);
         if (checkbox) {
-            const bool enabled = selection.available && (control.dependency == AnimationProperty::Count
-                || selection.IsMixed(control.dependency) || selection.values.Value(control.dependency) != 0);
-            EnableWindow(checkbox, enabled);
+            const bool enabled = selection.available
+                && (control.dependency == AnimationProperty::Count
+                    || selection.IsMixed(control.dependency)
+                    || selection.values.Value(control.dependency) != 0);
             const UINT state = selection.available && selection.IsMixed(control.property)
                 ? BST_INDETERMINATE
                 : selection.available && selection.values.Value(control.property) != 0 ? BST_CHECKED : BST_UNCHECKED;
-            SendMessageW(checkbox, BM_SETCHECK, state, 0);
+            states.push_back(SettingsControlState{ checkbox, enabled, state });
         }
     }
-    UpdateAnimationObjectControls(window, selection);
+    AppendAnimationObjectControlStates(window, selection, states);
     for (const AnimationSliderControl& control : ANIMATION_SLIDERS) {
         HWND slider = GetDlgItem(window, control.id);
-        EnableWindow(slider, selection.available);
-        SendMessageW(slider, TBM_SETPOS, TRUE, selection.values.Value(control.property));
+        states.push_back(SettingsControlState{
+            slider,
+            selection.available,
+            std::nullopt,
+            static_cast<LONG>(selection.values.Value(control.property))
+        });
+        HWND label = GetDlgItem(window, control.labelId);
+        states.push_back(SettingsControlState{
+            label,
+            std::nullopt,
+            std::nullopt,
+            std::nullopt,
+            AnimationSliderCaption(label, data, selection, control)
+        });
     }
-    UpdateSliderLabels(window, data);
+    AppendSettingsActionButtonStates(window, data, selection, states);
+    const bool updating = data.updating;
+    data.updating = true;
+    ApplySettingsControlStates(std::move(states));
     data.updating = updating;
-    UpdateSettingsActionButtons(window);
+    UpdateScreenSaverInhibition();
+}
+
+/// Coalesces native row notifications and paints only the final selection after the current input is processed.
+static void ScheduleMonitorAnimationControlsUpdate(HWND window, SettingsWindowData& data) {
+    UpdateSelectedAnimationDevices(window, data);
+    if (!data.monitorSelectionUpdatePending) {
+        data.monitorSelectionUpdatePending =
+            PostMessageW(GetAncestor(window, GA_ROOT), UPDATE_MONITOR_ANIMATION_CONTROLS, 0, 0) != FALSE;
+        if (!data.monitorSelectionUpdatePending) {
+            UpdateMonitorAnimationControls(window, data);
+        }
+    }
 }
 
 /// Publishes selected-monitor edits using the existing live-preview and save policy.
@@ -1917,8 +2035,9 @@ static void PopulateMonitorList(HWND window, SettingsWindowData& data) {
         selEmpty = false;
     }
     if (data.appMode) {
-        data.settings->animationMonitorDevice =
-            selEmpty ? NO_ANIMATION_MONITORS : JoinMonitorDevices(data.monitors, selected);
+        data.settings->animationMonitorDevice = selEmpty
+            ? NO_ANIMATION_MONITORS
+            : JoinMonitorDevices(data.monitors, selected);
     }
     for (std::size_t index = 0; index < data.monitors.size(); index++) {
         const DisplayMonitor& monitor = data.monitors[index];
@@ -4870,6 +4989,11 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             UpdateSettingsActionButtons(window);
             RestoreCurrentStatus();
             return 0;
+        case UPDATE_MONITOR_ANIMATION_CONTROLS:
+            if (data && data->monitorSelectionUpdatePending) {
+                UpdateMonitorAnimationControls(window, *data);
+            }
+            return 0;
         case UPDATE_SETTINGS_CONTROL_METRICS:
             if (data) {
                 UpdateSettingsControlMetrics(window);
@@ -5168,7 +5292,8 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                         if (ShouldPreventMonitorUncheck(*change, *data)) {
                             RestoreRecordingMonitorCheckState(change->hdr.hwndFrom, *data);
                         }
-                        const bool stateImageChanged = data->appMode && !data->updating
+                        const bool stateImageChanged = data->appMode
+                            && !data->updating
                             && (change->uChanged & LVIF_STATE) != 0
                             && ((change->uOldState ^ change->uNewState) & LVIS_STATEIMAGEMASK) != 0;
                         if (stateImageChanged) {
@@ -5182,10 +5307,11 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                                 ApplyAnimationMonitors();
                             }
                         }
-                        const bool selectionChanged = !data->updating && (change->uChanged & LVIF_STATE) != 0
+                        const bool selectionChanged = !data->updating
+                            && (change->uChanged & LVIF_STATE) != 0
                             && ((change->uOldState ^ change->uNewState) & LVIS_SELECTED) != 0;
                         if (selectionChanged) {
-                            UpdateMonitorAnimationControls(window, *data);
+                            ScheduleMonitorAnimationControlsUpdate(window, *data);
                         }
                     }
                 }
