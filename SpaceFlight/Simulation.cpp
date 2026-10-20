@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.1
  */
 
 #define NOMINMAX
@@ -124,7 +124,7 @@ std::array<double, 3> Simulation::CreateAngularVelocity() {
     return {radial * std::cos(azimuth) * speed, radial * std::sin(azimuth) * speed, axial * speed};
 }
 
-/// The same quintic easing as FSSaver's FlightEase, evaluated on the CPU for continuous motion targets.
+/// Evaluates quintic easing on the CPU for continuous motion targets.
 static double MotionEase(double progress) {
     progress = std::clamp(progress, 0.0, 1.0);
     return progress * progress * progress * (progress * (progress * 6.0 - 15.0) + 10.0);

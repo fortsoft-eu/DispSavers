@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.1
  */
 
 #define NOMINMAX
@@ -53,6 +53,8 @@
 #pragma comment(lib, "windowscodecs.lib")
 
 using Microsoft::WRL::ComPtr;
+
+static constexpr DXGI_FORMAT RENDER_TARGET_FORMAT = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
 
 /// HLSL-compatible four-component value aligned for constant buffers.
 struct alignas(16) Float4 {
@@ -182,7 +184,6 @@ struct OutputFramePacer {
             RequestStop(status);
             return status;
         }
-        static_cast<void>(WaitForSingleObject(readyEvent, 0));
         status = result.load(std::memory_order_acquire);
         if (FAILED(status)) {
             return status;
@@ -284,7 +285,8 @@ struct Renderer::Impl {
                 swapChainFlags = flip.Flags;
                 if (flip.Flags & DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT) {
                     ComPtr<IDXGISwapChain2> swapChain2;
-                    if (SUCCEEDED(swapChain.As(&swapChain2)) && SUCCEEDED(swapChain2->SetMaximumFrameLatency(2))) {
+                    if (SUCCEEDED(swapChain.As(&swapChain2))
+                            && SUCCEEDED(swapChain2->SetMaximumFrameLatency(2))) {
                         frameLatencyWaitableObject = swapChain2->GetFrameLatencyWaitableObject();
                     }
                 }
@@ -404,23 +406,31 @@ struct Renderer::Impl {
         return CreateTargets();
     }
 
-    /// Recreates render and depth targets from the current swap-chain back buffer.
+    /// Recreates the shared offscreen color and depth targets at the native back-buffer size.
     bool CreateTargets() {
         ComPtr<ID3D11Texture2D> depthTexture;
         backBuffer.Reset();
+        sceneColor.Reset();
         renderTarget.Reset();
         depthView.Reset();
         if (FAILED(swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer)))) {
             return false;
         }
-        D3D11_TEXTURE2D_DESC backDescription{};
-        backBuffer->GetDesc(&backDescription);
-        width = backDescription.Width;
-        height = backDescription.Height;
+        D3D11_TEXTURE2D_DESC colorDescription{};
+        backBuffer->GetDesc(&colorDescription);
+        width = colorDescription.Width;
+        height = colorDescription.Height;
+        colorDescription.Format = DXGI_FORMAT_B8G8R8A8_TYPELESS;
+        colorDescription.SampleDesc.Count = renderSamples;
+        colorDescription.SampleDesc.Quality = 0;
+        colorDescription.BindFlags = D3D11_BIND_RENDER_TARGET;
+        colorDescription.MiscFlags = 0;
         D3D11_RENDER_TARGET_VIEW_DESC targetDescription{};
-        targetDescription.Format = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
-        targetDescription.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-        if (FAILED(device->CreateRenderTargetView(backBuffer.Get(), &targetDescription, &renderTarget))) {
+        targetDescription.Format = RENDER_TARGET_FORMAT;
+        targetDescription.ViewDimension = renderSamples > 1
+            ? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
+        if (FAILED(device->CreateTexture2D(&colorDescription, nullptr, &sceneColor))
+                || FAILED(device->CreateRenderTargetView(sceneColor.Get(), &targetDescription, &renderTarget))) {
             return false;
         }
         D3D11_TEXTURE2D_DESC depthDescription{};
@@ -429,7 +439,7 @@ struct Renderer::Impl {
         depthDescription.MipLevels = 1;
         depthDescription.ArraySize = 1;
         depthDescription.Format = DXGI_FORMAT_D32_FLOAT;
-        depthDescription.SampleDesc.Count = 1;
+        depthDescription.SampleDesc.Count = renderSamples;
         depthDescription.BindFlags = D3D11_BIND_DEPTH_STENCIL;
         return SUCCEEDED(device->CreateTexture2D(&depthDescription, nullptr, &depthTexture))
             && SUCCEEDED(device->CreateDepthStencilView(depthTexture.Get(), nullptr, &depthView));
@@ -445,10 +455,21 @@ struct Renderer::Impl {
         }
         context->OMSetRenderTargets(0, nullptr, nullptr);
         renderTarget.Reset();
+        sceneColor.Reset();
         depthView.Reset();
         backBuffer.Reset();
         if (SUCCEEDED(swapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, swapChainFlags))) {
             CreateTargets();
+        }
+    }
+
+    /// Completes every frame through the same offscreen-to-presentation path, independent of scene or draw mode.
+    void CompleteFrame() {
+        context->OMSetRenderTargets(0, nullptr, nullptr);
+        if (renderSamples > 1) {
+            context->ResolveSubresource(backBuffer.Get(), 0, sceneColor.Get(), 0, DXGI_FORMAT_B8G8R8A8_UNORM);
+        } else {
+            context->CopyResource(backBuffer.Get(), sceneColor.Get());
         }
     }
 
@@ -542,6 +563,7 @@ struct Renderer::Impl {
                 context->RSSetState(rasterizerState.Get());
             }
         }
+        CompleteFrame();
         if (presentFrame && recorder.IsRecording()) {
             recorder.CaptureFrame(context.Get(), backBuffer.Get());
         }
@@ -694,8 +716,10 @@ struct Renderer::Impl {
 
     /// Size-dependent render targets
     ComPtr<ID3D11Texture2D> backBuffer;
+    ComPtr<ID3D11Texture2D> sceneColor;
     ComPtr<ID3D11RenderTargetView> renderTarget;
     ComPtr<ID3D11DepthStencilView> depthView;
+    UINT renderSamples = 1;
 
     /// Shader pipeline and constant buffers
     ComPtr<ID3D11VertexShader> vertexShader;

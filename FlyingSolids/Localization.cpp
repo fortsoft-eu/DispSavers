@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.1
  */
 
 #define NOMINMAX
@@ -3893,7 +3893,7 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> RECORDING_CLOSE_WARNING_TEX
     L"Закрытие приложения остановит текущую запись."
 };
 
-/// Recording-settings captions and presets shared with the Emulators interface.
+/// Localized recording-settings captions.
 constexpr std::array<RecordingText, LANGUAGE_COUNT> RECORDING_TEXTS = {
     RecordingText{
         L"Nastavení záznamu",
@@ -6266,7 +6266,7 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_DESCRIPTION_TEXTS = {
     L"Аппаратно ускоренная анимация объёмных тел."
 };
 
-/// Website tooltip copied from the corresponding CalClock language entries.
+/// Localized website tooltips.
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_VISIT_TOOLTIP_TEXTS = {
     L"Navštívit web",
     L"Visit website",

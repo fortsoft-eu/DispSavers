@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.1
  */
 
 cbuffer FrameConstants : register(b0) {
@@ -62,14 +62,14 @@ float3 TumblingView(float3 view) {
     return view + cameraRotation.w * turn + cross(axis, turn);
 }
 
-/// Original FSSaver InfiniteGridOffset calculation.
+/// Spreads grid offsets progressively farther from the camera.
 float InfiniteGridOffset(float index) {
     float direction = index < 0 ? -1.0 : 1.0;
     float distance = abs((float) index);
     return direction * (1.5 * distance + 0.045 * distance * distance);
 }
 
-/// Original FSSaver InfiniteGridCoordinate calculation.
+/// Blends grid coordinates between adjacent camera cells.
 float InfiniteGridCoordinate(float cameraCoordinate, float index) {
     static const float spacing = 1.5;
     float cameraCell = cameraCoordinate / spacing;
@@ -80,7 +80,7 @@ float InfiniteGridCoordinate(float cameraCoordinate, float index) {
     return lerp(currentCoordinate, nextCoordinate, blend);
 }
 
-/// FSSaver WaveHeight calculation with independent, smoothly varying scene parameters.
+/// Calculates animated wave height with smoothly varying surface curvature.
 float WaveHeight(float x, float z, float2 cameraXZ) {
     float height = 0.0;
     if (surfaceWaves != 0) {
@@ -102,13 +102,13 @@ float WaveHeight(float x, float z, float2 cameraXZ) {
     return height;
 }
 
-/// Original FSSaver AnchoredFlightGridCoordinate calculation.
+/// Anchors a uniformly spaced grid to the camera's current grid cell.
 float AnchoredFlightGridCoordinate(float cameraCoordinate, float index, float spacing) {
     float gridOrigin = floor(cameraCoordinate / spacing) * spacing;
     return gridOrigin + index * spacing;
 }
 
-/// FSSaver InfiniteSurfaceSample calculation with independent, smoothly varying scene parameters.
+/// Projects a wave-surface grid sample and computes distance fading and color variation.
 float4 InfiniteSurfaceSample(float2 gridIndex, out float fade, out float colorPhase) {
     float2 cameraXZ = float2(time * 1.15 + 4.0 * sin(time * 0.071 + pathPhases.x)
         * cameraVariations.x, time * 0.82 + 3.2 * cos(time * 0.053 + pathPhases.y) * cameraVariations.x);
@@ -148,7 +148,7 @@ float4 InfiniteSurfaceSample(float2 gridIndex, out float fade, out float colorPh
         view.z * farPlane / (farPlane - nearPlane) - nearPlane * farPlane / (farPlane - nearPlane), view.z);
 }
 
-/// FSSaver MorphingSurfaceHeight calculation with independent, smoothly varying scene parameters.
+/// Blends animated surface shapes around the deformation center.
 float MorphingSurfaceHeight(float x, float z, float2 deformationCenter) {
     float height = 0.0;
     if (surfaceWaves != 0) {
@@ -187,7 +187,7 @@ float MorphingSurfaceHeight(float x, float z, float2 deformationCenter) {
     return height;
 }
 
-/// FSSaver MorphingSurfaceSample calculation with independent, smoothly varying scene parameters.
+/// Projects a morphing-surface grid sample and computes distance fading and color variation.
 float4 MorphingSurfaceSample(float2 gridIndex, out float fade, out float colorPhase) {
     float2 cameraXZ = float2(time * 3.20 + 18.0 * sin(time * 0.031 + pathPhases.x) * cameraVariations.x,
         time * 2.15 + 14.0 * cos(time * 0.027 + pathPhases.y) * cameraVariations.x);
@@ -233,7 +233,7 @@ float4 MorphingSurfaceSample(float2 gridIndex, out float fade, out float colorPh
         view.z * farPlane / (farPlane - nearPlane) - nearPlane * farPlane / (farPlane - nearPlane), view.z);
 }
 
-/// Original FSSaver InfiniteSurfacePosition calculation.
+/// Maps a wireframe segment endpoint to a wave-surface grid sample.
 float4 InfiniteSurfacePosition(uint segment, uint endpoint, out float fade, out float colorPhase) {
     uint direction = segment / (89 * 88);
     uint part = segment % (89 * 88);
@@ -244,7 +244,7 @@ float4 InfiniteSurfacePosition(uint segment, uint endpoint, out float fade, out 
         : float2(varyingIndex, fixedIndex), fade, colorPhase);
 }
 
-/// Original FSSaver MorphingSurfaceFlightPosition calculation.
+/// Maps a wireframe segment endpoint to a morphing-surface grid sample.
 float4 MorphingSurfaceFlightPosition(uint segment, uint endpoint, out float fade, out float colorPhase) {
     uint direction = segment / (113 * 112);
     uint part = segment % (113 * 112);

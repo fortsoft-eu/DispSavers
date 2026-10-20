@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.1
  */
 
 #define NOMINMAX
@@ -69,7 +69,7 @@ constexpr std::size_t RECORDING_READBACK_COUNT = 3;
 constexpr std::size_t RECORDING_QUEUE_CAPACITY = 2;
 constexpr std::size_t RECORDING_IMAGE_COUNT = RECORDING_QUEUE_CAPACITY + 3;
 
-/// Packed source image and its destination viewport, matching Emulators' recording resampler.
+/// Packed source image and its destination viewport.
 struct RecordingImage {
     std::vector<std::uint32_t> pixels;
     unsigned width = 0;
@@ -84,7 +84,7 @@ struct RecordingColumn {
     unsigned weight;
 };
 
-/// Byte ranges of a validated MP4 box, following Emulators' metadata normalizer.
+/// Byte ranges of a validated MP4 box.
 struct RecordingBox {
     std::size_t begin;
     std::size_t data;
@@ -273,7 +273,7 @@ struct Mp4Recorder::Impl {
     HRESULT CollectReadbacks(ID3D11DeviceContext* context, bool wait);
 };
 
-/// Preserves Emulators' no-blending exception for NTSC output on a 60 Hz monitor.
+/// Disables temporal blending for integral rate ratios and for NTSC output on a 60 Hz monitor.
 void RecordingFormat::SetMonitorRate(unsigned rate, unsigned divisor) {
     temporalBlend = !(std::uint64_t(rate) * denominator % (std::uint64_t(numerator) * divisor) == 0
         || std::uint64_t(rate) == std::uint64_t(60) * divisor && denominator == 1001 && (numerator == 60000
@@ -307,7 +307,7 @@ RECT RecordingFormat::Viewport(POINT base) const {
     return RECT{ left, top, left + viewportWidth, top + viewportHeight };
 }
 
-/// Selects Emulators' TV presets or the unchanged viewport and monitor-rate recording format.
+/// Selects TV presets or the native viewport recording format.
 RecordingFormat RecordingOptions::Format(unsigned nativeWidth, unsigned nativeHeight, unsigned nativeRate) const {
     RecordingFormat format;
     format.width = nativeWidth;
@@ -335,7 +335,7 @@ RecordingFormat RecordingOptions::Format(unsigned nativeWidth, unsigned nativeHe
     return format;
 }
 
-/// Blends RGB channels independently with the same fixed-point rounding as Emulators.
+/// Blends RGB channels independently with fixed-point rounding.
 static std::uint32_t BlendRecordingPixel(std::uint32_t first, std::uint32_t second, unsigned weight) {
     std::uint32_t result = 0;
     for (int shift = 0; shift <= 16; shift += 8) {
@@ -354,7 +354,7 @@ static RecordingImage BlendRecordingImages(const RecordingImage& first, const Re
     return result;
 }
 
-/// Samples pixel centers with the same edge clamping as Emulators' bilinear scaler.
+/// Samples pixel centers with edge clamping for bilinear scaling.
 static constexpr double RecordingCoordinate(int pixel, int origin, int extent, unsigned source) {
     return std::clamp((double(pixel) - origin + 0.5) * source / extent - 0.5, 0.0, double(source - 1));
 }
@@ -368,7 +368,7 @@ static constexpr std::uint32_t MixRecordingPixel(std::uint32_t first, std::uint3
     return redBlue | green;
 }
 
-/// Letterboxes and bilinearly scales TV frames with Emulators' pixel-center mapping.
+/// Letterboxes and bilinearly scales TV frames using pixel-center mapping.
 static void ScaleRecordingImage(const RecordingImage& image, unsigned width, unsigned height,
         std::vector<std::uint32_t>& result) {
     result.assign(std::size_t(width) * height, 0);
@@ -407,12 +407,12 @@ static constexpr int RecordingComponent(std::uint32_t pixel, int shift) {
     return int(pixel >> shift & 255);
 }
 
-/// Rounds signed chroma coefficients with Emulators' exact fixed-point convention.
+/// Rounds signed chroma coefficients using fixed-point arithmetic.
 static int RoundRecordingChroma(int value) {
     return int(std::floor(double(value) / (8.0 * 65536.0) + 0.5));
 }
 
-/// Converts RGB to progressive BT.709 limited-range NV12 with MPEG-2 chroma siting, as in Emulators.
+/// Converts RGB to progressive BT.709 limited-range NV12 with MPEG-2 chroma siting.
 static void ConvertRecordingNv12(const std::vector<std::uint32_t>& rgb, unsigned width, unsigned height,
         std::vector<std::uint8_t>& result) {
     result.resize(std::size_t(width) * height * 3 / 2);
@@ -462,7 +462,7 @@ static std::uint64_t RecordingHeaderValue(const std::uint8_t* header, unsigned p
     return value;
 }
 
-/// Retains Emulators' exact NTSC timing and anamorphic pixel-aspect metadata after Media Foundation finalization.
+/// Retains exact NTSC timing and anamorphic pixel-aspect metadata after Media Foundation finalization.
 static void NormalizeRecordingTiming(const std::filesystem::path& path, const RecordingFormat& format) {
     if (!format.television) {
         return;

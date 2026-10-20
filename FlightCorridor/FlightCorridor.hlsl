@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.1
  */
 
 static const float PI = 3.14159265358979323846;
@@ -68,23 +68,23 @@ float3 TumblingView(float3 view) {
     return view + cameraRotation.w * turn + cross(axis, turn);
 }
 
-/// Original FSSaver AnchoredFlightGridCoordinate calculation.
+/// Anchors a uniformly spaced grid to the camera's current grid cell.
 float AnchoredFlightGridCoordinate(float cameraCoordinate, float index, float spacing) {
     float gridOrigin = floor(cameraCoordinate / spacing) * spacing;
     return gridOrigin + index * spacing;
 }
 
-/// FSSaver CorridorCenterX calculation with independent, smoothly varying scene parameters.
+/// Calculates the corridor's smoothly varying horizontal center.
 float CorridorCenterX(float z) {
     return (13.0 * sin(z * 0.028 + pathPhases.x) + 6.0 * sin(z * 0.011 + 1.2 + pathPhases.y)) * surfaceVariations.y;
 }
 
-/// FSSaver CorridorBaseHeight calculation with independent, smoothly varying scene parameters.
+/// Calculates the corridor's smoothly varying base height.
 float CorridorBaseHeight(float z) {
     return (6.0 * sin(z * 0.022 + 0.4 + pathPhases.z) + 3.0 * sin(z * 0.047 + 1.1 + pathPhases.w)) * surfaceVariations.x;
 }
 
-/// FSSaver CorridorMidHeight calculation with independent, smoothly varying scene parameters.
+/// Blends the corridor's waves, banking, saddle and arch shapes.
 float CorridorMidHeight(float x, float z, float2 cameraXZ) {
     float lateral = clamp((x - CorridorCenterX(z)) * 0.032, -2.6, 2.6);
     float longitudinal = clamp((z - cameraXZ.y) * 0.026, -2.6, 2.6);
@@ -115,14 +115,14 @@ float CorridorMidHeight(float x, float z, float2 cameraXZ) {
     return CorridorBaseHeight(z) + lerp(currentShape, nextShape, blend);
 }
 
-/// FSSaver CorridorHalfHeight calculation with independent, smoothly varying scene parameters.
+/// Calculates the corridor's animated vertical half-opening.
 float CorridorHalfHeight(float z) {
     float opening = (7.6 + 1.5 * sin(z * 0.032 - time * 0.19 + animationPhases.x) + 1.1
         * sin(time * 0.073 + 0.8 + animationPhases.y)) * surfaceVariations.z / surfaceVariations.w;
     return clamp(opening, 4.8, 11.5);
 }
 
-/// FSSaver CorridorHalfWidth calculation with independent, smoothly varying scene parameters.
+/// Calculates the corridor's animated horizontal half-opening.
 float CorridorHalfWidth(float z) {
     float opening = (10.2 + 2.2 * sin(z * 0.025 + time * 0.15 + 1.4 + animationPhases.x) + 1.4
         * cos(time * 0.061 - 0.6 + animationPhases.y)) * surfaceVariations.z * surfaceVariations.w;
@@ -153,7 +153,7 @@ float3 BendCorridor(float3 relative) {
         relative.x * rollSine + relative.y * rollCosine, relative.z);
 }
 
-/// FSSaver CorridorSurfaceSample calculation with independent, smoothly varying scene parameters.
+/// Projects a corridor-wall grid sample and computes distance fading and color variation.
 float4 CorridorSurfaceSample(float u, float zIndex, uint surface, out float fade, out float colorPhase) {
     float cameraZ = time * 4.6;
     float cameraX = CorridorCenterX(cameraZ);
@@ -209,27 +209,27 @@ float4 CorridorSurfaceSample(float u, float zIndex, uint surface, out float fade
         view.z * farPlane / (farPlane - nearPlane) - nearPlane * farPlane / (farPlane - nearPlane), view.z);
 }
 
-/// FSSaver FunnelCenter calculation with independent, smoothly varying scene parameters.
+/// Calculates the funnel's smoothly varying centerline.
 float3 FunnelCenter(float pathPosition) {
     return float3((14.0 * sin(pathPosition * 0.022 + pathPhases.x) + 4.0 * sin(pathPosition * 0.061 + 0.7 + pathPhases.y))
         * surfaceVariations.y, (9.0 * sin(pathPosition * 0.017 + 0.8 + pathPhases.z) + 3.0 * cos(pathPosition * 0.051
         + pathPhases.w)) * surfaceVariations.x, pathPosition);
 }
 
-/// FSSaver FunnelTangent calculation with independent, smoothly varying scene parameters.
+/// Calculates the tangent along the funnel's centerline.
 float3 FunnelTangent(float pathPosition) {
     return normalize(float3((0.308 * cos(pathPosition * 0.022 + pathPhases.x) + 0.244 * cos(pathPosition * 0.061 + 0.7
         + pathPhases.y)) * surfaceVariations.y, (0.153 * cos(pathPosition * 0.017 + 0.8 + pathPhases.z) - 0.153
         * sin(pathPosition * 0.051 + pathPhases.w)) * surfaceVariations.x, 1.0));
 }
 
-/// FSSaver FunnelChamberAmount calculation with independent, smoothly varying scene parameters.
+/// Calculates the smoothly varying chamber expansion along the funnel.
 float FunnelChamberAmount(float pathPosition) {
     float chamberWave = 0.5 + 0.5 * cos(pathPosition * 0.038 + PI + pathPhases.z);
     return chamberWave * chamberWave * chamberWave;
 }
 
-/// FSSaver FunnelRadius calculation with independent, smoothly varying scene parameters.
+/// Calculates the funnel radius, including its chamber expansion.
 float FunnelRadius(float pathPosition) {
     float chamber = FunnelChamberAmount(pathPosition);
     float narrowVariation = (1.15 * sin(pathPosition * 0.11 + animationPhases.x) + 0.65
@@ -237,7 +237,7 @@ float FunnelRadius(float pathPosition) {
     return max(4.2, 5.8 + narrowVariation + 36.0 * chamber * surfaceVariations.z);
 }
 
-/// FSSaver FunnelPoint calculation with independent, smoothly varying scene parameters.
+/// Calculates a point on a funnel cross-section along its centerline.
 float3 FunnelPoint(float pathPosition, float angle, out float chamberAmount) {
     float3 center = FunnelCenter(pathPosition);
     float3 tangent = FunnelTangent(pathPosition);
@@ -260,7 +260,7 @@ float3 FunnelPoint(float pathPosition, float angle, out float chamberAmount) {
         * angleSine);
 }
 
-/// FSSaver FunnelSurfaceSample calculation with independent, smoothly varying scene parameters.
+/// Projects a funnel grid sample and computes distance fading, color variation and chamber expansion.
 float4 FunnelSurfaceSample(float angle, float pathIndex, out float fade, out float colorPhase, out float chamberAmount) {
     float cameraPath = time * 4.5;
     float cameraRadius = FunnelRadius(cameraPath);

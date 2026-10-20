@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.1.0.0
+ * Last modified for version 1.2.0.1
  */
 
 #pragma once
@@ -40,7 +40,7 @@ struct RecordingFormat {
     unsigned aspectX = 1;
     unsigned aspectY = 1;
 
-    /// Preserves Emulators' no-blending exception for NTSC output on a 60 Hz monitor.
+    /// Disables temporal blending for integral rate ratios and for NTSC output on a 60 Hz monitor.
     void SetMonitorRate(unsigned rate, unsigned divisor);
 
     /// Derives each boundary directly from its frame index without accumulating rounding errors.
@@ -56,13 +56,13 @@ struct RecordingFormat {
     RECT Viewport(POINT base) const;
 };
 
-/// Persistent output choices matching the Recording page in Emulators.
+/// Persistent recording-output settings.
 struct RecordingOptions {
     bool television = false;
     int resolution = 0;
     int rate = 0;
 
-    /// Selects Emulators' TV presets or the unchanged viewport and monitor-rate recording format.
+    /// Selects TV presets or the native viewport recording format.
     RecordingFormat Format(unsigned nativeWidth, unsigned nativeHeight, unsigned nativeRate) const;
 };
 

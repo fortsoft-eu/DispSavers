@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.1
  */
 
 #define NOMINMAX
@@ -2603,7 +2603,7 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> RECORDING_CLOSE_WARNING_TEX
     L"Закрытие приложения остановит текущую запись."
 };
 
-/// Recording-settings captions and presets shared with the Emulators interface.
+/// Localized recording-settings captions.
 constexpr std::array<RecordingText, LANGUAGE_COUNT> RECORDING_TEXTS = {
     RecordingText{
         L"Nastavení záznamu",
@@ -5143,7 +5143,7 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_DESCRIPTION_TEXTS = {
     L"Аппаратно ускоренный полёт над волнообразной поверхностью."
 };
 
-/// Website tooltip copied from the corresponding CalClock language entries.
+/// Localized website tooltips.
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> ABOUT_VISIT_TOOLTIP_TEXTS = {
     L"Navštívit web",
     L"Visit website",
@@ -5343,7 +5343,7 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> CAMERA_REVERSALS_TEXTS = {
     L"Паузы и смены направления"
 };
 
-/// Per-monitor main-light captions shared with FlyingSolids.
+/// Localized per-monitor main-light captions.
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> MAIN_LIGHT_TEXTS = {
     L"Hlavní světlo",
     L"Main light",
@@ -5383,7 +5383,7 @@ constexpr std::array<const wchar_t*, LANGUAGE_COUNT> MAIN_LIGHT_TEXTS = {
     L"Основной свет"
 };
 
-/// Per-monitor fill-light captions shared with FlyingSolids.
+/// Localized per-monitor fill-light captions.
 constexpr std::array<const wchar_t*, LANGUAGE_COUNT> FILL_LIGHT_TEXTS = {
     L"Doplňkové světlo",
     L"Fill light",

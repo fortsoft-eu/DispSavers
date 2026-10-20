@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.1
  */
 
 #define NOMINMAX
@@ -416,7 +416,7 @@ struct PositionedControl {
     RECT rect{};
 };
 
-/// Font metrics used by the copied CalClock information-text renderer.
+/// Font metrics used by the information-text renderer.
 struct UiTextLine {
     LONG ascent;
     LONG descent;
@@ -456,7 +456,7 @@ static void RequestScreenSaverChange(HWND owner);
 /// Extends settings text controls to the content edge and restores their clipping Z-order.
 static void UpdateSettingsTextControlLayout(HWND parent);
 
-/// Aligns settings text baselines using CalClock's native control-metric calculation.
+/// Aligns settings text baselines using native control metrics.
 static void UpdateSettingsControlMetrics(HWND window);
 
 static void UpdateComboBoxDropDownSize(HWND combo);
@@ -957,7 +957,7 @@ static bool RemoveLegacyScreenSaverCopies() {
     return true;
 }
 
-/// Recognizes canonical and historical FlyingSolids installation paths.
+/// Recognizes canonical and historical installation paths.
 static bool IsFlyingSolidsScreenSaverPath(const std::wstring& path) {
     if (SamePath(path, ScreenSaverDestinationPath())) {
         return true;
@@ -1718,7 +1718,7 @@ static int CompareMonitorRefreshRates(const DISPLAYCONFIG_RATIONAL& left, const 
     return CompareMonitorValues(leftValue, rightValue);
 }
 
-/// Compares stable monitor indices by the chosen column, retaining source order for equal values as in CalClock.
+/// Compares stable monitor indices by the chosen column, retaining source order for equal values.
 static int CALLBACK CompareMonitorListEntries(LPARAM left, LPARAM right, LPARAM sortData) {
     const SettingsWindowData* data = reinterpret_cast<const SettingsWindowData*>(sortData);
     const std::size_t leftIndex = static_cast<std::size_t>(left);
@@ -1865,7 +1865,7 @@ static void RestoreRecordingMonitorCheckState(HWND list, SettingsWindowData& dat
     data.updating = updating;
 }
 
-/// Selects all monitor rows with Ctrl+A, as in CalClock's log, without changing checkbox states.
+/// Selects all monitor rows with Ctrl+A without changing checkbox states.
 static LRESULT CALLBACK MonitorListSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam, UINT_PTR subclassId,
         DWORD_PTR referenceData) {
     UNREFERENCED_PARAMETER(referenceData);
@@ -2463,7 +2463,7 @@ static void AlignSettingsButton(HWND button, HWND reference) {
     AlignSettingsControl(button, reference);
 }
 
-/// Aligns a label with the native combo text origin used by CalClock's button alignment.
+/// Aligns a label with the native combo-box text origin.
 static void AlignSettingsLabel(HWND label, HWND reference) {
     AlignSettingsControl(label, reference);
 }
@@ -2896,7 +2896,7 @@ static std::vector<int> SettingsTabOrder(const SettingsWindowData& data) {
 }
 
 /// Moves settings page controls through their declared tab order and exposes keyboard focus cues.
-/// Leaves ordinary pushbutton transitions to native dialog processing, as in CalClock.
+/// Leaves ordinary pushbutton transitions to native dialog processing.
 static bool MoveSettingsTabFocus(HWND parent, const SettingsWindowData& data, bool backwards) {
     parent = SettingsContentWindow(parent);
     std::vector<HWND> controls;
@@ -3895,7 +3895,7 @@ static void DestroyInformationWindowFonts(InformationWindowData& data) {
     }
 }
 
-/// Creates Help or About controls after the parent handle is stored, matching CalClock initialization order.
+/// Creates Help or About controls after the parent handle has been stored.
 static bool CreateInformationControls(HWND window, InformationWindowData& data) {
     HWND text = GetDlgItem(window, ID_INFORMATION_TEXT);
     if (!InstallSelectionEditHandler(text)) {
@@ -4216,7 +4216,7 @@ static void ShowInformationWindow(HWND owner, bool help, AppLanguage language, b
     placement.Show();
 }
 
-/// Enables TV-only controls exactly as the Recording page in Emulators.
+/// Enables the controls specific to TV recording.
 static void UpdateRecordingSettingsControls(HWND window) {
     const bool enabled = SendDlgItemMessageW(window, ID_RECORD_TV, BM_GETCHECK, 0, 0) == BST_CHECKED;
     constexpr int controls[]{ ID_RECORD_SIZE, ID_RECORD_RATE, ID_RECORD_SIZE_LABEL, ID_RECORD_RATE_LABEL };

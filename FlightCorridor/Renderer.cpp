@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.1
  */
 
 #define NOMINMAX
@@ -55,6 +55,8 @@
 
 using Microsoft::WRL::ComPtr;
 
+static constexpr DXGI_FORMAT RENDER_TARGET_FORMAT = DXGI_FORMAT_B8G8R8A8_UNORM;
+
 /// Original frame constants followed by this monitor's independent motion parameters.
 struct alignas(16) FrameConstants {
     float width;
@@ -74,7 +76,7 @@ static_assert(offsetof(FrameConstants, wallPalettes) == 112);
 static_assert(offsetof(FrameConstants, lightSettings) == 128);
 static_assert(sizeof(FrameConstants) == 144);
 
-/// Source effect constants, matching the original FSSaver shader.
+/// Shader constants selecting a flight effect and its grid layout.
 struct alignas(16) DrawConstants {
     unsigned effect;
     unsigned columns;
@@ -88,7 +90,7 @@ struct GpuMesh {
     unsigned indexCount = 0;
 };
 
-/// Creates the same patch-grid triangles as FSSaver.
+/// Creates triangle indices for a patch-based surface grid.
 static std::vector<unsigned> CreateSurfaceIndices(const SurfaceMesh& mesh);
 
 /// Keeps one pending physical refresh independently of rendering and blocking Present calls.
@@ -173,7 +175,6 @@ struct OutputFramePacer {
             RequestStop(status);
             return status;
         }
-        static_cast<void>(WaitForSingleObject(readyEvent, 0));
         status = result.load(std::memory_order_acquire);
         if (FAILED(status)) {
             return status;
@@ -222,7 +223,6 @@ struct Renderer::Impl {
     }
 
     /// Creates the device, swap chain, shaders, buffers, meshes and pipeline states.
-    /// Uses FlyingSolids' three-buffer swap chain with a maximum frame latency of two.
     /// Clocks flip presentation only from this window's output; other swap models retain their timed path.
     bool Initialize(HWND window) {
         RECT client{};
@@ -275,7 +275,8 @@ struct Renderer::Impl {
                 swapChainFlags = flip.Flags;
                 if (flip.Flags & DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT) {
                     ComPtr<IDXGISwapChain2> swapChain2;
-                    if (SUCCEEDED(swapChain.As(&swapChain2)) && SUCCEEDED(swapChain2->SetMaximumFrameLatency(2))) {
+                    if (SUCCEEDED(swapChain.As(&swapChain2))
+                            && SUCCEEDED(swapChain2->SetMaximumFrameLatency(2))) {
                         frameLatencyWaitableObject = swapChain2->GetFrameLatencyWaitableObject();
                     }
                 }
@@ -357,13 +358,9 @@ struct Renderer::Impl {
         rasterizer.FillMode = D3D11_FILL_SOLID;
         rasterizer.CullMode = D3D11_CULL_NONE;
         rasterizer.DepthClipEnable = TRUE;
-        rasterizer.MultisampleEnable = FALSE;
+        rasterizer.MultisampleEnable = TRUE;
         rasterizer.AntialiasedLineEnable = FALSE;
         if (FAILED(device->CreateRasterizerState(&rasterizer, &rasterizerState))) {
-            return false;
-        }
-        rasterizer.MultisampleEnable = TRUE;
-        if (FAILED(device->CreateRasterizerState(&rasterizer, &surfaceRasterizerState))) {
             return false;
         }
         D3D11_DEPTH_STENCIL_DESC depth{};
@@ -379,44 +376,37 @@ struct Renderer::Impl {
                 && SUCCEEDED(device->CheckMultisampleQualityLevels(DXGI_FORMAT_D32_FLOAT, 4, &depthQuality))
                 && colorQuality != 0
                 && depthQuality != 0) {
-            surfaceSamples = 4;
+            renderSamples = 4;
         }
         return CreateTargets();
     }
 
-    /// Recreates render and depth targets from the current swap-chain back buffer.
+    /// Recreates the shared offscreen color and depth targets at the native back-buffer size.
     bool CreateTargets() {
         ComPtr<ID3D11Texture2D> depthTexture;
         backBuffer.Reset();
+        sceneColor.Reset();
         renderTarget.Reset();
-        surfaceColor.Reset();
-        surfaceTarget.Reset();
         depthView.Reset();
         if (FAILED(swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer)))) {
             return false;
         }
-        D3D11_TEXTURE2D_DESC backDescription{};
-        backBuffer->GetDesc(&backDescription);
-        width = backDescription.Width;
-        height = backDescription.Height;
+        D3D11_TEXTURE2D_DESC colorDescription{};
+        backBuffer->GetDesc(&colorDescription);
+        width = colorDescription.Width;
+        height = colorDescription.Height;
+        colorDescription.Format = DXGI_FORMAT_B8G8R8A8_TYPELESS;
+        colorDescription.SampleDesc.Count = renderSamples;
+        colorDescription.SampleDesc.Quality = 0;
+        colorDescription.BindFlags = D3D11_BIND_RENDER_TARGET;
+        colorDescription.MiscFlags = 0;
         D3D11_RENDER_TARGET_VIEW_DESC targetDescription{};
-        targetDescription.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-        targetDescription.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-        if (FAILED(device->CreateRenderTargetView(backBuffer.Get(), &targetDescription, &renderTarget))) {
+        targetDescription.Format = RENDER_TARGET_FORMAT;
+        targetDescription.ViewDimension = renderSamples > 1
+            ? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
+        if (FAILED(device->CreateTexture2D(&colorDescription, nullptr, &sceneColor))
+                || FAILED(device->CreateRenderTargetView(sceneColor.Get(), &targetDescription, &renderTarget))) {
             return false;
-        }
-        if (surfaceSamples > 1) {
-            D3D11_TEXTURE2D_DESC surfaceDescription = backDescription;
-            surfaceDescription.SampleDesc.Count = surfaceSamples;
-            surfaceDescription.SampleDesc.Quality = 0;
-            surfaceDescription.BindFlags = D3D11_BIND_RENDER_TARGET;
-            surfaceDescription.MiscFlags = 0;
-            if (FAILED(device->CreateTexture2D(&surfaceDescription, nullptr, &surfaceColor))
-                    || FAILED(device->CreateRenderTargetView(surfaceColor.Get(), nullptr, &surfaceTarget))) {
-                return false;
-            }
-        } else {
-            surfaceTarget = renderTarget;
         }
         D3D11_TEXTURE2D_DESC depthDescription{};
         depthDescription.Width = width;
@@ -424,7 +414,7 @@ struct Renderer::Impl {
         depthDescription.MipLevels = 1;
         depthDescription.ArraySize = 1;
         depthDescription.Format = DXGI_FORMAT_D32_FLOAT;
-        depthDescription.SampleDesc.Count = surfaceSamples;
+        depthDescription.SampleDesc.Count = renderSamples;
         depthDescription.BindFlags = D3D11_BIND_DEPTH_STENCIL;
         return SUCCEEDED(device->CreateTexture2D(&depthDescription, nullptr, &depthTexture))
             && SUCCEEDED(device->CreateDepthStencilView(depthTexture.Get(), nullptr, &depthView));
@@ -440,12 +430,21 @@ struct Renderer::Impl {
         }
         context->OMSetRenderTargets(0, nullptr, nullptr);
         renderTarget.Reset();
-        surfaceTarget.Reset();
-        surfaceColor.Reset();
+        sceneColor.Reset();
         depthView.Reset();
         backBuffer.Reset();
         if (SUCCEEDED(swapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, swapChainFlags))) {
             CreateTargets();
+        }
+    }
+
+    /// Completes every frame through the same offscreen-to-presentation path, independent of scene or draw mode.
+    void CompleteFrame() {
+        context->OMSetRenderTargets(0, nullptr, nullptr);
+        if (renderSamples > 1) {
+            context->ResolveSubresource(backBuffer.Get(), 0, sceneColor.Get(), 0, DXGI_FORMAT_B8G8R8A8_UNORM);
+        } else {
+            context->CopyResource(backBuffer.Get(), sceneColor.Get());
         }
     }
 
@@ -459,17 +458,16 @@ struct Renderer::Impl {
             hasSnapshotScene = true;
         }
         constexpr float background[]{ 0.0f, 0.0f, 0.0f, 1.0f };
-        const bool filledSurface = (scene.enabledEffects & 1U) != 0 && scene.corridorFilled
-            || (scene.enabledEffects & 2U) != 0 && scene.funnelFilled;
-        if (surfaceSamples <= 1 || !filledSurface) {
-            context->ClearRenderTargetView(renderTarget.Get(), background);
-        }
-        bool resolveSurface = false;
+        context->ClearRenderTargetView(renderTarget.Get(), background);
+        context->ClearDepthStencilView(depthView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+        ID3D11RenderTargetView* target = renderTarget.Get();
+        context->OMSetRenderTargets(1, &target, depthView.Get());
         D3D11_VIEWPORT viewport{};
         viewport.Width = static_cast<float>(width);
         viewport.Height = static_cast<float>(height);
         viewport.MaxDepth = 1.0f;
         context->RSSetViewports(1, &viewport);
+        context->RSSetState(rasterizerState.Get());
         context->IASetInputLayout(nullptr);
         const std::array<float, 4> lightSettings{
             scene.mainLight ? 1.0f : 0.0f,
@@ -503,21 +501,13 @@ struct Renderer::Impl {
             const SurfaceMesh& mesh = SURFACE_MESHES[kind];
             const DrawConstants draw{ 22U + static_cast<unsigned>(kind), mesh.columns, mesh.rows, mesh.patches };
             context->UpdateSubresource(drawBuffer.Get(), 0, nullptr, &draw, 0, 0);
-            context->RSSetState(filled ? surfaceRasterizerState.Get() : rasterizerState.Get());
             context->VSSetShader(filled ? surfaceVertexShader.Get() : vertexShader.Get(), nullptr, 0);
             context->PSSetShader(filled ? surfacePixelShader.Get() : pixelShader.Get(), nullptr, 0);
             context->IASetPrimitiveTopology(filled
                 ? D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
                 : D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-            ID3D11RenderTargetView* target = filled ? surfaceTarget.Get() : renderTarget.Get();
-            context->OMSetRenderTargets(1, &target, filled ? depthView.Get() : nullptr);
             context->OMSetDepthStencilState(filled ? depthState.Get() : nullptr, 0);
             if (filled) {
-                if (!resolveSurface && surfaceSamples > 1) {
-                    context->ClearRenderTargetView(surfaceTarget.Get(), background);
-                }
-                resolveSurface = true;
-                context->ClearDepthStencilView(depthView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
                 context->IASetIndexBuffer(meshes[kind].indices.Get(), DXGI_FORMAT_R32_UINT, 0);
                 context->DrawIndexedInstanced(meshes[kind].indexCount, 1, 0, 0, 0);
             } else {
@@ -525,10 +515,7 @@ struct Renderer::Impl {
                 context->DrawInstanced(SEGMENT_COUNTS[kind] * 2, 1, 0, 0);
             }
         }
-        if (resolveSurface && surfaceSamples > 1) {
-            context->OMSetRenderTargets(0, nullptr, nullptr);
-            context->ResolveSubresource(backBuffer.Get(), 0, surfaceColor.Get(), 0, DXGI_FORMAT_B8G8R8A8_UNORM);
-        }
+        CompleteFrame();
         if (presentFrame && recorder.IsRecording()) {
             recorder.CaptureFrame(context.Get(), backBuffer.Get());
         }
@@ -681,11 +668,10 @@ struct Renderer::Impl {
 
     /// Size-dependent render targets
     ComPtr<ID3D11Texture2D> backBuffer;
+    ComPtr<ID3D11Texture2D> sceneColor;
     ComPtr<ID3D11RenderTargetView> renderTarget;
-    ComPtr<ID3D11Texture2D> surfaceColor;
-    ComPtr<ID3D11RenderTargetView> surfaceTarget;
-    UINT surfaceSamples = 1;
     ComPtr<ID3D11DepthStencilView> depthView;
+    UINT renderSamples = 1;
 
     /// Shader pipeline and constant buffers
     ComPtr<ID3D11VertexShader> vertexShader;
@@ -695,7 +681,6 @@ struct Renderer::Impl {
     ComPtr<ID3D11Buffer> frameBuffer;
     ComPtr<ID3D11Buffer> drawBuffer;
     ComPtr<ID3D11RasterizerState> rasterizerState;
-    ComPtr<ID3D11RasterizerState> surfaceRasterizerState;
     ComPtr<ID3D11DepthStencilState> depthState;
 
     /// Meshes and capture services
@@ -712,7 +697,7 @@ struct Renderer::Impl {
     unsigned lastVisiblePixels = 0;
 };
 
-/// Creates the same patch-grid triangles as FSSaver.
+/// Creates triangle indices for a patch-based surface grid.
 static std::vector<unsigned> CreateSurfaceIndices(const SurfaceMesh& mesh) {
     std::vector<unsigned> indices;
     indices.reserve(static_cast<std::size_t>(mesh.columns) * mesh.rows * mesh.patches * 6);

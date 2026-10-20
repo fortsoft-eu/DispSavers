@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.1
  */
 
 #pragma once
@@ -29,7 +29,7 @@
 #include <array>
 #include <cstdint>
 
-/// The two original FSSaver flight effects in display order.
+/// The two flight effects in display order.
 enum class EffectKind : std::uint32_t {
     Corridor,
     Funnel,
@@ -52,6 +52,7 @@ struct SurfaceMesh {
     unsigned rows;
     unsigned patches;
 };
+
 inline constexpr std::array<SurfaceMesh, EFFECT_COUNT> SURFACE_MESHES{
     SurfaceMesh{ 96, 232, 4 },
     SurfaceMesh{ 192, 232, 1 }

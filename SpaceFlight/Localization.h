@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.1
  */
 
 #pragma once
@@ -133,10 +133,10 @@ const RecordingText& RecordingSettingsText(AppLanguage language);
 /// Returns the warning displayed before closing an application with an active recording.
 const wchar_t* RecordingCloseWarningText(AppLanguage language);
 
-/// Returns one of Emulators' three TV resolution captions.
+/// Returns one of the three TV resolution captions.
 const wchar_t* RecordingResolutionText(unsigned index);
 
-/// Returns one of Emulators' four exact TV frame-rate captions.
+/// Returns one of the four exact TV frame-rate captions.
 const wchar_t* RecordingRateText(unsigned index);
 
 /// Core language-table access and conversion

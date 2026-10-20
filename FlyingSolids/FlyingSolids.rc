@@ -29,6 +29,7 @@ LANGUAGE LANG_CZECH, SUBLANG_DEFAULT
 
 IDR_LICENSE             RCDATA                  "..\\license.txt"
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
@@ -117,8 +118,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,2,0,0
- PRODUCTVERSION 1,2,0,0
+ FILEVERSION 1,2,0,1
+ PRODUCTVERSION 1,2,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -135,12 +136,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FortSoft"
             VALUE "FileDescription", "FlyingSolids"
-            VALUE "FileVersion", "1.2.0.0"
+            VALUE "FileVersion", "1.2.0.1"
             VALUE "InternalName", "FlyingSolids.exe"
             VALUE "LegalCopyright", "Copyright © Petr Červinka — FortSoft 2026"
             VALUE "OriginalFilename", "FlyingSolids.exe"
             VALUE "ProductName", "FlyingSolids"
-            VALUE "ProductVersion", "1.2.0.0"
+            VALUE "ProductVersion", "1.2.0.1"
         END
     END
     BLOCK "VarFileInfo"
