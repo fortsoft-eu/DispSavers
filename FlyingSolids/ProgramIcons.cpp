@@ -21,25 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.2.0.2
  */
 
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include "ProgramIcons.h"
+#include <shlobj.h>
 #include <shellapi.h>
 #include <string>
 
-/// Loads matching large and small icons from a Windows system library.
-static bool ExtractSystemIconPair(const wchar_t* libraryName, int iconIndex, HICON& largeIcon, HICON& smallIcon) {
+/// Resolves the full path to a Windows system icon library.
+static std::wstring SystemIconLibraryPath(const wchar_t* libraryName) {
     wchar_t systemDirectory[MAX_PATH]{};
     const UINT length = GetSystemDirectoryW(systemDirectory, MAX_PATH);
     if (length == 0 || length >= static_cast<UINT>(MAX_PATH)) {
-        return false;
+        return std::wstring{};
     }
     std::wstring libraryPath(systemDirectory, length);
     libraryPath += L"\\";
     libraryPath += libraryName;
+    return libraryPath;
+}
+
+/// Loads matching large and small icons from a Windows system library.
+static bool ExtractSystemIconPair(const wchar_t* libraryName, int iconIndex, HICON& largeIcon, HICON& smallIcon) {
+    const std::wstring libraryPath = SystemIconLibraryPath(libraryName);
+    if (libraryPath.empty()) {
+        return false;
+    }
     largeIcon = nullptr;
     smallIcon = nullptr;
     if (ExtractIconExW(libraryPath.c_str(), iconIndex, &largeIcon, &smallIcon, 1) == 0) {
@@ -73,14 +83,30 @@ ProgramIcons::~ProgramIcons() {
 /// Loads the application icons from shell32.dll at index 34.
 bool ProgramIcons::Load() {
     HICON largeIcon = nullptr;
-    HICON smallIcon = nullptr;
-    if (!ExtractSystemIconPair(L"shell32.dll", 34, largeIcon, smallIcon)) {
+    HICON loadedSmallIcon = nullptr;
+    if (!ExtractSystemIconPair(L"shell32.dll", 34, largeIcon, loadedSmallIcon)) {
         return false;
     }
     Reset();
     large = largeIcon;
-    small = smallIcon;
+    smallIcon = loadedSmallIcon;
     return true;
+}
+
+/// Loads an icon at the requested pixel size; the caller must release it with DestroyIcon.
+HICON ProgramIcons::LoadSized(UINT size) const {
+    const std::wstring libraryPath = SystemIconLibraryPath(L"shell32.dll");
+    if (libraryPath.empty()) {
+        return nullptr;
+    }
+    HICON icon = nullptr;
+    if (SHDefExtractIconW(libraryPath.c_str(), 34, 0, &icon, nullptr, size) != S_OK) {
+        if (icon != nullptr) {
+            DestroyIcon(icon);
+        }
+        return nullptr;
+    }
+    return icon;
 }
 
 /// Returns the large application icon, or null when loading has failed.
@@ -90,17 +116,17 @@ HICON ProgramIcons::Large() const {
 
 /// Returns the small application icon, or null when loading has failed.
 HICON ProgramIcons::Small() const {
-    return small;
+    return smallIcon;
 }
 
 /// Releases the currently owned icon handles.
 void ProgramIcons::Reset() {
-    if (small != nullptr && small != large) {
-        DestroyIcon(small);
+    if (smallIcon != nullptr && smallIcon != large) {
+        DestroyIcon(smallIcon);
     }
     if (large != nullptr) {
         DestroyIcon(large);
     }
     large = nullptr;
-    small = nullptr;
+    smallIcon = nullptr;
 }

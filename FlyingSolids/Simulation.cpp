@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.2
  */
 
 #define NOMINMAX
@@ -283,11 +283,7 @@ void Simulation::RestoreBodySpeeds(float seconds) {
             continue;
         }
         const float angle = goldenAngle * static_cast<float>(index + 1U) + static_cast<float>(seed & 0xffffU) * 0.001f;
-        body.velocity = Vec3{
-            std::cos(angle),
-            std::sin(angle * 0.73f) * 0.5f,
-            std::sin(angle)
-        };
+        body.velocity = Vec3{ std::cos(angle), std::sin(angle * 0.73f) * 0.5f, std::sin(angle) };
         body.velocity = Normalized(body.velocity) * (body.targetSpeed * recovery);
     }
 }

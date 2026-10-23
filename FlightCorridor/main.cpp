@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.2.0.2
  */
 
 #define NOMINMAX
@@ -405,6 +405,7 @@ struct InformationWindowLayout {
 /// Presentation state and resources owned by a Help or About window.
 struct InformationWindowData {
     AppSettings* settings = nullptr;
+    HICON icon = nullptr;
     HFONT licenseFont = nullptr;
     bool initialized = false;
     bool help = false;
@@ -466,7 +467,7 @@ static void AlignSettingsControl(HWND control, HWND reference, LONG baselineDist
 static void ApplyAnimationMonitors();
 
 /// Creates an animation window and initializes its independent simulation and renderer.
-static bool AddRenderSurface(Application& app, const RECT& bounds, HWND parent, unsigned seed,
+static bool AddRenderSurface(Application& application, const RECT& bounds, HWND parent, unsigned seed,
     const std::wstring& monitorDevice = std::wstring());
 
 /// Starts installation or uninstallation according to the current screen-saver state.
@@ -835,20 +836,11 @@ static void UpdateScreenSaverInhibition() {
     app->screenSaverInhibition = request;
 }
 
-/// Returns the renderer owned by the primary animation surface.
-static Renderer* PrimaryRenderer() {
-    RenderSurface* surface = PrimarySurface();
-    if (surface) {
-        return surface->renderer.get();
-    }
-    return nullptr;
-}
-
 /// Publishes UI settings atomically to every render thread.
-static void SyncRuntimeSettings(Application& app) {
-    for (const std::unique_ptr<RenderSurface>& surface : app.surfaces) {
+static void SyncRuntimeSettings(Application& application) {
+    for (const std::unique_ptr<RenderSurface>& surface : application.surfaces) {
         const std::lock_guard lock(surface->settingsMutex);
-        surface->runtimeSettings = app.settings.AnimationForMonitor(surface->monitorDevice);
+        surface->runtimeSettings = application.settings.AnimationForMonitor(surface->monitorDevice);
     }
 }
 
@@ -2286,7 +2278,7 @@ static HANDLE CreateRenderFrameTimer() {
 
 /// Advances the unchanged solid simulation on this monitor's independent refresh-paced worker.
 /// Flip presentation waits for the output itself; legacy timing waits only after a fast Present.
-static void RenderSurfaceLoop(Application* app, RenderSurface* surface) {
+static void RenderSurfaceLoop(Application* application, RenderSurface* surface) {
     SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
     DWORD multimediaTaskIndex = 0;
     HANDLE multimediaTask = AvSetMmThreadCharacteristicsW(L"Games", &multimediaTaskIndex);
@@ -2298,15 +2290,17 @@ static void RenderSurfaceLoop(Application* app, RenderSurface* surface) {
     const double rate = std::clamp(surface->refreshFrequency, 24.0, 360.0);
     const double frameSeconds = 1.0 / rate;
     const double periodTicks = static_cast<double>(frequency.QuadPart) / rate;
-    const bool inspect = app->mode == RunMode::SelfTest || app->mode == RunMode::SelfTestAllMonitors;
+    const bool inspect = application->mode == RunMode::SelfTest || application->mode == RunMode::SelfTestAllMonitors;
     bool presentationPaced = UsesPresentationPacing(*surface, inspect);
     HANDLE timer = nullptr;
     if (!presentationPaced) {
         timer = CreateRenderFrameTimer();
     }
-    while (!app->closing.load(std::memory_order_relaxed) && !surface->stopRequested.load(std::memory_order_relaxed)) {
+    while (!application->closing.load(std::memory_order_relaxed)
+            && !surface->stopRequested.load(std::memory_order_relaxed)) {
         const HRESULT waitResult = presentationPaced ? surface->renderer->WaitForNextFrame() : S_OK;
-        if (app->closing.load(std::memory_order_relaxed) || surface->stopRequested.load(std::memory_order_relaxed)) {
+        if (application->closing.load(std::memory_order_relaxed)
+                || surface->stopRequested.load(std::memory_order_relaxed)) {
             break;
         }
         if (FAILED(waitResult)) {
@@ -2319,9 +2313,9 @@ static void RenderSurfaceLoop(Application* app, RenderSurface* surface) {
         const MonitorAnimation animation = SurfaceAnimationSettings(*surface);
         const std::uint32_t effect = 1U << static_cast<unsigned>(animation.effect);
         const std::uint32_t enabled = animation.enabledEffects & effect;
-        if (!app->paused.load(std::memory_order_relaxed)) {
+        if (!application->paused.load(std::memory_order_relaxed)) {
             const double simulationSeconds =
-                frameSeconds * (app->mode == RunMode::Preview ? SYSTEM_PREVIEW_SPEED_MULTIPLIER : 1.0);
+                frameSeconds * (application->mode == RunMode::Preview ? SYSTEM_PREVIEW_SPEED_MULTIPLIER : 1.0);
             surface->simulation.Step(simulationSeconds,
                 animation.objectSpeedPercent / 100.0f,
                 enabled, animation.cameraTumbling, animation.cameraReversals);
@@ -2338,7 +2332,7 @@ static void RenderSurfaceLoop(Application* app, RenderSurface* surface) {
         scene.corridorFilled = animation.textured;
         scene.funnelFilled = scene.corridorFilled;
         DrawSurface(*surface, scene, inspect);
-        CompleteSurfaceFrame(*app, *surface);
+        CompleteSurfaceFrame(*application, *surface);
         if (!presentationPaced) {
             WaitForRenderDeadline(timer, static_cast<double>(frameStarted.QuadPart) + periodTicks,
                 frequency.QuadPart);
@@ -2353,10 +2347,10 @@ static void RenderSurfaceLoop(Application* app, RenderSurface* surface) {
 }
 
 /// Starts the worker thread owned by a fully initialized render surface.
-static void StartRenderSurface(Application& app, RenderSurface& surface) {
+static void StartRenderSurface(Application& application, RenderSurface& surface) {
     surface.stopRequested.store(false, std::memory_order_relaxed);
     surface.renderedFrames.store(0, std::memory_order_relaxed);
-    surface.renderThread = std::thread(RenderSurfaceLoop, &app, &surface);
+    surface.renderThread = std::thread(RenderSurfaceLoop, &application, &surface);
 }
 
 /// Requests and joins one render thread.
@@ -2368,8 +2362,8 @@ static void StopRenderSurface(RenderSurface& surface) {
 }
 
 /// Stops every render worker before windows or shared state are destroyed.
-static void StopAllRenderSurfaces(Application& app) {
-    for (std::unique_ptr<RenderSurface>& surface : app.surfaces) {
+static void StopAllRenderSurfaces(Application& application) {
+    for (std::unique_ptr<RenderSurface>& surface : application.surfaces) {
         StopRenderSurface(*surface);
     }
 }
@@ -2599,7 +2593,7 @@ static void UpdateSettingsScrollBars(HWND window, SettingsWindowData& data, bool
 }
 
 /// Applies one horizontal or vertical scroll-bar request.
-static bool ScrollSettingsWindow(HWND window, SettingsWindowData& data, int bar, int request) {
+static bool ScrollSettingsWindow(HWND window, int bar, int request) {
     window = SettingsContentWindow(window);
     const LONG_PTR style = GetWindowLongPtrW(window, GWL_STYLE);
     const LONG_PTR flag = bar == SB_HORZ ? WS_HSCROLL : WS_VSCROLL;
@@ -2658,7 +2652,7 @@ static bool ScrollSettingsWindow(HWND window, SettingsWindowData& data, int bar,
 }
 
 /// Converts a mouse-wheel gesture into virtual-content scrolling.
-static bool ScrollSettingsWheel(HWND window, SettingsWindowData& data, WPARAM wParam) {
+static bool ScrollSettingsWheel(HWND window, WPARAM wParam) {
     window = SettingsContentWindow(window);
     const LONG_PTR style = GetWindowLongPtrW(window, GWL_STYLE);
     const bool horizontal = (GET_KEYSTATE_WPARAM(wParam) & MK_SHIFT) != 0 && (style & WS_HSCROLL) != 0;
@@ -2669,7 +2663,7 @@ static bool ScrollSettingsWheel(HWND window, SettingsWindowData& data, WPARAM wP
     const int steps = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
     const int request = steps > 0 ? SB_LINELEFT : SB_LINERIGHT;
     for (int index = 0; index < std::abs(steps) * 3; index++) {
-        ScrollSettingsWindow(window, data, bar, request);
+        ScrollSettingsWindow(window, bar, request);
     }
     return true;
 }
@@ -2988,7 +2982,7 @@ static void UpdateSettingsTextControlLayout(HWND parent) {
                 [id](const AnimationSliderControl& control) { return control.labelId == id; });
             const bool opaqueLabel = sliderLabel
                 || std::find(std::begin(OPAQUE_SETTINGS_LABEL_IDS), std::end(OPAQUE_SETTINGS_LABEL_IDS), id)
-                    != std::end(OPAQUE_SETTINGS_LABEL_IDS);
+                != std::end(OPAQUE_SETTINGS_LABEL_IDS);
             LONG_PTR style = GetWindowLongPtrW(control, GWL_STYLE);
             style |= WS_CLIPSIBLINGS;
             if (layer == SettingsControlLayer::Label) {
@@ -3681,6 +3675,7 @@ static SIZE InformationTextSize(HWND control) {
 /// Lays out About controls with measured product and website text, optionally resizing within the work area.
 static void LayoutAboutWindow(HWND window, bool resize) {
     const InformationWindowLayout& layout = aboutWindowLayout;
+    HWND icon = GetDlgItem(window, ID_INFORMATION_ICON);
     HWND website = GetDlgItem(window, ID_INFORMATION_WEBSITE);
     HWND link = GetDlgItem(window, ID_INFORMATION_LINK);
     SIZE websiteSize = InformationTextSize(website);
@@ -3688,6 +3683,11 @@ static void LayoutAboutWindow(HWND window, bool resize) {
     SendMessageW(link, LM_GETIDEALSIZE, 0, reinterpret_cast<LPARAM>(&linkSize));
     RECT spacing = { 0, 0, 4, ABOUT_WEB_GAP_DLU };
     MapDialogRect(window, &spacing);
+    RECT iconPosition = { 10, 10, 0, 0 };
+    MapDialogRect(window, &iconPosition);
+    SetWindowPos(icon, nullptr, iconPosition.left, iconPosition.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+    RECT iconBounds = InformationControlRect(window, ID_INFORMATION_ICON);
+    int productLeft = iconBounds.right + iconBounds.left;
     int margin = layout.text.left;
     int rightMargin = layout.client.cx - layout.text.right;
     int bottomMargin = layout.client.cy - layout.close.bottom;
@@ -3700,7 +3700,7 @@ static void LayoutAboutWindow(HWND window, bool resize) {
     GetClientRect(window, &client);
     if (resize) {
         client.right =
-            std::max(layout.client.cx, layout.website.left + websiteSize.cx + spacing.right + linkSize.cx + rightMargin);
+            std::max(layout.client.cx, productLeft + websiteSize.cx + spacing.right + linkSize.cx + rightMargin);
         RECT frame = {};
         DWORD style = static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE));
         DWORD extendedStyle = static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE));
@@ -3720,13 +3720,12 @@ static void LayoutAboutWindow(HWND window, bool resize) {
         GetClientRect(window, &client);
     }
     int right = client.right - rightMargin;
-    int productWidth = right - layout.product.left;
+    int productWidth = right - productLeft;
     int productHeight = InformationLabelHeight(GetDlgItem(window, ID_INFORMATION_PRODUCT), productWidth);
     int websiteY = layout.product.top + productHeight + productGap;
-    int linkX = layout.website.left + websiteSize.cx + spacing.right;
-    PlaceInformationControl(window, ID_INFORMATION_PRODUCT, layout.product.left, layout.product.top, productWidth,
-        productHeight);
-    PlaceInformationControl(window, ID_INFORMATION_WEBSITE, layout.website.left, websiteY, websiteSize.cx, websiteSize.cy);
+    int linkX = productLeft + websiteSize.cx + spacing.right;
+    PlaceInformationControl(window, ID_INFORMATION_PRODUCT, productLeft, layout.product.top, productWidth, productHeight);
+    PlaceInformationControl(window, ID_INFORMATION_WEBSITE, productLeft, websiteY, websiteSize.cx, websiteSize.cy);
     PlaceInformationControl(window, ID_INFORMATION_LINK, linkX, websiteY, right - linkX, linkSize.cy);
     AlignSettingsControl(link, website);
     RECT websiteBounds = InformationControlRect(window, ID_INFORMATION_WEBSITE);
@@ -3819,26 +3818,6 @@ static bool HandleInformationNotification(HWND window, LPARAM lParam) {
     return false;
 }
 
-/// Positions an information window at the system-selected default location without resizing or activation.
-static bool PositionInformationWindowByWindowsDefault(HWND window) {
-    RECT bounds = {};
-    if (!GetWindowRect(window, &bounds)) {
-        return false;
-    }
-    HWND positionWindow = CreateWindowExW(0, L"STATIC", L"", WS_OVERLAPPED, CW_USEDEFAULT, CW_USEDEFAULT,
-        bounds.right - bounds.left, bounds.bottom - bounds.top, nullptr, nullptr, app->instance, nullptr);
-    if (positionWindow == nullptr) {
-        return false;
-    }
-    bool positioned = GetWindowRect(positionWindow, &bounds) != FALSE;
-    DestroyWindow(positionWindow);
-    if (!positioned) {
-        return false;
-    }
-    return SetWindowPos(window, nullptr, bounds.left, bounds.top, 0, 0,
-        SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE) != FALSE;
-}
-
 /// Captures the form's screen position, using and translating its normal placement when minimized.
 static void SaveFormPosition(HWND window, int* x, int* y) {
     if (window == nullptr) {
@@ -3870,19 +3849,32 @@ static void SaveFormPosition(HWND window, int* x, int* y) {
     *y = rect.top;
 }
 
-/// Remembers an initialized information window without committing pending animation preferences.
-static void SaveInformationWindowPosition(HWND window, const InformationWindowData* data) {
+/// Persists captured placement without committing pending animation preferences.
+static void InformationWindowStateSaved(PersistWindowState* sender, const PersistWindowStateEventArgs&, void* context) {
+    const InformationWindowData* data = static_cast<const InformationWindowData*>(context);
+    if (!data || !data->initialized || !data->settings) {
+        return;
+    }
+    PersistWindowStateData& saved = data->help ? data->settings->helpWindowState : data->settings->aboutWindowState;
+    saved = sender->GetState();
+    data->settings->SaveWindowPositions();
+}
+
+/// Captures an initialized information window and invokes its persistence callback.
+static void SaveInformationWindowPosition(const InformationWindowData* data) {
     if (!data || !data->initialized || !data->settings) {
         return;
     }
     PersistWindowState& placement = data->help ? helpWindowState : aboutWindowState;
-    PersistWindowStateData& saved = data->help ? data->settings->helpWindowState : data->settings->aboutWindowState;
-    saved = placement.Save();
-    data->settings->SaveWindowPositions();
+    placement.Save();
 }
 
-/// Releases the fonts owned by one information window and clears their handles.
-static void DestroyInformationWindowFonts(InformationWindowData& data) {
+/// Releases the icon and fonts owned by one information window and clears their handles.
+static void DestroyInformationWindowResources(InformationWindowData& data) {
+    if (data.icon != nullptr) {
+        DestroyIcon(data.icon);
+        data.icon = nullptr;
+    }
     if (data.licenseFont) {
         DeleteObject(data.licenseFont);
         data.licenseFont = nullptr;
@@ -3908,7 +3900,11 @@ static bool CreateInformationControls(HWND window, InformationWindowData& data) 
             }
             ReleaseDC(window, screen);
         }
-        SendMessageW(icon, STM_SETICON, reinterpret_cast<WPARAM>(app->programIcons.Large()), 0);
+        data.icon = app->programIcons.LoadSized(iconSize);
+        if (data.icon == nullptr) {
+            return false;
+        }
+        SendMessageW(icon, STM_SETICON, reinterpret_cast<WPARAM>(data.icon), 0);
         SetWindowPos(icon, nullptr, 0, 0, iconSize, iconSize, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
         HWND product = GetDlgItem(window, ID_INFORMATION_PRODUCT);
         HWND website = GetDlgItem(window, ID_INFORMATION_WEBSITE);
@@ -3952,12 +3948,11 @@ static LRESULT CALLBACK InformationProc(HWND window, UINT msg, WPARAM wParam, LP
                 return 0;
             }
             if ((wParam & 0xFFF0) == SC_MINIMIZE) {
-                SaveInformationWindowPosition(window, data);
+                SaveInformationWindowPosition(data);
             }
             break;
         case WM_EXITSIZEMOVE:
-        case WM_DESTROY:
-            SaveInformationWindowPosition(window, data);
+            SaveInformationWindowPosition(data);
             return 0;
         case WM_CLOSE:
             DestroyWindow(window);
@@ -3974,7 +3969,9 @@ static LRESULT CALLBACK InformationProc(HWND window, UINT msg, WPARAM wParam, LP
                 }
             }
             if (data != nullptr) {
-                DestroyInformationWindowFonts(*data);
+                PersistWindowState& placement = data->help ? helpWindowState : aboutWindowState;
+                placement.SetSavedHandler(nullptr);
+                DestroyInformationWindowResources(*data);
                 if (data->initialized) {
                     delete data;
                 }
@@ -4001,7 +3998,7 @@ static INT_PTR CALLBACK InformationDialogProc(HWND window, UINT msg, WPARAM wPar
     if (msg == WM_SYSCOMMAND && (wParam & 0xFFF0) == SC_MINIMIZE) {
         const InformationWindowData* data =
             reinterpret_cast<const InformationWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
-        SaveInformationWindowPosition(window, data);
+        SaveInformationWindowPosition(data);
     }
     if (msg == WM_CLOSE
             || msg == WM_COMMAND && (LOWORD(wParam) == ID_INFORMATION_CLOSE || LOWORD(wParam) == IDCANCEL)
@@ -4175,6 +4172,9 @@ static void ShowInformationWindow(HWND owner, bool help, AppLanguage language, b
     }
     InformationWindowLayout& layout = help ? helpWindowLayout : aboutWindowLayout;
     layout = {};
+    placement.SetSavingOptions(PersistWindowStateSavingOptions::None);
+    placement.SetDetectionOptions(WindowDetectionOptions::NoDetection);
+    placement.SetUseWindowsDefaultSize(false);
     placement.Load(help ? settingsData->settings->helpWindowState : settingsData->settings->aboutWindowState);
     std::unique_ptr<InformationWindowData> data = std::make_unique<InformationWindowData>();
     data->settings = settingsData->settings;
@@ -4192,13 +4192,12 @@ static void ShowInformationWindow(HWND owner, bool help, AppLanguage language, b
         target = nullptr;
         return;
     }
+    placement.SetSavedHandler(InformationWindowStateSaved, data.get());
     data->initialized = true;
     data.release();
     InitializeInformationWindowLayout(target, help);
     LayoutInformationWindow(target, true);
-    const PersistWindowStateData& savedPlacement = placement.GetState();
-    const bool defaultPosition = savedPlacement.x == CW_USEDEFAULT || savedPlacement.y == CW_USEDEFAULT;
-    if (defaultPosition && !PositionInformationWindowByWindowsDefault(target) || !placement.Attach(target)) {
+    if (!placement.Attach(target, help ? "Help" : "About")) {
         DestroyWindow(target);
         target = nullptr;
         return;
@@ -4648,14 +4647,14 @@ static void ShowRecordingSettings(HWND owner, SettingsWindowData& settingsData) 
 }
 
 /// Stops and destroys every full-monitor surface created by settings preview.
-static void DestroySettingsPreviewSurfaces(Application& app) {
-    StopAllRenderSurfaces(app);
-    for (std::unique_ptr<RenderSurface>& surface : app.surfaces) {
+static void DestroySettingsPreviewSurfaces(Application& application) {
+    StopAllRenderSurfaces(application);
+    for (std::unique_ptr<RenderSurface>& surface : application.surfaces) {
         if (surface->window) {
             DestroyWindow(surface->window);
         }
     }
-    app.surfaces.clear();
+    application.surfaces.clear();
 }
 
 /// Ends settings preview and returns the process to standalone UI mode.
@@ -5201,7 +5200,7 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             break;
         case WM_HSCROLL:
             if (data) {
-                if (lParam == 0 && ScrollSettingsWindow(window, *data, SB_HORZ, LOWORD(wParam))) {
+                if (lParam == 0 && ScrollSettingsWindow(window, SB_HORZ, LOWORD(wParam))) {
                     return 0;
                 }
                 if (data->settings && !data->updating && lParam != 0) {
@@ -5220,14 +5219,14 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             return 0;
         case WM_VSCROLL:
             if (data) {
-                if (lParam == 0 && ScrollSettingsWindow(window, *data, SB_VERT, LOWORD(wParam))) {
+                if (lParam == 0 && ScrollSettingsWindow(window, SB_VERT, LOWORD(wParam))) {
                     return 0;
                 }
             }
             break;
         case WM_MOUSEWHEEL:
             if (data) {
-                if (ScrollSettingsWheel(window, *data, wParam)) {
+                if (ScrollSettingsWheel(window, wParam)) {
                     return 0;
                 }
             }
@@ -5655,25 +5654,25 @@ static void ApplyAnimationMonitors() {
 }
 
 /// Creates the modeless standalone control window and transfers its state ownership.
-static HWND CreateApplicationWindow(Application& app, SettingsWindowData*& data) {
+static HWND CreateApplicationWindow(Application& application, SettingsWindowData*& data) {
     data = new SettingsWindowData{};
-    data->original = app.settings;
-    data->settings = &app.settings;
+    data->original = application.settings;
+    data->settings = &application.settings;
     data->monitors = AvailableMonitors();
     data->appMode = true;
-    data->language = ResolvedLanguage(app.settings);
+    data->language = ResolvedLanguage(application.settings);
     MONITORINFO primary{};
     primary.cbSize = sizeof(primary);
     const POINT origin{ 0, 0 };
     GetMonitorInfoW(MonitorFromPoint(origin, MONITOR_DEFAULTTOPRIMARY), &primary);
     RECT area = primary.rcWork;
-    if (app.settings.controlWindowX != std::numeric_limits<int>::min()
-            && app.settings.controlWindowY != std::numeric_limits<int>::min()) {
+    if (application.settings.controlWindowX != std::numeric_limits<int>::min()
+            && application.settings.controlWindowY != std::numeric_limits<int>::min()) {
         RECT saved{
-            app.settings.controlWindowX,
-            app.settings.controlWindowY,
-            app.settings.controlWindowX + SETTINGS_WIDTH,
-            app.settings.controlWindowY + APPLICATION_SETTINGS_HEIGHT
+            application.settings.controlWindowX,
+            application.settings.controlWindowY,
+            application.settings.controlWindowX + SETTINGS_WIDTH,
+            application.settings.controlWindowY + APPLICATION_SETTINGS_HEIGHT
         };
         const HMONITOR savedMonitor = MonitorFromRect(&saved, MONITOR_DEFAULTTONULL);
         if (savedMonitor) {
@@ -5693,15 +5692,15 @@ static HWND CreateApplicationWindow(Application& app, SettingsWindowData*& data)
         static_cast<int>(area.right) - layout.width));
     int y = std::min(static_cast<int>(area.top) + 24, std::max(static_cast<int>(area.top),
         static_cast<int>(area.bottom) - layout.height));
-    if (app.settings.controlWindowX != std::numeric_limits<int>::min()
-            && app.settings.controlWindowY != std::numeric_limits<int>::min()) {
-        x = std::clamp(app.settings.controlWindowX, static_cast<int>(area.left), std::max(static_cast<int>(area.left),
-            static_cast<int>(area.right) - layout.width));
-        y = std::clamp(app.settings.controlWindowY, static_cast<int>(area.top), std::max(static_cast<int>(area.top),
-            static_cast<int>(area.bottom) - layout.height));
+    if (application.settings.controlWindowX != std::numeric_limits<int>::min()
+            && application.settings.controlWindowY != std::numeric_limits<int>::min()) {
+        x = std::clamp(application.settings.controlWindowX, static_cast<int>(area.left),
+            std::max(static_cast<int>(area.left), static_cast<int>(area.right) - layout.width));
+        y = std::clamp(application.settings.controlWindowY, static_cast<int>(area.top),
+            std::max(static_cast<int>(area.top), static_cast<int>(area.bottom) - layout.height));
     }
     HWND window = CreateWindowExW(extendedStyle, SETTINGS_CLASS, Text(data->language).controlTitle,
-        layout.style | WS_VISIBLE, x, y, layout.width, layout.height, nullptr, nullptr, app.instance, data);
+        layout.style | WS_VISIBLE, x, y, layout.width, layout.height, nullptr, nullptr, application.instance, data);
     if (!window) {
         delete data;
         data = nullptr;
@@ -5995,12 +5994,6 @@ static LRESULT CALLBACK RenderProc(HWND window, UINT msg, WPARAM wParam, LPARAM 
     return DefWindowProcW(window, msg, wParam, lParam);
 }
 
-/// Collects raw monitor rectangles for full-screen SCR and diagnostic modes.
-static BOOL CALLBACK CollectMonitor(HMONITOR, HDC, LPRECT rectangle, LPARAM parameter) {
-    reinterpret_cast<std::vector<RECT>*>(parameter)->push_back(*rectangle);
-    return TRUE;
-}
-
 /// Registers render, settings and information window classes.
 static bool RegisterClasses(HINSTANCE instance) {
     WNDCLASSEXW render{};
@@ -6020,7 +6013,7 @@ static bool RegisterClasses(HINSTANCE instance) {
 }
 
 /// Creates a render window with ownership and activation styles appropriate to its mode.
-static HWND CreateRenderWindow(Application& app, RenderSurface& surface, const RECT& requestedBounds,
+static HWND CreateRenderWindow(Application& application, RenderSurface& surface, const RECT& requestedBounds,
         HWND requestedParent = nullptr) {
     DWORD style = WS_POPUP;
     DWORD extendedStyle = 0;
@@ -6029,37 +6022,37 @@ static HWND CreateRenderWindow(Application& app, RenderSurface& surface, const R
     int y = requestedBounds.top;
     int width = requestedBounds.right - requestedBounds.left;
     int height = requestedBounds.bottom - requestedBounds.top;
-    if (app.mode == RunMode::Preview) {
+    if (application.mode == RunMode::Preview) {
         style = WS_CHILD | WS_VISIBLE;
-    } else if (app.mode == RunMode::SelfTest) {
+    } else if (application.mode == RunMode::SelfTest) {
         style = WS_POPUP;
         width = 320;
         height = 240;
-    } else if (app.mode == RunMode::SelfTestAllMonitors) {
+    } else if (application.mode == RunMode::SelfTestAllMonitors) {
         style = WS_POPUP;
     } else {
         style |= WS_VISIBLE;
         extendedStyle |= WS_EX_TOOLWINDOW;
-        if (app.mode == RunMode::ScreenSaver) {
+        if (application.mode == RunMode::ScreenSaver) {
             extendedStyle |= WS_EX_TOPMOST;
         }
-        if (app.mode == RunMode::Application || app.mode == RunMode::SettingsPreview) {
+        if (application.mode == RunMode::Application || application.mode == RunMode::SettingsPreview) {
             extendedStyle |= WS_EX_NOACTIVATE;
         }
     }
     return CreateWindowExW(extendedStyle, RENDER_CLASS, PRODUCT_NAME, style, x, y, width, height, parent, nullptr,
-        app.instance, &surface);
+        application.instance, &surface);
 }
 
 /// Creates, initializes and starts one independent animation surface.
-static bool AddRenderSurface(Application& app, const RECT& bounds, HWND parent, unsigned seed,
+static bool AddRenderSurface(Application& application, const RECT& bounds, HWND parent, unsigned seed,
         const std::wstring& monitorDevice) {
     std::unique_ptr<RenderSurface> surface = std::make_unique<RenderSurface>(seed);
     surface->monitorDevice = monitorDevice;
-    surface->runtimeSettings = app.settings.AnimationForMonitor(monitorDevice);
+    surface->runtimeSettings = application.settings.AnimationForMonitor(monitorDevice);
     surface->bounds = bounds;
     surface->renderer = std::make_unique<Renderer>();
-    surface->window = CreateRenderWindow(app, *surface, bounds, parent);
+    surface->window = CreateRenderWindow(application, *surface, bounds, parent);
     if (!surface->window || !surface->renderer->Initialize(surface->window)) {
         if (surface->window) {
             DestroyWindow(surface->window);
@@ -6069,8 +6062,8 @@ static bool AddRenderSurface(Application& app, const RECT& bounds, HWND parent, 
     surface->refreshFrequency = CurrentRefreshRate(surface->window);
     surface->refreshRate = static_cast<unsigned>(std::lround(surface->refreshFrequency));
     RenderSurface* startedSurface = surface.get();
-    app.surfaces.push_back(std::move(surface));
-    StartRenderSurface(app, *startedSurface);
+    application.surfaces.push_back(std::move(surface));
+    StartRenderSurface(application, *startedSurface);
     return true;
 }
 

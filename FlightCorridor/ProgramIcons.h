@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.0.2
  */
 
 #pragma once
@@ -47,6 +47,9 @@ public:
     /// Loads the application icons from shell32.dll at index 34.
     bool Load();
 
+    /// Loads an icon at the requested pixel size; the caller must release it with DestroyIcon.
+    HICON LoadSized(UINT size) const;
+
     /// Returns the large application icon, or null when loading has failed.
     HICON Large() const;
 
@@ -58,5 +61,5 @@ private:
     void Reset();
 
     HICON large = nullptr;
-    HICON small = nullptr;
+    HICON smallIcon = nullptr;
 };
