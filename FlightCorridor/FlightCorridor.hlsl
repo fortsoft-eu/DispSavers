@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.2.1.0
  */
 
 static const float PI = 3.14159265358979323846;
@@ -76,12 +76,14 @@ float AnchoredFlightGridCoordinate(float cameraCoordinate, float index, float sp
 
 /// Calculates the corridor's smoothly varying horizontal center.
 float CorridorCenterX(float z) {
-    return (13.0 * sin(z * 0.028 + pathPhases.x) + 6.0 * sin(z * 0.011 + 1.2 + pathPhases.y)) * surfaceVariations.y;
+    return (13.0 * sin(z * 0.028 + pathPhases.x)
+        + 6.0 * sin(z * 0.011 + 1.2 + pathPhases.y)) * surfaceVariations.y;
 }
 
 /// Calculates the corridor's smoothly varying base height.
 float CorridorBaseHeight(float z) {
-    return (6.0 * sin(z * 0.022 + 0.4 + pathPhases.z) + 3.0 * sin(z * 0.047 + 1.1 + pathPhases.w)) * surfaceVariations.x;
+    return (6.0 * sin(z * 0.022 + 0.4 + pathPhases.z)
+        + 3.0 * sin(z * 0.047 + 1.1 + pathPhases.w)) * surfaceVariations.x;
 }
 
 /// Blends the corridor's waves, banking, saddle and arch shapes.
@@ -92,8 +94,8 @@ float CorridorMidHeight(float x, float z, float2 cameraXZ) {
         * cos(z * 0.083 + time * 0.21 + animationPhases.y)) * surfaceVariations.x;
     float bank = 4.2 * lateral * sin(z * 0.019 + time * 0.047 + animationPhases.x) * surfaceVariations.y;
     float saddle = 2.0 * (lateral * lateral - 0.58 * longitudinal * longitudinal) * surfaceVariations.y;
-    float arch = (-3.1 * cos(lateral * 0.92) + 1.5 * sin(longitudinal * 1.25 + time * 0.16 + animationPhases.x))
-        * surfaceVariations.x;
+    float arch = (-3.1 * cos(lateral * 0.92)
+        + 1.5 * sin(longitudinal * 1.25 + time * 0.16 + animationPhases.x)) * surfaceVariations.x;
     float cycle = frac(time * 0.014 + animationPhases.y / (2.0 * PI)) * 4.0;
     uint shape = (uint) floor(cycle);
     float blend = smoothstep(0.15, 0.85, frac(cycle));
@@ -117,20 +119,20 @@ float CorridorMidHeight(float x, float z, float2 cameraXZ) {
 
 /// Calculates the corridor's animated vertical half-opening.
 float CorridorHalfHeight(float z) {
-    float opening = (7.6 + 1.5 * sin(z * 0.032 - time * 0.19 + animationPhases.x) + 1.1
-        * sin(time * 0.073 + 0.8 + animationPhases.y)) * surfaceVariations.z / surfaceVariations.w;
+    float opening = (7.6 + 1.5 * sin(z * 0.032 - time * 0.19 + animationPhases.x)
+        + 1.1 * sin(time * 0.073 + 0.8 + animationPhases.y)) * surfaceVariations.z / surfaceVariations.w;
     return clamp(opening, 4.8, 11.5);
 }
 
 /// Calculates the corridor's animated horizontal half-opening.
 float CorridorHalfWidth(float z) {
-    float opening = (10.2 + 2.2 * sin(z * 0.025 + time * 0.15 + 1.4 + animationPhases.x) + 1.4
-        * cos(time * 0.061 - 0.6 + animationPhases.y)) * surfaceVariations.z * surfaceVariations.w;
+    float opening = (10.2 + 2.2 * sin(z * 0.025 + time * 0.15 + 1.4 + animationPhases.x)
+        + 1.4 * cos(time * 0.061 - 0.6 + animationPhases.y)) * surfaceVariations.z * surfaceVariations.w;
     return clamp(opening, 6.5, 14.0);
 }
 
-/// Bends the local flight into a circular arc and transports cross-sections along its tangent.
-/// Zero curvature is the exact original route; axial rotation changes wall orientation independently of tumbling.
+/// Bends the local flight into a circular arc and transports cross-sections along its tangent. Zero curvature
+/// is the exact original route; axial rotation changes wall orientation independently of tumbling.
 float3 BendCorridor(float3 relative) {
     float squaredAngle = dot(corridorShape.xy, corridorShape.xy) * relative.z * relative.z;
     float sinc;
@@ -211,16 +213,16 @@ float4 CorridorSurfaceSample(float u, float zIndex, uint surface, out float fade
 
 /// Calculates the funnel's smoothly varying centerline.
 float3 FunnelCenter(float pathPosition) {
-    return float3((14.0 * sin(pathPosition * 0.022 + pathPhases.x) + 4.0 * sin(pathPosition * 0.061 + 0.7 + pathPhases.y))
-        * surfaceVariations.y, (9.0 * sin(pathPosition * 0.017 + 0.8 + pathPhases.z) + 3.0 * cos(pathPosition * 0.051
-        + pathPhases.w)) * surfaceVariations.x, pathPosition);
+    return float3((14.0 * sin(pathPosition * 0.022 + pathPhases.x) + 4.0 * sin(pathPosition * 0.061 + 0.7
+        + pathPhases.y)) * surfaceVariations.y, (9.0 * sin(pathPosition * 0.017 + 0.8 + pathPhases.z)
+        + 3.0 * cos(pathPosition * 0.051 + pathPhases.w)) * surfaceVariations.x, pathPosition);
 }
 
 /// Calculates the tangent along the funnel's centerline.
 float3 FunnelTangent(float pathPosition) {
-    return normalize(float3((0.308 * cos(pathPosition * 0.022 + pathPhases.x) + 0.244 * cos(pathPosition * 0.061 + 0.7
-        + pathPhases.y)) * surfaceVariations.y, (0.153 * cos(pathPosition * 0.017 + 0.8 + pathPhases.z) - 0.153
-        * sin(pathPosition * 0.051 + pathPhases.w)) * surfaceVariations.x, 1.0));
+    return normalize(float3((0.308 * cos(pathPosition * 0.022 + pathPhases.x) + 0.244 * cos(pathPosition
+        * 0.061 + 0.7 + pathPhases.y)) * surfaceVariations.y, (0.153 * cos(pathPosition * 0.017 + 0.8
+        + pathPhases.z) - 0.153 * sin(pathPosition * 0.051 + pathPhases.w)) * surfaceVariations.x, 1.0));
 }
 
 /// Calculates the smoothly varying chamber expansion along the funnel.
@@ -250,18 +252,20 @@ float3 FunnelPoint(float pathPosition, float angle, out float chamberAmount) {
     sincos(twistedAngle, angleSine, angleCosine);
     chamberAmount = FunnelChamberAmount(pathPosition);
     float radius = FunnelRadius(pathPosition);
-    float lobes = 1.0 + (0.18 * sin(3.0 * angle + pathPosition * 0.031 - time * 0.16 + animationPhases.x) + 0.09
-        * sin(5.0 * angle - pathPosition * 0.019 + time * 0.11 + animationPhases.y)) * surfaceVariations.y;
+    float lobes = 1.0 + (0.18 * sin(3.0 * angle + pathPosition * 0.031 - time * 0.16 + animationPhases.x)
+        + 0.09 * sin(5.0 * angle - pathPosition * 0.019 + time * 0.11 + animationPhases.y))
+        * surfaceVariations.y;
     float horizontalScale = (1.0 + 0.28 * sin(pathPosition * 0.024 + time * 0.047 + animationPhases.x))
         * surfaceVariations.w;
     float verticalScale = (1.0 - 0.22 * sin(pathPosition * 0.024 + time * 0.047 + animationPhases.x))
         / surfaceVariations.w;
-    return center + right * (radius * lobes * horizontalScale * angleCosine) + localUp * (radius * lobes * verticalScale
-        * angleSine);
+    return center + right * (radius * lobes * horizontalScale * angleCosine)
+        + localUp * (radius * lobes * verticalScale * angleSine);
 }
 
 /// Projects a funnel grid sample and computes distance fading, color variation and chamber expansion.
-float4 FunnelSurfaceSample(float angle, float pathIndex, out float fade, out float colorPhase, out float chamberAmount) {
+float4 FunnelSurfaceSample(float angle, float pathIndex, out float fade, out float colorPhase,
+        out float chamberAmount) {
     float cameraPath = time * 4.5;
     float cameraRadius = FunnelRadius(cameraPath);
     float3 cameraCenter = FunnelCenter(cameraPath);
@@ -269,8 +273,8 @@ float4 FunnelSurfaceSample(float angle, float pathIndex, out float fade, out flo
     float3 cameraRight = normalize(cross(float3(0.0, 1.0, 0.0), cameraTangent));
     float3 cameraUp = normalize(cross(cameraTangent, cameraRight));
     float cameraOffset = min(cameraRadius * 0.10 * cameraVariations.x, 2.4);
-    float3 camera = cameraCenter + cameraRight * (cameraOffset * sin(time * 0.083 + animationPhases.w)) + cameraUp
-        * (cameraOffset * 0.65 * cos(time * 0.071 + animationPhases.w) * cameraVariations.y);
+    float3 camera = cameraCenter + cameraRight * (cameraOffset * sin(time * 0.083 + animationPhases.w))
+        + cameraUp * (cameraOffset * 0.65 * cos(time * 0.071 + animationPhases.w) * cameraVariations.y);
     float pathPosition = AnchoredFlightGridCoordinate(cameraPath, pathIndex, 3.0);
     float3 world = FunnelPoint(pathPosition, angle, chamberAmount);
     float targetPath = cameraPath + 36.0 * cameraVariations.w + 6.0 * sin(time * 0.057 + animationPhases.w)
@@ -296,8 +300,8 @@ float4 FunnelSurfaceSample(float angle, float pathIndex, out float fade, out flo
     float nearFade = smoothstep(0.35, 4.5, view.z);
     fade = lerp(1.0, 0.16, distantFade) * nearFade;
     colorPhase = 0.5 + 0.5 * sin(angle * 2.0 + pathPosition * 0.046 - time * 0.22 + animationPhases.z);
-    return float4(view.x * focalLength / aspect, view.y * focalLength, view.z * farPlane / (farPlane - nearPlane)
-        - nearPlane * farPlane / (farPlane - nearPlane), view.z);
+    return float4(view.x * focalLength / aspect, view.y * focalLength, view.z * farPlane
+        / (farPlane - nearPlane) - nearPlane * farPlane / (farPlane - nearPlane), view.z);
 }
 
 /// Builds corridor wire segments over the extended longitudinal grid.
@@ -408,7 +412,8 @@ float4 PSMain(VSOutput input) : SV_TARGET {
     return input.color;
 }
 
-/// Samples the filled surface and reconstructs view coordinates before perspective division for hardware clipping.
+/// Samples the filled surface and reconstructs view coordinates before perspective division for hardware
+/// clipping.
 float4 SolidFlightSample(float2 uv, uint patch,
     out float3 view, out float4 material) {
     float fade = 1.0;
@@ -417,15 +422,16 @@ float4 SolidFlightSample(float2 uv, uint patch,
     float4 position;
     float halfFov;
     if (effect == 22) {
-        position = CorridorSurfaceSample(uv.x * 2.0 - 1.0, uv.y * 2.0 * FLIGHT_HALF_DEPTH_INDEX - FLIGHT_HALF_DEPTH_INDEX,
-            patch, fade, phase);
+        position = CorridorSurfaceSample(uv.x * 2.0 - 1.0, uv.y * 2.0 * FLIGHT_HALF_DEPTH_INDEX
+            - FLIGHT_HALF_DEPTH_INDEX, patch, fade, phase);
         halfFov = 0.62;
     } else {
-        position = FunnelSurfaceSample(uv.x * 2.0 * PI, uv.y * 2.0 * FLIGHT_HALF_DEPTH_INDEX - FLIGHT_HALF_DEPTH_INDEX,
-            fade, phase, chamber);
+        position = FunnelSurfaceSample(uv.x * 2.0 * PI, uv.y * 2.0 * FLIGHT_HALF_DEPTH_INDEX
+            - FLIGHT_HALF_DEPTH_INDEX, fade, phase, chamber);
         halfFov = 0.66;
     }
-    view = float3(position.x * (resolution.x / resolution.y) * tan(halfFov), position.y * tan(halfFov), position.w);
+    view = float3(position.x * (resolution.x / resolution.y) * tan(halfFov), position.y * tan(halfFov),
+        position.w);
     material = float4(FlightMaterialColor(phase, patch, chamber), fade);
     return position;
 }

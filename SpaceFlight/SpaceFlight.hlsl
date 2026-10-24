@@ -165,7 +165,8 @@ float FunnelCutRadius() {
 float FunnelDeformedHeight(float radius) {
     float formation = FunnelFormation();
     float depth = FunnelRimDepth();
-    float strength = formation * (formation * FUNNEL_DEPTH_FACTOR + (1.0 - formation) * depth * FUNNEL_CENTER_SQUARED);
+    float strength = formation * (formation * FUNNEL_DEPTH_FACTOR + (1.0 - formation) * depth
+        * FUNNEL_CENTER_SQUARED);
     return max(-formation * depth, -strength / (radius * radius + FUNNEL_CENTER_SQUARED));
 }
 
@@ -208,7 +209,8 @@ float3 FunnelApproachMotion(float initialRadius, float orbitTime) {
     float rate = orbitTime - 0.75 * (1.0 - decay);
     float plungeTime = max(0.0, orbitTime - funnelMotion.y);
     float squared = plungeTime * plungeTime;
-    float radius = initialRadius - funnelPath.x * orbitTime - funnelPath.y * distance - 0.03 * squared * squared;
+    float radius = initialRadius - funnelPath.x * orbitTime - funnelPath.y * distance
+        - 0.03 * squared * squared;
     float inwardSpeed = funnelPath.x + funnelPath.y * rate + 0.12 * squared * plungeTime;
     float acceleration = funnelPath.y * (1.0 - decay) + 0.36 * squared;
     return float3(radius, inwardSpeed, acceleration);
@@ -301,7 +303,8 @@ float3 FunnelView(float3 forward) {
         float initialRadius = length(offset);
         float4 orbit = FunnelOrbitMotion(initialRadius, orbitTime);
         float initialAngularRate = FunnelOrbitCoefficient(initialRadius) * funnelPath.x / initialRadius;
-        float yaw = funnelHeading + funnelView.x * orbitTime + funnelCycle.z * (orbit.z - initialAngularRate * orbitTime);
+        float yaw = funnelHeading + funnelView.x * orbitTime + funnelCycle.z
+            * (orbit.z - initialAngularRate * orbitTime);
         float initialTilt = exp(-FUNNEL_TILT_RATE * (funnelMotion.y + FUNNEL_TILT_DELAY));
         float initialTargetPitch = -atan(initialTilt);
         float initialPitchRate = -FUNNEL_TILT_RATE * initialTilt / (1.0 + initialTilt * initialTilt);
@@ -313,8 +316,8 @@ float3 FunnelView(float3 forward) {
         }
         float tiltTime = orbitTime - funnelMotion.y - FUNNEL_TILT_DELAY;
         float targetPitch = -atan(exp(FUNNEL_TILT_RATE * tiltTime));
-        float pitch = targetPitch
-            + (pitchError + (pitchRateError + pitchError / pitchRelaxation) * orbitTime) * exp(-orbitTime / pitchRelaxation);
+        float pitch = targetPitch + (pitchError + (pitchRateError + pitchError / pitchRelaxation) * orbitTime)
+            * exp(-orbitTime / pitchRelaxation);
         forward = float3(cos(yaw) * cos(pitch), sin(pitch), sin(yaw) * cos(pitch));
     }
     return forward;
@@ -338,7 +341,8 @@ float3 FunnelEntryView(float3 view, float3 planeNormal, float side) {
                 float angle = acos(cosine) * amount;
                 float sine, turnCosine;
                 sincos(angle, sine, turnCosine);
-                view = view * turnCosine + cross(axis, view) * sine + axis * dot(axis, view) * (1.0 - turnCosine);
+                view = view * turnCosine + cross(axis, view) * sine + axis * dot(axis, view)
+                    * (1.0 - turnCosine);
             }
         }
     }
@@ -434,7 +438,8 @@ float2 FunnelGridPoint(float2 index) {
     float2 grid = 0.0;
     if (effect == 19) {
         float2 anchor = FunnelGridAnchor();
-        grid = float2(FrozenGridCoordinate(anchor.x, camera.x, index.x), FrozenGridCoordinate(anchor.y, camera.z, index.y));
+        grid = float2(FrozenGridCoordinate(anchor.x, camera.x, index.x),
+            FrozenGridCoordinate(anchor.y, camera.z, index.y));
     } else {
         grid = float2(AnchoredFlightGridCoordinate(camera.x, index.x, 3.0),
             AnchoredFlightGridCoordinate(camera.z, index.y, 3.0));
@@ -542,8 +547,8 @@ float MorphingSurfaceHeight(float x, float z, float2 deformationCenter) {
         float hyperbolicParaboloid = 0.72 * (local.x * local.x - local.y * local.y) * surfaceVariations.y;
         float ellipticParaboloid = 0.46 * (local.x * local.x + 0.72 * local.y * local.y) * surfaceVariations.z;
         float coneSurface = 1.35 * radius * surfaceVariations.w;
-        float radialSurface = 2.8 * sin(radius * 2.4 - time * 0.72 + animationPhases.x) * exp(-0.10 * radius * radius)
-            * surfaceVariations.x;
+        float radialSurface = 2.8 * sin(radius * 2.4 - time * 0.72 + animationPhases.x)
+            * exp(-0.10 * radius * radius) * surfaceVariations.x;
         float cycle = frac(time * 0.018 + animationPhases.y / 6.283185307179586) * 5.0;
         uint shape = (uint) floor(cycle);
         float blend = smoothstep(0.18, 0.82, frac(cycle));
@@ -578,14 +583,15 @@ float4 MorphingSurfaceSample(float2 gridIndex, bool pointSample, bool circleSamp
     surfacePoint = 0.0;
     float2 cameraXZ = float2(time * 3.20 + 18.0 * sin(time * 0.031 + pathPhases.x) * cameraVariations.x,
         time * 2.15 + 14.0 * cos(time * 0.027 + pathPhases.y) * cameraVariations.x);
-    float2 velocity = float2(3.20 + 0.558 * cos(time * 0.031 + pathPhases.x) * cameraVariations.x, 2.15 - 0.378
-        * sin(time * 0.027 + pathPhases.y) * cameraVariations.x);
+    float2 velocity = float2(3.20 + 0.558 * cos(time * 0.031 + pathPhases.x) * cameraVariations.x,
+        2.15 - 0.378 * sin(time * 0.027 + pathPhases.y) * cameraVariations.x);
     float2 heading = normalize(velocity);
     float2 lateral = float2(-heading.y, heading.x);
     float deformationDistance = (24.0 + 7.0 * sin(time * 0.063 + 0.4 + pathPhases.z)) * surfaceVariations.z;
-    float2 deformationCenter = cameraXZ + heading * deformationDistance + lateral * (6.0 * sin(time * 0.049 + pathPhases.w)
-        * surfaceVariations.y);
-    float surfaceAtCamera = surfaceShape == 2 ? 0.0 : MorphingSurfaceHeight(cameraXZ.x, cameraXZ.y, deformationCenter);
+    float2 deformationCenter = cameraXZ + heading * deformationDistance + lateral
+        * (6.0 * sin(time * 0.049 + pathPhases.w) * surfaceVariations.y);
+    float surfaceAtCamera = surfaceShape == 2 ? 0.0 : MorphingSurfaceHeight(cameraXZ.x, cameraXZ.y,
+        deformationCenter);
     float altitudePhase = 0.5 + 0.5 * sin(time * 0.087 + 0.6 + animationPhases.w);
     float altitude = lerp(7.0, 18.0, altitudePhase) * cameraVariations.y;
     float3 camera = float3(cameraXZ.x, surfaceAtCamera + altitude, cameraXZ.y);
@@ -603,9 +609,10 @@ float4 MorphingSurfaceSample(float2 gridIndex, bool pointSample, bool circleSamp
     surfacePoint = world;
     float trackingPhase = 0.5 + 0.5 * sin(time * 0.079 + 1.7 + pathPhases.z);
     float trackingDistance = lerp(12.0, 44.0, trackingPhase) * cameraVariations.w;
-    float2 targetXZ = cameraXZ + heading * trackingDistance + lateral * (7.0 * sin(time * 0.041 + 0.9 + pathPhases.w)
-        * cameraVariations.x);
-    float targetHeight = surfaceShape == 2 ? 0.0 : MorphingSurfaceHeight(targetXZ.x, targetXZ.y, deformationCenter);
+    float2 targetXZ = cameraXZ + heading * trackingDistance + lateral * (7.0 * sin(time * 0.041 + 0.9
+        + pathPhases.w) * cameraVariations.x);
+    float targetHeight = surfaceShape == 2 ? 0.0 : MorphingSurfaceHeight(targetXZ.x, targetXZ.y,
+        deformationCenter);
     float3 target = float3(targetXZ.x, targetHeight, targetXZ.y);
     float3 forward = normalize(target - viewCamera);
     if (surfaceShape == 2) {
@@ -632,7 +639,8 @@ float4 MorphingSurfaceSample(float2 gridIndex, bool pointSample, bool circleSamp
     float projectionFar = farPlane;
     float distantFade = smoothstep(155.0, farPlane, view.z);
     fade = lerp(1.0, 0.28, distantFade);
-    colorPhase = 0.5 + 0.5 * sin(time * 0.19 + x * 0.075 + z * 0.055 + length(world - camera) * 0.025 + animationPhases.z);
+    colorPhase = 0.5 + 0.5 * sin(time * 0.19 + x * 0.075 + z * 0.055 + length(world - camera) * 0.025
+        + animationPhases.z);
     if (surfaceShape == 2) {
         if (!circleSample) {
             fade *= FunnelVisibility();
@@ -666,7 +674,8 @@ float4 InfiniteSurfacePosition(uint segment, uint endpoint, out float fade, out 
     float3 unusedPoint;
     float4 position = float4(0.0, 0.0, -1.0, 1.0);
     if (visible) {
-        position = InfiniteSurfaceSample(index, surfaceShape == 2, false, worldPoint, fade, colorPhase, unusedPoint);
+        position = InfiniteSurfaceSample(index, surfaceShape == 2, false, worldPoint, fade, colorPhase,
+            unusedPoint);
     } else {
         fade = 0.0;
         colorPhase = 0.0;
@@ -694,7 +703,8 @@ float4 MorphingSurfaceFlightPosition(uint segment, uint endpoint, out float fade
     float3 unusedPoint;
     float4 position = float4(0.0, 0.0, -1.0, 1.0);
     if (visible) {
-        position = MorphingSurfaceSample(index, surfaceShape == 2, false, worldPoint, fade, colorPhase, unusedPoint);
+        position = MorphingSurfaceSample(index, surfaceShape == 2, false, worldPoint, fade, colorPhase,
+            unusedPoint);
     } else {
         fade = 0.0;
         colorPhase = 0.0;
@@ -767,9 +777,11 @@ VSOutput FunnelCircleVS(uint vertexId : SV_VertexID) {
     if (visibility > 0.0) {
         float3 unusedPoint;
         if (effect == 19) {
-            output.position = InfiniteSurfaceSample(float2(0.0, 0.0), true, true, world, fade, colorPhase, unusedPoint);
+            output.position = InfiniteSurfaceSample(float2(0.0, 0.0), true, true, world, fade, colorPhase,
+                unusedPoint);
         } else {
-            output.position = MorphingSurfaceSample(float2(0.0, 0.0), true, true, world, fade, colorPhase, unusedPoint);
+            output.position = MorphingSurfaceSample(float2(0.0, 0.0), true, true, world, fade, colorPhase,
+                unusedPoint);
         }
         output.color = float4(FlightMaterialColor(colorPhase, 0, 0.0) * fade * visibility, 1.0);
     }
@@ -781,7 +793,8 @@ float4 PSMain(VSOutput input) : SV_TARGET {
     return input.color;
 }
 
-/// Samples the filled surface and reconstructs view coordinates before perspective division for hardware clipping.
+/// Samples the filled surface and reconstructs view coordinates before perspective division for hardware
+/// clipping.
 float4 SolidFlightSample(float2 uv, uint patch,
     out float3 view, out float4 material, out float3 world) {
     float fade = 1.0;
@@ -790,11 +803,14 @@ float4 SolidFlightSample(float2 uv, uint patch,
     float4 position = 0.0;
     float halfFov = 0.61;
     if (effect == 19) {
-        position = InfiniteSurfaceSample(uv * 92.0 - 46.0, false, false, float3(0.0, 0.0, 0.0), fade, phase, world);
+        position = InfiniteSurfaceSample(uv * 92.0 - 46.0, false, false, float3(0.0, 0.0, 0.0), fade, phase,
+            world);
     } else {
-        position = MorphingSurfaceSample(uv * 112.0 - 56.0, false, false, float3(0.0, 0.0, 0.0), fade, phase, world);
+        position = MorphingSurfaceSample(uv * 112.0 - 56.0, false, false, float3(0.0, 0.0, 0.0), fade, phase,
+            world);
     }
-    view = float3(position.x * (resolution.x / resolution.y) * tan(halfFov), position.y * tan(halfFov), position.w);
+    view = float3(position.x * (resolution.x / resolution.y) * tan(halfFov), position.y * tan(halfFov),
+        position.w);
     material = float4(FlightMaterialColor(phase, patch, chamber), fade);
     return position;
 }
