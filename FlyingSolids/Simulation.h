@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.2.1.0
  */
 
 #pragma once
@@ -68,10 +68,10 @@ struct SceneState {
 class Simulation final {
 
 public:
-    /// Creates a simulation; a zero seed requests operating-system entropy.
+    /// Initializes an independent scene from system entropy, optionally mixed with the monitor seed.
     explicit Simulation(unsigned initialSeed = 0);
 
-    /// Restores the initial scene using the supplied or generated seed.
+    /// Starts a fresh independently randomized scene.
     void Reset(unsigned initialSeed = 0);
 
     /// Updates the aspect ratio used to keep visible bounds monitor-independent.

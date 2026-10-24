@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.1.0
  */
 
 #pragma once
@@ -69,8 +69,9 @@ struct MonitorAnimation {
     bool rimLight = true;
     std::uint32_t enabledSolids = ALL_SOLID_MASK;
 
-    /// Reads or validates one animation property without changing other properties.
+    /// Reads one animation property without changing the stored preferences.
     std::uint32_t Value(AnimationProperty property) const;
+    /// Validates and updates one animation property without modifying other properties.
     void SetValue(AnimationProperty property, std::uint32_t value);
 };
 
@@ -81,6 +82,7 @@ struct MonitorSelection {
     std::uint32_t mixedSolids = 0;
     bool available = false;
 
+    /// Reports whether selected monitors have different values of the requested property.
     bool IsMixed(AnimationProperty property) const;
 };
 
@@ -113,8 +115,9 @@ struct AppSettings {
     /// Summarizes common and differing values without changing settings.
     MonitorSelection SelectionForMonitors(const std::vector<std::wstring>& devices);
 
-    /// Changes only the requested property or solid on the selected display identities.
+    /// Changes one property only on the selected display identities.
     void SetMonitorValue(const std::vector<std::wstring>& devices, AnimationProperty property, std::uint32_t value);
+    /// Enables or disables one solid kind on the selected display identities.
     void SetMonitorSolid(const std::vector<std::wstring>& devices, unsigned index, bool enabled);
 
     /// Loads the selected profile from the current user's registry hive.

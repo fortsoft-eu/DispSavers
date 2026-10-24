@@ -28,6 +28,7 @@ static const float PI = 3.14159265358979323846;
 static const uint FLIGHT_WIRE_ROWS = 116;
 static const float FLIGHT_HALF_DEPTH_INDEX = 57.6;
 
+/// Per-frame camera, lighting and scene parameters shared with the CPU renderer.
 cbuffer FrameConstants : register(b0) {
     float2 resolution;
     float time;
@@ -42,6 +43,7 @@ cbuffer FrameConstants : register(b0) {
     float4 lightSettings;
 };
 
+/// Effect identity and procedural surface mesh dimensions for the current draw call.
 cbuffer EffectConstants : register(b1) {
     uint effect;
     uint surfaceColumns;
@@ -49,11 +51,13 @@ cbuffer EffectConstants : register(b1) {
     uint surfacePatches;
 };
 
+/// Projected position and color passed from the wireframe vertex shader to the pixel shader.
 struct VSOutput {
     float4 position : SV_POSITION;
     float4 color : COLOR0;
 };
 
+/// Projected and view-space surface data used for lighting and funnel clipping.
 struct SolidSurfaceOutput {
     float4 position : SV_POSITION;
     centroid float3 viewPosition : TEXCOORD0;
@@ -76,14 +80,12 @@ float AnchoredFlightGridCoordinate(float cameraCoordinate, float index, float sp
 
 /// Calculates the corridor's smoothly varying horizontal center.
 float CorridorCenterX(float z) {
-    return (13.0 * sin(z * 0.028 + pathPhases.x)
-        + 6.0 * sin(z * 0.011 + 1.2 + pathPhases.y)) * surfaceVariations.y;
+    return (13.0 * sin(z * 0.028 + pathPhases.x) + 6.0 * sin(z * 0.011 + 1.2 + pathPhases.y)) * surfaceVariations.y;
 }
 
 /// Calculates the corridor's smoothly varying base height.
 float CorridorBaseHeight(float z) {
-    return (6.0 * sin(z * 0.022 + 0.4 + pathPhases.z)
-        + 3.0 * sin(z * 0.047 + 1.1 + pathPhases.w)) * surfaceVariations.x;
+    return (6.0 * sin(z * 0.022 + 0.4 + pathPhases.z) + 3.0 * sin(z * 0.047 + 1.1 + pathPhases.w)) * surfaceVariations.x;
 }
 
 /// Blends the corridor's waves, banking, saddle and arch shapes.
@@ -172,15 +174,15 @@ float4 CorridorSurfaceSample(float u, float zIndex, uint surface, out float fade
     if (surface < 2) {
         float side = surface == 0 ? -1.0 : 1.0;
         float x = centerX + u * halfWidth;
-        float sharedVerticalBend = (1.35 * sin(u * PI + z * 0.031 - time * 0.17 + animationPhases.x) + 1.05 * u * u
-            * sin(z * 0.017 + time * 0.083 + animationPhases.y)) * surfaceVariations.x;
+        float sharedVerticalBend = (1.35 * sin(u * PI + z * 0.031 - time * 0.17 + animationPhases.x) +
+            1.05 * u * u * sin(z * 0.017 + time * 0.083 + animationPhases.y)) * surfaceVariations.x;
         float middle = CorridorMidHeight(x, z, cameraXZ);
         world = float3(x, middle + side * halfHeight + sharedVerticalBend, z);
     } else {
         float side = surface == 2 ? -1.0 : 1.0;
         float y = centerY + u * halfHeight;
-        float sharedHorizontalBend = (1.75 * sin(u * PI - z * 0.027 + time * 0.14 + animationPhases.x) + 1.20 * u * u
-            * cos(z * 0.015 - time * 0.091 + animationPhases.y)) * surfaceVariations.y;
+        float sharedHorizontalBend = (1.75 * sin(u * PI - z * 0.027 + time * 0.14 + animationPhases.x)
+            + 1.20 * u * u * cos(z * 0.015 - time * 0.091 + animationPhases.y)) * surfaceVariations.y;
         world = float3(centerX + side * halfWidth + sharedHorizontalBend, y, z);
     }
     float targetZ = cameraZ + 34.0 * cameraVariations.w + 5.0 * sin(time * 0.061 + animationPhases.w) * cameraVariations.w;
@@ -264,8 +266,7 @@ float3 FunnelPoint(float pathPosition, float angle, out float chamberAmount) {
 }
 
 /// Projects a funnel grid sample and computes distance fading, color variation and chamber expansion.
-float4 FunnelSurfaceSample(float angle, float pathIndex, out float fade, out float colorPhase,
-        out float chamberAmount) {
+float4 FunnelSurfaceSample(float angle, float pathIndex, out float fade, out float colorPhase, out float chamberAmount) {
     float cameraPath = time * 4.5;
     float cameraRadius = FunnelRadius(cameraPath);
     float3 cameraCenter = FunnelCenter(cameraPath);
@@ -414,8 +415,7 @@ float4 PSMain(VSOutput input) : SV_TARGET {
 
 /// Samples the filled surface and reconstructs view coordinates before perspective division for hardware
 /// clipping.
-float4 SolidFlightSample(float2 uv, uint patch,
-    out float3 view, out float4 material) {
+float4 SolidFlightSample(float2 uv, uint patch, out float3 view, out float4 material) {
     float fade = 1.0;
     float phase = 0.0;
     float chamber = 0.0;
@@ -430,8 +430,7 @@ float4 SolidFlightSample(float2 uv, uint patch,
             - FLIGHT_HALF_DEPTH_INDEX, fade, phase, chamber);
         halfFov = 0.66;
     }
-    view = float3(position.x * (resolution.x / resolution.y) * tan(halfFov), position.y * tan(halfFov),
-        position.w);
+    view = float3(position.x * (resolution.x / resolution.y) * tan(halfFov), position.y * tan(halfFov), position.w);
     material = float4(FlightMaterialColor(phase, patch, chamber), fade);
     return position;
 }

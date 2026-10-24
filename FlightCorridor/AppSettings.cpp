@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.1.0
  */
 
 #define NOMINMAX
@@ -87,21 +87,14 @@ static std::wstring ReadString(HKEY key, const wchar_t* name) {
     DWORD size = 0;
     const LSTATUS queryResult = RegQueryValueExW(key, name, nullptr, &type, nullptr, &size);
     constexpr DWORD MAX_SETTINGS_STRING_BYTES = 65536;
-    if (queryResult != ERROR_SUCCESS
-            || type != REG_SZ
-            || size < sizeof(wchar_t)
-            || size > MAX_SETTINGS_STRING_BYTES
+    if (queryResult != ERROR_SUCCESS || type != REG_SZ || size < sizeof(wchar_t) || size > MAX_SETTINGS_STRING_BYTES
             || size % sizeof(wchar_t) != 0) {
         return std::wstring{};
     }
     std::wstring value(size / sizeof(wchar_t), L'\0');
     const DWORD capacity = static_cast<DWORD>(value.size() * sizeof(wchar_t));
-    const LSTATUS readResult = RegQueryValueExW(key, name, nullptr, &type,
-        reinterpret_cast<BYTE*>(value.data()), &size);
-    if (readResult != ERROR_SUCCESS
-            || type != REG_SZ
-            || size > capacity
-            || size < sizeof(wchar_t)
+    const LSTATUS readResult = RegQueryValueExW(key, name, nullptr, &type, reinterpret_cast<BYTE*>(value.data()), &size);
+    if (readResult != ERROR_SUCCESS || type != REG_SZ || size > capacity || size < sizeof(wchar_t)
             || size % sizeof(wchar_t) != 0) {
         return std::wstring{};
     }
@@ -173,7 +166,7 @@ void MonitorAnimation::SetValue(AnimationProperty property, std::uint32_t value)
     }
 }
 
-/// Reports differing values of the requested property in the current monitor selection.
+/// Reports whether selected monitors have different values of the requested property.
 bool MonitorSelection::IsMixed(AnimationProperty property) const {
     return (mixedProperties & 1U << static_cast<unsigned>(property)) != 0;
 }
@@ -191,14 +184,14 @@ std::uint32_t MonitorAnimation::Packed() const {
         | (rimLight ? 0U : 512U);
 }
 
-/// Assigns the first textured flight to every device, preserving saved and disconnected-display choices.
+/// Initializes each new display with its own built-in settings, preserving saved records.
 void AppSettings::InitializeMonitorAnimations(const std::vector<std::wstring>& devices) {
     for (const std::wstring& device : devices) {
         monitorAnimations.try_emplace(device);
     }
 }
 
-/// Looks up a Windows display device without treating a sorted ListView row as its identity.
+/// Looks up all animation preferences by device identity, independent of monitor order or selection.
 MonitorAnimation& AppSettings::AnimationForMonitor(const std::wstring& device) {
     return monitorAnimations.try_emplace(device).first->second;
 }
@@ -277,8 +270,7 @@ static void ReadMonitorAnimations(HKEY profile, AppSettings& settings) {
             if (result == ERROR_NO_MORE_ITEMS) {
                 break;
             }
-            if (result == ERROR_SUCCESS && type == REG_DWORD && size == sizeof(value)
-                    && value <= 1023U && length != 0) {
+            if (result == ERROR_SUCCESS && type == REG_DWORD && size == sizeof(value) && value <= 1023U && length != 0) {
                 MonitorAnimation animation{
                     static_cast<EffectKind>(value & 1U),
                     (value & 2U) != 0,
@@ -352,14 +344,12 @@ void AppSettings::Load(SettingsProfile selectedProfile) {
         helpWindowState.y = ReadValue(key, HELP_Y_VALUE_NAME, helpWindowState.y);
         helpWindowState.width = ReadValue(key, HELP_WIDTH_VALUE_NAME, helpWindowState.width);
         helpWindowState.height = ReadValue(key, HELP_HEIGHT_VALUE_NAME, helpWindowState.height);
-        helpWindowState.maximized = ReadValue(key, HELP_MAXIMIZED_VALUE_NAME,
-            helpWindowState.maximized ? 1 : 0) != 0;
+        helpWindowState.maximized = ReadValue(key, HELP_MAXIMIZED_VALUE_NAME, helpWindowState.maximized ? 1 : 0) != 0;
         aboutWindowState.x = ReadValue(key, ABOUT_X_VALUE_NAME, aboutWindowState.x);
         aboutWindowState.y = ReadValue(key, ABOUT_Y_VALUE_NAME, aboutWindowState.y);
         aboutWindowState.width = ReadValue(key, ABOUT_WIDTH_VALUE_NAME, aboutWindowState.width);
         aboutWindowState.height = ReadValue(key, ABOUT_HEIGHT_VALUE_NAME, aboutWindowState.height);
-        aboutWindowState.maximized = ReadValue(key, ABOUT_MAXIMIZED_VALUE_NAME,
-            aboutWindowState.maximized ? 1 : 0) != 0;
+        aboutWindowState.maximized = ReadValue(key, ABOUT_MAXIMIZED_VALUE_NAME, aboutWindowState.maximized ? 1 : 0) != 0;
         recordingSettingsX = ReadValue(key, RECORDING_SETTINGS_X_VALUE_NAME, recordingSettingsX);
         recordingSettingsY = ReadValue(key, RECORDING_SETTINGS_Y_VALUE_NAME, recordingSettingsY);
         language = ReadValue(key, LANGUAGE_VALUE_NAME, language);
@@ -399,20 +389,15 @@ static void WriteWindowPositions(HKEY key, const AppSettings& settings) {
         reinterpret_cast<const BYTE*>(&windowX), sizeof(windowX));
     RegSetValueExW(key, CONTROL_WINDOW_Y_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&windowY), sizeof(windowY));
-    RegSetValueExW(key, HELP_X_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&helpX), sizeof(helpX));
-    RegSetValueExW(key, HELP_Y_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&helpY), sizeof(helpY));
-    RegSetValueExW(key, HELP_WIDTH_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&helpWidth), sizeof(helpWidth));
+    RegSetValueExW(key, HELP_X_VALUE_NAME, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&helpX), sizeof(helpX));
+    RegSetValueExW(key, HELP_Y_VALUE_NAME, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&helpY), sizeof(helpY));
+    RegSetValueExW(key, HELP_WIDTH_VALUE_NAME, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&helpWidth), sizeof(helpWidth));
     RegSetValueExW(key, HELP_HEIGHT_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&helpHeight), sizeof(helpHeight));
     RegSetValueExW(key, HELP_MAXIMIZED_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&helpMaximized), sizeof(helpMaximized));
-    RegSetValueExW(key, ABOUT_X_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&aboutX), sizeof(aboutX));
-    RegSetValueExW(key, ABOUT_Y_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&aboutY), sizeof(aboutY));
+    RegSetValueExW(key, ABOUT_X_VALUE_NAME, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&aboutX), sizeof(aboutX));
+    RegSetValueExW(key, ABOUT_Y_VALUE_NAME, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&aboutY), sizeof(aboutY));
     RegSetValueExW(key, ABOUT_WIDTH_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&aboutWidth), sizeof(aboutWidth));
     RegSetValueExW(key, ABOUT_HEIGHT_VALUE_NAME, 0, REG_DWORD,

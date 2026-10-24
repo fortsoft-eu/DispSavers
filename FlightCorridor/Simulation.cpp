@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.2.1.0
  */
 
 #define NOMINMAX
@@ -35,7 +35,7 @@
 
 #pragma comment(lib, "bcrypt.lib")
 
-/// Initializes an independently randomized monitor scene.
+/// Creates and initializes a simulation instance.
 Simulation::Simulation(unsigned initialSeed) {
     Reset(initialSeed);
 }
@@ -118,8 +118,7 @@ void Simulation::UpdateMotionParameters() {
         transitionTo.pathPhases = transitionFrom.pathPhases;
         transitionDuration = CryptographicRandom(45.0f, 90.0f);
     }
-    const float progress = static_cast<float>(std::clamp(
-        (elapsed - transitionStart) / transitionDuration, 0.0, 1.0));
+    const float progress = static_cast<float>(std::clamp((elapsed - transitionStart) / transitionDuration, 0.0, 1.0));
     const float amount = progress * progress * progress * (progress * (progress * 6.0f - 15.0f) + 10.0f);
     BlendMotionValues(state.motion.phases, transitionFrom.phases, transitionTo.phases, amount);
     BlendMotionValues(state.motion.waves, transitionFrom.waves, transitionTo.waves, amount);
@@ -134,7 +133,7 @@ std::array<double, 3> Simulation::CreateAngularVelocity() {
     const double axial = CryptographicRandom(-1.0f, 1.0f);
     const double radial = std::sqrt(1.0 - axial * axial);
     const double speed = CryptographicRandom(0.20f, 0.50f);
-    return {radial * std::cos(azimuth) * speed, radial * std::sin(azimuth) * speed, axial * speed};
+    return { radial * std::cos(azimuth) * speed, radial * std::sin(azimuth) * speed, axial * speed };
 }
 
 /// Evaluates quintic easing on the CPU for continuous motion targets.
@@ -145,8 +144,7 @@ static double MotionEase(double progress) {
 
 /// Integrates a local angular velocity without changing orientation when the rotation axis changes.
 static void RotateCamera(std::array<double, 4>& rotation, const std::array<double, 3>& velocity, double seconds) {
-    const double length = std::sqrt(velocity[0] * velocity[0] + velocity[1] * velocity[1]
-        + velocity[2] * velocity[2]);
+    const double length = std::sqrt(velocity[0] * velocity[0] + velocity[1] * velocity[1] + velocity[2] * velocity[2]);
     if (length == 0.0) {
         return;
     }
@@ -171,8 +169,8 @@ static void RotateCamera(std::array<double, 4>& rotation, const std::array<doubl
 
 /// Resets camera state without advancing the flight or consuming random values.
 void Simulation::ResetCameraRotation() {
-    cameraOrientation = {0.0, 0.0, 0.0, 1.0};
-    state.cameraRotation = {0.0f, 0.0f, 0.0f, 1.0f};
+    cameraOrientation = { 0.0, 0.0, 0.0, 1.0 };
+    state.cameraRotation = { 0.0f, 0.0f, 0.0f, 1.0f };
     tumblingTime = 0.0;
     tumblingStart = 0.0;
     tumblingPhase = TumblingPhase::Cruising;
@@ -313,7 +311,7 @@ void Simulation::UpdateCorridorPath(double seconds) {
             corridorDuration = CryptographicRandom(36.0f, 80.0f);
             continue;
         }
-        const double step = std::min({remaining, 0.05, end - corridorTime});
+        const double step = std::min({ remaining, 0.05, end - corridorTime });
         const double amount = MotionEase((corridorTime + step * 0.5 - corridorStart) / (corridorDuration * 0.35));
         const double rollSpeed = corridorFrom[2] + (corridorTo[2] - corridorFrom[2]) * amount;
         corridorRoll = std::remainder(corridorRoll + rollSpeed * step, twoPi);

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.2.1.0
  */
 
 #pragma once
@@ -55,6 +55,7 @@ struct SceneState {
 
 /// Owns this monitor's flight clock, cryptographic entropy and smoothly changing scene parameters.
 class Simulation final {
+
 public:
     /// Initializes an independent scene from system entropy, optionally mixed with the monitor seed.
     explicit Simulation(unsigned initialSeed = 0);
@@ -70,16 +71,16 @@ public:
     const SceneState& State() const;
 
 private:
-    /// Refills this simulation's random cache using the Windows system CSPRNG.
+    /// Refills the cache from the Windows system RNG and throws if generation fails.
     void RefillRandomBuffer();
 
-    /// Returns one cryptographically generated 32-bit value from the local cache.
+    /// Returns one cached cryptographic random value, refilling the cache when exhausted.
     std::uint32_t NextCryptographicRandom();
 
     /// Draws an unbiased integer below a nonzero upper bound.
     std::uint32_t CryptographicIndex(std::uint32_t count);
 
-    /// Scales one cryptographic value between the supplied bounds.
+    /// Returns a random float scaled between the supplied bounds.
     float CryptographicRandom(float low, float high);
 
     /// Creates bounded variations for phases, waves, camera motion and path curvature.
@@ -119,6 +120,7 @@ private:
     double corridorDuration = 1.0;
     double corridorRoll = 0.0;
 
+    /// Phases of the optional camera-rotation braking, pause and reversal cycle.
     enum class TumblingPhase {
         Cruising,
         Braking,

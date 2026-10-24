@@ -36,6 +36,7 @@ enum class EffectKind : std::uint32_t {
     Count
 };
 
+/// Plane, wave and funnel deformation modes shared by both surface animations.
 enum class SurfaceShape : std::uint32_t {
     Plane,
     Waves,

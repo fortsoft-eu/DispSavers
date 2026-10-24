@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.2.1.0
  */
 
 #define NOMINMAX
@@ -6313,8 +6313,7 @@ const RecordingText& RecordingSettingsText(AppLanguage language) {
 
 /// Returns the close warning for a validated application language.
 const wchar_t* RecordingCloseWarningText(AppLanguage language) {
-    return RECORDING_CLOSE_WARNING_TEXTS[
-        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return RECORDING_CLOSE_WARNING_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns a TV resolution caption at the supplied preset index.
@@ -6475,8 +6474,7 @@ const MonitorColumnText& MonitorColumnsText(AppLanguage language) {
 
 /// Returns the localized option that inhibits the screen saver during visible animation.
 const wchar_t* PreventScreenSaverText(AppLanguage language) {
-    return PREVENT_SCREEN_SAVER_TEXTS[
-        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return PREVENT_SCREEN_SAVER_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the localized ambient-light checkbox caption.
@@ -6526,20 +6524,17 @@ const wchar_t* SnapshotFailedText(AppLanguage language) {
 
 /// Returns the localized uninstall command caption.
 const wchar_t* UninstallScreenSaverText(AppLanguage language) {
-    return UNINSTALL_SCREEN_SAVER_TEXTS[
-        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return UNINSTALL_SCREEN_SAVER_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the localized successful-uninstallation status text.
 const wchar_t* UninstallationSucceededText(AppLanguage language) {
-    return UNINSTALLATION_SUCCEEDED_TEXTS[
-        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return UNINSTALLATION_SUCCEEDED_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the generic localized uninstallation failure text.
 const wchar_t* UninstallationFailedText(AppLanguage language) {
-    return UNINSTALLATION_FAILED_TEXTS[
-        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return UNINSTALLATION_FAILED_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the recovery instruction for an open saver settings window.

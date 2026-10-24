@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.1.0
  */
 
 #define NOMINMAX
@@ -38,12 +38,14 @@
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "uxtheme.lib")
 
+/// Native control categories that support mixed-value feedback.
 enum class MixedControlKind {
     Trackbar,
     RadioButton,
     PushButton
 };
 
+/// Control-specific state retained by the mixed-value subclass.
 struct MixedControlsState {
     MixedControlKind kind = MixedControlKind::Trackbar;
     bool mixed = false;
@@ -52,6 +54,7 @@ struct MixedControlsState {
 constexpr UINT_PTR MIXED_CONTROL_SUBCLASS = 0xF506;
 constexpr WORD MIXED_DITHER_BITS[]{ 0x0055, 0x00AA, 0x0055, 0x00AA, 0x0055, 0x00AA, 0x0055, 0x00AA };
 
+/// Adds mixed-state feedback without replacing native mouse capture, focus, keyboard handling or painting.
 static LRESULT CALLBACK MixedControlsProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam, UINT_PTR subclassId,
     DWORD_PTR referenceData);
 
@@ -59,8 +62,7 @@ static LRESULT CALLBACK MixedControlsProc(HWND window, UINT message, WPARAM wPar
 static MixedControlsState* ControlState(HWND window) {
     DWORD_PTR referenceData = 0;
     return window && GetWindowSubclass(window, MixedControlsProc, MIXED_CONTROL_SUBCLASS, &referenceData)
-        ? reinterpret_cast<MixedControlsState*>(referenceData)
-        : nullptr;
+        ? reinterpret_cast<MixedControlsState*>(referenceData) : nullptr;
 }
 
 /// Reports whether visual styles are active for Windows and the current application.
@@ -70,8 +72,7 @@ static bool AreVisualStylesActive() {
 
 /// Tests the native raster's RGB value without depending on its unused alpha byte.
 static bool IsPaintedPixel(const DWORD* pixels, LONG width, LONG x, LONG y, DWORD background) {
-    const std::size_t index = static_cast<std::size_t>(y) * static_cast<std::size_t>(width)
-        + static_cast<std::size_t>(x);
+    const std::size_t index = static_cast<std::size_t>(y) * static_cast<std::size_t>(width) + static_cast<std::size_t>(x);
     return (pixels[index] & 0x00FFFFFF) != background;
 }
 
@@ -227,8 +228,7 @@ static int PushButtonThemeState(const NMCUSTOMDRAW& draw) {
     if ((draw.uItemState & CDIS_HOT) != 0) {
         return PBS_HOT;
     }
-    return (GetWindowLongPtrW(draw.hdr.hwndFrom, GWL_STYLE) & BS_TYPEMASK) == BS_DEFPUSHBUTTON
-        ? PBS_DEFAULTED
+    return (GetWindowLongPtrW(draw.hdr.hwndFrom, GWL_STYLE) & BS_TYPEMASK) == BS_DEFPUSHBUTTON ? PBS_DEFAULTED
         : PBS_NORMAL;
 }
 
@@ -383,10 +383,8 @@ static void NotifyMixedThumbClick(HWND window, LPARAM coordinates) {
 static LRESULT CALLBACK MixedControlsProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam,
         UINT_PTR subclassId, DWORD_PTR referenceData) {
     MixedControlsState* state = reinterpret_cast<MixedControlsState*>(referenceData);
-    if ((message == WM_LBUTTONDOWN || message == WM_LBUTTONDBLCLK)
-            && state->mixed
-            && state->kind == MixedControlKind::Trackbar
-            && IsWindowEnabled(window)) {
+    if ((message == WM_LBUTTONDOWN || message == WM_LBUTTONDBLCLK) && state->mixed
+            && state->kind == MixedControlKind::Trackbar && IsWindowEnabled(window)) {
         NotifyMixedThumbClick(window, lParam);
         if (!IsWindow(window)) {
             return 0;
@@ -398,11 +396,8 @@ static LRESULT CALLBACK MixedControlsProc(HWND window, UINT message, WPARAM wPar
         return DefSubclassProc(window, message, wParam, lParam);
     }
     const LRESULT result = DefSubclassProc(window, message, wParam, lParam);
-    if (MixedControls::IsMixed(window)
-        && (message == WM_THEMECHANGED
-            || message == WM_SYSCOLORCHANGE
-            || message == WM_SETTINGCHANGE
-            || message == WM_DPICHANGED_AFTERPARENT)) {
+    if (MixedControls::IsMixed(window) && (message == WM_THEMECHANGED || message == WM_SYSCOLORCHANGE
+            || message == WM_SETTINGCHANGE || message == WM_DPICHANGED_AFTERPARENT)) {
         InvalidateMixedControl(window);
     }
     return result;
@@ -435,8 +430,7 @@ bool MixedControls::Attach(HWND window) {
             return false;
         }
     }
-    if (!SetWindowSubclass(window, MixedControlsProc, MIXED_CONTROL_SUBCLASS,
-        reinterpret_cast<DWORD_PTR>(state.get()))) {
+    if (!SetWindowSubclass(window, MixedControlsProc, MIXED_CONTROL_SUBCLASS, reinterpret_cast<DWORD_PTR>(state.get()))) {
         return false;
     }
     state.release();

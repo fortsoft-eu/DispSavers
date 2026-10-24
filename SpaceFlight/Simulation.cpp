@@ -35,7 +35,7 @@
 
 #pragma comment(lib, "bcrypt.lib")
 
-/// Initializes an independently randomized monitor scene.
+/// Creates and initializes a simulation instance.
 Simulation::Simulation(unsigned initialSeed) {
     Reset(initialSeed);
 }
@@ -161,8 +161,8 @@ static void RotateCamera(std::array<double, 4>& rotation, const std::array<doubl
         rotation[3] * z + rotation[0] * y - rotation[1] * x + rotation[2] * w,
         rotation[3] * w - rotation[0] * x - rotation[1] * y - rotation[2] * z
     };
-    const double inverseLength =
-        1.0 / std::sqrt(next[0] * next[0] + next[1] * next[1] + next[2] * next[2] + next[3] * next[3]);
+    const double inverseLength = 1.0 / std::sqrt(next[0] * next[0] + next[1] * next[1]
+        + next[2] * next[2] + next[3] * next[3]);
     for (std::size_t index = 0; index < rotation.size(); index++) {
         rotation[index] = next[index] * inverseLength;
     }
@@ -309,6 +309,7 @@ std::array<double, 3> Simulation::NativeCameraPosition(double sampleTime) const 
     return position;
 }
 
+/// Evaluates free-flight velocity, including the derivatives of changing motion parameters.
 std::array<double, 3> Simulation::NativeCameraVelocity(double sampleTime) const {
     const double progress = std::clamp((elapsed - transitionStart) / transitionDuration, 0.0, 1.0);
     const double first = 30.0 * progress * progress * (progress - 1.0) * (progress - 1.0) / transitionDuration;
@@ -325,8 +326,10 @@ std::array<double, 3> Simulation::NativeCameraVelocity(double sampleTime) const 
     const double xPhase = sampleTime * xFrequency + motion.pathPhases[0];
     const double zPhase = sampleTime * zFrequency + motion.pathPhases[1];
     std::array<double, 3> velocity{};
-    velocity[0] = (infinite ? 1.15 : 3.20) + xAmplitude * (xFrequency * std::cos(xPhase) * amplitude + std::sin(xPhase) * amplitudeRate);
-    velocity[2] = (infinite ? 0.82 : 2.15) + zAmplitude * (-zFrequency * std::sin(zPhase) * amplitude + std::cos(zPhase) * amplitudeRate);
+    velocity[0] = (infinite ? 1.15 : 3.20) + xAmplitude * (xFrequency * std::cos(xPhase) * amplitude
+        + std::sin(xPhase) * amplitudeRate);
+    velocity[2] = (infinite ? 0.82 : 2.15) + zAmplitude * (-zFrequency * std::sin(zPhase) * amplitude
+        + std::cos(zPhase) * amplitudeRate);
     double height;
     double heightVelocity;
     if (infinite) {
@@ -348,6 +351,7 @@ std::array<double, 3> Simulation::NativeCameraVelocity(double sampleTime) const 
     return velocity;
 }
 
+/// Returns free-flight yaw rate, pitch and pitch rate for a continuous transition into the funnel.
 std::array<double, 3> Simulation::NativeViewMotion(double sampleTime, double height, double heightVelocity) const {
     const double progress = std::clamp((elapsed - transitionStart) / transitionDuration, 0.0, 1.0);
     const double first = 30.0 * progress * progress * (progress - 1.0) * (progress - 1.0) / transitionDuration;
@@ -391,6 +395,7 @@ std::array<double, 3> Simulation::NativeViewMotion(double sampleTime, double hei
     return std::array<double, 3>{ yawRate, pitch, pitchRate };
 }
 
+/// Evaluates radius, inward speed and radial acceleration while approaching the funnel rim.
 std::array<double, 3> Simulation::FunnelRadialMotion(double pathTime) const {
     constexpr double relaxation = 0.75;
     const double offsetX = static_cast<double>(state.funnelCapture[0]) - state.funnelMotion[2];
@@ -407,6 +412,7 @@ std::array<double, 3> Simulation::FunnelRadialMotion(double pathTime) const {
     return std::array<double, 3>{ radius, velocity, acceleration };
 }
 
+/// Starts a new funnel cycle with a randomized approach and an above-surface capture time.
 void Simulation::ResetFunnel(bool entering) {
     double captureStart = CryptographicFunnelRandom(6.0f, 8.0f);
     const float approach = CryptographicFunnelRandom(42.0f, 48.0f);
@@ -518,8 +524,7 @@ void Simulation::PrepareFunnelCapture() {
     const double denominator = radius * radius + 0.00390625;
     const double slope = 7125.0 * radius / (denominator * denominator);
     const double heightDelta = capturedVelocity[1] + slope * radialSpeed;
-    const double heightRelaxation =
-        heightDelta < 0.0 ? std::min(3.0, state.funnelCapture[1] / (-4.0 * heightDelta)) : 3.0;
+    const double heightRelaxation = heightDelta < 0.0 ? std::min(3.0, state.funnelCapture[1] / (-4.0 * heightDelta)) : 3.0;
     state.funnelPath = std::array<float, 4>{
         static_cast<float>(radialSpeed),
         static_cast<float>(radialAcceleration),
@@ -550,6 +555,7 @@ void Simulation::PrepareFunnelCapture() {
     funnelCaptured = true;
 }
 
+/// Advances the active funnel cycle, starts subsequent cycles and publishes the current phase.
 void Simulation::UpdateFunnel(double seconds, SurfaceShape shape) {
     if (shape == SurfaceShape::Funnel) {
         if (state.surfaceShape != shape) {
@@ -557,7 +563,7 @@ void Simulation::UpdateFunnel(double seconds, SurfaceShape shape) {
             ResetFunnel(false);
         }
         funnelElapsed += seconds;
-        while (true) {
+        while(true) {
             PrepareFunnelCapture();
             if (funnelElapsed < funnelDuration) {
                 break;
@@ -572,6 +578,7 @@ void Simulation::UpdateFunnel(double seconds, SurfaceShape shape) {
     state.surfaceShape = shape;
 }
 
+/// Applies the surface mode and initializes its deformation transition for the selected flight.
 void Simulation::SetSurfaceShape(SurfaceShape shape, EffectKind effect) {
     if (state.surfaceShape != shape) {
         surfaceActivationStart = elapsed;

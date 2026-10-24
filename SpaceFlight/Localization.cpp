@@ -5573,8 +5573,7 @@ const RecordingText& RecordingSettingsText(AppLanguage language) {
 
 /// Returns the close warning for a validated application language.
 const wchar_t* RecordingCloseWarningText(AppLanguage language) {
-    return RECORDING_CLOSE_WARNING_TEXTS[
-        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return RECORDING_CLOSE_WARNING_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns a TV resolution caption at the supplied preset index.
@@ -5730,8 +5729,7 @@ const MonitorColumnText& MonitorColumnsText(AppLanguage language) {
 
 /// Returns the localized option that inhibits the screen saver during visible animation.
 const wchar_t* PreventScreenSaverText(AppLanguage language) {
-    return PREVENT_SCREEN_SAVER_TEXTS[
-        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return PREVENT_SCREEN_SAVER_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the localized ready status when no animation is rendering.
@@ -5771,20 +5769,17 @@ const wchar_t* SnapshotFailedText(AppLanguage language) {
 
 /// Returns the localized uninstall command caption.
 const wchar_t* UninstallScreenSaverText(AppLanguage language) {
-    return UNINSTALL_SCREEN_SAVER_TEXTS[
-        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return UNINSTALL_SCREEN_SAVER_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the localized successful-uninstallation status text.
 const wchar_t* UninstallationSucceededText(AppLanguage language) {
-    return UNINSTALLATION_SUCCEEDED_TEXTS[
-        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return UNINSTALLATION_SUCCEEDED_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the generic localized uninstallation failure text.
 const wchar_t* UninstallationFailedText(AppLanguage language) {
-    return UNINSTALLATION_FAILED_TEXTS[
-        static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
+    return UNINSTALLATION_FAILED_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
 /// Returns the recovery instruction for an open saver settings window.
@@ -5856,12 +5851,12 @@ const wchar_t* FillLightText(AppLanguage language) {
     return FILL_LIGHT_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
-/// Returns the selected monitors' ambient-light option in the selected language.
+/// Returns the localized ambient-light checkbox caption.
 const wchar_t* AmbientLightText(AppLanguage language) {
     return AMBIENT_LIGHT_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
-/// Returns the selected monitors' rim-light option in the selected language.
+/// Returns the localized rim-light checkbox caption.
 const wchar_t* RimLightText(AppLanguage language) {
     return RIM_LIGHT_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
@@ -5871,6 +5866,7 @@ const wchar_t* FilledSurfaceText(AppLanguage language) {
     return FILLED_SURFACE_TEXTS[static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)))];
 }
 
+/// Returns the localized caption for the selected surface deformation mode.
 const wchar_t* SurfaceShapeText(AppLanguage language, SurfaceShape shape) {
     const std::size_t index = static_cast<std::size_t>(NormalizeLanguage(static_cast<int>(language)));
     return SURFACE_SHAPE_TEXTS[index][static_cast<std::size_t>(shape)];

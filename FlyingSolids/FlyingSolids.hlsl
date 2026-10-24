@@ -109,8 +109,7 @@ PixelInput VSMain(VertexInput input, uint copyInstance : SV_InstanceID) {
     const uint kind = drawKind;
     float4 placement = objectPositionAndScale[instance];
     float3 rotation = objectRotationAndKind[instance].xyz;
-    const float3 world = Rotate(input.position * placement.w, rotation) + placement.xyz
-        + float3(0.0, 0.0, drawZOffset);
+    const float3 world = Rotate(input.position * placement.w, rotation) + placement.xyz + float3(0.0, 0.0, drawZOffset);
     const float3 relative = world - cameraPosition.xyz;
     const float3 view = float3(dot(relative, cameraRight.xyz), dot(relative, cameraUp.xyz),
         dot(relative, cameraForward.xyz));
@@ -265,8 +264,7 @@ AccuratePoint CapsuleOffset(AccuratePoint position) {
     const float2 height = AccurateSum(difference.x, position.error.y + difference.y);
     position.value.y = height.x;
     position.error.y = height.y;
-    if (abs(segmentY) < capsuleHalfLength
-            || segmentY == capsuleHalfLength && height.x <= 0.0
+    if (abs(segmentY) < capsuleHalfLength || segmentY == capsuleHalfLength && height.x <= 0.0
             || segmentY == -capsuleHalfLength && height.x >= 0.0) {
         position.value.y = 0.0;
         position.error.y = 0.0;
@@ -285,8 +283,7 @@ float AccurateDistanceEquation(AccuratePoint position, float radius) {
     const float2 total = AccurateSum(difference.x, y.x);
     precise float error = x.y + z.y + radial.y - radiusSquared.y + difference.y + y.y + total.y;
     const float2 corrected = AccurateSum(total.x, error);
-    precise float displacement = 2.0 * dot(position.value, position.error)
-        + dot(position.error, position.error);
+    precise float displacement = 2.0 * dot(position.value, position.error) + dot(position.error, position.error);
     const float2 result = AccurateSum(corrected.x, displacement);
     return result.x + corrected.y + result.y;
 }
@@ -392,7 +389,6 @@ AnalyticPixelOutput PSCapsuleMain(PixelInput input) {
         dot(worldNormal, cameraForward.xyz));
     AnalyticPixelOutput output;
     output.color = ShadeSolid(viewNormal, viewPosition, input.kind);
-    output.depth = farPlane / (farPlane - nearPlane)
-        - nearPlane * farPlane / ((farPlane - nearPlane) * viewPosition.z);
+    output.depth = farPlane / (farPlane - nearPlane) - nearPlane * farPlane / ((farPlane - nearPlane) * viewPosition.z);
     return output;
 }

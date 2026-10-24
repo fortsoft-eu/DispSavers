@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.2.1.0
  */
 
 #define NOMINMAX
@@ -105,6 +105,7 @@ static float MeshScale(std::size_t kind);
 /// Keeps one pending physical refresh independently of rendering and blocking Present calls.
 /// Auto-reset notification coalesces old ticks instead of accumulating a catch-up frame queue.
 struct OutputFramePacer {
+    /// Stops the output-clock worker and releases its synchronization resources.
     ~OutputFramePacer() {
         Stop();
     }
@@ -285,8 +286,7 @@ struct Renderer::Impl {
                 swapChainFlags = flip.Flags;
                 if (flip.Flags & DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT) {
                     ComPtr<IDXGISwapChain2> swapChain2;
-                    if (SUCCEEDED(swapChain.As(&swapChain2))
-                            && SUCCEEDED(swapChain2->SetMaximumFrameLatency(2))) {
+                    if (SUCCEEDED(swapChain.As(&swapChain2)) && SUCCEEDED(swapChain2->SetMaximumFrameLatency(2))) {
                         frameLatencyWaitableObject = swapChain2->GetFrameLatencyWaitableObject();
                     }
                 }

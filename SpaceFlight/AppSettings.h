@@ -111,13 +111,13 @@ struct AppSettings {
     int language = -1;
     SettingsProfile profile = SettingsProfile::Standalone;
 
-    /// Creates first-animation textured defaults for every monitor without overwriting saved choices.
+    /// Initializes new display identities without changing existing preferences.
     void InitializeMonitorAnimations(const std::vector<std::wstring>& devices);
 
     /// Returns this device's own settings, creating a built-in initial record when it is new.
     MonitorAnimation& AnimationForMonitor(const std::wstring& device);
 
-    /// Summarizes common and differing properties without modifying selected displays.
+    /// Summarizes common and differing values without changing settings.
     MonitorSelection SelectionForMonitors(const std::vector<std::wstring>& devices);
 
     /// Changes one property only on the selected display identities.

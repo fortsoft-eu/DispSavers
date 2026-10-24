@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.2.1.0
  */
 
 #define NOMINMAX
@@ -887,8 +887,7 @@ HRESULT Mp4Recorder::Impl::CreateWriter(bool hardware) {
     ComPtr<IMFMediaType> inputType;
     result = MFCreateMediaType(&inputType);
     if (SUCCEEDED(result)) {
-        result =
-            ConfigureVideoType(inputType.Get(), format.television ? MFVideoFormat_NV12 : MFVideoFormat_RGB32, format);
+        result = ConfigureVideoType(inputType.Get(), format.television ? MFVideoFormat_NV12 : MFVideoFormat_RGB32, format);
     }
     const UINT32 imageSize = format.television ? format.width * format.height * 3 / 2 : format.width * format.height * 4;
     if (SUCCEEDED(result)) {
@@ -969,14 +968,11 @@ HRESULT Mp4Recorder::Impl::EncodeFrame(RecordingFrame& source) {
     const bool resampleMotion = format.temporalBlend && source.sequence == previousSequence + 1;
     for (LONGLONG frame = lastFrameIndex + 1; frame <= frameIndex; frame++) {
         const LONGLONG sampleTime = LONGLONG(format.Time(std::uint64_t(frame)));
-        const bool blend = resampleMotion
-            && !previousImage.pixels.empty()
-            && sampleTime > previousImageTime
+        const bool blend = resampleMotion && !previousImage.pixels.empty() && sampleTime > previousImageTime
             && sampleTime < source.time;
         const std::vector<std::uint8_t>* pixels = &converted;
         if (blend) {
-            const unsigned weight = unsigned((sampleTime - previousImageTime) * 65536
-                / (source.time - previousImageTime));
+            const unsigned weight = unsigned((sampleTime - previousImageTime) * 65536 / (source.time - previousImageTime));
             const RecordingImage blended = BlendRecordingImages(previousImage, image, weight);
             ScaleRecordingImage(blended, format.width, format.height, scaled);
             ConvertRecordingNv12(scaled, format.width, format.height, converted);
@@ -1255,19 +1251,9 @@ bool Mp4Recorder::Start(ID3D11Device* device, const wchar_t* filePath, UINT widt
         const RecordingFormat& format) {
     Stop();
     impl->lastError.store(S_OK, std::memory_order_relaxed);
-    if (!device
-            || !filePath
-            || !*filePath
-            || width == 0
-            || height == 0
-            || format.width == 0
-            || format.height == 0
-            || format.numerator == 0
-            || format.denominator == 0
-            || format.aspectX == 0
-            || format.aspectY == 0
-            || std::uint64_t(width) * height > MAXDWORD / 4
-            || std::uint64_t(format.width) * format.height > MAXDWORD / 4
+    if (!device || !filePath || !*filePath || width == 0 || height == 0 || format.width == 0 || format.height == 0
+            || format.numerator == 0 || format.denominator == 0 || format.aspectX == 0 || format.aspectY == 0
+            || std::uint64_t(width) * height > MAXDWORD / 4 || std::uint64_t(format.width) * format.height > MAXDWORD / 4
             || format.television && (format.width % 2 != 0 || format.height % 2 != 0)) {
         impl->SetError(E_INVALIDARG);
         return false;

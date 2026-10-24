@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.2.1.0
  */
 
 #pragma once
@@ -258,8 +258,8 @@ const wchar_t* MainLightText(AppLanguage language);
 /// Returns the selected monitors' fill-light checkbox caption.
 const wchar_t* FillLightText(AppLanguage language);
 
-/// Returns the selected monitors' ambient-light checkbox caption.
+/// Returns the localized ambient-light checkbox caption.
 const wchar_t* AmbientLightText(AppLanguage language);
 
-/// Returns the selected monitors' rim-light checkbox caption.
+/// Returns the localized rim-light checkbox caption.
 const wchar_t* RimLightText(AppLanguage language);

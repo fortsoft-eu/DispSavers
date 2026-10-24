@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.2
+ * Last modified for version 1.2.1.0
  */
 
 #define NOMINMAX
@@ -460,6 +460,8 @@ static void UpdateSettingsTextControlLayout(HWND parent);
 /// Aligns settings text baselines using native control metrics.
 static void UpdateSettingsControlMetrics(HWND window);
 
+/// Measures current items in the dropdown font immediately before opening, adding borders, padding, and scrollbar space.
+/// Limits the list to 13 visible items and keeps it at least as wide as its combo within the monitor work area.
 static void UpdateComboBoxDropDownSize(HWND combo);
 
 /// Updates the language and presentation mode of all open information windows.
@@ -1300,8 +1302,7 @@ static void AppendSettingsActionButtonStates(HWND window, const SettingsWindowDa
 static void UpdateSettingsActionButtons(HWND window) {
     UpdateScreenSaverInhibition();
     window = GetAncestor(window, GA_ROOT);
-    const SettingsWindowData* data =
-        reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+    const SettingsWindowData* data = reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
     if (!data || !data->settings) {
         return;
     }
@@ -1925,9 +1926,7 @@ static void RememberSelectedAnimationMonitors(SettingsWindowData& data, const st
     if (data.updating || !data.monitorSelectionInitialized || !data.settings) {
         return;
     }
-    const std::wstring devices = selected.empty()
-        ? NO_ANIMATION_MONITORS
-        : JoinMonitorDevices(data.monitors, selected);
+    const std::wstring devices = selected.empty() ? NO_ANIMATION_MONITORS : JoinMonitorDevices(data.monitors, selected);
     const bool allSelected = data.monitors.empty()
         ? data.settings->allAnimationMonitorsSelected
         : selected.size() == data.monitors.size();
@@ -2195,12 +2194,8 @@ static void ApplyLocalizedCaptions(HWND window, SettingsWindowData& data) {
     SetDlgItemTextW(window, ID_PREVIEW_TOGGLE, data.previewActive
         ? DisablePreviewText(data.language)
         : EnablePreviewText(data.language));
-    SetDlgItemTextW(window, ID_RECORD_TOGGLE, PrimaryIsRecording()
-        ? strings.stopRecording
-        : strings.startRecording);
-    SetDlgItemTextW(window, ID_PAUSE, app && app->paused
-        ? strings.resume
-        : strings.pause);
+    SetDlgItemTextW(window, ID_RECORD_TOGGLE, PrimaryIsRecording() ? strings.stopRecording : strings.startRecording);
+    SetDlgItemTextW(window, ID_PAUSE, app && app->paused ? strings.resume : strings.pause);
     SetDlgItemTextW(window, ID_INSTALL, IsScreenSaverInstalled()
         ? UninstallScreenSaverText(data.language)
         : strings.installScreenSaver);
@@ -2338,8 +2333,7 @@ static void RenderSurfaceLoop(Application* application, RenderSurface* surface) 
         DrawSurface(*surface, scene, inspect);
         CompleteSurfaceFrame(*application, *surface);
         if (!presentationPaced) {
-            WaitForRenderDeadline(timer, static_cast<double>(frameStarted.QuadPart) + periodTicks,
-                frequency.QuadPart);
+            WaitForRenderDeadline(timer, static_cast<double>(frameStarted.QuadPart) + periodTicks, frequency.QuadPart);
         }
     }
     if (timer) {
@@ -2828,8 +2822,7 @@ static SettingsControlLayer GetSettingsControlLayer(HWND control) {
 }
 
 /// Orders settings controls by layer and position while preserving foreground order.
-static bool CompareSettingsControls(const PositionedControl& left,
-    const PositionedControl& rightControl) {
+static bool CompareSettingsControls(const PositionedControl& left, const PositionedControl& rightControl) {
     const SettingsControlLayer leftLayer = GetSettingsControlLayer(left.window);
     const SettingsControlLayer rightLayer = GetSettingsControlLayer(rightControl.window);
     if (leftLayer != rightLayer) {
@@ -3334,8 +3327,7 @@ static LONG GetSettingsButtonTextTop(HWND button, const WINDOWINFO& information,
             }
         } else if (type == BS_CHECKBOX || type == BS_AUTOCHECKBOX || type == BS_3STATE || type == BS_AUTO3STATE) {
             SIZE glyph = {};
-            if (SUCCEEDED(GetThemePartSize(theme, nullptr, BP_CHECKBOX, CBS_UNCHECKEDNORMAL, nullptr,
-                TS_TRUE, &glyph))) {
+            if (SUCCEEDED(GetThemePartSize(theme, nullptr, BP_CHECKBOX, CBS_UNCHECKEDNORMAL, nullptr, TS_TRUE, &glyph))) {
                 textHeight = std::max(textHeight, glyph.cy);
             }
         }
@@ -3714,8 +3706,7 @@ static void LayoutAboutWindow(HWND window, bool resize) {
         MONITORINFO monitor = { sizeof(monitor) };
         GetMonitorInfoW(MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST), &monitor);
         client.right = std::min(client.right, monitor.rcWork.right - monitor.rcWork.left - frame.right + frame.left);
-        client.bottom =
-            std::min(layout.client.cy, monitor.rcWork.bottom - monitor.rcWork.top - frame.bottom + frame.top);
+        client.bottom = std::min(layout.client.cy, monitor.rcWork.bottom - monitor.rcWork.top - frame.bottom + frame.top);
         RECT bounds = {};
         GetWindowRect(window, &bounds);
         int width = client.right + frame.right - frame.left;
@@ -4387,9 +4378,7 @@ static SIZE LayoutRecordingSettings(HWND window) {
     const int buttonHeight = buttonGeometry.bottom;
     const int buttonWidth = buttonGeometry.right;
     const int buttonGap = secondButton.left - firstButton.right;
-    const int bottomMargin = data
-        ? std::max(0, data->contentHeight - static_cast<int>(bottomButton.bottom))
-        : margin;
+    const int bottomMargin = data ? std::max(0, data->contentHeight - static_cast<int>(bottomButton.bottom)) : margin;
     RECT horizontal{ 0, 0, 249, 0 };
     MapDialogRect(window, &horizontal);
     RECT comboGeometry{ 0, 0, RECORDING_COMBO_WIDTH_DLU, 90 };
@@ -4519,8 +4508,7 @@ static void InitializeRecordingSettings(HWND window, RecordingWindowData& data) 
             reinterpret_cast<LPARAM>(RecordingResolutionText(index)));
     }
     for (unsigned index = 0; index < 4; index++) {
-        SendDlgItemMessageW(window, ID_RECORD_RATE, CB_ADDSTRING, 0,
-            reinterpret_cast<LPARAM>(RecordingRateText(index)));
+        SendDlgItemMessageW(window, ID_RECORD_RATE, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(RecordingRateText(index)));
     }
     SendDlgItemMessageW(window, ID_RECORD_SIZE, CB_SETCURSEL, data.settings->recording.resolution, 0);
     SendDlgItemMessageW(window, ID_RECORD_RATE, CB_SETCURSEL, data.settings->recording.rate, 0);
@@ -4556,8 +4544,7 @@ static INT_PTR CALLBACK RecordingSettingsProc(HWND window, UINT msg, WPARAM wPar
             if (!data) {
                 break;
             }
-            if (HIWORD(wParam) == CBN_DROPDOWN
-                    && (LOWORD(wParam) == ID_RECORD_SIZE || LOWORD(wParam) == ID_RECORD_RATE)) {
+            if (HIWORD(wParam) == CBN_DROPDOWN && (LOWORD(wParam) == ID_RECORD_SIZE || LOWORD(wParam) == ID_RECORD_RATE)) {
                 UpdateComboBoxDropDownSize(reinterpret_cast<HWND>(lParam));
                 return TRUE;
             }
@@ -5231,8 +5218,7 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     for (const AnimationSliderControl& control : ANIMATION_SLIDERS) {
                         if (control.id == id) {
                             const auto value = static_cast<std::uint32_t>(SendMessageW(slider, TBM_GETPOS, 0, 0));
-                            SetSelectedMonitorValue(window, *data, control.property, value,
-                                LOWORD(wParam) == TB_ENDTRACK);
+                            SetSelectedMonitorValue(window, *data, control.property, value, LOWORD(wParam) == TB_ENDTRACK);
                             break;
                         }
                     }
@@ -5653,9 +5639,7 @@ static void ApplyAnimationMonitors() {
             }
         }
     }
-    app->settings.animationMonitorDevice = created.empty()
-        ? NO_ANIMATION_MONITORS
-        : JoinMonitorDevices(monitors, created);
+    app->settings.animationMonitorDevice = created.empty() ? NO_ANIMATION_MONITORS : JoinMonitorDevices(monitors, created);
     if (recording && !MonitorDeviceSelected(app->settings.animationMonitorDevice, recording->monitorDevice)) {
         app->settings.animationMonitorDevice = created.empty()
             ? recording->monitorDevice
@@ -5753,8 +5737,7 @@ static bool WriteScreenSaverFile(const std::wstring& destination, const std::wst
     if (destinationAttributes != INVALID_FILE_ATTRIBUTES && (destinationAttributes & FILE_ATTRIBUTE_READONLY) != 0) {
         SetFileAttributesW(destination.c_str(), destinationAttributes & ~FILE_ATTRIBUTE_READONLY);
     }
-    if (!MoveFileExW(staging.c_str(), destination.c_str(),
-        MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) {
+    if (!MoveFileExW(staging.c_str(), destination.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) {
         DeleteFileW(staging.c_str());
         return false;
     }
@@ -5910,8 +5893,7 @@ static void RequestScreenSaverChange(HWND owner) {
 
 /// Applies the screen-saver startup grace period and mouse-motion threshold.
 static bool SaverShouldExitOnMouse() {
-    if (!app || app->mode != RunMode::ScreenSaver ||
-        GetTickCount64() - app->saverStarted < 900) {
+    if (!app || app->mode != RunMode::ScreenSaver || GetTickCount64() - app->saverStarted < 900) {
         return false;
     }
     POINT current{};
@@ -6220,8 +6202,7 @@ static bool SaveSelfTestSnapshot(Application& application) {
 /// Completes frame and optional snapshot checks when every self-test surface is ready.
 static void CompleteSelfTest(Application& application) {
     if (application.mode == RunMode::SelfTest || application.mode == RunMode::SelfTestAllMonitors) {
-        const bool enoughFrames =
-            std::all_of(application.surfaces.begin(), application.surfaces.end(), HasSelfTestFrames);
+        const bool enoughFrames = std::all_of(application.surfaces.begin(), application.surfaces.end(), HasSelfTestFrames);
         if (enoughFrames) {
             application.selfTestFailed =
                 std::any_of(application.surfaces.begin(), application.surfaces.end(), IsSelfTestSurfaceEmpty);

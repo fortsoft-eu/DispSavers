@@ -75,19 +75,20 @@ public:
     void Step(double seconds, float speed, std::uint32_t selectedEffects, bool cameraTumbling = false,
         bool cameraReversals = false);
 
+    /// Applies the surface mode and initializes its deformation transition for the selected flight.
     void SetSurfaceShape(SurfaceShape shape, EffectKind effect);
 
     /// Returns the snapshot for rendering.
     const SceneState& State() const;
 
 private:
-    /// Refills this simulation's random cache using the Windows system CSPRNG.
+    /// Refills the cache from the Windows system RNG and throws if generation fails.
     void RefillRandomBuffer();
 
-    /// Returns one cryptographically generated 32-bit value from the local cache.
+    /// Returns one cached cryptographic random value, refilling the cache when exhausted.
     std::uint32_t NextCryptographicRandom();
 
-    /// Scales one cryptographic value between the supplied bounds.
+    /// Returns a random float scaled between the supplied bounds.
     float CryptographicRandom(float low, float high);
 
     /// Reserves independent cryptographic funnel values from the other end of the same cache.
@@ -120,19 +121,25 @@ private:
     /// Evaluates the unmodified absolute world camera for the selected flight.
     std::array<double, 3> NativeCameraPosition(double sampleTime) const;
 
+    /// Evaluates free-flight velocity, including the derivatives of changing motion parameters.
     std::array<double, 3> NativeCameraVelocity(double sampleTime) const;
 
+    /// Returns free-flight yaw rate, pitch and pitch rate for a continuous transition into the funnel.
     std::array<double, 3> NativeViewMotion(double sampleTime, double height, double heightVelocity) const;
 
+    /// Evaluates radius, inward speed and radial acceleration while approaching the funnel rim.
     std::array<double, 3> FunnelRadialMotion(double pathTime) const;
 
+    /// Starts a new funnel cycle with a randomized approach and an above-surface capture time.
     void ResetFunnel(bool entering);
 
     /// Freezes the native capture position and solves the exact finite-body exit once per cycle.
     void PrepareFunnelCapture();
 
+    /// Advances the active funnel cycle, starts subsequent cycles and publishes the current phase.
     void UpdateFunnel(double seconds, SurfaceShape shape);
 
+    /// Phases of the optional camera-rotation braking, pause and reversal cycle.
     enum class TumblingPhase {
         Cruising,
         Braking,

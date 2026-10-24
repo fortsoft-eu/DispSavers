@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.1.0
  */
 
 #define _USE_MATH_DEFINES
@@ -194,8 +194,7 @@ static void Box(MeshData& mesh, float lower = -1, float upper = 1) {
 /// Samples a parametric surface with analytically supplied normals.
 template<typename... Parameters>
 static void GridWithNormals(MeshData& mesh, unsigned columns, unsigned rows,
-        V3(*samplePosition)(float, float, Parameters...),
-        V3(*sampleNormal)(float, float, Parameters...),
+        V3(*samplePosition)(float, float, Parameters...), V3(*sampleNormal)(float, float, Parameters...),
         Parameters... parameters) {
     const unsigned stride = columns + 1;
     const unsigned base = static_cast<unsigned>(mesh.vertices.size());

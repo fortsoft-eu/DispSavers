@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.2.1.0
  */
 
 #pragma once
@@ -66,8 +66,11 @@ struct RecordingOptions {
     RecordingFormat Format(unsigned nativeWidth, unsigned nativeHeight, unsigned nativeRate) const;
 };
 
+/// Direct3D device interface used to create recording resources.
 struct ID3D11Device;
+/// Direct3D context interface used to copy and convert captured frames.
 struct ID3D11DeviceContext;
+/// Direct3D texture interface representing a captured render target.
 struct ID3D11Texture2D;
 
 /// Encodes Direct3D texture frames into an H.264 MP4 file through Media Foundation.

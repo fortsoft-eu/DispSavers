@@ -246,6 +246,7 @@ const wchar_t* CopyInformationText(AppLanguage language);
 /// Returns the selected monitors' texture checkbox caption.
 const wchar_t* FilledSurfaceText(AppLanguage language);
 
+/// Returns the localized caption for the selected surface deformation mode.
 const wchar_t* SurfaceShapeText(AppLanguage language, SurfaceShape shape);
 
 /// Returns the selected monitors' free camera-tumbling option.
@@ -260,8 +261,8 @@ const wchar_t* MainLightText(AppLanguage language);
 /// Returns the selected monitors' fill-light checkbox caption.
 const wchar_t* FillLightText(AppLanguage language);
 
-/// Returns the selected monitors' ambient-light checkbox caption.
+/// Returns the localized ambient-light checkbox caption.
 const wchar_t* AmbientLightText(AppLanguage language);
 
-/// Returns the selected monitors' rim-light checkbox caption.
+/// Returns the localized rim-light checkbox caption.
 const wchar_t* RimLightText(AppLanguage language);
