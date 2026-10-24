@@ -6,11 +6,11 @@ Riistvarakiirendusega lend muutuvate pindade vahel. Lend nelja muutuva pinna vah
 
 ## Juhtimine
 
-Valige loendis üks või mitu kuvaririda. Ctrl+A valib kõik read; Ctrl ja Shift võimaldavad valikut muuta. Animatsiooni juhtnupud ja liugurid mõjutavad ainult valitud kuvarite sätteid, mitte kogu rakendust. Rea valimine ja selle märkeruuduga väljundi lubamine on eri toimingud. Valik jäetakse rakenduse ja ekraanisäästja jaoks eraldi meelde. Kui varem olid valitud kõik kuvarid, kaasatakse ka lisatud kuvarid. Valitud kuvarite erinevaid väärtusi näitavad märkeruutude määramata olek ning raadionuppude, liugurite käepidemete ja kõigi valikute lülitusnuppude punktimuster. Liuguri sildil on ühise väärtuse asemel kriips. Valiku muutmine või liuguril klõpsamine määrab selle väärtuse kõigile valitud kuvaritele.
+Valige loendis üks või mitu kuvaririda. Ctrl+A valib kõik read; Ctrl ja Shift võimaldavad valikut muuta. Animatsiooni juhtnupud ja liugurid mõjutavad ainult valitud kuvarite sätteid, mitte kogu rakendust. Rea valimine ja selle märkeruuduga väljundi lubamine on eri toimingud. Valik jäetakse rakenduse ja ekraanisäästja jaoks eraldi meelde. Kui varem olid valitud kõik kuvarid, kaasatakse ka lisatud kuvarid. Valitud kuvarite erinevaid väärtusi näitavad märkeruutude määramata olek ning raadionuppude, liugurite käepidemete ja nuppude „Luba kõik” ja „Keela kõik” punktimuster. Liuguri sildil on ühise väärtuse asemel kriips. Valiku muutmine või liuguril klõpsamine määrab selle väärtuse kõigile valitud kuvaritele.
 
 ## Rakendus
 
-Käivitage FlightCorridor.exe. Sätteid salvestatakse jooksvalt ning rakendus töötab ühe eksemplarina. Kuvari märkeruut või topeltklõps real lülitab selle animatsiooniväljundi sisse või välja. Animatsiooni saab peatada ja jätkata. PNG-pilt ja MP4-video jäädvustavad esimese aktiivse animatsioonikuvari, mitte kõiki kuvareid koos. Salvestatavat kuvarit ei saa salvestamise ajal välja lülitada; rakenduse sulgemine nõuab siis kinnitust. Peatamine ja ekraanisäästja tõkestamine kehtivad kogu rakendusele, sõltumata kuvarite valikust. Kui tõkestamine on sisse lülitatud, takistatakse Windowsi ekraanisäästjat ainult seni, kuni vähemalt ühel kuvaril on nähtav peatamata animatsioon. Rakendus saab paigaldada ja eemaldada sisseehitatud ekraanisäästja.
+Käivitage FlightCorridor.exe. Sätteid salvestatakse jooksvalt ning rakendus töötab ühe eksemplarina. Kuvari märkeruut või topeltklõps real lülitab selle animatsiooniväljundi sisse või välja. Animatsiooni saab peatada ja jätkata. PNG-pilt ja MP4-video jäädvustavad esimese aktiivse animatsioonikuvari, mitte kõiki kuvareid koos. Salvestatava kuvari animatsiooniväljundit ei saa salvestamise ajal välja lülitada; rakenduse sulgemine nõuab siis kinnitust. Peatamine ja ekraanisäästja tõkestamine kehtivad kogu rakendusele, sõltumata kuvarite valikust. Kui tõkestamine on sisse lülitatud, takistatakse Windowsi ekraanisäästjat ainult seni, kuni vähemalt ühel kuvaril on nähtav peatamata animatsioon. Rakendus saab paigaldada ja eemaldada sisseehitatud ekraanisäästja.
 
 Salvestussätetes valige Viewport või TV. Viewport säilitab kuvari mõõtmed ja värskendussageduse kuni 60 kaadrit sekundis. TV pakub 1920 × 1080, 1440 × 1080 või 1280 × 720 väljundit kuvasuhtega 16:9 ning 50, 25, 59.94 (60000/1001) või 29.97 (30000/1001) kaadrit sekundis. TV-video on progressiivne BT.709, piiratud vahemikuga ja 4:2:0 värvialamdiskreetimisega. Pildi kuvasuhe säilib ja täiteribad on mustad. OK rakendab valikud järgmisele salvestusele; Loobu või Esc tühistab kinnitamata muudatused. Salvestussätted, spikker ja teave ei blokeeri teisi aknaid ning neid saab minimeerida. Tab ja Shift+Tab liigutavad fookust, Enter vajutab fookusega nuppu ning Esc sulgeb aktiivse lisaakna.
 
@@ -20,7 +20,7 @@ Käivitage FlightCorridor.scr Windowsi ekraanisäästjana. Selle sätted on rake
 
 ## Süsteeminõuded
 
-Windows 7–11 toetab kõiki funktsioone. Windows Vista SP2 jaoks tuleb paigaldada värskendused KB971512 ja KB2117917; MP4 salvestamine Vistas ei tööta. Vaja on Direct3D 11 tuge ning MP4 jaoks Media Foundationi ja H.264 kodeerijat. Liides ja dokumentatsioon on saadaval 36 keeles.
+Windows 7–11 toetab kõiki funktsioone. Windows Vista SP2 jaoks tuleb paigaldada värskendused KB971512 ja KB2117917; MP4 salvestamine Vistas ei tööta. Vaja on Direct3D 11 tuge ning MP4 jaoks Media Foundationi ja H.264 kodeerijat. Liides ja dokumentatsioon on saadaval 36 keeles. Eraldiseisev rakendus võib Wine’i kaudu töötada ka Linuxis; ekraanisäästja integratsioon on saadaval ainult Windowsis.
 
 ## Koostamine ja pakkimine
 

@@ -4,13 +4,13 @@
 
 FlyingSolids je natívna aplikácia Win32/x86 využívajúca Direct3D a šetrič obrazovky Windows. Zobrazuje osvetlené plné priestorové geometrické telesá. Telesá sa nezávisle pohybujú, otáčajú a odrážajú bez vzájomného prenikania.
 
-Označenie riadkov určuje, ktoré monitory práve nastavujete; je nezávislé od políčok zapínajúcich animačné výstupy. Ctrl+A označí všetky monitory, Ctrl a Shift upravujú označenie. Všetky animačné voľby a posuvníky platia pre označené monitory. Označenie sa pamätá zvlášť pre EXE a SCR. Ak boli označené všetky monitory, označia sa aj novopripojené. Rozdielne hodnoty na označených monitoroch ukazuje neurčitý stav políčok a bodkovanie prepínačov, úchytov posuvníkov a tlačidiel na zapnutie či vypnutie všetkých volieb. Popis posuvníka namiesto spoločnej hodnoty zobrazuje pomlčku. Zmena voľby alebo kliknutie na posuvník zjednotí príslušnú hodnotu na označených monitoroch.
+Označenie riadkov určuje, ktoré monitory práve nastavujete; je nezávislé od políčok zapínajúcich animačné výstupy. Ctrl+A označí všetky monitory, Ctrl a Shift upravujú označenie. Všetky animačné voľby a posuvníky platia pre označené monitory. Označenie sa pamätá zvlášť pre EXE a SCR. Ak boli označené všetky monitory, označia sa aj novopripojené. Rozdielne hodnoty na označených monitoroch ukazuje neurčitý stav políčok a bodkovanie prepínačov, úchytov posuvníkov a tlačidiel „Všetko zapnúť“ a „Všetko vypnúť“. Popis posuvníka namiesto spoločnej hodnoty zobrazuje pomlčku. Zmena voľby alebo kliknutie na posuvník zjednotí príslušnú hodnotu na označených monitoroch.
 
 ## Funkcie
 
 - **Pozorovanie priestoru** a priamy **Prelet priestorom**. V zozname označte jeden alebo viac monitorov. Režim kamery, výber telies, svetlá, rýchlosti, veľkosť a počet kópií sa nastavujú len pre označené monitory a každý monitor si pamätá vlastné nastavenia.
 - Nezávislé ovládanie hlavného a doplnkového svetla, základného jasu a prisvetlenia obrysov
-- Nezávislá scéna na každom vybranom monitore
+- Nezávislá scéna na každom monitore
 - Jedna až desať kópií každého zapnutého telesa
 - Rýchlosť objektov a kamery 0–1600 %, veľkosť 50–200 %
 - Lesklé osvetlenie, samostatné farby a riešenie kolízií
@@ -25,11 +25,11 @@ Kocka; Pravidelný štvorboký ihlan; Komolý štvorboký ihlan; Štvorboký ihl
 
 ## Osvetlenie
 
-Začiarkavacie políčka `Hlavné svetlo`, `Doplnkové svetlo`, `Základný jas` a `Prisvetlenie obrysov` pod jazdcami nezávisle ovládajú osvetlenie celej scény. Základný jas prisvetľuje povrchy telies a prisvetlenie obrysov zvýrazňuje ich okraje. Nastavenia osvetlenia sa ukladajú zvlášť pre aplikáciu a šetrič obrazovky.
+Začiarkavacie políčka `Hlavné svetlo`, `Doplnkové svetlo`, `Základný jas` a `Prisvetlenie obrysov` pod jazdcami nezávisle ovládajú osvetlenie scén na označených monitoroch. Základný jas prisvetľuje povrchy telies a prisvetlenie obrysov zvýrazňuje ich okraje. Nastavenia osvetlenia sa ukladajú zvlášť pre aplikáciu a šetrič obrazovky.
 
 ## Aplikácia a šetrič
 
-`FlyingSolids.exe` ponechá počas animácie dostupné jediné ovládacie okno. Animačné výstupy zapnete alebo vypnete políčkami pri monitoroch alebo dvojklikom na ich riadky. EXE dokáže nainštalovať aj odinštalovať vložený šetrič. Aplikácia beží iba v jednej inštancii. Ďalšie spustenie obnoví minimalizované ovládacie okno a prenesie do popredia. Medzi ovládacími prvkami prechádzajte klávesmi Tab a Shift+Tab; podčiarknuté voľby vyvoláte pomocou Alt a príslušného písmena. Esc zavrie aktívne okno Pomocníka alebo O aplikácii; v ovládacom okne ukončí aplikáciu. Snímky a záznamy zachytávajú prvý aktívny animačný monitor, nie spoločnú plochu všetkých monitorov. PNG používa Obrázky, MP4 Videá; ak tieto priečinky neexistujú, použijú sa Dokumenty. Tlačidlo Nastavenie záznamu vyberá Viewport alebo TV. Viewport zachováva rozmery animačného monitora a jeho obnovovaciu frekvenciu, najviac 60 snímok za sekundu. TV ponúka rozlíšenie 1920 × 1080, 1440 × 1080 alebo 1280 × 720 v pomere 16:9 a frekvenciu 50, 25, 59.94 (60000/1001) alebo 29.97 (30000/1001) snímok za sekundu. Obraz zachováva pomer strán; TV používa progresívne video BT.709 s obmedzeným rozsahom a vzorkovaním 4:2:0. Rozlíšenie a snímkovú frekvenciu možno vybrať iba v režime TV. Okno Nastavenie záznamu možno minimalizovať a neblokuje ostatné okná aplikácie. OK uloží voľby pre nasledujúci záznam MP4; Zrušiť alebo Esc zahodí nepotvrdené zmeny. Nahrávaný monitor nemožno počas záznamu odpojiť; zmeny ostatných monitorov záznam nezastavia. Ukončenie aplikácie počas záznamu vyžaduje potvrdenie, pretože ukončí aj záznam. Pozastavenie a blokovanie šetriča platia pre celú aplikáciu bez ohľadu na označené monitory. Ak je blokovanie zapnuté, bráni spusteniu šetriča Windows iba vtedy, keď je aspoň na jednom monitore viditeľná nepozastavená animácia. `FlyingSolids.scr` má vlastné nastavenia bez záznamu. Celoobrazovkový režim vytvorí nezávislú scénu na každom monitore. Tlačidlo Zapnúť náhľad v nastaveniach spustí samostatný celoobrazovkový náhľad na všetkých monitoroch. Používa aktuálne nastavenia, umožňuje úpravy za behu a možno ho opäť vypnúť. Celoobrazovkový šetrič ukončí ľubovoľný kláves, pohyb myši alebo kliknutie. Esc v nastaveniach zodpovedá tlačidlu Zrušiť; v Pomocníkovi alebo okne O aplikácii zavrie iba toto okno.
+`FlyingSolids.exe` ponechá počas animácie dostupné jediné ovládacie okno. Animačné výstupy zapnete alebo vypnete políčkami pri monitoroch alebo dvojklikom na ich riadky. EXE dokáže nainštalovať aj odinštalovať vložený šetrič. Aplikácia beží iba v jednej inštancii. Ďalšie spustenie obnoví minimalizované ovládacie okno a prenesie ho do popredia. Medzi ovládacími prvkami prechádzajte klávesmi Tab a Shift+Tab; podčiarknuté voľby vyvoláte pomocou Alt a príslušného písmena. Esc zavrie aktívne okno Pomoc alebo O aplikácii; v ovládacom okne ukončí aplikáciu. Snímky a záznamy zachytávajú prvý aktívny animačný monitor, nie spoločnú plochu všetkých monitorov. PNG používa Obrázky, MP4 Videá; ak tieto priečinky neexistujú, použijú sa Dokumenty. Tlačidlo Nastavenie záznamu vyberá Viewport alebo TV. Viewport zachováva rozmery animačného monitora a jeho obnovovaciu frekvenciu, najviac 60 snímok za sekundu. TV ponúka rozlíšenie 1920 × 1080, 1440 × 1080 alebo 1280 × 720 v pomere 16:9 a frekvenciu 50, 25, 59.94 (60000/1001) alebo 29.97 (30000/1001) snímok za sekundu. Obraz zachováva pomer strán; TV používa progresívne video BT.709 s obmedzeným rozsahom a vzorkovaním 4:2:0. Rozlíšenie a snímkovú frekvenciu možno vybrať iba v režime TV. Okno Nastavenie záznamu možno minimalizovať a neblokuje ostatné okná aplikácie. OK uloží voľby pre nasledujúci záznam MP4; Zrušiť alebo Esc zahodí nepotvrdené zmeny. Animačný výstup nahrávaného monitora nemožno počas záznamu vypnúť; zmeny ostatných monitorov záznam nezastavia. Ukončenie aplikácie počas záznamu vyžaduje potvrdenie, pretože ukončí aj záznam. Pozastavenie a blokovanie šetriča platia pre celú aplikáciu bez ohľadu na označené monitory. Ak je blokovanie zapnuté, bráni spusteniu šetriča Windows iba vtedy, keď je aspoň na jednom monitore viditeľná nepozastavená animácia. `FlyingSolids.scr` má vlastné nastavenia bez záznamu. Celoobrazovkový režim vytvorí nezávislú scénu na každom monitore. Tlačidlo Zapnúť náhľad v nastaveniach spustí samostatný celoobrazovkový náhľad na všetkých monitoroch. Používa aktuálne nastavenia, umožňuje úpravy za behu a možno ho opäť vypnúť. Celoobrazovkový šetrič ukončí ľubovoľný kláves, pohyb myši alebo kliknutie. Esc v nastaveniach zodpovedá tlačidlu Zrušiť; v okne Pomoc alebo O aplikácii zavrie iba toto okno.
 
 ## Uloženie nastavení
 
@@ -40,7 +40,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 ## Systémové požiadavky
 
-Windows 7 až Windows 11 podporujú všetky funkcie vrátane snímok PNG a záznamu MP4. Na spustenie aplikácie v systéme Windows Vista SP2 je potrebné nainštalovať aktualizácie KB971512 a KB2117917. Záznam MP4 na Viste v súčasnej verzii nefunguje. Vykresľovanie vyžaduje Direct3D 11, nie iba starší DirectX runtime. Záznam MP4 vyžaduje dostupné súčasti Media Foundation a kodér H.264.
+Windows 7 až Windows 11 podporujú všetky funkcie vrátane snímok PNG a záznamu MP4. Na spustenie aplikácie v systéme Windows Vista SP2 je potrebné nainštalovať aktualizácie KB971512 a KB2117917. Záznam MP4 na Viste v súčasnej verzii nefunguje. Vykresľovanie vyžaduje Direct3D 11, nie iba starší DirectX runtime. Záznam MP4 vyžaduje dostupné súčasti Media Foundation a kodér H.264. Samostatná aplikácia môže bežať aj v Linuxe prostredníctvom Wine; integrácia šetriča obrazovky je dostupná iba vo Windows.
 
 ## Zostavenie
 
@@ -54,7 +54,7 @@ FlyingSolids je dostupný pod [licenciou MIT](../license.txt). Copyright © Petr
 
 ## FlightCorridor
 
-FlightCorridor ponúka Prelet štyrmi premenlivými plochami a Prelet premenlivým lievikom. Každému monitoru priradíte práve jeden prelet: označte jeho riadok v zozname a zvoľte príslušný prepínač.
+FlightCorridor ponúka Prelet medzi štyrmi premenlivými plochami a Prelet premenlivým lievikom. Každému monitoru priradíte práve jeden prelet: označte jeho riadok v zozname a zvoľte príslušný prepínač.
 
 `Release\FlightCorridor.exe` · `Release\FlightCorridor.scr` · [FlightCorridor](../FlightCorridor/README.sk-SK.md)
 

@@ -4,13 +4,13 @@
 
 FlyingSolids is a native Win32/x86 Direct3D application and Windows screen saver that displays illuminated, solid three-dimensional geometric objects. Objects move independently, rotate, and collide without passing through one another.
 
-Row selection determines which displays you are editing; it is separate from the checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the selection. All animation options and sliders apply to the selected displays. The selection is remembered separately for EXE and SCR. If all displays were selected, newly connected displays join the selection. Different values across selected displays are indicated by indeterminate checkboxes and dotted radio buttons, slider thumbs, and buttons for enabling or disabling all options. Slider labels show a dash instead of a shared value. Changing an option or clicking a slider applies that value to all selected displays.
+Row selection determines which displays you are editing; it is separate from the checkboxes that enable animation outputs. Ctrl+A selects every display; Ctrl and Shift adjust the selection. All animation options and sliders apply to the selected displays. The selection is remembered separately for EXE and SCR. If all displays were selected, newly connected displays join the selection. Different values across selected displays are indicated by indeterminate checkboxes and dotted radio buttons, slider thumbs, and the “Enable all” and “Disable all” buttons. Slider labels show a dash instead of a shared value. Changing an option or clicking a slider applies that value to all selected displays.
 
 ## Features
 
 - Two camera modes: **Space observation** and a straight **Fly through space** mode. Select one or more displays in the list. Camera mode, object selection, lighting, speeds, size and copy count apply only to the selected displays, and each display remembers its own settings.
 - Independently switchable main, fill, ambient, and rim lighting
-- Independent animation space for every selected display
+- Independent animation space for every display
 - Up to ten copies of each enabled object
 - Object and camera speed from 0% to 1600%; object size from 50% to 200%
 - Glossy, illuminated surfaces with a distinct color for every object type
@@ -26,11 +26,11 @@ Cube; Regular square pyramid; Square pyramidal frustum; Obliquely truncated squa
 
 ## Lighting
 
-The `Main light`, `Fill light`, `Ambient light`, and `Rim light` checkboxes below the sliders independently control lighting for the whole scene. Ambient light provides base illumination of object surfaces; rim light highlights their edges. Lighting settings are stored separately for the application and screen saver.
+The `Main light`, `Fill light`, `Ambient light`, and `Rim light` checkboxes below the sliders independently control lighting on the selected displays. Ambient light provides base illumination of object surfaces; rim light highlights their edges. Lighting settings are stored separately for the application and screen saver.
 
 ## Standalone application
 
-Run `FlyingSolids.exe`. Enable or disable animation outputs using the display checkboxes or by double-clicking their rows. Select one or more animation displays in the list; double-clicking a row toggles that display. All displays may also be detached. Changes are saved continuously. Only one instance of the application runs at a time. Launching it again restores its minimized control window and brings it to the foreground. Use Tab and Shift+Tab to move between controls; use Alt and the underlined letter to activate a command. Esc closes the active Help or About window; in the control window, it exits the application. Snapshots and recordings capture the first active animation display, not a combined image of all displays. PNG uses Pictures and MP4 uses Videos, with Documents as the fallback if those folders do not exist. The Recording settings button selects Viewport or TV. Viewport preserves the animation display’s dimensions and refresh rate, up to 60 frames per second. TV offers 1920 × 1080, 1440 × 1080 or 1280 × 720 output in 16:9, with 50, 25, 59.94 (60000/1001) or 29.97 (30000/1001) frames per second. The image keeps its aspect ratio; TV uses progressive BT.709 limited-range 4:2:0 video. Resolution and frame rate are available only in TV mode. The Recording settings window can be minimized and does not block the other application windows. OK saves choices for the next MP4 recording; Cancel or Esc discards unconfirmed changes. The recorded display cannot be detached during recording; changes to other displays do not stop the recording. Closing the application while recording requires confirmation because it also stops the recording. Pause and screen-saver blocking apply to the whole application, regardless of display selection. When blocking is enabled, the Windows screen saver is prevented only while unpaused animation is visible on at least one display. The application can install or uninstall the embedded screen saver, so a separate `.scr` file is not required for installation.
+Run `FlyingSolids.exe`. Enable or disable animation outputs using the display checkboxes or by double-clicking their rows. Select one or more animation displays in the list; double-clicking a row toggles that display. All displays may also be detached. Changes are saved continuously. Only one instance of the application runs at a time. Launching it again restores its minimized control window and brings it to the foreground. Use Tab and Shift+Tab to move between controls; use Alt and the underlined letter to activate a command. Esc closes the active Help or About window; in the control window, it exits the application. Snapshots and recordings capture the first active animation display, not a combined image of all displays. PNG uses Pictures and MP4 uses Videos, with Documents as the fallback if those folders do not exist. The Recording settings button selects Viewport or TV. Viewport preserves the animation display’s dimensions and refresh rate, up to 60 frames per second. TV offers 1920 × 1080, 1440 × 1080 or 1280 × 720 output in 16:9, with 50, 25, 59.94 (60000/1001) or 29.97 (30000/1001) frames per second. The image keeps its aspect ratio; TV uses progressive BT.709 limited-range 4:2:0 video. Resolution and frame rate are available only in TV mode. The Recording settings window can be minimized and does not block the other application windows. OK saves choices for the next MP4 recording; Cancel or Esc discards unconfirmed changes. The recorded display’s animation output cannot be disabled during recording; changes to other displays do not stop the recording. Closing the application while recording requires confirmation because it also stops the recording. Pause and screen-saver blocking apply to the whole application, regardless of display selection. When blocking is enabled, the Windows screen saver is prevented only while unpaused animation is visible on at least one display. The application can install or uninstall the embedded screen saver, so a separate `.scr` file is not required for installation.
 
 ## Screen saver
 
@@ -47,7 +47,7 @@ HKEY_CURRENT_USER\Software\FortSoft\FlyingSolids\ScreenSaver
 
 ## System requirements
 
-Windows 7 through Windows 11 support all features, including PNG snapshots and MP4 recording. To run the application on Windows Vista SP2, you must install updates KB971512 and KB2117917. MP4 recording does not work on Vista in the current version. Rendering requires Direct3D 11, not just an older DirectX runtime. MP4 recording requires available Media Foundation components and an H.264 encoder.
+Windows 7 through Windows 11 support all features, including PNG snapshots and MP4 recording. To run the application on Windows Vista SP2, you must install updates KB971512 and KB2117917. MP4 recording does not work on Vista in the current version. Rendering requires Direct3D 11, not just an older DirectX runtime. MP4 recording requires available Media Foundation components and an H.264 encoder. The standalone application can also run on Linux through Wine; screen saver integration is available only on Windows.
 
 ## Building and packaging
 
@@ -67,6 +67,6 @@ FlightCorridor offers Flight between four morphing surfaces and Flight through a
 
 ## SpaceFlight
 
-SpaceFlight offers "Infinite undulating surface" and "Long-distance flight — morphing surface". Assign exactly one flight to each display: select its row in the list and choose the corresponding radio button.
+SpaceFlight offers “Infinite undulating surface” and “Long-distance flight — morphing surface”. Assign exactly one flight to each display: select its row in the list and choose the corresponding radio button.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](SpaceFlight/README.md)
