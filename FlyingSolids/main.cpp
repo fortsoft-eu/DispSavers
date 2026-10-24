@@ -464,6 +464,9 @@ static void UpdateSettingsControlMetrics(HWND window);
 /// Limits the list to 13 visible items and keeps it at least as wide as its combo within the monitor work area.
 static void UpdateComboBoxDropDownSize(HWND combo);
 
+/// Returns the next available control in the declared settings tab sequence, retaining a disabled source as its anchor.
+static HWND FindSettingsTabTarget(HWND parent, const SettingsWindowData& data, HWND focused, bool backwards);
+
 /// Updates the language and presentation mode of all open information windows.
 static void RefreshInformationWindows(AppLanguage language, bool appMode);
 
@@ -1210,8 +1213,40 @@ static void ShowTransientStatus(const wchar_t* text) {
     SetTimer(app->controlWindow, ID_STATUS_RESET_TIMER, 10000, nullptr);
 }
 
+/// Moves focus from a disabled control to the next available tab stop without overriding another focused window.
+static void RestoreDisabledControlFocus(HWND control, const SettingsWindowData* data = nullptr) {
+    if (!IsWindow(control) || IsWindowEnabled(control)) {
+        return;
+    }
+    HWND focused = GetFocus();
+    if (focused && focused != control && !IsChild(control, focused)) {
+        return;
+    }
+    if (GetActiveWindow() != GetAncestor(control, GA_ROOT)) {
+        return;
+    }
+    HWND parent = GetParent(control);
+    HWND next = data ? FindSettingsTabTarget(parent, *data, control, false)
+        : GetNextDlgTabItem(parent, control, FALSE);
+    if (next && next != control) {
+        SetFocus(next);
+    }
+}
+
+/// Applies a standalone control state change and retains keyboard navigation when the focused control is disabled.
+static void EnableSettingsControl(HWND control, bool enabled, const SettingsWindowData* data = nullptr) {
+    HWND focused = GetFocus();
+    const bool restore = !enabled && focused && (focused == control || IsChild(control, focused));
+    EnableWindow(control, enabled);
+    if (restore) {
+        RestoreDisabledControlFocus(control, data);
+    }
+}
+
 /// Applies only changed values while keeping every affected control unpainted until the batch is complete.
 static void ApplySettingsControlStates(std::vector<SettingsControlState> states) {
+    HWND focused = GetFocus();
+    HWND disabledFocus = nullptr;
     std::vector<std::unique_ptr<WindowRedrawScope>> redraw;
     redraw.reserve(states.size());
     for (SettingsControlState& state : states) {
@@ -1255,6 +1290,9 @@ static void ApplySettingsControlStates(std::vector<SettingsControlState> states)
             MixedControls::SetMixed(state.window, *state.mixed);
         }
         if (state.enabled) {
+            if (!*state.enabled && (focused == state.window || IsChild(state.window, focused))) {
+                disabledFocus = state.window;
+            }
             EnableWindow(state.window, *state.enabled);
         }
         if (state.check) {
@@ -1266,6 +1304,12 @@ static void ApplySettingsControlStates(std::vector<SettingsControlState> states)
         if (state.caption) {
             SetWindowTextW(state.window, state.caption->c_str());
         }
+    }
+    redraw.clear();
+    if (disabledFocus) {
+        const SettingsWindowData* data = reinterpret_cast<const SettingsWindowData*>(
+            GetWindowLongPtrW(GetParent(disabledFocus), GWLP_USERDATA));
+        RestoreDisabledControlFocus(disabledFocus, data);
     }
 }
 
@@ -2882,9 +2926,8 @@ static std::vector<int> SettingsTabOrder(const SettingsWindowData& data) {
     return order;
 }
 
-/// Moves settings page controls through their declared tab order and exposes keyboard focus cues.
-/// Leaves ordinary pushbutton transitions to native dialog processing.
-static bool MoveSettingsTabFocus(HWND parent, const SettingsWindowData& data, bool backwards) {
+/// Returns the next available control in the declared settings tab sequence, retaining a disabled source as its anchor.
+static HWND FindSettingsTabTarget(HWND parent, const SettingsWindowData& data, HWND focused, bool backwards) {
     parent = SettingsContentWindow(parent);
     std::vector<HWND> controls;
     for (const int id : SettingsTabOrder(data)) {
@@ -2892,14 +2935,19 @@ static bool MoveSettingsTabFocus(HWND parent, const SettingsWindowData& data, bo
         const bool radioGroup = id == ID_ANIMATION_PRIMARY;
         if (radioGroup) {
             for (const int radioId : ANIMATION_RADIO_IDS) {
-                if (SendDlgItemMessageW(parent, radioId, BM_GETCHECK, 0, 0) == BST_CHECKED) {
-                    control = GetDlgItem(parent, radioId);
+                HWND radio = GetDlgItem(parent, radioId);
+                if (focused == radio || IsChild(radio, focused)) {
+                    control = radio;
                     break;
+                }
+                if (SendDlgItemMessageW(parent, radioId, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+                    control = radio;
                 }
             }
         }
         if (control) {
-            if (IsWindowVisible(control)
+            const bool anchor = focused == control || IsChild(control, focused);
+            if (anchor || IsWindowVisible(control)
                     && IsWindowEnabled(control)
                     && (radioGroup || (GetWindowLongPtrW(control, GWL_STYLE) & WS_TABSTOP) != 0)) {
                 controls.push_back(control);
@@ -2907,9 +2955,8 @@ static bool MoveSettingsTabFocus(HWND parent, const SettingsWindowData& data, bo
         }
     }
     if (controls.empty()) {
-        return false;
+        return nullptr;
     }
-    HWND focused = GetFocus();
     std::vector<HWND>::iterator current = controls.begin();
     for (; current != controls.end(); current++) {
         if (focused == *current || IsChild(*current, focused)) {
@@ -2918,12 +2965,24 @@ static bool MoveSettingsTabFocus(HWND parent, const SettingsWindowData& data, bo
     }
     std::size_t next = 0;
     if (current == controls.end()) {
-        return false;
+        return nullptr;
     } else {
         const std::size_t index = static_cast<std::size_t>(current - controls.begin());
         next = backwards ? (index + controls.size() - 1) % controls.size() : (index + 1) % controls.size();
     }
     HWND target = controls[next];
+    return IsWindowVisible(target) && IsWindowEnabled(target) ? target : nullptr;
+}
+
+/// Moves settings page controls through their declared tab order and exposes keyboard focus cues.
+/// Leaves ordinary pushbutton transitions to native dialog processing.
+static bool MoveSettingsTabFocus(HWND parent, const SettingsWindowData& data, bool backwards) {
+    parent = SettingsContentWindow(parent);
+    HWND focused = GetFocus();
+    HWND target = FindSettingsTabTarget(parent, data, focused, backwards);
+    if (!target) {
+        return false;
+    }
     wchar_t className[32]{};
     GetClassNameW(focused, className, static_cast<int>(std::size(className)));
     const LONG_PTR buttonType = GetWindowLongPtrW(focused, GWL_STYLE) & BS_TYPEMASK;
@@ -4211,7 +4270,7 @@ static void UpdateRecordingSettingsControls(HWND window) {
     const bool enabled = SendDlgItemMessageW(window, ID_RECORD_TV, BM_GETCHECK, 0, 0) == BST_CHECKED;
     constexpr int controls[]{ ID_RECORD_SIZE, ID_RECORD_RATE, ID_RECORD_SIZE_LABEL, ID_RECORD_RATE_LABEL };
     for (int id : controls) {
-        EnableWindow(GetDlgItem(window, id), enabled);
+        EnableSettingsControl(GetDlgItem(window, id), enabled);
     }
 }
 
@@ -5186,7 +5245,7 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 CloseHandle(app->installProcess);
                 app->installProcess = nullptr;
                 app->uninstallingScreenSaver = false;
-                EnableWindow(GetDlgItem(controls, ID_INSTALL), TRUE);
+                EnableSettingsControl(GetDlgItem(controls, ID_INSTALL), true);
                 if (data) {
                     SetDlgItemTextW(controls, ID_INSTALL, IsScreenSaverInstalled()
                         ? UninstallScreenSaverText(data->language)
@@ -5887,7 +5946,8 @@ static void RequestScreenSaverChange(HWND owner) {
     }
     app->uninstallingScreenSaver = uninstall;
     app->installProcess = execute.hProcess;
-    EnableWindow(GetDlgItem(SettingsContentWindow(owner), ID_INSTALL), FALSE);
+    EnableSettingsControl(GetDlgItem(SettingsContentWindow(owner), ID_INSTALL), false,
+        reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(owner, GWLP_USERDATA)));
     SetTimer(owner, ID_INSTALL_POLL_TIMER, 100, nullptr);
 }
 
