@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.1.0
  */
 
 #pragma once
@@ -46,7 +46,7 @@ enum class AnimationProperty {
     ObjectSpeed,
     Effect,
     Textured,
-    SurfaceWaves,
+    SurfaceShape,
     CameraTumbling,
     CameraReversals,
     MainLight,
@@ -61,7 +61,7 @@ enum class AnimationProperty {
 struct MonitorAnimation {
     EffectKind effect = EffectKind::InfiniteSurface;
     bool textured = true;
-    bool surfaceWaves = true;
+    SurfaceShape surfaceShape = SurfaceShape::Waves;
     bool cameraTumbling = true;
     bool cameraReversals = true;
     bool mainLight = true;

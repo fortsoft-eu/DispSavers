@@ -439,7 +439,7 @@ struct Renderer::Impl {
     }
 
     /// Completes every frame through the same offscreen-to-presentation path, independent of scene or draw mode.
-    void CompleteFrame() {
+    void CompleteFrame() const {
         context->OMSetRenderTargets(0, nullptr, nullptr);
         if (renderSamples > 1) {
             context->ResolveSubresource(backBuffer.Get(), 0, sceneColor.Get(), 0, DXGI_FORMAT_B8G8R8A8_UNORM);

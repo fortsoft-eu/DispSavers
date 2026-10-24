@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.2.1.0
  */
 
 #pragma once
@@ -246,8 +246,7 @@ const wchar_t* CopyInformationText(AppLanguage language);
 /// Returns the selected monitors' texture checkbox caption.
 const wchar_t* FilledSurfaceText(AppLanguage language);
 
-/// Returns the selected monitors' surface-waves checkbox caption.
-const wchar_t* SurfaceWavesText(AppLanguage language);
+const wchar_t* SurfaceShapeText(AppLanguage language, SurfaceShape shape);
 
 /// Returns the selected monitors' free camera-tumbling option.
 const wchar_t* CameraTumblingText(AppLanguage language);

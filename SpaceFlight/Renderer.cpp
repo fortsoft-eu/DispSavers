@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.2.1.0
  */
 
 #define NOMINMAX
@@ -42,6 +42,7 @@
 #include <avrt.h>
 #include <wincodec.h>
 #include <wrl/client.h>
+#include "SpaceFlightFunnelVS.h"
 #include "SpaceFlightPS.h"
 #include "SpaceFlightSurfaceVS.h"
 #include "SpaceFlightSurfacePS.h"
@@ -62,15 +63,34 @@ struct alignas(16) FrameConstants {
     float width;
     float height;
     float time;
-    unsigned surfaceWaves;
+    unsigned surfaceShape;
     MotionParameters motion;
     std::array<float, 4> cameraRotation;
     std::array<float, 4> lightSettings;
+    std::array<float, 4> funnelMotion;
+    std::array<float, 4> funnelCycle;
+    std::array<float, 4> funnelCapture;
+    unsigned funnelEntry;
+    float surfaceActivation;
+    float funnelHeading;
+    std::array<unsigned, 1> padding{};
+    std::array<float, 4> funnelGrid;
+    std::array<float, 4> funnelView;
+    std::array<float, 4> funnelPath;
 };
 static_assert(offsetof(FrameConstants, motion) == 16);
 static_assert(offsetof(FrameConstants, cameraRotation) == 80);
 static_assert(offsetof(FrameConstants, lightSettings) == 96);
-static_assert(sizeof(FrameConstants) == 112);
+static_assert(offsetof(FrameConstants, funnelMotion) == 112);
+static_assert(offsetof(FrameConstants, funnelCycle) == 128);
+static_assert(offsetof(FrameConstants, funnelCapture) == 144);
+static_assert(offsetof(FrameConstants, funnelEntry) == 160);
+static_assert(offsetof(FrameConstants, surfaceActivation) == 164);
+static_assert(offsetof(FrameConstants, funnelHeading) == 168);
+static_assert(offsetof(FrameConstants, funnelGrid) == 176);
+static_assert(offsetof(FrameConstants, funnelView) == 192);
+static_assert(offsetof(FrameConstants, funnelPath) == 208);
+static_assert(sizeof(FrameConstants) == 224);
 
 /// Shader constants selecting a flight effect and its grid layout.
 struct alignas(16) DrawConstants {
@@ -313,7 +333,9 @@ struct Renderer::Impl {
             FAILED(device->CreateVertexShader(SpaceFlightVertexShader,
                 sizeof(SpaceFlightVertexShader), nullptr, &vertexShader))
             || FAILED(device->CreatePixelShader(SpaceFlightPixelShader,
-                sizeof(SpaceFlightPixelShader), nullptr, &pixelShader));
+                sizeof(SpaceFlightPixelShader), nullptr, &pixelShader))
+            || FAILED(device->CreateVertexShader(SpaceFlightFunnelVertexShader,
+                sizeof(SpaceFlightFunnelVertexShader), nullptr, &funnelVertexShader));
         if (shaderCreationFailed) {
             return false;
         }
@@ -435,7 +457,7 @@ struct Renderer::Impl {
     }
 
     /// Completes every frame through the same offscreen-to-presentation path, independent of scene or draw mode.
-    void CompleteFrame() {
+    void CompleteFrame() const {
         context->OMSetRenderTargets(0, nullptr, nullptr);
         if (renderSamples > 1) {
             context->ResolveSubresource(backBuffer.Get(), 0, sceneColor.Get(), 0, DXGI_FORMAT_B8G8R8A8_UNORM);
@@ -475,10 +497,20 @@ struct Renderer::Impl {
             static_cast<float>(width),
             static_cast<float>(height),
             scene.animationTime,
-            scene.surfaceWaves ? 1U : 0U,
+            static_cast<unsigned>(scene.surfaceShape),
             scene.motion,
             scene.cameraRotation,
-            lightSettings
+            lightSettings,
+            scene.funnelMotion,
+            scene.funnelCycle,
+            scene.funnelCapture,
+            scene.funnelEntry ? 1U : 0U,
+            scene.surfaceActivation,
+            scene.funnelHeading,
+            std::array<unsigned, 1>{},
+            scene.funnelGrid,
+            scene.funnelView,
+            scene.funnelPath
         };
         context->UpdateSubresource(frameBuffer.Get(), 0, nullptr, &frame, 0, 0);
         ID3D11Buffer* frameConstant = frameBuffer.Get();
@@ -507,6 +539,14 @@ struct Renderer::Impl {
             } else {
                 context->IASetIndexBuffer(nullptr, DXGI_FORMAT_R32_UINT, 0);
                 context->DrawInstanced(SEGMENT_COUNTS[kind] * 2, 1, 0, 0);
+            }
+            if (scene.surfaceShape == SurfaceShape::Funnel) {
+                context->VSSetShader(funnelVertexShader.Get(), nullptr, 0);
+                context->PSSetShader(pixelShader.Get(), nullptr, 0);
+                context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+                context->OMSetDepthStencilState(filled ? depthState.Get() : nullptr, 0);
+                context->IASetIndexBuffer(nullptr, DXGI_FORMAT_R32_UINT, 0);
+                context->DrawInstanced(FUNNEL_CIRCLE_VERTEX_COUNT, 1, 0, 0);
             }
         }
         CompleteFrame();
@@ -669,6 +709,7 @@ struct Renderer::Impl {
 
     /// Shader pipeline and constant buffers
     ComPtr<ID3D11VertexShader> vertexShader;
+    ComPtr<ID3D11VertexShader> funnelVertexShader;
     ComPtr<ID3D11PixelShader> pixelShader;
     ComPtr<ID3D11VertexShader> surfaceVertexShader;
     ComPtr<ID3D11PixelShader> surfacePixelShader;

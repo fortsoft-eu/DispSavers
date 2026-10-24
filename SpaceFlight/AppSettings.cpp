@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.2.1.0
  */
 
 #define NOMINMAX
@@ -74,7 +74,8 @@ static int ReadValue(HKEY key, const wchar_t* name, int defaultValue) {
     DWORD value = 0;
     DWORD type = 0;
     DWORD size = sizeof(value);
-    const LSTATUS queryResult = RegQueryValueExW(key, name, nullptr, &type, reinterpret_cast<BYTE*>(&value), &size);
+    const LSTATUS queryResult =
+        RegQueryValueExW(key, name, nullptr, &type, reinterpret_cast<BYTE*>(&value), &size);
     if (queryResult == ERROR_SUCCESS && type == REG_DWORD && size == sizeof(value)) {
         return static_cast<int>(value);
     }
@@ -124,7 +125,7 @@ std::uint32_t MonitorAnimation::Value(AnimationProperty property) const {
         case AnimationProperty::ObjectSpeed: return objectSpeedPercent;
         case AnimationProperty::Effect: return static_cast<std::uint32_t>(effect);
         case AnimationProperty::Textured: return textured;
-        case AnimationProperty::SurfaceWaves: return surfaceWaves;
+        case AnimationProperty::SurfaceShape: return static_cast<std::uint32_t>(surfaceShape);
         case AnimationProperty::CameraTumbling: return cameraTumbling;
         case AnimationProperty::CameraReversals: return cameraReversals;
         case AnimationProperty::MainLight: return mainLight;
@@ -148,8 +149,8 @@ void MonitorAnimation::SetValue(AnimationProperty property, std::uint32_t value)
         case AnimationProperty::Textured:
             textured = value != 0;
             break;
-        case AnimationProperty::SurfaceWaves:
-            surfaceWaves = value != 0;
+        case AnimationProperty::SurfaceShape:
+            surfaceShape = static_cast<SurfaceShape>(std::min(value, 2U));
             break;
         case AnimationProperty::CameraTumbling:
             cameraTumbling = value != 0;
@@ -193,7 +194,8 @@ std::uint32_t MonitorAnimation::Packed() const {
         | (fillLight ? 128U : 0U)
         | (ambientLight ? 0U : 256U)
         | (rimLight ? 0U : 512U)
-        | (surfaceWaves ? 0U : 1024U);
+        | (surfaceShape == SurfaceShape::Plane ? 1024U : 0U)
+        | (surfaceShape == SurfaceShape::Funnel ? 2048U : 0U);
 }
 
 /// Assigns the first textured flight to every device, preserving saved and disconnected-display choices.
@@ -268,8 +270,8 @@ static void ReadMonitorAnimations(HKEY profile, AppSettings& settings) {
     HKEY speeds = nullptr;
     RegOpenKeyExW(profile, MONITOR_SPEEDS_KEY, 0, KEY_READ, &speeds);
     DWORD maximumNameLength = 0;
-    const LSTATUS infoResult = RegQueryInfoKeyW(key, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-        &maximumNameLength, nullptr, nullptr, nullptr);
+    const LSTATUS infoResult = RegQueryInfoKeyW(key, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+        nullptr, &maximumNameLength, nullptr, nullptr, nullptr);
     if (infoResult == ERROR_SUCCESS && maximumNameLength < 32768U) {
         std::vector<wchar_t> name(static_cast<std::size_t>(maximumNameLength) + 1);
         for (DWORD index = 0; ; index++) {
@@ -282,12 +284,19 @@ static void ReadMonitorAnimations(HKEY profile, AppSettings& settings) {
             if (result == ERROR_NO_MORE_ITEMS) {
                 break;
             }
-            if (result == ERROR_SUCCESS && type == REG_DWORD && size == sizeof(value)
-                    && value <= 2047U && length != 0) {
+            if (result == ERROR_SUCCESS
+                    && type == REG_DWORD
+                    && size == sizeof(value)
+                    && value <= 4095U
+                    && length != 0
+                    && (value & 3072U) != 3072U) {
+                const SurfaceShape surfaceShape = (value & 2048U) != 0
+                    ? SurfaceShape::Funnel
+                    : (value & 1024U) != 0 ? SurfaceShape::Plane : SurfaceShape::Waves;
                 MonitorAnimation animation{
                     static_cast<EffectKind>(value & 1U),
                     (value & 2U) != 0,
-                    (value & 1024U) == 0,
+                    surfaceShape,
                     (value & 4U) != 0,
                     (value & 8U) != 0,
                     (value & 64U) == 0,
@@ -319,8 +328,8 @@ static void ReadMonitorAnimations(HKEY profile, AppSettings& settings) {
 /// Persists device-specific animation, texture and camera choices without removing disconnected settings.
 static void WriteMonitorAnimations(HKEY profile, const AppSettings& settings) {
     HKEY key = nullptr;
-    const LSTATUS createResult = RegCreateKeyExW(profile, MONITOR_ANIMATIONS_KEY, 0, nullptr, 0, KEY_WRITE, nullptr,
-        &key, nullptr);
+    const LSTATUS createResult = RegCreateKeyExW(profile, MONITOR_ANIMATIONS_KEY, 0, nullptr, 0, KEY_WRITE,
+        nullptr, &key, nullptr);
     if (createResult != ERROR_SUCCESS) {
         return;
     }
@@ -328,7 +337,8 @@ static void WriteMonitorAnimations(HKEY profile, const AppSettings& settings) {
     RegCreateKeyExW(profile, MONITOR_SPEEDS_KEY, 0, nullptr, 0, KEY_WRITE, nullptr, &speeds, nullptr);
     for (const auto& entry : settings.monitorAnimations) {
         const DWORD value = entry.second.Packed();
-        RegSetValueExW(key, entry.first.c_str(), 0, REG_DWORD, reinterpret_cast<const BYTE*>(&value), sizeof(value));
+        RegSetValueExW(key, entry.first.c_str(), 0, REG_DWORD, reinterpret_cast<const BYTE*>(&value),
+            sizeof(value));
         if (speeds) {
             const DWORD speed = static_cast<DWORD>(std::clamp(entry.second.objectSpeedPercent, 0, 1600));
             RegSetValueExW(speeds, entry.first.c_str(), 0, REG_DWORD,
@@ -370,9 +380,11 @@ void AppSettings::Load(SettingsProfile selectedProfile) {
         recordingSettingsY = ReadValue(key, RECORDING_SETTINGS_Y_VALUE_NAME, recordingSettingsY);
         language = ReadValue(key, LANGUAGE_VALUE_NAME, language);
         if (profile == SettingsProfile::Standalone) {
-            preventScreenSaver = ReadValue(key, PREVENT_SCREEN_SAVER_VALUE_NAME, preventScreenSaver ? 1 : 0) == 1;
+            preventScreenSaver =
+                ReadValue(key, PREVENT_SCREEN_SAVER_VALUE_NAME, preventScreenSaver ? 1 : 0) == 1;
             recording.television = ReadValue(key, RECORDING_TV_VALUE_NAME, recording.television ? 1 : 0) != 0;
-            recording.resolution = std::clamp(ReadValue(key, RECORDING_RESOLUTION_VALUE_NAME, recording.resolution), 0, 2);
+            recording.resolution =
+                std::clamp(ReadValue(key, RECORDING_RESOLUTION_VALUE_NAME, recording.resolution), 0, 2);
             recording.rate = std::clamp(ReadValue(key, RECORDING_RATE_VALUE_NAME, recording.rate), 0, 3);
         }
         RegCloseKey(key);
@@ -434,8 +446,8 @@ static void WriteWindowPositions(HKEY key, const AppSettings& settings) {
 /// Saves window positions and selected monitor rows without applying pending animation changes.
 void AppSettings::SaveWindowPositions() const {
     HKEY key = nullptr;
-    const LSTATUS createResult =
-        RegCreateKeyExW(HKEY_CURRENT_USER, RegistryPath(profile), 0, nullptr, 0, KEY_WRITE, nullptr, &key, nullptr);
+    const LSTATUS createResult = RegCreateKeyExW(HKEY_CURRENT_USER, RegistryPath(profile), 0, nullptr, 0,
+        KEY_WRITE, nullptr, &key, nullptr);
     if (createResult != ERROR_SUCCESS) {
         return;
     }
@@ -446,8 +458,8 @@ void AppSettings::SaveWindowPositions() const {
 /// Persists the complete settings record in the active profile branch.
 void AppSettings::Save() const {
     HKEY key = nullptr;
-    const LSTATUS createResult =
-        RegCreateKeyExW(HKEY_CURRENT_USER, RegistryPath(profile), 0, nullptr, 0, KEY_WRITE, nullptr, &key, nullptr);
+    const LSTATUS createResult = RegCreateKeyExW(HKEY_CURRENT_USER, RegistryPath(profile), 0, nullptr, 0,
+        KEY_WRITE, nullptr, &key, nullptr);
     if (createResult != ERROR_SUCCESS) {
         return;
     }

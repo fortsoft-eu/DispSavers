@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.2.1.0
  */
 
 #pragma once
@@ -36,11 +36,20 @@ enum class EffectKind : std::uint32_t {
     Count
 };
 
+enum class SurfaceShape : std::uint32_t {
+    Plane,
+    Waves,
+    Funnel
+};
+
 inline constexpr std::size_t EFFECT_COUNT = static_cast<std::size_t>(EffectKind::Count);
 inline constexpr std::uint32_t ALL_EFFECT_MASK = (1U << EFFECT_COUNT) - 1U;
 
 /// Original wire-grid segment counts for the two surface flights.
-inline constexpr std::array<unsigned, EFFECT_COUNT> SEGMENT_COUNTS{ 15664, 25312 };
+inline constexpr std::array<unsigned, EFFECT_COUNT> SEGMENT_COUNTS{ 17112, 25312 };
+inline constexpr unsigned FUNNEL_CIRCLE_SEGMENTS = 128;
+inline constexpr unsigned FUNNEL_CIRCLE_COUNT = 2;
+inline constexpr unsigned FUNNEL_CIRCLE_VERTEX_COUNT = FUNNEL_CIRCLE_COUNT * FUNNEL_CIRCLE_SEGMENTS * 2;
 
 /// Filled-grid dimensions for the two surface flights.
 struct SurfaceMesh {
@@ -48,7 +57,8 @@ struct SurfaceMesh {
     unsigned rows;
     unsigned patches;
 };
+
 inline constexpr std::array<SurfaceMesh, EFFECT_COUNT> SURFACE_MESHES{
-    SurfaceMesh{ 176, 176, 1 },
+    SurfaceMesh{ 184, 184, 1 },
     SurfaceMesh{ 224, 224, 1 }
 };

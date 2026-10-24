@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.2
+ * Last modified for version 1.2.1.0
  */
 
 #define NOMINMAX
@@ -59,6 +59,7 @@
 #include <memory>
 #include <mutex>
 #include <optional>
+#include <span>
 #include <string>
 #include <thread>
 #include <vector>
@@ -181,11 +182,13 @@ enum ControlId {
     ID_CAMERA_TUMBLING = 1161,
     ID_PREVENT_SCREEN_SAVER = 1162,
     ID_CAMERA_REVERSALS = 1163,
-    ID_SURFACE_WAVES = 1164,
     ID_MAIN_LIGHT = 1165,
     ID_FILL_LIGHT,
     ID_AMBIENT_LIGHT,
     ID_RIM_LIGHT,
+    ID_SURFACE_PLANE = 1170,
+    ID_SURFACE_WAVES,
+    ID_SURFACE_FUNNEL,
     ID_EFFECT_FIRST = 1200,
     ID_INSTALL_POLL_TIMER = 1400,
     ID_STATUS_RESET_TIMER,
@@ -200,6 +203,11 @@ struct AnimationControl {
     int id;
     AnimationProperty property;
     AnimationProperty dependency = AnimationProperty::Count;
+};
+
+struct AnimationRadioGroup {
+    AnimationProperty property;
+    std::span<const int> ids;
 };
 
 /// Slider and label identifiers associated with one numeric animation property.
@@ -226,15 +234,18 @@ constexpr int ID_ANIMATION_SECONDARY = ID_EFFECT_FIRST + 1;
 constexpr int ID_ANIMATION_GROUP = ID_EFFECTS_GROUP;
 constexpr int ID_ALL_ANIMATIONS = ID_ALL_EFFECTS;
 constexpr int ID_NO_ANIMATIONS = ID_NO_EFFECTS;
-constexpr AnimationProperty ANIMATION_RADIO_PROPERTY = AnimationProperty::Effect;
 constexpr AnimationProperty ANIMATION_ENABLED_PROPERTY = AnimationProperty::EnabledEffects;
 constexpr std::uint32_t ALL_ANIMATION_MASK = ALL_EFFECT_MASK;
 constexpr int ANIMATION_RADIO_IDS[]{ ID_EFFECT_FIRST, ID_EFFECT_FIRST + 1 };
+constexpr int SURFACE_SHAPE_RADIO_IDS[]{ ID_SURFACE_PLANE, ID_SURFACE_WAVES, ID_SURFACE_FUNNEL };
+constexpr AnimationRadioGroup ANIMATION_RADIO_GROUPS[]{
+    { AnimationProperty::Effect, ANIMATION_RADIO_IDS },
+    { AnimationProperty::SurfaceShape, SURFACE_SHAPE_RADIO_IDS }
+};
 constexpr int ANIMATION_TAB_CHECKBOX_IDS[]{
     ID_MONITOR_TEXTURE,
     ID_CAMERA_TUMBLING,
     ID_CAMERA_REVERSALS,
-    ID_SURFACE_WAVES,
     ID_AMBIENT_LIGHT,
     ID_RIM_LIGHT,
     ID_MAIN_LIGHT,
@@ -245,7 +256,6 @@ constexpr AnimationSliderControl ANIMATION_SLIDERS[]{
 };
 constexpr int OPAQUE_SETTINGS_LABEL_IDS[]{ ID_EFFECTS_GROUP, ID_MONITOR_GROUP };
 constexpr AnimationControl ANIMATION_CHECKBOXES[]{
-    { ID_SURFACE_WAVES, AnimationProperty::SurfaceWaves },
     { ID_MONITOR_TEXTURE, AnimationProperty::Textured },
     { ID_CAMERA_TUMBLING, AnimationProperty::CameraTumbling },
     { ID_CAMERA_REVERSALS, AnimationProperty::CameraReversals, AnimationProperty::CameraTumbling },
@@ -258,7 +268,6 @@ constexpr AnimationCheckboxPlacement ANIMATION_CHECKBOX_PLACEMENTS[]{
     { ID_MONITOR_TEXTURE, 0, 0 },
     { ID_CAMERA_TUMBLING, 0, 1 },
     { ID_CAMERA_REVERSALS, 0, 2 },
-    { ID_SURFACE_WAVES, 0, 3 },
     { ID_AMBIENT_LIGHT, 1, 0 },
     { ID_RIM_LIGHT, 1, 1 },
     { ID_MAIN_LIGHT, 2, 0 },
@@ -269,7 +278,9 @@ constexpr SettingsControlAlignment ANIMATION_CONTROL_ALIGNMENTS[]{
     { ID_AMBIENT_LIGHT, ID_MONITOR_TEXTURE },
     { ID_RIM_LIGHT, ID_CAMERA_TUMBLING },
     { ID_MAIN_LIGHT, ID_MONITOR_TEXTURE },
-    { ID_FILL_LIGHT, ID_CAMERA_TUMBLING }
+    { ID_FILL_LIGHT, ID_CAMERA_TUMBLING },
+    { ID_SURFACE_WAVES, ID_SURFACE_PLANE },
+    { ID_SURFACE_FUNNEL, ID_SURFACE_PLANE }
 };
 
 /// Stable source metadata and displayed values of one monitor-list item.
@@ -664,7 +675,9 @@ static RenderSurface* PrimarySurface() {
 /// Reports whether the primary surface has a rendered frame and can accept capture commands.
 static bool HasReadyPrimarySurface() {
     RenderSurface* surface = PrimarySurface();
-    return surface && surface->renderer && surface->renderedFrames.load(std::memory_order_relaxed) != 0
+    return surface
+        && surface->renderer
+        && surface->renderedFrames.load(std::memory_order_relaxed) != 0
         && !surface->stopRequested.load(std::memory_order_relaxed);
 }
 
@@ -674,7 +687,8 @@ static bool HasReadyAnimationSurface() {
         return false;
     }
     for (const std::unique_ptr<RenderSurface>& surface : app->surfaces) {
-        if (surface->renderer && surface->renderedFrames.load(std::memory_order_relaxed) != 0
+        if (surface->renderer
+                && surface->renderedFrames.load(std::memory_order_relaxed) != 0
                 && !surface->stopRequested.load(std::memory_order_relaxed)) {
             return true;
         }
@@ -1973,19 +1987,21 @@ static void UpdateMonitorAnimationControls(HWND window, SettingsWindowData& data
     const MonitorSelection selection = data.settings->SelectionForMonitors(data.selectedAnimationDevices);
     std::vector<SettingsControlState> states;
     states.push_back(SettingsControlState{ GetDlgItem(window, ID_ANIMATION_GROUP), selection.available });
-    for (std::size_t index = 0; index < std::size(ANIMATION_RADIO_IDS); index++) {
-        HWND radio = GetDlgItem(window, ANIMATION_RADIO_IDS[index]);
-        const bool checked = selection.available
-            && !selection.IsMixed(ANIMATION_RADIO_PROPERTY)
-            && selection.values.Value(ANIMATION_RADIO_PROPERTY) == index;
-        states.push_back(SettingsControlState{
-            radio,
-            selection.available,
-            checked ? BST_CHECKED : BST_UNCHECKED,
-            std::nullopt,
-            std::nullopt,
-            selection.available && selection.IsMixed(ANIMATION_RADIO_PROPERTY)
-        });
+    for (const AnimationRadioGroup& group : ANIMATION_RADIO_GROUPS) {
+        for (std::size_t index = 0; index < group.ids.size(); index++) {
+            HWND radio = GetDlgItem(window, group.ids[index]);
+            const bool checked = selection.available
+                && !selection.IsMixed(group.property)
+                && selection.values.Value(group.property) == index;
+            states.push_back(SettingsControlState{
+                radio,
+                selection.available,
+                checked ? BST_CHECKED : BST_UNCHECKED,
+                std::nullopt,
+                std::nullopt,
+                selection.available && selection.IsMixed(group.property)
+            });
+        }
     }
     for (const AnimationControl& control : ANIMATION_CHECKBOXES) {
         HWND checkbox = GetDlgItem(window, control.id);
@@ -2170,7 +2186,10 @@ static void PopulateMonitorList(HWND window, SettingsWindowData& data) {
 static void ApplyAnimationCaptions(HWND window, const SettingsWindowData& data) {
     const LocalizedText& strings = Text(data.language);
     SetDlgItemTextW(window, ID_MONITOR_TEXTURE, FilledSurfaceText(data.language));
-    SetDlgItemTextW(window, ID_SURFACE_WAVES, SurfaceWavesText(data.language));
+    for (std::size_t index = 0; index < std::size(SURFACE_SHAPE_RADIO_IDS); index++) {
+        SetDlgItemTextW(window, SURFACE_SHAPE_RADIO_IDS[index],
+            SurfaceShapeText(data.language, static_cast<SurfaceShape>(index)));
+    }
     SetDlgItemTextW(window, ID_CAMERA_TUMBLING, CameraTumblingText(data.language));
     SetDlgItemTextW(window, ID_CAMERA_REVERSALS, CameraReversalsText(data.language));
     SetDlgItemTextW(window, ID_AMBIENT_LIGHT, AmbientLightText(data.language));
@@ -2318,12 +2337,12 @@ static void RenderSurfaceLoop(Application* application, RenderSurface* surface) 
         const MonitorAnimation animation = SurfaceAnimationSettings(*surface);
         const std::uint32_t effect = 1U << static_cast<unsigned>(animation.effect);
         const std::uint32_t enabled = animation.enabledEffects & effect;
+        surface->simulation.SetSurfaceShape(animation.surfaceShape, animation.effect);
         if (!application->paused.load(std::memory_order_relaxed)) {
             const double simulationSeconds =
                 frameSeconds * (application->mode == RunMode::Preview ? SYSTEM_PREVIEW_SPEED_MULTIPLIER : 1.0);
-            surface->simulation.Step(simulationSeconds,
-                animation.objectSpeedPercent / 100.0f,
-                enabled, animation.cameraTumbling, animation.cameraReversals);
+            surface->simulation.Step(simulationSeconds, animation.objectSpeedPercent / 100.0f, enabled,
+                animation.cameraTumbling, animation.cameraReversals);
         }
         SceneState scene = surface->simulation.State();
         if (!animation.cameraTumbling) {
@@ -2336,12 +2355,10 @@ static void RenderSurfaceLoop(Application* application, RenderSurface* surface) 
         scene.rimLight = animation.rimLight;
         scene.infiniteSurfaceFilled = animation.textured;
         scene.morphingSurfaceFilled = scene.infiniteSurfaceFilled;
-        scene.surfaceWaves = animation.surfaceWaves;
         DrawSurface(*surface, scene, inspect);
         CompleteSurfaceFrame(*application, *surface);
         if (!presentationPaced) {
-            WaitForRenderDeadline(timer, static_cast<double>(frameStarted.QuadPart) + periodTicks,
-                frequency.QuadPart);
+            WaitForRenderDeadline(timer, static_cast<double>(frameStarted.QuadPart) + periodTicks, frequency.QuadPart);
         }
     }
     if (timer) {
@@ -2864,6 +2881,7 @@ static std::vector<int> SettingsTabOrder(const SettingsWindowData& data) {
     for (const int id : ANIMATION_TAB_CHECKBOX_IDS) {
         order.push_back(id);
     }
+    order.push_back(ID_SURFACE_PLANE);
     AppendAnimationObjectTabOrder(order);
     order.push_back(ID_ALL_ANIMATIONS);
     order.push_back(ID_NO_ANIMATIONS);
@@ -2896,9 +2914,15 @@ static bool MoveSettingsTabFocus(HWND parent, const SettingsWindowData& data, bo
     std::vector<HWND> controls;
     for (const int id : SettingsTabOrder(data)) {
         HWND control = GetDlgItem(parent, id);
-        const bool radioGroup = id == ID_ANIMATION_PRIMARY;
+        const AnimationRadioGroup* radioGroup = nullptr;
+        for (const AnimationRadioGroup& group : ANIMATION_RADIO_GROUPS) {
+            if (id == group.ids.front()) {
+                radioGroup = &group;
+                break;
+            }
+        }
         if (radioGroup) {
-            for (const int radioId : ANIMATION_RADIO_IDS) {
+            for (const int radioId : radioGroup->ids) {
                 if (SendDlgItemMessageW(parent, radioId, BM_GETCHECK, 0, 0) == BST_CHECKED) {
                     control = GetDlgItem(parent, radioId);
                     break;
@@ -4811,7 +4835,12 @@ static int CreateAnimationCheckboxControls(HWND window, int top, int rowHeight) 
             nullptr);
         rows = std::max(rows, placement.row + 1);
     }
-    return top + rows * rowHeight;
+    for (std::size_t index = 0; index < std::size(SURFACE_SHAPE_RADIO_IDS); index++) {
+        const DWORD style = WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | (index == 0 ? WS_TABSTOP | WS_GROUP : 0U);
+        CreateWindowExW(0, L"BUTTON", L"", style, columnX[index], top + rows * rowHeight, checkboxWidth,
+            rowHeight + 1, window, reinterpret_cast<HMENU>(SURFACE_SHAPE_RADIO_IDS[index]), nullptr, nullptr);
+    }
+    return top + (rows + 1) * rowHeight;
 }
 
 /// Places animation choices beside the speed slider and three columns of options below their shared separator.
@@ -4852,8 +4881,10 @@ static bool AttachMixedSettingsControls(HWND window) {
     for (const AnimationSliderControl& control : ANIMATION_SLIDERS) {
         ids.push_back(control.id);
     }
-    for (const int id : ANIMATION_RADIO_IDS) {
-        ids.push_back(id);
+    for (const AnimationRadioGroup& group : ANIMATION_RADIO_GROUPS) {
+        for (const int id : group.ids) {
+            ids.push_back(id);
+        }
     }
     for (const int id : ids) {
         if (!MixedControls::Attach(GetDlgItem(window, id))) {
@@ -5020,10 +5051,12 @@ static bool HandleAnimationSettingsCommand(HWND window, SettingsWindowData& data
             id == ID_ALL_ANIMATIONS ? ALL_ANIMATION_MASK : 0U);
         return true;
     }
-    for (std::size_t index = 0; index < std::size(ANIMATION_RADIO_IDS); index++) {
-        if (id == ANIMATION_RADIO_IDS[index]) {
-            SetSelectedMonitorValue(window, data, ANIMATION_RADIO_PROPERTY, static_cast<std::uint32_t>(index));
-            return true;
+    for (const AnimationRadioGroup& group : ANIMATION_RADIO_GROUPS) {
+        for (std::size_t index = 0; index < group.ids.size(); index++) {
+            if (id == group.ids[index]) {
+                SetSelectedMonitorValue(window, data, group.property, static_cast<std::uint32_t>(index));
+                return true;
+            }
         }
     }
     for (const AnimationControl& control : ANIMATION_CHECKBOXES) {

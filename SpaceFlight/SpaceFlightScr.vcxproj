@@ -123,6 +123,8 @@
       <Command>set "PATH=$(ExecutablePath)"
 fxc.exe /nologo /T vs_4_0 /E VSMain /Fh "$(IntDir)SpaceFlightVS.h" /Fo "$(IntDir)SpaceFlightVS.cso" /Vn SpaceFlightVertexShader $(ShaderCompilerOptions) "%(FullPath)"
 if errorlevel 1 exit /b %errorlevel%
+fxc.exe /nologo /T vs_4_0 /E FunnelCircleVS /Fh "$(IntDir)SpaceFlightFunnelVS.h" /Fo "$(IntDir)SpaceFlightFunnelVS.cso" /Vn SpaceFlightFunnelVertexShader $(ShaderCompilerOptions) "%(FullPath)"
+if errorlevel 1 exit /b %errorlevel%
 fxc.exe /nologo /T ps_4_0 /E PSMain /Fh "$(IntDir)SpaceFlightPS.h" /Fo "$(IntDir)SpaceFlightPS.cso" /Vn SpaceFlightPixelShader $(ShaderCompilerOptions) "%(FullPath)"
 if errorlevel 1 exit /b %errorlevel%
 fxc.exe /nologo /T vs_4_0 /E SolidSurfaceVS /Fh "$(IntDir)SpaceFlightSurfaceVS.h" /Fo "$(IntDir)SpaceFlightSurfaceVS.cso" /Vn SpaceFlightSurfaceVertexShader $(ShaderCompilerOptions) "%(FullPath)"
@@ -130,7 +132,7 @@ if errorlevel 1 exit /b %errorlevel%
 fxc.exe /nologo /T ps_4_0 /E SolidSurfacePS /Fh "$(IntDir)SpaceFlightSurfacePS.h" /Fo "$(IntDir)SpaceFlightSurfacePS.cso" /Vn SpaceFlightSurfacePixelShader $(ShaderCompilerOptions) "%(FullPath)"
 if errorlevel 1 exit /b %errorlevel%</Command>
       <Message>Compiling shaders from SpaceFlight.hlsl</Message>
-      <Outputs>$(IntDir)SpaceFlightVS.h;$(IntDir)SpaceFlightVS.cso;$(IntDir)SpaceFlightPS.h;$(IntDir)SpaceFlightPS.cso;$(IntDir)SpaceFlightSurfaceVS.h;$(IntDir)SpaceFlightSurfaceVS.cso;$(IntDir)SpaceFlightSurfacePS.h;$(IntDir)SpaceFlightSurfacePS.cso</Outputs>
+      <Outputs>$(IntDir)SpaceFlightVS.h;$(IntDir)SpaceFlightVS.cso;$(IntDir)SpaceFlightFunnelVS.h;$(IntDir)SpaceFlightFunnelVS.cso;$(IntDir)SpaceFlightPS.h;$(IntDir)SpaceFlightPS.cso;$(IntDir)SpaceFlightSurfaceVS.h;$(IntDir)SpaceFlightSurfaceVS.cso;$(IntDir)SpaceFlightSurfacePS.h;$(IntDir)SpaceFlightSurfacePS.cso</Outputs>
       <LinkObjects>false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
