@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.0
  */
 
 #pragma once
@@ -233,6 +233,15 @@ const wchar_t* AboutWebsiteLabel(AppLanguage language);
 
 /// Returns the localized About website tooltip.
 const wchar_t* AboutVisitTooltipText(AppLanguage language);
+
+/// Returns the localized website-opening failure message.
+const wchar_t* AboutWebsiteFailedText(AppLanguage language);
+
+/// Returns the localized URL-copying failure message.
+const wchar_t* AboutCopyUrlFailedText(AppLanguage language);
+
+/// Returns the localized product-information-copying failure message.
+const wchar_t* AboutCopyInformationFailedText(AppLanguage language);
 
 /// Returns the localized context command that opens the product website.
 const wchar_t* OpenInBrowserText(AppLanguage language);

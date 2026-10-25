@@ -95,6 +95,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SelectionEdit.cpp" />
     <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="SystemDialogTemplate.cpp" />
     <ClCompile Include="SystemSync.cpp" />
     <ClCompile Include="SystemTime.cpp" />
     <ClCompile Include="Wow64Redirection.cpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="SelectionEdit.h" />
+    <ClInclude Include="SystemDialogTemplate.h" />
     <ClInclude Include="Wow64Redirection.h" />
     <ClInclude Include="WindowRedrawScope.h" />
     <ClInclude Include="resource.h" />

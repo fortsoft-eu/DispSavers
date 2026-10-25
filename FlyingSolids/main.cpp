@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.0
  */
 
 #define NOMINMAX
@@ -33,6 +33,7 @@
 #include "PersistWindowState.h"
 #include "Renderer.h"
 #include "SelectionEdit.h"
+#include "SystemDialogTemplate.h"
 #include "Wow64Redirection.h"
 #include "WindowRedrawScope.h"
 #include "resource.h"
@@ -101,7 +102,6 @@ constexpr int PUSH_BUTTON_HEIGHT = 28;
 constexpr int ABOUT_ICON_SIZE = 32;
 constexpr int ABOUT_LARGE_ICON_SIZE = 48;
 constexpr int ABOUT_LARGE_ICON_DPI = 130;
-constexpr int ABOUT_WEB_GAP_DLU = 8;
 constexpr int RECORDING_COMBO_WIDTH_DLU = 130;
 constexpr int COMBO_BOX_MAX_VISIBLE_ITEMS = 13;
 constexpr int MONITOR_COLUMN_COUNT = 8;
@@ -372,14 +372,13 @@ struct RecordingWindowData {
     bool initialized = false;
 };
 
-/// Initial control geometry used by the anchored Help and About layout.
+/// Stores the system font and initial button and license dimensions for an information dialog.
 struct InformationWindowLayout {
-    SIZE client = {};
-    RECT text = {};
-    RECT close = {};
-    RECT product = {};
-    RECT website = {};
-    RECT link = {};
+    HFONT font = nullptr;
+    SIZE button = {};
+    SIZE license = {};
+    UINT dpi = 96;
+    bool ownsFont = false;
     bool initialized = false;
 };
 
@@ -435,11 +434,14 @@ static PersistWindowState helpWindowState;
 static PersistWindowState aboutWindowState;
 static HWND recordingSettingsWindow = nullptr;
 
-/// Initial information-window control rectangles
+/// System fonts and reference information-window dimensions
 static InformationWindowLayout helpWindowLayout;
 static InformationWindowLayout aboutWindowLayout;
+static wchar_t aboutTooltipText[256] = {};
 
 /// Cross-section forward declarations
+
+static void LayoutInformationWindow(HWND window);
 
 /// Aligns native text-bearing controls using their current fonts and theme content rectangles.
 static void AlignSettingsControl(HWND control, HWND reference, LONG baselineDistance = 0);
@@ -2360,13 +2362,9 @@ static void RenderSurfaceLoop(Application* application, RenderSurface* surface) 
             surface->simulation.SetViewport(width, height);
             const double simulationSeconds =
                 frameSeconds * (application->mode == RunMode::Preview ? SYSTEM_PREVIEW_SPEED_MULTIPLIER : 1.0);
-            surface->simulation.Step(simulationSeconds,
-                animation.objectSpeedPercent / 100.0f,
-                animation.cameraSpeedPercent / 100.0f,
-                animation.cameraFlight,
-                animation.enabledSolids,
-                animation.copyCount,
-                animation.objectSizePercent / 100.0f,
+            surface->simulation.Step(simulationSeconds, animation.objectSpeedPercent / 100.0f,
+                animation.cameraSpeedPercent / 100.0f, animation.cameraFlight, animation.enabledSolids,
+                animation.copyCount, animation.objectSizePercent / 100.0f,
                 application->mode == RunMode::Preview ? 16 : 1);
         }
         SceneState scene = surface->simulation.State();
@@ -2426,58 +2424,16 @@ static HFONT CreateSystemDialogFont() {
     return nullptr;
 }
 
-/// Marks the requested font family as found and stops font enumeration.
-static int CALLBACK FindFontCallback(const LOGFONTW*, const TEXTMETRICW*, DWORD, LPARAM parameter) {
-    *reinterpret_cast<bool*>(parameter) = true;
-    return 0;
-}
-
-/// Checks whether the requested font family is installed on the system.
-static bool IsFontAvailable(const wchar_t* face) {
-    HDC screen = GetDC(nullptr);
-    if (screen == nullptr) {
-        return false;
-    }
+/// Creates the About license font using Consolas at the reference 8-point size.
+/// The caller owns the returned GDI font, which may be null on failure.
+static HFONT CreateAboutFont(HWND window) {
     LOGFONTW font = {};
-    font.lfCharSet = DEFAULT_CHARSET;
-    wcsncpy_s(font.lfFaceName, face, _TRUNCATE);
-    bool found = false;
-    EnumFontFamiliesExW(screen, &font, FindFontCallback, reinterpret_cast<LPARAM>(&found), 0);
-    ReleaseDC(nullptr, screen);
-    return found;
-}
-
-/// Creates the regular 8.25-point license font with a Courier New fallback; the information window owns it.
-static HFONT CreateAboutFont() {
-    NONCLIENTMETRICSW metrics = {};
-    metrics.cbSize = sizeof(metrics);
-    LOGFONTW font = {};
-    if (SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(metrics), &metrics, 0)) {
-        font = metrics.lfMessageFont;
-    } else {
-        font.lfHeight = -12;
-        font.lfCharSet = DEFAULT_CHARSET;
-    }
-    HDC screen = GetDC(nullptr);
-    int dpi = screen == nullptr ? 96 : GetDeviceCaps(screen, LOGPIXELSY);
-    if (screen != nullptr) {
-        ReleaseDC(nullptr, screen);
-    }
-    font.lfHeight = -MulDiv(825, dpi > 0 ? dpi : 96, 7200);
-    font.lfWidth = 0;
+    font.lfHeight = -MulDiv(8, GetSystemDialogDpi(window), 72);
     font.lfWeight = FW_NORMAL;
-    font.lfItalic = FALSE;
-    font.lfUnderline = FALSE;
-    font.lfStrikeOut = FALSE;
+    font.lfCharSet = ANSI_CHARSET;
     font.lfPitchAndFamily = FIXED_PITCH | FF_MODERN;
-    const wchar_t* face = IsFontAvailable(L"Consolas") ? L"Consolas" : L"Courier New";
-    wcsncpy_s(font.lfFaceName, face, _TRUNCATE);
-    HFONT result = CreateFontIndirectW(&font);
-    if (result == nullptr && wcscmp(face, L"Courier New") != 0) {
-        wcsncpy_s(font.lfFaceName, L"Courier New", _TRUNCATE);
-        result = CreateFontIndirectW(&font);
-    }
-    return result;
+    wcsncpy_s(font.lfFaceName, L"Consolas", _TRUNCATE);
+    return CreateFontIndirectW(&font);
 }
 
 /// Creates, owns and applies a system dialog font to all settings controls.
@@ -3258,6 +3214,18 @@ static POINT InformationMenuPoint(HWND control, LPARAM lParam) {
     return point;
 }
 
+/// Opens the About website and reports failures in the selected application language.
+static void OpenAboutWebsite() {
+    HINSTANCE result = ShellExecuteW(aboutWindow, SHELL_OPEN_VERB, WEBSITE_URL, nullptr, nullptr, SW_SHOWNORMAL);
+    if (reinterpret_cast<INT_PTR>(result) <= 32) {
+        const InformationWindowData* data =
+            reinterpret_cast<const InformationWindowData*>(GetWindowLongPtrW(aboutWindow, DWLP_USER));
+        if (data != nullptr) {
+            MessageBoxW(aboutWindow, AboutWebsiteFailedText(data->language), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+        }
+    }
+}
+
 /// Displays the localized context menu for About labels and website link.
 static void ShowAboutContextMenu(HWND control, LPARAM lParam) {
     HWND parent = GetParent(control);
@@ -3281,24 +3249,40 @@ static void ShowAboutContextMenu(HWND control, LPARAM lParam) {
     const UINT command = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_RIGHTBUTTON, point.x, point.y, 0, parent, nullptr);
     DestroyMenu(menu);
     if (command == ID_MENU_ABOUT_OPEN) {
-        ShellExecuteW(parent, SHELL_OPEN_VERB, WEBSITE_URL, nullptr, nullptr, SW_SHOWNORMAL);
+        OpenAboutWebsite();
     } else if (command == ID_MENU_ABOUT_COPY_URL) {
-        CopyInformationTextToClipboard(parent, WEBSITE_URL);
+        if (!CopyInformationTextToClipboard(parent, WEBSITE_URL)) {
+            MessageBoxW(parent, AboutCopyUrlFailedText(data->language), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+        }
     } else if (command == ID_MENU_ABOUT_COPY_INFORMATION) {
-        CopyInformationTextToClipboard(parent, AboutClipboardText(data->language));
+        if (!CopyInformationTextToClipboard(parent, AboutClipboardText(data->language))) {
+            MessageBoxW(parent, AboutCopyInformationFailedText(data->language), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+        }
     }
 }
 
-/// Adds a context menu to otherwise passive About controls.
-static LRESULT CALLBACK AboutControlSubclass(HWND control, UINT msg, WPARAM wParam, LPARAM lParam, UINT_PTR, DWORD_PTR) {
+/// Adds the About context menu to product and website controls and removes the subclass on destruction.
+static LRESULT CALLBACK AboutControlSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam, UINT_PTR subclassId,
+        DWORD_PTR referenceData) {
+    UNREFERENCED_PARAMETER(referenceData);
     if (msg == WM_CONTEXTMENU) {
-        ShowAboutContextMenu(control, lParam);
+        ShowAboutContextMenu(window, lParam);
         return 0;
     }
-    if (msg == WM_NCDESTROY) {
-        RemoveWindowSubclass(control, AboutControlSubclass, ABOUT_CONTROL_SUBCLASS);
+    if (GetDlgCtrlID(window) == ID_INFORMATION_LINK) {
+        if (msg == WM_SETCURSOR && LOWORD(lParam) == HTCLIENT) {
+            SetCursor(LoadCursorW(nullptr, IDC_HAND));
+            return TRUE;
+        }
+        if (msg == WM_MBUTTONUP) {
+            OpenAboutWebsite();
+            return 0;
+        }
     }
-    return DefSubclassProc(control, msg, wParam, lParam);
+    if (msg == WM_NCDESTROY) {
+        RemoveWindowSubclass(window, AboutControlSubclassProc, subclassId);
+    }
+    return DefSubclassProc(window, msg, wParam, lParam);
 }
 
 /// Measures unwrapped license text in the edit's current font and toggles the horizontal scrollbar only when needed.
@@ -3329,8 +3313,8 @@ static void UpdateAboutLicenseScrollBar(HWND window) {
     }
 }
 
-/// Lets the information window handle Enter, Escape and Tab from its read-only text field. Updates the About license
-/// horizontal scrollbar after native content or layout changes and removes the subclass on destruction.
+/// Lets the information window handle Enter, Escape and Tab from its read-only text field. Updates the About
+/// license horizontal scrollbar after native content or layout changes and removes the subclass on destruction.
 static LRESULT CALLBACK InformationTextSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam,
         UINT_PTR subclassId, DWORD_PTR referenceData) {
     UNREFERENCED_PARAMETER(referenceData);
@@ -3668,18 +3652,18 @@ static RECT InformationControlRect(HWND window, int id) {
     return rect;
 }
 
-/// Captures initial Help or About control rectangles for subsequent anchored layout calculations.
+/// Captures the native button size, system font and reference license dimensions before layout.
 static void InitializeInformationWindowLayout(HWND window, bool help) {
     InformationWindowLayout& layout = help ? helpWindowLayout : aboutWindowLayout;
-    RECT client = {};
-    GetClientRect(window, &client);
-    layout.client = SIZE{ client.right, client.bottom };
-    layout.text = InformationControlRect(window, ID_INFORMATION_TEXT);
-    layout.close = InformationControlRect(window, ID_INFORMATION_CLOSE);
+    RECT button = InformationControlRect(window, ID_INFORMATION_CLOSE);
+    layout.font = reinterpret_cast<HFONT>(SendMessageW(window, WM_GETFONT, 0, 0));
+    layout.button = SIZE{ button.right - button.left, button.bottom - button.top };
+    layout.dpi = GetSystemDialogDpi(window);
     if (!help) {
-        layout.product = InformationControlRect(window, ID_INFORMATION_PRODUCT);
-        layout.website = InformationControlRect(window, ID_INFORMATION_WEBSITE);
-        layout.link = InformationControlRect(window, ID_INFORMATION_LINK);
+        layout.license = SIZE{
+            MulDiv(ABOUT_LICENSE_WIDTH_96DPI, layout.dpi, 96),
+            MulDiv(ABOUT_LICENSE_HEIGHT_96DPI, layout.dpi, 96)
+        };
     }
     layout.initialized = true;
 }
@@ -3712,7 +3696,7 @@ static int InformationLabelHeight(HWND control, int width) {
     return height;
 }
 
-/// Measures unwrapped control text using its current font, returning zero dimensions if no DC is available.
+/// Measures unwrapped information text using the control's current font.
 static SIZE InformationTextSize(HWND control) {
     SIZE size = {};
     HDC dc = GetDC(control);
@@ -3729,104 +3713,168 @@ static SIZE InformationTextSize(HWND control) {
     return size;
 }
 
-/// Lays out About controls with measured product and website text, optionally resizing within the work area.
-static void LayoutAboutWindow(HWND window, bool resize) {
-    const InformationWindowLayout& layout = aboutWindowLayout;
-    HWND icon = GetDlgItem(window, ID_INFORMATION_ICON);
-    HWND website = GetDlgItem(window, ID_INFORMATION_WEBSITE);
-    HWND link = GetDlgItem(window, ID_INFORMATION_LINK);
-    SIZE websiteSize = InformationTextSize(website);
-    SIZE linkSize = {};
-    SendMessageW(link, LM_GETIDEALSIZE, 0, reinterpret_cast<LPARAM>(&linkSize));
-    RECT spacing = { 0, 0, 4, ABOUT_WEB_GAP_DLU };
-    MapDialogRect(window, &spacing);
-    RECT iconPosition = { 10, 10, 0, 0 };
-    MapDialogRect(window, &iconPosition);
-    SetWindowPos(icon, nullptr, iconPosition.left, iconPosition.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-    RECT iconBounds = InformationControlRect(window, ID_INFORMATION_ICON);
-    int productLeft = iconBounds.right + iconBounds.left;
-    int margin = layout.text.left;
-    int rightMargin = layout.client.cx - layout.text.right;
-    int bottomMargin = layout.client.cy - layout.close.bottom;
-    int buttonWidth = layout.close.right - layout.close.left;
-    int buttonHeight = layout.close.bottom - layout.close.top;
-    int productGap = spacing.bottom;
-    int textGap = layout.text.top - std::max(layout.website.bottom, layout.link.bottom);
-    int buttonGap = layout.close.top - layout.text.bottom;
-    RECT client = {};
-    GetClientRect(window, &client);
-    if (resize) {
-        client.right =
-            std::max(layout.client.cx, productLeft + websiteSize.cx + spacing.right + linkSize.cx + rightMargin);
-        RECT frame = {};
-        DWORD style = static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE));
-        DWORD extendedStyle = static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE));
-        AdjustWindowRectEx(&frame, style, FALSE, extendedStyle);
-        MONITORINFO monitor = { sizeof(monitor) };
-        GetMonitorInfoW(MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST), &monitor);
-        client.right = std::min(client.right, monitor.rcWork.right - monitor.rcWork.left - frame.right + frame.left);
-        client.bottom = std::min(layout.client.cy, monitor.rcWork.bottom - monitor.rcWork.top - frame.bottom + frame.top);
-        RECT bounds = {};
-        GetWindowRect(window, &bounds);
-        int width = client.right + frame.right - frame.left;
-        int height = client.bottom + frame.bottom - frame.top;
-        if (width != bounds.right - bounds.left || height != bounds.bottom - bounds.top) {
-            SetWindowPos(window, nullptr, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
-        }
-        GetClientRect(window, &client);
+/// Measures native dialog base units from the information window's interface font.
+static bool InformationDialogBaseUnits(HFONT font, SIZE* units) {
+    HDC dc = GetDC(nullptr);
+    if (dc == nullptr) {
+        return false;
     }
-    int right = client.right - rightMargin;
-    int productWidth = right - productLeft;
-    int productHeight = InformationLabelHeight(GetDlgItem(window, ID_INFORMATION_PRODUCT), productWidth);
-    int websiteY = layout.product.top + productHeight + productGap;
-    int linkX = productLeft + websiteSize.cx + spacing.right;
-    PlaceInformationControl(window, ID_INFORMATION_PRODUCT, productLeft, layout.product.top, productWidth, productHeight);
-    PlaceInformationControl(window, ID_INFORMATION_WEBSITE, productLeft, websiteY, websiteSize.cx, websiteSize.cy);
-    PlaceInformationControl(window, ID_INFORMATION_LINK, linkX, websiteY, right - linkX, linkSize.cy);
-    AlignSettingsControl(link, website);
-    RECT websiteBounds = InformationControlRect(window, ID_INFORMATION_WEBSITE);
-    RECT linkBounds = InformationControlRect(window, ID_INFORMATION_LINK);
-    int textTop = std::max(websiteBounds.bottom, linkBounds.bottom) + textGap;
-    int buttonY = client.bottom - bottomMargin - buttonHeight;
-    PlaceInformationControl(window, ID_INFORMATION_TEXT, margin, textTop, right - margin, buttonY - buttonGap - textTop);
-    SetWindowPos(GetDlgItem(window, ID_INFORMATION_CLOSE), HWND_TOP, right - buttonWidth, buttonY, buttonWidth,
-        buttonHeight, SWP_NOACTIVATE);
-    InvalidateRect(window, nullptr, TRUE);
+    HGDIOBJ previous = font == nullptr ? nullptr : SelectObject(dc, font);
+    SIZE alphabet = {};
+    TEXTMETRICW metrics = {};
+    bool measured = GetTextExtentPoint32W(dc, L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 52, &alphabet)
+        && GetTextMetricsW(dc, &metrics);
+    if (measured) {
+        units->cx = (alphabet.cx / 26 + 1) / 2;
+        units->cy = metrics.tmHeight;
+    }
+    if (previous != nullptr) {
+        SelectObject(dc, previous);
+    }
+    ReleaseDC(nullptr, dc);
+    return measured;
 }
 
-/// Updates the Help or About layout while preserving the original control sizes and edge spacing.
-static void LayoutInformationWindow(HWND window, bool resizeAbout = false) {
+/// Converts current information-dialog font units to native pixel dimensions.
+static SIZE InformationDialogUnits(HWND window, int x, int y) {
+    InformationWindowLayout& layout = window == helpWindow ? helpWindowLayout : aboutWindowLayout;
+    SIZE units = {};
+    if (!InformationDialogBaseUnits(layout.font, &units)) {
+        return SIZE{};
+    }
+    return SIZE{ MulDiv(x, units.cx, 4), MulDiv(y, units.cy, 8) };
+}
+
+/// Applies the system interface font and current theme while keeping the About license in Consolas.
+static bool ApplyInformationWindowStyle(HWND window, bool updateFont) {
+    InformationWindowData* data = reinterpret_cast<InformationWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
+    if (data == nullptr) {
+        return false;
+    }
+    InformationWindowLayout& layout = window == helpWindow ? helpWindowLayout : aboutWindowLayout;
+    HFONT font = updateFont ? CreateSystemDialogFont(window) : layout.font;
+    if (font == nullptr) {
+        return false;
+    }
+    HFONT licenseFont = window == aboutWindow ? CreateAboutFont(window) : nullptr;
+    if (window == aboutWindow && licenseFont == nullptr) {
+        if (updateFont) {
+            DeleteObject(font);
+        }
+        return false;
+    }
+    HFONT previousFont = layout.ownsFont ? layout.font : nullptr;
+    layout.font = font;
+    layout.ownsFont = updateFont;
+    SendMessageW(window, WM_SETFONT, reinterpret_cast<WPARAM>(font), FALSE);
+    const int ids[] = {
+        ID_INFORMATION_PRODUCT,
+        ID_INFORMATION_WEBSITE,
+        ID_INFORMATION_LINK,
+        ID_INFORMATION_TEXT,
+        ID_INFORMATION_CLOSE
+    };
+    const wchar_t* theme = nullptr;
+    for (int id : ids) {
+        HWND control = GetDlgItem(window, id);
+        if (control == nullptr) {
+            continue;
+        }
+        HFONT selected = id == ID_INFORMATION_TEXT && licenseFont != nullptr ? licenseFont : font;
+        SendMessageW(control, WM_SETFONT, reinterpret_cast<WPARAM>(selected), FALSE);
+        SetWindowTheme(control, theme, theme);
+    }
+    if (previousFont != nullptr) {
+        DeleteObject(previousFont);
+    }
+    if (window == aboutWindow) {
+        if (data->licenseFont != nullptr) {
+            DeleteObject(data->licenseFont);
+        }
+        data->licenseFont = licenseFont;
+        int size = GetSystemDialogDpi(window) >= ABOUT_LARGE_ICON_DPI ? ABOUT_LARGE_ICON_SIZE : ABOUT_ICON_SIZE;
+        HICON icon = app->programIcons.LoadSized(size);
+        if (icon == nullptr) {
+            return false;
+        }
+        SendDlgItemMessageW(window, ID_INFORMATION_ICON, STM_SETICON, reinterpret_cast<WPARAM>(icon), 0);
+        if (data->icon != nullptr) {
+            DestroyIcon(data->icon);
+        }
+        data->icon = icon;
+        SetWindowPos(GetDlgItem(window, ID_INFORMATION_ICON), nullptr, 0, 0, size, size,
+            SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+    }
+    LayoutInformationWindow(window);
+    RedrawWindow(window, nullptr, nullptr, RDW_INVALIDATE | RDW_ERASE | RDW_FRAME | RDW_ALLCHILDREN);
+    return true;
+}
+
+/// Places information controls using system-font dialog units and preserves the reference About license dimensions.
+static void LayoutInformationWindow(HWND window) {
     InformationWindowLayout& layout = window == helpWindow ? helpWindowLayout : aboutWindowLayout;
     if (!layout.initialized || IsIconic(window)) {
         return;
     }
-    if (window == aboutWindow) {
-        LayoutAboutWindow(window, resizeAbout);
-        return;
-    }
     RECT client = {};
     GetClientRect(window, &client);
-    int right = client.right - layout.client.cx + layout.text.right;
-    int buttonWidth = layout.close.right - layout.close.left;
-    int buttonHeight = layout.close.bottom - layout.close.top;
-    int buttonX = client.right - layout.client.cx + layout.close.left;
-    int buttonY = client.bottom - layout.client.cy + layout.close.top;
-    int buttonGap = layout.close.top - layout.text.bottom;
-    int textHeight = buttonY - buttonGap - layout.text.top;
-    PlaceInformationControl(window, ID_INFORMATION_TEXT, layout.text.left, layout.text.top, right - layout.text.left,
-        textHeight);
-    SetWindowPos(GetDlgItem(window, ID_INFORMATION_CLOSE), HWND_TOP, buttonX, buttonY, buttonWidth, buttonHeight,
-        SWP_NOACTIVATE);
-    int gripWidth = GetSystemMetrics(SM_CXVSCROLL);
-    int gripHeight = GetSystemMetrics(SM_CYHSCROLL);
-    UINT flags = SWP_NOZORDER | SWP_NOACTIVATE;
-    if (IsZoomed(window)) {
-        flags |= SWP_HIDEWINDOW;
-    } else {
-        flags |= SWP_SHOWWINDOW;
+    SIZE current = { client.right, client.bottom };
+    UINT dpi = GetSystemDialogDpi(window);
+    SIZE margin = InformationDialogUnits(window, 10, 10);
+    SIZE gap = InformationDialogUnits(window, 4, 6);
+    SIZE button = { MulDiv(layout.button.cx, dpi, layout.dpi), MulDiv(layout.button.cy, dpi, layout.dpi) };
+    SIZE ideal = {};
+    SendDlgItemMessageW(window, ID_INFORMATION_CLOSE, BCM_GETIDEALSIZE, 0, reinterpret_cast<LPARAM>(&ideal));
+    button.cx = std::max(button.cx, ideal.cx);
+    int textTop = margin.cy;
+    if (window == aboutWindow) {
+        SIZE license = { MulDiv(layout.license.cx, dpi, layout.dpi), MulDiv(layout.license.cy, dpi, layout.dpi) };
+        client.right = license.cx + 2 * margin.cx;
+        SIZE iconPosition = InformationDialogUnits(window, 10, 10);
+        SetWindowPos(GetDlgItem(window, ID_INFORMATION_ICON), nullptr, iconPosition.cx, iconPosition.cy, 0, 0,
+            SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+        RECT icon = InformationControlRect(window, ID_INFORMATION_ICON);
+        SIZE productPosition = InformationDialogUnits(window, 0, 6);
+        productPosition.cx = icon.right + icon.left;
+        int width = client.right - margin.cx - productPosition.cx;
+        int productHeight = InformationLabelHeight(GetDlgItem(window, ID_INFORMATION_PRODUCT), width);
+        PlaceInformationControl(window, ID_INFORMATION_PRODUCT, productPosition.cx, productPosition.cy, width,
+            productHeight);
+        SIZE website = InformationTextSize(GetDlgItem(window, ID_INFORMATION_WEBSITE));
+        int websiteY = productPosition.cy + productHeight + gap.cy;
+        PlaceInformationControl(window, ID_INFORMATION_WEBSITE, productPosition.cx, websiteY, website.cx, website.cy);
+        int linkX = productPosition.cx + website.cx + gap.cx;
+        int linkWidth = client.right - margin.cx - linkX;
+        SIZE idealLink = {};
+        LRESULT linkHeight = SendDlgItemMessageW(window, ID_INFORMATION_LINK, LM_GETIDEALSIZE, linkWidth,
+            reinterpret_cast<LPARAM>(&idealLink));
+        if (idealLink.cx > 0 && idealLink.cx < linkWidth) {
+            linkWidth = idealLink.cx;
+        }
+        PlaceInformationControl(window, ID_INFORMATION_LINK, linkX, websiteY, linkWidth, static_cast<int>(linkHeight));
+        AlignSettingsControl(GetDlgItem(window, ID_INFORMATION_LINK), GetDlgItem(window, ID_INFORMATION_WEBSITE));
+        RECT link = InformationControlRect(window, ID_INFORMATION_LINK);
+        textTop = std::max(websiteY + website.cy, link.bottom) + gap.cy;
+        client.bottom = textTop + license.cy + gap.cy + button.cy + margin.cy;
+        if (client.right != current.cx || client.bottom != current.cy) {
+            RECT bounds = {};
+            GetWindowRect(window, &bounds);
+            SetWindowPos(window, nullptr, 0, 0, bounds.right - bounds.left + client.right - current.cx,
+                bounds.bottom - bounds.top + client.bottom - current.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+        }
     }
-    SetWindowPos(GetDlgItem(window, ID_INFORMATION_SIZE_GRIP), nullptr, client.right - gripWidth,
-        client.bottom - gripHeight, gripWidth, gripHeight, flags);
+    int buttonY = client.bottom - margin.cy - button.cy;
+    PlaceInformationControl(window, ID_INFORMATION_CLOSE, client.right - margin.cx - button.cx, buttonY, button.cx,
+        button.cy);
+    PlaceInformationControl(window, ID_INFORMATION_TEXT, margin.cx, textTop, client.right - 2 * margin.cx,
+        buttonY - gap.cy - textTop);
+    HWND grip = GetDlgItem(window, ID_INFORMATION_SIZE_GRIP);
+    if (grip != nullptr) {
+        int width = GetSystemMetrics(SM_CXVSCROLL);
+        int height = GetSystemMetrics(SM_CYHSCROLL);
+        UINT flags = SWP_NOZORDER | SWP_NOACTIVATE | (IsZoomed(window) ? SWP_HIDEWINDOW : SWP_SHOWWINDOW);
+        SetWindowPos(grip, nullptr, client.right - width, client.bottom - height, width, height, flags);
+    }
 }
 
 /// Refreshes localized content and geometry of one information window.
@@ -3847,7 +3895,7 @@ static void RefreshInformationWindow(HWND window, InformationWindowData& data) {
         SetDlgItemTextW(window, ID_INFORMATION_WEBSITE, AboutWebsiteLabel(data.language));
         SetDlgItemTextW(window, ID_INFORMATION_LINK, link.c_str());
     }
-    LayoutInformationWindow(window, !data.help);
+    LayoutInformationWindow(window);
     if (!data.help && aboutTooltip != nullptr) {
         SendMessageW(aboutTooltip, TTM_UPDATE, 0, 0);
     }
@@ -3862,12 +3910,13 @@ static bool HandleInformationNotification(HWND window, LPARAM lParam) {
                 reinterpret_cast<const InformationWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
             if (data != nullptr) {
                 NMTTDISPINFOW* information = reinterpret_cast<NMTTDISPINFOW*>(lParam);
-                information->lpszText = const_cast<wchar_t*>(AboutVisitTooltipText(data->language));
+                swprintf_s(aboutTooltipText, AboutVisitTooltipText(data->language), WEBSITE_URL);
+                information->lpszText = aboutTooltipText;
             }
             return true;
         }
         if (header->idFrom == ID_INFORMATION_LINK && (header->code == NM_CLICK || header->code == NM_RETURN)) {
-            ShellExecuteW(window, SHELL_OPEN_VERB, WEBSITE_URL, nullptr, nullptr, SW_SHOWNORMAL);
+            OpenAboutWebsite();
             return true;
         }
     }
@@ -3937,146 +3986,82 @@ static void DestroyInformationWindowResources(InformationWindowData& data) {
     }
 }
 
-/// Creates Help or About controls after the parent handle has been stored.
-static bool CreateInformationControls(HWND window, InformationWindowData& data) {
-    HWND text = GetDlgItem(window, ID_INFORMATION_TEXT);
-    if (!InstallSelectionEditHandler(text)) {
-        return false;
-    }
-    SendMessageW(window, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(app->programIcons.Large()));
-    SendMessageW(window, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(app->programIcons.Small()));
-    SetWindowSubclass(text, InformationTextSubclassProc, INFORMATION_TEXT_SUBCLASS_ID, 0);
-    if (!data.help) {
-        HWND icon = GetDlgItem(window, ID_INFORMATION_ICON);
-        int iconSize = ABOUT_ICON_SIZE;
-        HDC screen = GetDC(window);
-        if (screen != nullptr) {
-            if (GetDeviceCaps(screen, LOGPIXELSY) >= ABOUT_LARGE_ICON_DPI) {
-                iconSize = ABOUT_LARGE_ICON_SIZE;
-            }
-            ReleaseDC(window, screen);
-        }
-        data.icon = app->programIcons.LoadSized(iconSize);
-        if (data.icon == nullptr) {
-            return false;
-        }
-        SendMessageW(icon, STM_SETICON, reinterpret_cast<WPARAM>(data.icon), 0);
-        SetWindowPos(icon, nullptr, 0, 0, iconSize, iconSize, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
-        HWND product = GetDlgItem(window, ID_INFORMATION_PRODUCT);
-        HWND website = GetDlgItem(window, ID_INFORMATION_WEBSITE);
-        HWND link = GetDlgItem(window, ID_INFORMATION_LINK);
-        SetWindowSubclass(product, AboutControlSubclass, ABOUT_CONTROL_SUBCLASS, 0);
-        SetWindowSubclass(website, AboutControlSubclass, ABOUT_CONTROL_SUBCLASS, 0);
-        SetWindowSubclass(link, AboutControlSubclass, ABOUT_CONTROL_SUBCLASS, 0);
-        aboutTooltip = CreateControlTooltip(window, link, LPSTR_TEXTCALLBACKW);
-        data.licenseFont = CreateAboutFont();
-        if (data.licenseFont != nullptr) {
-            SendMessageW(text, WM_SETFONT, reinterpret_cast<WPARAM>(data.licenseFont), FALSE);
-        }
-        SetWindowTextW(text, LoadLicenseText().c_str());
-    }
-    RefreshInformationWindow(window, data);
-    SendMessageW(text, EM_SETSEL, 0, 0);
-    return true;
-}
-
-/// Handles lifetime, commands and keyboard interaction of Help and About windows.
-static LRESULT CALLBACK InformationProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam) {
-    InformationWindowData* data = reinterpret_cast<InformationWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
-    switch (msg) {
-        case WM_SIZE:
-            if (wParam != SIZE_MINIMIZED) {
-                LayoutInformationWindow(window);
-            }
-            return 0;
-        case WM_DRAWITEM:
-            return DrawWrappedTextItem(reinterpret_cast<const DRAWITEMSTRUCT*>(lParam));
-        case WM_COMMAND:
-            if (LOWORD(wParam) == ID_INFORMATION_CLOSE || LOWORD(wParam) == IDCANCEL) {
-                SendMessageW(window, WM_CLOSE, 0, 0);
-            }
-            return 0;
-        case WM_NOTIFY:
-            HandleInformationNotification(window, lParam);
-            return 0;
-        case WM_SYSCOMMAND:
-            if ((wParam & 0xFFF0) == SC_SCREENSAVE && ShouldInhibitScreenSaver()) {
-                return 0;
-            }
-            if ((wParam & 0xFFF0) == SC_MINIMIZE) {
-                SaveInformationWindowPosition(data);
-            }
-            break;
-        case WM_EXITSIZEMOVE:
-            SaveInformationWindowPosition(data);
-            return 0;
-        case WM_CLOSE:
-            DestroyWindow(window);
-            return 0;
-        case WM_NCDESTROY:
-            if (window == helpWindow) {
-                helpWindow = nullptr;
-            }
-            if (window == aboutWindow) {
-                aboutWindow = nullptr;
-                if (aboutTooltip != nullptr) {
-                    DestroyWindow(aboutTooltip);
-                    aboutTooltip = nullptr;
-                }
-            }
-            if (data != nullptr) {
-                PersistWindowState& placement = data->help ? helpWindowState : aboutWindowState;
-                placement.SetSavedHandler(nullptr);
-                DestroyInformationWindowResources(*data);
-                if (data->initialized) {
-                    delete data;
-                }
-                SetWindowLongPtrW(window, DWLP_USER, 0);
-            }
-            return 0;
-    }
-    return DefWindowProcW(window, msg, wParam, lParam);
-}
-
-/// Routes dialog lifecycle, commands, drawing and notifications to the shared information-window handler.
-static INT_PTR CALLBACK InformationDialogProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam) {
-    if (msg == WM_INITDIALOG) {
+/// Leaves native dialog navigation to Windows and forwards the existing information-window actions and notifications.
+static INT_PTR CALLBACK InformationDialogProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
+    if (message == WM_INITDIALOG) {
+        InformationWindowData* data = reinterpret_cast<InformationWindowData*>(lParam);
         SetWindowLongPtrW(window, DWLP_USER, lParam);
-        return TRUE;
-    }
-    if (msg == WM_DESTROY || msg == WM_NCDESTROY || msg == WM_EXITSIZEMOVE) {
-        InformationProc(window, msg, wParam, lParam);
+        HWND& target = data->help ? helpWindow : aboutWindow;
+        target = window;
         return FALSE;
     }
-    if (msg == WM_SYSCOMMAND && (wParam & 0xFFF0) == SC_SCREENSAVE && ShouldInhibitScreenSaver()) {
+    if (window != helpWindow && window != aboutWindow) {
+        return FALSE;
+    }
+    InformationWindowData* data = reinterpret_cast<InformationWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
+    if (message == WM_SYSCOMMAND && (wParam & 0xFFF0) == SC_SCREENSAVE && ShouldInhibitScreenSaver()) {
         return TRUE;
     }
-    if (msg == WM_SYSCOMMAND && (wParam & 0xFFF0) == SC_MINIMIZE) {
-        const InformationWindowData* data =
-            reinterpret_cast<const InformationWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
+    if (message == WM_EXITSIZEMOVE || message == WM_SYSCOMMAND && (wParam & 0xFFF0) == SC_MINIMIZE) {
         SaveInformationWindowPosition(data);
     }
-    if (msg == WM_CLOSE
-            || msg == WM_COMMAND && (LOWORD(wParam) == ID_INFORMATION_CLOSE || LOWORD(wParam) == IDCANCEL)
-            || msg == WM_SIZE && wParam != SIZE_MINIMIZED) {
-        InformationProc(window, msg, wParam, lParam);
+    if (message == WM_CLOSE
+            || message == WM_COMMAND && (LOWORD(wParam) == ID_INFORMATION_CLOSE || LOWORD(wParam) == IDCANCEL)) {
+        DestroyWindow(window);
         return TRUE;
     }
-    if (msg == WM_DRAWITEM && wParam == ID_INFORMATION_PRODUCT) {
-        return InformationProc(window, msg, wParam, lParam);
+    if (message == WM_SIZE) {
+        LayoutInformationWindow(window);
+        return TRUE;
     }
-    if (msg == WM_NOTIFY) {
-        NMHDR* notification = reinterpret_cast<NMHDR*>(lParam);
-        bool tooltip = notification->hwndFrom == aboutTooltip && notification->code == TTN_GETDISPINFOW;
-        bool website = notification->idFrom == ID_INFORMATION_LINK
-            && (notification->code == NM_CLICK || notification->code == NM_RETURN);
-        if (tooltip || website) {
-            SetWindowLongPtrW(window, DWLP_MSGRESULT, InformationProc(window, msg, wParam, lParam));
-            return TRUE;
+    if (message == WM_DRAWITEM && wParam == ID_INFORMATION_PRODUCT) {
+        return DrawWrappedTextItem(reinterpret_cast<const DRAWITEMSTRUCT*>(lParam));
+    }
+    if (message == WM_NOTIFY && HandleInformationNotification(window, lParam)) {
+        SetWindowLongPtrW(window, DWLP_MSGRESULT, 0);
+        return TRUE;
+    }
+    if (message == WM_GETMINMAXINFO && window == helpWindow) {
+        SIZE size = InformationDialogUnits(window, 180, 110);
+        MINMAXINFO* information = reinterpret_cast<MINMAXINFO*>(lParam);
+        information->ptMinTrackSize = POINT{ size.cx, size.cy };
+        return TRUE;
+    }
+    if (message == WM_THEMECHANGED || message == WM_SETTINGCHANGE) {
+        ApplyInformationWindowStyle(window, true);
+        return TRUE;
+    }
+    if (message == WM_DPICHANGED) {
+        const RECT* bounds = reinterpret_cast<const RECT*>(lParam);
+        SetWindowPos(window, nullptr, bounds->left, bounds->top, bounds->right - bounds->left,
+            bounds->bottom - bounds->top, SWP_NOZORDER | SWP_NOACTIVATE);
+        ApplyInformationWindowStyle(window, true);
+        return TRUE;
+    }
+    if (message == WM_NCDESTROY) {
+        InformationWindowLayout& layout = window == helpWindow ? helpWindowLayout : aboutWindowLayout;
+        if (layout.ownsFont) {
+            DeleteObject(layout.font);
         }
-    }
-    if (msg == WM_THEMECHANGED || msg == WM_SETTINGCHANGE) {
-        LayoutInformationWindow(window, true);
+        layout = {};
+        if (window == aboutWindow) {
+            if (aboutTooltip != nullptr) {
+                DestroyWindow(aboutTooltip);
+                aboutTooltip = nullptr;
+            }
+            aboutWindow = nullptr;
+        } else if (window == helpWindow) {
+            helpWindow = nullptr;
+        }
+        if (data != nullptr) {
+            PersistWindowState& placement = data->help ? helpWindowState : aboutWindowState;
+            placement.SetSavedHandler(nullptr);
+            DestroyInformationWindowResources(*data);
+            if (data->initialized) {
+                delete data;
+            }
+            SetWindowLongPtrW(window, DWLP_USER, 0);
+        }
     }
     return FALSE;
 }
@@ -4213,11 +4198,32 @@ static void UpdateControlWindowTopmost(HWND window) {
     UpdateInformationWindowsTopmost(window);
 }
 
-/// Creates or activates Help or About with saved placement, independent taskbar presence and anchored layout.
+/// Obtains native CW_USEDEFAULT placement from an invisible overlapped window and moves the hidden dialog there.
+static bool PositionInformationWindowByWindowsDefault(HWND window) {
+    RECT bounds = {};
+    if (!GetWindowRect(window, &bounds)) {
+        return false;
+    }
+    HWND positionWindow = CreateWindowExW(0, L"STATIC", L"", WS_OVERLAPPED, CW_USEDEFAULT, CW_USEDEFAULT,
+        bounds.right - bounds.left, bounds.bottom - bounds.top, nullptr, nullptr, app->instance, nullptr);
+    if (positionWindow == nullptr) {
+        return false;
+    }
+    bool positioned = GetWindowRect(positionWindow, &bounds) != FALSE;
+    DestroyWindow(positionWindow);
+    if (!positioned) {
+        return false;
+    }
+    return SetWindowPos(window, nullptr, bounds.left, bounds.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE)
+        != FALSE;
+}
+
+/// Creates or activates Help or About using a system-font dialog template, localized content and saved placement.
 static void ShowInformationWindow(HWND owner, bool help, AppLanguage language, bool appMode) {
-    HWND& target = help ? helpWindow : aboutWindow;
+    HWND* target = help ? &helpWindow : &aboutWindow;
     PersistWindowState& placement = help ? helpWindowState : aboutWindowState;
-    if (target != nullptr && IsWindow(target)) {
+    InformationWindowLayout& layout = help ? helpWindowLayout : aboutWindowLayout;
+    if (*target != nullptr && IsWindow(*target)) {
         placement.BringToFront();
         return;
     }
@@ -4226,10 +4232,10 @@ static void ShowInformationWindow(HWND owner, bool help, AppLanguage language, b
     if (settingsData == nullptr || settingsData->settings == nullptr) {
         return;
     }
-    InformationWindowLayout& layout = help ? helpWindowLayout : aboutWindowLayout;
     layout = {};
     placement.SetSavingOptions(PersistWindowStateSavingOptions::None);
     placement.SetDetectionOptions(WindowDetectionOptions::NoDetection);
+    placement.SetUseWindowsDefaultLocation(false);
     placement.SetUseWindowsDefaultSize(false);
     placement.Load(help ? settingsData->settings->helpWindowState : settingsData->settings->aboutWindowState);
     std::unique_ptr<InformationWindowData> data = std::make_unique<InformationWindowData>();
@@ -4237,31 +4243,59 @@ static void ShowInformationWindow(HWND owner, bool help, AppLanguage language, b
     data->help = help;
     data->appMode = appMode;
     data->language = language;
-    const int resource = help ? IDD_HELP : IDD_ABOUT;
-    target = CreateDialogParamW(app->instance, MAKEINTRESOURCEW(resource), nullptr, InformationDialogProc,
+    UINT resource = help ? IDD_HELP : IDD_ABOUT;
+    DLGTEMPLATE* definition = LoadSystemDialogTemplate(app->instance, resource, nullptr);
+    if (definition == nullptr) {
+        return;
+    }
+    *target = CreateDialogIndirectParamW(app->instance, definition, nullptr, InformationDialogProc,
         reinterpret_cast<LPARAM>(data.get()));
-    if (target == nullptr) {
+    HeapFree(GetProcessHeap(), 0, definition);
+    if (*target == nullptr) {
         return;
     }
-    if (!CreateInformationControls(target, *data)) {
-        DestroyWindow(target);
-        target = nullptr;
+    InitializeInformationWindowLayout(*target, help);
+    if (!InstallSelectionEditHandler(GetDlgItem(*target, ID_INFORMATION_TEXT))
+            || !ApplyInformationWindowStyle(*target, false)) {
+        DestroyWindow(*target);
         return;
     }
+    SetWindowTheme(*target, nullptr, nullptr);
+    SendDlgItemMessageW(*target, ID_INFORMATION_TEXT, EM_SETLIMITTEXT, 0x7FFFFFFE, 0);
+    SendMessageW(*target, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(app->programIcons.Large()));
+    SendMessageW(*target, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(app->programIcons.Small()));
+    HWND text = GetDlgItem(*target, ID_INFORMATION_TEXT);
+    SetWindowSubclass(text, InformationTextSubclassProc, INFORMATION_TEXT_SUBCLASS_ID, 0);
+    if (!help) {
+        SetWindowTextW(text, LoadLicenseText().c_str());
+        const int controls[] = {
+            ID_INFORMATION_PRODUCT,
+            ID_INFORMATION_WEBSITE,
+            ID_INFORMATION_LINK,
+            ID_INFORMATION_ICON
+        };
+        for (int id : controls) {
+            SetWindowSubclass(GetDlgItem(*target, id), AboutControlSubclassProc, ABOUT_CONTROL_SUBCLASS, 0);
+        }
+        aboutTooltip = CreateControlTooltip(*target, GetDlgItem(*target, ID_INFORMATION_LINK), LPSTR_TEXTCALLBACKW);
+    }
+    RefreshInformationWindow(*target, *data);
+    SendMessageW(text, EM_SETSEL, 0, 0);
+    placement.SetDisableSaveSize(!help);
+    placement.SetDisableSaveWindowState(!help);
     placement.SetSavedHandler(InformationWindowStateSaved, data.get());
     data->initialized = true;
     data.release();
-    InitializeInformationWindowLayout(target, help);
-    LayoutInformationWindow(target, true);
-    if (!placement.Attach(target, help ? "Help" : "About")) {
-        DestroyWindow(target);
-        target = nullptr;
+    const PersistWindowStateData& saved = placement.GetState();
+    bool defaultPosition = saved.x == CW_USEDEFAULT || saved.y == CW_USEDEFAULT;
+    if (defaultPosition && !PositionInformationWindowByWindowsDefault(*target)
+            || !placement.Attach(*target, help ? "Help" : "About")) {
+        DestroyWindow(*target);
         return;
     }
-    LayoutInformationWindow(target);
+    LayoutInformationWindow(*target);
     UpdateInformationWindowsTopmost(owner);
-    const int focusId = help ? ID_INFORMATION_TEXT : ID_INFORMATION_CLOSE;
-    SetFocus(GetDlgItem(target, focusId));
+    SetFocus(GetDlgItem(*target, ID_INFORMATION_CLOSE));
     placement.Show();
 }
 

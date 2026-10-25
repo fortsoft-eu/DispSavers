@@ -23,6 +23,9 @@
 #define ID_RECORD_RATE_LABEL            1706
 #define ID_RECORD_NOTE                  1707
 
+#define ABOUT_LICENSE_WIDTH_96DPI      508
+#define ABOUT_LICENSE_HEIGHT_96DPI     267
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
