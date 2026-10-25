@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.0
  */
 
 #define NOMINMAX
@@ -2036,13 +2036,17 @@ static void UpdateMonitorAnimationControls(HWND window, SettingsWindowData& data
             const bool checked = available
                 && !selection.IsMixed(group.property)
                 && selection.values.Value(group.property) == index;
+            const bool mixed = available
+                && selection.IsMixed(group.property)
+                && data.settings->HasMonitorValue(data.selectedAnimationDevices, group.property,
+                    static_cast<std::uint32_t>(index));
             states.push_back(SettingsControlState{
                 radio,
                 available,
                 checked ? BST_CHECKED : BST_UNCHECKED,
                 std::nullopt,
                 std::nullopt,
-                available && selection.IsMixed(group.property)
+                mixed
             });
         }
     }

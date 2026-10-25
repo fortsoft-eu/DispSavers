@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.0
  */
 
 #define NOMINMAX
@@ -47,6 +47,7 @@ enum class MixedControlKind {
 
 /// Control-specific state retained by the mixed-value subclass.
 struct MixedControlsState {
+    HWND glyphWindow = nullptr;
     MixedControlKind kind = MixedControlKind::Trackbar;
     bool mixed = false;
 };
@@ -62,7 +63,8 @@ static LRESULT CALLBACK MixedControlsProc(HWND window, UINT message, WPARAM wPar
 static MixedControlsState* ControlState(HWND window) {
     DWORD_PTR referenceData = 0;
     return window && GetWindowSubclass(window, MixedControlsProc, MIXED_CONTROL_SUBCLASS, &referenceData)
-        ? reinterpret_cast<MixedControlsState*>(referenceData) : nullptr;
+        ? reinterpret_cast<MixedControlsState*>(referenceData)
+        : nullptr;
 }
 
 /// Reports whether visual styles are active for Windows and the current application.
@@ -76,57 +78,14 @@ static bool IsPaintedPixel(const DWORD* pixels, LONG width, LONG x, LONG y, DWOR
     return (pixels[index] & 0x00FFFFFF) != background;
 }
 
-/// Locates the first painted pixels at the native glyph side of the control.
-static bool IsPaintedColumn(const DWORD* pixels, LONG width, LONG height, LONG x, DWORD background) {
-    for (LONG y = 0; y < height; y++) {
-        if (IsPaintedPixel(pixels, width, x, y, background)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-/// Measures the native circle on its outer half so caption and focus pixels cannot extend its bounds.
-static RECT RadioPixelBounds(const DWORD* pixels, LONG width, LONG height, DWORD background, bool rightAligned) {
-    RECT glyph{ 0, height, width, 0 };
-    if (rightAligned) {
-        while (glyph.right > 0 && !IsPaintedColumn(pixels, width, height, glyph.right - 1, background)) {
-            glyph.right--;
-        }
-    } else {
-        while (glyph.left < width && !IsPaintedColumn(pixels, width, height, glyph.left, background)) {
-            glyph.left++;
-        }
-    }
-    const LONG first = rightAligned ? glyph.right / 2 : glyph.left;
-    const LONG last = rightAligned ? glyph.right : glyph.left + (width - glyph.left + 1) / 2;
-    for (LONG y = 0; y < height; y++) {
-        for (LONG x = first; x < last; x++) {
-            if (IsPaintedPixel(pixels, width, x, y, background)) {
-                glyph.top = std::min(glyph.top, y);
-                glyph.bottom = std::max(glyph.bottom, y + 1);
-                break;
-            }
-        }
-    }
-    const LONG diameter = std::max(0L, glyph.bottom - glyph.top);
-    if (rightAligned) {
-        glyph.left = std::max(0L, glyph.right - diameter);
-    } else {
-        glyph.right = std::min(width, glyph.left + diameter);
-    }
-    return glyph;
-}
-
 /// Follows the painted outer edges row by row, including antialiased pixels and filling the glyph's interior.
-static HRGN CreatePaintedPixelRegion(const DWORD* pixels, const RECT& bounds, bool radio, bool rightAligned) {
+static HRGN CreatePaintedPixelRegion(const DWORD* pixels, const RECT& bounds) {
     const LONG width = bounds.right - bounds.left;
     const LONG height = bounds.bottom - bounds.top;
     const COLORREF color = GetSysColor(COLOR_BTNFACE);
-    const DWORD background = static_cast<DWORD>(GetRValue(color)) << 16
-        | static_cast<DWORD>(GetGValue(color)) << 8 | GetBValue(color);
-    const RECT glyph = radio ? RadioPixelBounds(pixels, width, height, background, rightAligned)
-        : RECT{ 0, 0, width, height };
+    const DWORD background =
+        static_cast<DWORD>(GetRValue(color)) << 16 | static_cast<DWORD>(GetGValue(color)) << 8 | GetBValue(color);
+    const RECT glyph{ 0, 0, width, height };
     HRGN region = CreateRectRgn(0, 0, 0, 0);
     if (!region) {
         return nullptr;
@@ -156,8 +115,50 @@ static HRGN CreatePaintedPixelRegion(const DWORD* pixels, const RECT& bounds, bo
     return region;
 }
 
-/// Reads the image Windows has just painted rather than predicting the control's glyph position or silhouette.
-static HRGN CreatePaintedControlRegion(HDC source, const RECT& bounds, bool radio, bool rightAligned) {
+/// Renders a captionless native radio to memory so text and focus pixels cannot enter its glyph mask.
+static bool PaintRadioMask(HWND window, HDC dc, const RECT& bounds) {
+    MixedControlsState* state = ControlState(window);
+    if (!state) {
+        return false;
+    }
+    const LONG_PTR style = GetWindowLongPtrW(window, GWL_STYLE) & 0xFFFF;
+    const LONG_PTR extended = GetWindowLongPtrW(window, GWL_EXSTYLE) & (WS_EX_RIGHT | WS_EX_LAYOUTRTL | WS_EX_RTLREADING);
+    if (!state->glyphWindow) {
+        state->glyphWindow = CreateWindowExW(static_cast<DWORD>(extended) | WS_EX_NOACTIVATE | WS_EX_NOPARENTNOTIFY,
+            L"BUTTON", L"", WS_CHILD | static_cast<DWORD>(style), 0, 0, 0, 0, GetParent(window), nullptr,
+            GetModuleHandleW(nullptr), nullptr);
+        if (!state->glyphWindow) {
+            return false;
+        }
+    }
+    HWND glyph = state->glyphWindow;
+    SetWindowLongPtrW(glyph, GWL_STYLE, WS_CHILD | style);
+    SetWindowLongPtrW(glyph, GWL_EXSTYLE, WS_EX_NOACTIVATE | WS_EX_NOPARENTNOTIFY | extended);
+    RECT client{};
+    GetClientRect(window, &client);
+    if (!SetWindowPos(glyph, nullptr, 0, 0, client.right, client.bottom,
+        SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOREDRAW)) {
+        return false;
+    }
+    SendMessageW(glyph, WM_SETFONT, SendMessageW(window, WM_GETFONT, 0, 0), FALSE);
+    EnableWindow(glyph, IsWindowEnabled(window));
+    const bool themed = AreVisualStylesActive() && GetWindowTheme(window) != nullptr;
+    SetWindowTheme(glyph, themed ? nullptr : L"", themed ? nullptr : L"");
+    SendMessageW(glyph, BM_SETSTATE, SendMessageW(window, BM_GETSTATE, 0, 0) & BST_PUSHED, 0);
+    const int saved = SaveDC(dc);
+    if (saved == 0) {
+        return false;
+    }
+    const RECT capture{ 0, 0, bounds.right - bounds.left, bounds.bottom - bounds.top };
+    FillRect(dc, &capture, GetSysColorBrush(COLOR_BTNFACE));
+    SetViewportOrgEx(dc, -bounds.left, -bounds.top, nullptr);
+    SendMessageW(glyph, WM_PRINTCLIENT, reinterpret_cast<WPARAM>(dc), PRF_CLIENT);
+    RestoreDC(dc, saved);
+    return true;
+}
+
+/// Captures the native thumb or isolated radio glyph without predicting its position or silhouette.
+static HRGN CreatePaintedControlRegion(HDC source, const RECT& bounds, HWND radio = nullptr) {
     const LONG width = bounds.right - bounds.left;
     const LONG height = bounds.bottom - bounds.top;
     if (width <= 0 || height <= 0) {
@@ -183,9 +184,12 @@ static HRGN CreatePaintedControlRegion(HDC source, const RECT& bounds, bool radi
     HGDIOBJ previous = SelectObject(capture, bitmap);
     HRGN region = nullptr;
     if (previous && previous != HGDI_ERROR) {
-        if (BitBlt(capture, 0, 0, width, height, source, bounds.left, bounds.top, SRCCOPY)) {
+        const bool captured = radio
+            ? PaintRadioMask(radio, capture, bounds)
+            : BitBlt(capture, 0, 0, width, height, source, bounds.left, bounds.top, SRCCOPY) != FALSE;
+        if (captured) {
             GdiFlush();
-            region = CreatePaintedPixelRegion(static_cast<const DWORD*>(pixels), bounds, radio, rightAligned);
+            region = CreatePaintedPixelRegion(static_cast<const DWORD*>(pixels), bounds);
         }
         SelectObject(capture, previous);
     }
@@ -228,7 +232,8 @@ static int PushButtonThemeState(const NMCUSTOMDRAW& draw) {
     if ((draw.uItemState & CDIS_HOT) != 0) {
         return PBS_HOT;
     }
-    return (GetWindowLongPtrW(draw.hdr.hwndFrom, GWL_STYLE) & BS_TYPEMASK) == BS_DEFPUSHBUTTON ? PBS_DEFAULTED
+    return (GetWindowLongPtrW(draw.hdr.hwndFrom, GWL_STYLE) & BS_TYPEMASK) == BS_DEFPUSHBUTTON
+        ? PBS_DEFAULTED
         : PBS_NORMAL;
 }
 
@@ -311,16 +316,13 @@ static void DrawMixedButton(const NMCUSTOMDRAW& draw, MixedControlKind kind) {
         GetClientRect(window, &interior);
         RECT content = interior;
         if (!themed || FAILED(GetThemeBackgroundContentRect(GetWindowTheme(window), draw.hdc, BP_PUSHBUTTON,
-                PushButtonThemeState(draw), &interior, &content))) {
+            PushButtonThemeState(draw), &interior, &content))) {
             InflateRect(&content, -2 * GetSystemMetrics(SM_CXBORDER), -2 * GetSystemMetrics(SM_CYBORDER));
         }
         interior = content;
     } else {
         interior = RadioCaptureRect(draw);
-        const LONG_PTR style = GetWindowLongPtrW(window, GWL_STYLE);
-        const LONG_PTR extended = GetWindowLongPtrW(window, GWL_EXSTYLE);
-        const bool rightAligned = (style & BS_RIGHTBUTTON) != 0 || (extended & WS_EX_RIGHT) != 0;
-        HRGN region = CreatePaintedControlRegion(draw.hdc, interior, true, rightAligned);
+        HRGN region = CreatePaintedControlRegion(draw.hdc, interior, window);
         if (!region) {
             RestoreDC(draw.hdc, saved);
             return;
@@ -349,7 +351,7 @@ static void DrawMixedThumb(const NMCUSTOMDRAW& draw) {
     if (saved == 0) {
         return;
     }
-    HRGN region = CreatePaintedControlRegion(draw.hdc, thumb, false, false);
+    HRGN region = CreatePaintedControlRegion(draw.hdc, thumb);
     if (region) {
         ExtSelectClipRgn(draw.hdc, region, RGN_AND);
         IntersectClipRect(draw.hdc, thumb.left, thumb.top, thumb.right, thumb.bottom);
@@ -383,8 +385,10 @@ static void NotifyMixedThumbClick(HWND window, LPARAM coordinates) {
 static LRESULT CALLBACK MixedControlsProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam,
         UINT_PTR subclassId, DWORD_PTR referenceData) {
     MixedControlsState* state = reinterpret_cast<MixedControlsState*>(referenceData);
-    if ((message == WM_LBUTTONDOWN || message == WM_LBUTTONDBLCLK) && state->mixed
-            && state->kind == MixedControlKind::Trackbar && IsWindowEnabled(window)) {
+    if ((message == WM_LBUTTONDOWN || message == WM_LBUTTONDBLCLK)
+            && state->mixed
+            && state->kind == MixedControlKind::Trackbar
+            && IsWindowEnabled(window)) {
         NotifyMixedThumbClick(window, lParam);
         if (!IsWindow(window)) {
             return 0;
@@ -392,12 +396,17 @@ static LRESULT CALLBACK MixedControlsProc(HWND window, UINT message, WPARAM wPar
     }
     if (message == WM_NCDESTROY) {
         RemoveWindowSubclass(window, MixedControlsProc, subclassId);
+        if (state->glyphWindow) {
+            DestroyWindow(state->glyphWindow);
+        }
         delete state;
         return DefSubclassProc(window, message, wParam, lParam);
     }
     const LRESULT result = DefSubclassProc(window, message, wParam, lParam);
-    if (MixedControls::IsMixed(window) && (message == WM_THEMECHANGED || message == WM_SYSCOLORCHANGE
-            || message == WM_SETTINGCHANGE || message == WM_DPICHANGED_AFTERPARENT)) {
+    if (MixedControls::IsMixed(window) && (message == WM_THEMECHANGED
+        || message == WM_SYSCOLORCHANGE
+        || message == WM_SETTINGCHANGE
+        || message == WM_DPICHANGED_AFTERPARENT)) {
         InvalidateMixedControl(window);
     }
     return result;

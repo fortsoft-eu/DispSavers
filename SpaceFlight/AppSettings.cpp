@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.0
  */
 
 #define NOMINMAX
@@ -87,14 +87,20 @@ static std::wstring ReadString(HKEY key, const wchar_t* name) {
     DWORD size = 0;
     const LSTATUS queryResult = RegQueryValueExW(key, name, nullptr, &type, nullptr, &size);
     constexpr DWORD MAX_SETTINGS_STRING_BYTES = 65536;
-    if (queryResult != ERROR_SUCCESS || type != REG_SZ || size < sizeof(wchar_t) || size > MAX_SETTINGS_STRING_BYTES
+    if (queryResult != ERROR_SUCCESS
+            || type != REG_SZ
+            || size < sizeof(wchar_t)
+            || size > MAX_SETTINGS_STRING_BYTES
             || size % sizeof(wchar_t) != 0) {
         return std::wstring{};
     }
     std::wstring value(size / sizeof(wchar_t), L'\0');
     const DWORD capacity = static_cast<DWORD>(value.size() * sizeof(wchar_t));
     const LSTATUS readResult = RegQueryValueExW(key, name, nullptr, &type, reinterpret_cast<BYTE*>(value.data()), &size);
-    if (readResult != ERROR_SUCCESS || type != REG_SZ || size > capacity || size < sizeof(wchar_t)
+    if (readResult != ERROR_SUCCESS
+            || type != REG_SZ
+            || size > capacity
+            || size < sizeof(wchar_t)
             || size % sizeof(wchar_t) != 0) {
         return std::wstring{};
     }
@@ -262,6 +268,20 @@ MonitorSelection AppSettings::SelectionForMonitors(const std::vector<std::wstrin
         }
     }
     return result;
+}
+
+/// Reports whether any selected monitor supports and uses the requested property value.
+bool AppSettings::HasMonitorValue(const std::vector<std::wstring>& devices, AnimationProperty property,
+        std::uint32_t value) const {
+    for (const std::wstring& device : devices) {
+        const auto entry = monitorAnimations.find(device);
+        if (entry != monitorAnimations.end()
+                && entry->second.SupportsProperty(property)
+                && entry->second.Value(property) == value) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /// Changes only the requested property on selected monitor identities.

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.0
  */
 
 #pragma once
@@ -109,12 +109,12 @@ struct AppSettings {
     std::wstring selectedAnimationMonitors;
     bool allAnimationMonitorsSelected = true;
     bool preventScreenSaver = false;
-    int controlWindowX = std::numeric_limits<int>::min();
-    int controlWindowY = std::numeric_limits<int>::min();
+    int controlWindowX = (std::numeric_limits<int>::min)();
+    int controlWindowY = (std::numeric_limits<int>::min)();
     PersistWindowStateData helpWindowState;
     PersistWindowStateData aboutWindowState;
-    int recordingSettingsX = std::numeric_limits<int>::min();
-    int recordingSettingsY = std::numeric_limits<int>::min();
+    int recordingSettingsX = (std::numeric_limits<int>::min)();
+    int recordingSettingsY = (std::numeric_limits<int>::min)();
     int language = -1;
     SettingsProfile profile = SettingsProfile::Standalone;
 
@@ -126,6 +126,9 @@ struct AppSettings {
 
     /// Summarizes common and differing values without changing settings.
     MonitorSelection SelectionForMonitors(const std::vector<std::wstring>& devices);
+
+    /// Reports whether any selected monitor supports and uses the requested property value.
+    bool HasMonitorValue(const std::vector<std::wstring>& devices, AnimationProperty property, std::uint32_t value) const;
 
     /// Changes one property only on the selected display identities.
     void SetMonitorValue(const std::vector<std::wstring>& devices, AnimationProperty property, std::uint32_t value);

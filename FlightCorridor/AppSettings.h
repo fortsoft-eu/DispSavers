@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.0
  */
 
 #pragma once
@@ -100,12 +100,12 @@ struct AppSettings {
     std::wstring selectedAnimationMonitors;
     bool allAnimationMonitorsSelected = true;
     bool preventScreenSaver = false;
-    int controlWindowX = std::numeric_limits<int>::min();
-    int controlWindowY = std::numeric_limits<int>::min();
+    int controlWindowX = (std::numeric_limits<int>::min)();
+    int controlWindowY = (std::numeric_limits<int>::min)();
     PersistWindowStateData helpWindowState;
     PersistWindowStateData aboutWindowState;
-    int recordingSettingsX = std::numeric_limits<int>::min();
-    int recordingSettingsY = std::numeric_limits<int>::min();
+    int recordingSettingsX = (std::numeric_limits<int>::min)();
+    int recordingSettingsY = (std::numeric_limits<int>::min)();
     int language = -1;
     SettingsProfile profile = SettingsProfile::Standalone;
 
