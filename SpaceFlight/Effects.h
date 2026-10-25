@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.0
  */
 
 #pragma once
@@ -57,10 +57,7 @@ inline constexpr std::array<unsigned, EFFECT_COUNT> SEGMENT_COUNTS{
 
 inline constexpr unsigned FUNNEL_CIRCLE_SEGMENTS = 128;
 inline constexpr unsigned FUNNEL_CIRCLE_COUNT = 2;
-inline constexpr unsigned FUNNEL_BODY_CIRCLE_COUNT = 3;
-inline constexpr unsigned FUNNEL_CIRCLE_VERTEX_COUNT = FUNNEL_CIRCLE_COUNT * FUNNEL_CIRCLE_SEGMENTS * 2;
-inline constexpr unsigned FUNNEL_WIRE_CIRCLE_VERTEX_COUNT =
-    (FUNNEL_CIRCLE_COUNT + FUNNEL_BODY_CIRCLE_COUNT) * FUNNEL_CIRCLE_SEGMENTS * 2;
+inline constexpr std::array<unsigned, EFFECT_COUNT> FUNNEL_BODY_CIRCLE_COUNTS{ 4, 2, 0 };
 
 /// Filled-grid dimensions for the two surface flights.
 struct SurfaceMesh {

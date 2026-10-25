@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.0
  */
 
 #define NOMINMAX
@@ -549,8 +549,8 @@ struct Renderer::Impl {
                 context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
                 context->OMSetDepthStencilState(filled ? depthState.Get() : nullptr, 0);
                 context->IASetIndexBuffer(nullptr, DXGI_FORMAT_R32_UINT, 0);
-                const unsigned circleVertexCount = filled ? FUNNEL_CIRCLE_VERTEX_COUNT : FUNNEL_WIRE_CIRCLE_VERTEX_COUNT;
-                context->DrawInstanced(circleVertexCount, 1, 0, 0);
+                const unsigned circleCount = FUNNEL_CIRCLE_COUNT + (filled ? 0U : FUNNEL_BODY_CIRCLE_COUNTS[kind]);
+                context->DrawInstanced(circleCount * FUNNEL_CIRCLE_SEGMENTS * 2, 1, 0, 0);
             }
         }
         CompleteFrame();

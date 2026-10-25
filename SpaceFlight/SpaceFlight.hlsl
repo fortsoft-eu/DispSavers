@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.0
  */
 
 /// Per-frame camera, lighting and scene parameters shared with the CPU renderer.
@@ -363,7 +363,7 @@ float MorphingCameraHeight(float sampleTime) {
     return lerp(7.0, 18.0, altitudePhase) * cameraVariations.y;
 }
 
-/// Positions a segment endpoint on a funnel cross-section, its terminal rim or the next circle beyond it.
+/// Places neck circles at the lowest vertices of the bent grid rows, preserving the rim and exit rings.
 float3 FunnelCirclePoint(uint circle, uint segment, uint endpoint, out float visibility) {
     float elapsed = funnelMotion.x * funnelCycle.y;
     float plungeTime = funnelView.w - funnelMotion.y;
@@ -374,8 +374,8 @@ float3 FunnelCirclePoint(uint circle, uint segment, uint endpoint, out float vis
         float duration = circle == 0 ? FUNNEL_RIM_FADE_DURATION : 3.0;
         visibility = SurfaceEase((elapsed - formationEnd) / duration) * FunnelBodyVisibility();
         if (circle >= 2) {
-            float sectionDepth = depth * float(circle - 1) / 4.0;
-            radius = sqrt(FUNNEL_DEPTH_FACTOR / sectionDepth - FUNNEL_CENTER_SQUARED);
+            float gridSpacing = effect == 19 ? INFINITE_GRID_SPACING : 3.0;
+            radius = FUNNEL_CUTOFF_RADIUS * 2.0 - float(circle - 2) * gridSpacing;
             depth = -FunnelDeformedHeight(radius);
         }
     } else {
@@ -391,7 +391,17 @@ float3 FunnelCirclePoint(uint circle, uint segment, uint endpoint, out float vis
         }
     }
     float angle = float(segment + endpoint) * 6.283185307179586 / float(FUNNEL_CIRCLE_SEGMENTS);
-    return float3(funnelMotion.z + radius * cos(angle), -depth, funnelMotion.w + radius * sin(angle));
+    float3 position = float3(funnelMotion.z + radius * cos(angle), -depth, funnelMotion.w + radius * sin(angle));
+    uint quarterSegments = FUNNEL_CIRCLE_SEGMENTS / 4;
+    if (circle >= 2 && (segment + endpoint) % quarterSegments == 0) {
+        uint quadrant = (segment + endpoint) / quarterSegments % 4;
+        float2 offset = quadrant % 2 == 0 ? float2(radius, 0.0) : float2(0.0, radius);
+        if (quadrant >= 2) {
+            offset = -offset;
+        }
+        position.xz = funnelMotion.zw + offset;
+    }
+    return position;
 }
 
 /// Calculates animated wave height with smoothly varying surface curvature.
