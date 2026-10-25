@@ -29,10 +29,11 @@
 #include <array>
 #include <cstdint>
 
-/// The two flight effects in display order.
+/// The flight effects in display order.
 enum class EffectKind : std::uint32_t {
     InfiniteSurface,
     MorphingSurface,
+    GravityWarpedSpaceFlight,
     Count
 };
 
@@ -46,11 +47,20 @@ enum class SurfaceShape : std::uint32_t {
 inline constexpr std::size_t EFFECT_COUNT = static_cast<std::size_t>(EffectKind::Count);
 inline constexpr std::uint32_t ALL_EFFECT_MASK = (1U << EFFECT_COUNT) - 1U;
 
-/// Original wire-grid segment counts for the two surface flights.
-inline constexpr std::array<unsigned, EFFECT_COUNT> SEGMENT_COUNTS{ 17112, 25312 };
+/// Wire-grid dimensions and segment counts for the flight effects.
+inline constexpr unsigned INFINITE_GRID_CELLS = 220;
+inline constexpr std::array<unsigned, EFFECT_COUNT> SEGMENT_COUNTS{
+    (INFINITE_GRID_CELLS + 1) * INFINITE_GRID_CELLS * 2,
+    25312,
+    16224
+};
+
 inline constexpr unsigned FUNNEL_CIRCLE_SEGMENTS = 128;
 inline constexpr unsigned FUNNEL_CIRCLE_COUNT = 2;
+inline constexpr unsigned FUNNEL_BODY_CIRCLE_COUNT = 3;
 inline constexpr unsigned FUNNEL_CIRCLE_VERTEX_COUNT = FUNNEL_CIRCLE_COUNT * FUNNEL_CIRCLE_SEGMENTS * 2;
+inline constexpr unsigned FUNNEL_WIRE_CIRCLE_VERTEX_COUNT =
+    (FUNNEL_CIRCLE_COUNT + FUNNEL_BODY_CIRCLE_COUNT) * FUNNEL_CIRCLE_SEGMENTS * 2;
 
 /// Filled-grid dimensions for the two surface flights.
 struct SurfaceMesh {
@@ -60,6 +70,7 @@ struct SurfaceMesh {
 };
 
 inline constexpr std::array<SurfaceMesh, EFFECT_COUNT> SURFACE_MESHES{
-    SurfaceMesh{ 184, 184, 1 },
-    SurfaceMesh{ 224, 224, 1 }
+    SurfaceMesh{ INFINITE_GRID_CELLS * 2, INFINITE_GRID_CELLS * 2, 1 },
+    SurfaceMesh{ 224, 224, 1 },
+    SurfaceMesh{ 0, 0, 0 }
 };

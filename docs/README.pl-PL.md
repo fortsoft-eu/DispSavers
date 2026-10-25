@@ -60,6 +60,6 @@ FlightCorridor oferuje Przelot między czterema zmiennymi powierzchniami i Przel
 
 ## SpaceFlight
 
-SpaceFlight oferuje „Nieskończona falująca powierzchnia” i „Lot dalekodystansowy — zmienna powierzchnia”. Każdemu monitorowi przypisz dokładnie jeden przelot: zaznacz jego wiersz i odpowiedni przycisk opcji.
+SpaceFlight: Nieskończona falująca powierzchnia; Lot dalekodystansowy — zmienna powierzchnia; Lot przez przestrzeń zakrzywioną grawitacyjnie. Każdemu monitorowi przypisz dokładnie jeden przelot: zaznacz jego wiersz i odpowiedni przycisk opcji.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.pl-PL.md)

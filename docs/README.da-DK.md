@@ -60,6 +60,6 @@ FlightCorridor tilbyder Flyvetur mellem fire formskiftende flader og Flyvetur ge
 
 ## SpaceFlight
 
-SpaceFlight tilbyder »Uendelig bølgende flade« og »Langdistanceflyvetur — formskiftende flade«. Tildel præcis én flyvetur til hver skærm: vælg dens række og den tilsvarende alternativknap.
+SpaceFlight: Uendelig bølgende flade; Langdistanceflyvetur — formskiftende flade; Flyvetur gennem gravitationelt krummet rum. Tildel præcis én flyvetur til hver skærm: vælg dens række og den tilsvarende alternativknap.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.da-DK.md)

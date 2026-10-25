@@ -73,11 +73,11 @@ struct alignas(16) FrameConstants {
     unsigned funnelEntry;
     float surfaceActivation;
     float funnelHeading;
-    std::array<unsigned, 1> padding{};
-    std::array<float, 4> funnelGrid;
+    float funnelAngularCorrection;
     std::array<float, 4> funnelView;
     std::array<float, 4> funnelPath;
 };
+
 static_assert(offsetof(FrameConstants, motion) == 16);
 static_assert(offsetof(FrameConstants, cameraRotation) == 80);
 static_assert(offsetof(FrameConstants, lightSettings) == 96);
@@ -87,10 +87,10 @@ static_assert(offsetof(FrameConstants, funnelCapture) == 144);
 static_assert(offsetof(FrameConstants, funnelEntry) == 160);
 static_assert(offsetof(FrameConstants, surfaceActivation) == 164);
 static_assert(offsetof(FrameConstants, funnelHeading) == 168);
-static_assert(offsetof(FrameConstants, funnelGrid) == 176);
-static_assert(offsetof(FrameConstants, funnelView) == 192);
-static_assert(offsetof(FrameConstants, funnelPath) == 208);
-static_assert(sizeof(FrameConstants) == 224);
+static_assert(offsetof(FrameConstants, funnelAngularCorrection) == 172);
+static_assert(offsetof(FrameConstants, funnelView) == 176);
+static_assert(offsetof(FrameConstants, funnelPath) == 192);
+static_assert(sizeof(FrameConstants) == 208);
 
 /// Shader constants selecting a flight effect and its grid layout.
 struct alignas(16) DrawConstants {
@@ -360,6 +360,9 @@ struct Renderer::Impl {
         }
         for (std::size_t kind = 0; kind < EFFECT_COUNT; kind++) {
             const std::vector<unsigned> indices = CreateSurfaceIndices(SURFACE_MESHES[kind]);
+            if (indices.empty()) {
+                continue;
+            }
             GpuMesh& mesh = meshes[kind];
             D3D11_BUFFER_DESC description{};
             description.Usage = D3D11_USAGE_IMMUTABLE;
@@ -507,8 +510,7 @@ struct Renderer::Impl {
             scene.funnelEntry ? 1U : 0U,
             scene.surfaceActivation,
             scene.funnelHeading,
-            std::array<unsigned, 1>{},
-            scene.funnelGrid,
+            scene.funnelAngularCorrection,
             scene.funnelView,
             scene.funnelPath
         };
@@ -523,8 +525,9 @@ struct Renderer::Impl {
             if ((scene.enabledEffects & 1U << kind) == 0) {
                 continue;
             }
-            const bool filled = kind == 0 ? scene.infiniteSurfaceFilled : scene.morphingSurfaceFilled;
             const SurfaceMesh& mesh = SURFACE_MESHES[kind];
+            const bool filled =
+                mesh.patches != 0 && (kind == 0 ? scene.infiniteSurfaceFilled : scene.morphingSurfaceFilled);
             const DrawConstants draw{ 19U + static_cast<unsigned>(kind), mesh.columns, mesh.rows, mesh.patches };
             context->UpdateSubresource(drawBuffer.Get(), 0, nullptr, &draw, 0, 0);
             context->VSSetShader(filled ? surfaceVertexShader.Get() : vertexShader.Get(), nullptr, 0);
@@ -540,13 +543,14 @@ struct Renderer::Impl {
                 context->IASetIndexBuffer(nullptr, DXGI_FORMAT_R32_UINT, 0);
                 context->DrawInstanced(SEGMENT_COUNTS[kind] * 2, 1, 0, 0);
             }
-            if (scene.surfaceShape == SurfaceShape::Funnel) {
+            if (mesh.patches != 0 && scene.surfaceShape == SurfaceShape::Funnel) {
                 context->VSSetShader(funnelVertexShader.Get(), nullptr, 0);
                 context->PSSetShader(pixelShader.Get(), nullptr, 0);
                 context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
                 context->OMSetDepthStencilState(filled ? depthState.Get() : nullptr, 0);
                 context->IASetIndexBuffer(nullptr, DXGI_FORMAT_R32_UINT, 0);
-                context->DrawInstanced(FUNNEL_CIRCLE_VERTEX_COUNT, 1, 0, 0);
+                const unsigned circleVertexCount = filled ? FUNNEL_CIRCLE_VERTEX_COUNT : FUNNEL_WIRE_CIRCLE_VERTEX_COUNT;
+                context->DrawInstanced(circleVertexCount, 1, 0, 0);
             }
         }
         CompleteFrame();

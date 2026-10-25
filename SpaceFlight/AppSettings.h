@@ -71,6 +71,9 @@ struct MonitorAnimation {
     int objectSpeedPercent = 100;
     std::uint32_t enabledEffects = ALL_EFFECT_MASK;
 
+    /// Reports whether the selected animation uses the requested setting.
+    bool SupportsProperty(AnimationProperty property) const;
+
     /// Reads one animation property without changing the stored preferences.
     std::uint32_t Value(AnimationProperty property) const;
 
@@ -85,7 +88,11 @@ struct MonitorAnimation {
 struct MonitorSelection {
     MonitorAnimation values;
     std::uint32_t mixedProperties = 0;
+    std::uint32_t availableProperties = 0;
     bool available = false;
+
+    /// Reports whether any selected animation uses the requested setting.
+    bool IsAvailable(AnimationProperty property) const;
 
     /// Reports whether selected monitors have different values of the requested property.
     bool IsMixed(AnimationProperty property) const;

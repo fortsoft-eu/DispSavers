@@ -60,6 +60,6 @@ FlightCorridor, Biçim değiştiren dört yüzey arasında uçuş ve Biçim değ
 
 ## SpaceFlight
 
-SpaceFlight, “Sonsuz dalgalanan yüzey” ve “Uzun mesafeli uçuş — biçim değiştiren yüzey” seçeneklerini sunar. Her monitöre tam olarak bir uçuş atayın: monitörün satırını ve ilgili seçenek düğmesini seçin.
+SpaceFlight: Sonsuz dalgalanan yüzey; Uzun mesafeli uçuş — biçim değiştiren yüzey; Kütleçekimiyle bükülmüş uzayda uçuş. Her monitöre tam olarak bir uçuş atayın: monitörün satırını ve ilgili seçenek düğmesini seçin.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.tr-TR.md)

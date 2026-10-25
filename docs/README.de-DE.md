@@ -60,6 +60,6 @@ FlightCorridor bietet Flug zwischen vier veränderlichen Flächen und Flug durch
 
 ## SpaceFlight
 
-SpaceFlight bietet „Unendliche wellenförmige Fläche“ und „Fernflug — veränderliche Fläche“. Weisen Sie jedem Monitor genau einen Flug zu: Markieren Sie seine Zeile und wählen Sie den entsprechenden Optionsschalter.
+SpaceFlight: Unendliche wellenförmige Fläche; Fernflug — veränderliche Fläche; Flug durch gravitativ gekrümmten Raum. Weisen Sie jedem Monitor genau einen Flug zu: Markieren Sie seine Zeile und wählen Sie den entsprechenden Optionsschalter.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.de-DE.md)

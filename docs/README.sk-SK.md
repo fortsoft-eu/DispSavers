@@ -60,6 +60,6 @@ FlightCorridor ponúka Prelet medzi štyrmi premenlivými plochami a Prelet prem
 
 ## SpaceFlight
 
-SpaceFlight ponúka „Nekonečná vlniaca sa plocha“ a „Diaľkový let — premenlivá plocha“. Každému monitoru priradíte práve jeden prelet: označte jeho riadok v zozname a zvoľte príslušný prepínač.
+SpaceFlight: Nekonečná vlniaca sa plocha; Diaľkový let — premenlivá plocha; Prelet gravitačne deformovaným priestorom. Každému monitoru priradíte práve jeden prelet: označte jeho riadok v zozname a zvoľte príslušný prepínač.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.sk-SK.md)

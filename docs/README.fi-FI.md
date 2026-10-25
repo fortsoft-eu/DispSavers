@@ -60,6 +60,6 @@ FlightCorridor tarjoaa Lento neljän muuntuvan pinnan välissä ja Lento muuntuv
 
 ## SpaceFlight
 
-SpaceFlight tarjoaa ”Ääretön aaltoileva pinta” ja ”Pitkän matkan lento — muuntuva pinta” -animaatiot. Määritä kullekin näytölle täsmälleen yksi lento: valitse näytön rivi ja vastaava valintanappi.
+SpaceFlight: Ääretön aaltoileva pinta; Pitkän matkan lento — muuntuva pinta; Lento painovoiman kaareuttamassa avaruudessa. Määritä kullekin näytölle täsmälleen yksi lento: valitse näytön rivi ja vastaava valintanappi.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.fi-FI.md)

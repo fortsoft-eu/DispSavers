@@ -60,6 +60,6 @@ FlightCorridor propose Vol entre quatre surfaces déformables et Vol dans un ent
 
 ## SpaceFlight
 
-SpaceFlight propose « Surface ondulante infinie » et « Vol longue distance — surface déformable ». Attribuez un seul vol à chaque moniteur : sélectionnez sa ligne, puis le bouton radio correspondant.
+SpaceFlight: Surface ondulante infinie; Vol longue distance — surface déformable; Vol dans un espace déformé par la gravitation. Attribuez un seul vol à chaque moniteur : sélectionnez sa ligne, puis le bouton radio correspondant.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.fr-FR.md)

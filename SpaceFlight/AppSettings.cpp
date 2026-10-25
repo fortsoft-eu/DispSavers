@@ -111,6 +111,16 @@ static std::wstring ReadString(HKEY key, const wchar_t* name) {
     return value;
 }
 
+/// Keeps surface-only preferences stored while excluding them from gravitational-grid editing.
+bool MonitorAnimation::SupportsProperty(AnimationProperty property) const {
+    return effect != EffectKind::GravityWarpedSpaceFlight
+        || property == AnimationProperty::ObjectSpeed
+        || property == AnimationProperty::Effect
+        || property == AnimationProperty::CameraTumbling
+        || property == AnimationProperty::CameraReversals
+        || property == AnimationProperty::EnabledEffects;
+}
+
 /// Reads one property using the same identifiers as multi-monitor editing.
 std::uint32_t MonitorAnimation::Value(AnimationProperty property) const {
     switch (property) {
@@ -170,6 +180,11 @@ void MonitorAnimation::SetValue(AnimationProperty property, std::uint32_t value)
     }
 }
 
+/// Reports whether any selected animation uses the requested setting.
+bool MonitorSelection::IsAvailable(AnimationProperty property) const {
+    return (availableProperties & 1U << static_cast<unsigned>(property)) != 0;
+}
+
 /// Reports whether selected monitors have different values of the requested property.
 bool MonitorSelection::IsMixed(AnimationProperty property) const {
     return (mixedProperties & 1U << static_cast<unsigned>(property)) != 0;
@@ -177,7 +192,9 @@ bool MonitorSelection::IsMixed(AnimationProperty property) const {
 
 /// Packs effect and switch values without changing the separately stored numeric speed.
 std::uint32_t MonitorAnimation::Packed() const {
-    return static_cast<std::uint32_t>(effect)
+    const std::uint32_t effectValue = effect == EffectKind::GravityWarpedSpaceFlight
+        ? 4096U : static_cast<std::uint32_t>(effect);
+    return effectValue
         | (textured ? 2U : 0U)
         | (cameraTumbling ? 4U : 0U)
         | (cameraReversals ? 8U : 0U)
@@ -225,14 +242,16 @@ MonitorSelection AppSettings::SelectionForMonitors(const std::vector<std::wstrin
     MonitorSelection result;
     for (const std::wstring& device : devices) {
         const MonitorAnimation& animation = AnimationForMonitor(device);
-        if (!result.available) {
-            result.values = animation;
-            result.available = true;
-            continue;
-        }
+        result.available = true;
         for (unsigned index = 0; index < static_cast<unsigned>(AnimationProperty::Count); index++) {
             const AnimationProperty property = static_cast<AnimationProperty>(index);
-            if (result.values.Value(property) != animation.Value(property)) {
+            if (!animation.SupportsProperty(property)) {
+                continue;
+            }
+            if (!result.IsAvailable(property)) {
+                result.values.SetValue(property, animation.Value(property));
+                result.availableProperties |= 1U << index;
+            } else if (result.values.Value(property) != animation.Value(property)) {
                 result.mixedProperties |= 1U << index;
             }
         }
@@ -249,7 +268,10 @@ MonitorSelection AppSettings::SelectionForMonitors(const std::vector<std::wstrin
 void AppSettings::SetMonitorValue(const std::vector<std::wstring>& devices, AnimationProperty property,
         std::uint32_t value) {
     for (const std::wstring& device : devices) {
-        AnimationForMonitor(device).SetValue(property, value);
+        MonitorAnimation& animation = AnimationForMonitor(device);
+        if (animation.SupportsProperty(property)) {
+            animation.SetValue(property, value);
+        }
     }
 }
 
@@ -276,12 +298,21 @@ static void ReadMonitorAnimations(HKEY profile, AppSettings& settings) {
             if (result == ERROR_NO_MORE_ITEMS) {
                 break;
             }
-            if (result == ERROR_SUCCESS && type == REG_DWORD && size == sizeof(value) && value <= 4095U
-                    && length != 0 && (value & 3072U) != 3072U) {
-                const SurfaceShape surfaceShape = (value & 2048U) != 0 ? SurfaceShape::Funnel
+            if (result == ERROR_SUCCESS
+                    && type == REG_DWORD
+                    && size == sizeof(value)
+                    && value <= 8191U
+                    && length != 0
+                    && (value & 3072U) != 3072U
+                    && (value & 4097U) != 4097U) {
+                const SurfaceShape surfaceShape = (value & 2048U) != 0
+                    ? SurfaceShape::Funnel
                     : (value & 1024U) != 0 ? SurfaceShape::Plane : SurfaceShape::Waves;
+                const EffectKind effect = (value & 4096U) != 0
+                    ? EffectKind::GravityWarpedSpaceFlight
+                    : static_cast<EffectKind>(value & 1U);
                 MonitorAnimation animation{
-                    static_cast<EffectKind>(value & 1U),
+                    effect,
                     (value & 2U) != 0,
                     surfaceShape,
                     (value & 4U) != 0,

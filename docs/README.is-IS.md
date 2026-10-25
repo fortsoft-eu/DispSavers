@@ -60,6 +60,6 @@ FlightCorridor býður upp á Flug milli fjögurra breytilegra flata og Flug í 
 
 ## SpaceFlight
 
-SpaceFlight býður upp á „Óendanlegur bylgjandi flötur“ og „Langflug — breytilegur flötur“. Veldu nákvæmlega eitt flug fyrir hvern skjá: veldu röð skjásins og viðeigandi valhnapp.
+SpaceFlight: Óendanlegur bylgjandi flötur; Langflug — breytilegur flötur; Flug um rúm sveigt af þyngdarafli. Veldu nákvæmlega eitt flug fyrir hvern skjá: veldu röð skjásins og viðeigandi valhnapp.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.is-IS.md)

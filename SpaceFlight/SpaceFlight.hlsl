@@ -41,7 +41,7 @@ cbuffer FrameConstants : register(b0) {
     uint funnelEntry;
     float surfaceActivation;
     float funnelHeading;
-    float4 funnelGrid;
+    float funnelAngularCorrection;
     float4 funnelView;
     float4 funnelPath;
 };
@@ -66,9 +66,10 @@ struct SolidSurfaceOutput {
     centroid float3 viewPosition : TEXCOORD0;
     centroid float3 normal : TEXCOORD1;
     centroid float4 material : COLOR0;
-    float2 funnelLocal : TEXCOORD2;
+    float2 clipDistance : SV_ClipDistance0;
 };
 
+static const float SURFACE_NEAR_PLANE = 0.12;
 static const float FUNNEL_NECK_VISIBILITY_DEPTH = 24.0;
 static const float FUNNEL_DEPTH_FACTOR = 3562.5;
 static const float FUNNEL_CENTER_SQUARED = 0.00390625;
@@ -81,6 +82,8 @@ static const float FUNNEL_VIEW_PITCH_RELAXATION = 4.0;
 static const float FUNNEL_TILT_RATE = 0.4;
 static const float FUNNEL_TILT_DELAY = 0.75;
 static const uint FUNNEL_CIRCLE_SEGMENTS = 128;
+static const uint INFINITE_GRID_CELLS = 220;
+static const float INFINITE_GRID_SPACING = 1.5;
 
 /// Interpolates deformation progress with zero velocity and acceleration at both endpoints.
 float SurfaceEase(float progress) {
@@ -101,57 +104,9 @@ float3 TumblingView(float3 view) {
     return view + cameraRotation.w * turn + cross(axis, turn);
 }
 
-/// Spreads grid offsets progressively farther from the camera.
-float InfiniteGridOffset(float index) {
-    float direction = index < 0 ? -1.0 : 1.0;
-    float distance = abs((float) index);
-    return direction * (1.5 * distance + 0.045 * distance * distance);
-}
-
-/// Blends grid coordinates between adjacent camera cells.
+/// Anchors a square grid of constant cell size to the camera's current grid cell.
 float InfiniteGridCoordinate(float cameraCoordinate, float index) {
-    static const float spacing = 1.5;
-    float cameraCell = cameraCoordinate / spacing;
-    float baseCell = floor(cameraCell);
-    float blend = smoothstep(0.0, 1.0, frac(cameraCell));
-    float currentCoordinate = baseCell * spacing + InfiniteGridOffset(index);
-    float nextCoordinate = (baseCell + 1.0) * spacing + InfiniteGridOffset(index - 1);
-    return lerp(currentCoordinate, nextCoordinate, blend);
-}
-
-/// Retains the original infinite-surface grid anchor from the beginning of the current funnel cycle.
-float2 FunnelGridAnchor() {
-    return float2(funnelCycle.x * 1.15 + 4.0 * sin(funnelCycle.x * 0.071 + funnelGrid.y) * funnelGrid.x,
-        funnelCycle.x * 0.82 + 3.2 * cos(funnelCycle.x * 0.053 + funnelGrid.z) * funnelGrid.x);
-}
-
-/// Finds the material-grid index immediately below a world coordinate at the frozen anchor.
-float FrozenGridFloor(float anchor, float coordinate) {
-    float distance = coordinate - InfiniteGridCoordinate(anchor, 0.0);
-    float radius = abs(distance);
-    float estimate = 2.0 * radius / (1.5 + sqrt(2.25 + 0.18 * radius));
-    float index = floor(distance < 0.0 ? -estimate : estimate);
-    if (InfiniteGridCoordinate(anchor, index) > coordinate) {
-        index -= 1.0;
-    }
-    if (InfiniteGridCoordinate(anchor, index + 1.0) <= coordinate) {
-        index += 1.0;
-    }
-    return index;
-}
-
-/// Recycles the visible grid window using fixed material coordinates while the camera moves.
-float FrozenGridCoordinate(float anchor, float cameraCoordinate, float index) {
-    float extent = min(160.0, min(anchor - InfiniteGridCoordinate(anchor, -46.0),
-        InfiniteGridCoordinate(anchor, 46.0) - anchor));
-    float upperCoordinate = cameraCoordinate + extent;
-    float upperIndex = FrozenGridFloor(anchor, upperCoordinate);
-    if (InfiniteGridCoordinate(anchor, upperIndex) < upperCoordinate) {
-        upperIndex += 1.0;
-    }
-    float lowerIndex = FrozenGridFloor(anchor, cameraCoordinate - extent);
-    float window = clamp(0.0, upperIndex - 46.0, lowerIndex + 46.0);
-    return InfiniteGridCoordinate(anchor, index + window);
+    return (floor(cameraCoordinate / INFINITE_GRID_SPACING) + index) * INFINITE_GRID_SPACING;
 }
 
 /// Returns the fully formed funnel height at the supplied radial distance.
@@ -284,8 +239,9 @@ float FunnelOrbitCoefficient(float initialRadius) {
 float4 FunnelOrbitMotion(float initialRadius, float orbitTime) {
     float coefficient = FunnelOrbitCoefficient(initialRadius);
     float3 radial = FunnelRadialMotion(initialRadius, orbitTime);
-    float angle = coefficient * log(initialRadius / radial.x);
-    float angularSpeed = coefficient * radial.y / radial.x;
+    float decay = exp(-orbitTime / 0.75);
+    float angle = coefficient * log(initialRadius / radial.x) + funnelAngularCorrection * 0.75 * (1.0 - decay);
+    float angularSpeed = coefficient * radial.y / radial.x + funnelAngularCorrection * decay;
     return float4(radial.x, radial.y, angle, angularSpeed);
 }
 
@@ -326,7 +282,8 @@ float3 FunnelView(float3 forward) {
         float2 offset = funnelCapture.xz - funnelMotion.zw;
         float initialRadius = length(offset);
         float4 orbit = FunnelOrbitMotion(initialRadius, orbitTime);
-        float initialAngularRate = FunnelOrbitCoefficient(initialRadius) * funnelPath.x / initialRadius;
+        float initialAngularRate = FunnelOrbitCoefficient(initialRadius) * funnelPath.x / initialRadius
+            + funnelAngularCorrection;
         float yaw = funnelHeading + funnelView.x * orbitTime + funnelCycle.z
             * (orbit.z - initialAngularRate * orbitTime);
         float initialTilt = exp(-FUNNEL_TILT_RATE * (funnelMotion.y + FUNNEL_TILT_DELAY));
@@ -406,15 +363,21 @@ float MorphingCameraHeight(float sampleTime) {
     return lerp(7.0, 18.0, altitudePhase) * cameraVariations.y;
 }
 
-/// Positions a segment endpoint on the mesh rim or the next standalone circle after it.
+/// Positions a segment endpoint on a funnel cross-section, its terminal rim or the next circle beyond it.
 float3 FunnelCirclePoint(uint circle, uint segment, uint endpoint, out float visibility) {
     float elapsed = funnelMotion.x * funnelCycle.y;
     float plungeTime = funnelView.w - funnelMotion.y;
     float radius = FunnelCutRadius();
     float depth = FunnelRimDepth();
-    if (circle == 0) {
+    if (circle == 0 || circle >= 2) {
         float formationEnd = funnelCycle.w + FUNNEL_FORMATION_DURATION;
-        visibility = SurfaceEase((elapsed - formationEnd) / FUNNEL_RIM_FADE_DURATION) * FunnelBodyVisibility();
+        float duration = circle == 0 ? FUNNEL_RIM_FADE_DURATION : 3.0;
+        visibility = SurfaceEase((elapsed - formationEnd) / duration) * FunnelBodyVisibility();
+        if (circle >= 2) {
+            float sectionDepth = depth * float(circle - 1) / 4.0;
+            radius = sqrt(FUNNEL_DEPTH_FACTOR / sectionDepth - FUNNEL_CENTER_SQUARED);
+            depth = -FunnelDeformedHeight(radius);
+        }
     } else {
         visibility = smoothstep(funnelCapture.w - 0.04, funnelCapture.w + 0.02, plungeTime)
             * (1.0 - smoothstep(funnelCapture.w + 2.05, funnelCapture.w + 2.2, plungeTime));
@@ -469,9 +432,7 @@ float2 FunnelGridPoint(float2 index) {
     float3 camera = FunnelCamera(float3(nativeXZ.x, height, nativeXZ.y), velocity);
     float2 grid = 0.0;
     if (effect == 19) {
-        float2 anchor = FunnelGridAnchor();
-        grid = float2(FrozenGridCoordinate(anchor.x, camera.x, index.x),
-            FrozenGridCoordinate(anchor.y, camera.z, index.y));
+        grid = float2(InfiniteGridCoordinate(camera.x, index.x), InfiniteGridCoordinate(camera.z, index.y));
     } else {
         grid = float2(AnchoredFlightGridCoordinate(camera.x, index.x, 3.0),
             AnchoredFlightGridCoordinate(camera.z, index.y, 3.0));
@@ -512,11 +473,6 @@ float4 InfiniteSurfaceSample(float2 gridIndex, bool pointSample, bool circleSamp
     }
     float x = InfiniteGridCoordinate(camera.x, gridIndex.x);
     float z = InfiniteGridCoordinate(camera.z, gridIndex.y);
-    if (surfaceShape == 2) {
-        float2 anchor = FunnelGridAnchor();
-        x = FrozenGridCoordinate(anchor.x, camera.x, gridIndex.x);
-        z = FrozenGridCoordinate(anchor.y, camera.z, gridIndex.y);
-    }
     float3 world = float3(x, WaveHeight(x, z, cameraXZ), z);
     if (pointSample) {
         world = samplePoint;
@@ -549,7 +505,7 @@ float4 InfiniteSurfaceSample(float2 gridIndex, bool pointSample, bool circleSamp
     }
     float focalLength = 1.0 / tan(0.61);
     float aspect = resolution.x / resolution.y;
-    static const float nearPlane = 0.12;
+    static const float nearPlane = SURFACE_NEAR_PLANE;
     static const float farPlane = 160.0;
     float projectionFar = farPlane;
     float distantFade = smoothstep(100.0, farPlane, view.z);
@@ -665,7 +621,7 @@ float4 MorphingSurfaceSample(float2 gridIndex, bool pointSample, bool circleSamp
     }
     float focalLength = 1.0 / tan(0.61);
     float aspect = resolution.x / resolution.y;
-    static const float nearPlane = 0.12;
+    static const float nearPlane = SURFACE_NEAR_PLANE;
     static const float farPlane = 230.0;
     float projectionFar = farPlane;
     float distantFade = smoothstep(155.0, farPlane, view.z);
@@ -684,14 +640,112 @@ float4 MorphingSurfaceSample(float2 gridIndex, bool pointSample, bool circleSamp
         / (projectionFar - nearPlane) - nearPlane * projectionFar / (projectionFar - nearPlane), view.z);
 }
 
+/// Returns the native camera trajectory through the gravity-warped spatial grid.
+float3 SpaceFlightCamera() {
+    return float3(time * 4.8 + 12.0 * sin(time * 0.053), 4.0 * sin(time * 0.110) + 2.0 * sin(time * 0.033),
+        time * 3.6 + 10.0 * cos(time * 0.047));
+}
+
+/// Returns the derivative of the native gravity-flight camera trajectory.
+float3 SpaceFlightVelocity() {
+    return float3(4.8 + 0.636 * cos(time * 0.053), 0.440 * cos(time * 0.110) + 0.066 * cos(time * 0.033),
+        3.6 - 0.470 * sin(time * 0.047));
+}
+
+/// Anchors the cubic spatial lattice with constant five-unit spacing.
+float SpaceGridCoordinate(float cameraCoordinate, int index) {
+    static const float spacing = 5.0;
+    return (floor(cameraCoordinate / spacing) + index) * spacing;
+}
+
+/// Fades the recurring gravitational deformation in and out.
+float GravityActivity() {
+    float phase = frac(time * 0.025);
+    float arrival = smoothstep(0.10, 0.24, phase);
+    float departure = 1.0 - smoothstep(0.64, 0.82, phase);
+    return arrival * departure;
+}
+
+/// Displaces spatial-grid points toward the softened gravitational center.
+float3 ApplyGravityWarp(float3 world, float3 gravityCenter, float activity, out float influence) {
+    float3 towardCenter = gravityCenter - world;
+    float distanceToCenter = length(towardCenter);
+    float normalizedDistance = distanceToCenter / 18.0;
+    influence = activity * exp(-normalizedDistance * normalizedDistance);
+    float centerSoftening = 1.0 - exp(-distanceToCenter * 0.32);
+    return world + towardCenter / max(distanceToCenter, 0.001) * (12.0 * influence * centerSoftening);
+}
+
+/// Projects one gravity-warped spatial-grid endpoint with the native camera and fading.
+float4 GravityWarpedSpacePosition(uint segment, uint endpoint, out float fade, out float colorPhase) {
+    static const uint gridLines = 13;
+    static const uint segmentsPerLine = 32;
+    static const uint segmentsPerDirection = gridLines * gridLines * segmentsPerLine;
+    float3 camera = SpaceFlightCamera();
+    float3 travelDirection = normalize(SpaceFlightVelocity());
+    float3 pathRight = normalize(cross(float3(0.0, 1.0, 0.0), travelDirection));
+    float3 pathUp = normalize(cross(travelDirection, pathRight));
+    uint direction = segment / segmentsPerDirection;
+    uint part = segment % segmentsPerDirection;
+    uint fixedPair = part / segmentsPerLine;
+    uint localSegment = part % segmentsPerLine;
+    int firstFixedIndex = int(fixedPair / gridLines) - 6;
+    int secondFixedIndex = int(fixedPair % gridLines) - 6;
+    int varyingIndex = int(localSegment + endpoint) - 16;
+    float x;
+    float y;
+    float z;
+    if (direction == 0) {
+        x = SpaceGridCoordinate(camera.x, varyingIndex);
+        y = SpaceGridCoordinate(camera.y, firstFixedIndex);
+        z = SpaceGridCoordinate(camera.z, secondFixedIndex);
+    } else if (direction == 1) {
+        x = SpaceGridCoordinate(camera.x, firstFixedIndex);
+        y = SpaceGridCoordinate(camera.y, varyingIndex);
+        z = SpaceGridCoordinate(camera.z, secondFixedIndex);
+    } else {
+        x = SpaceGridCoordinate(camera.x, firstFixedIndex);
+        y = SpaceGridCoordinate(camera.y, secondFixedIndex);
+        z = SpaceGridCoordinate(camera.z, varyingIndex);
+    }
+    float3 world = float3(x, y, z);
+    float gravity = GravityActivity();
+    float3 gravityCenter = camera + travelDirection * (34.0 + 7.0 * sin(time * 0.071))
+        + pathRight * (12.0 * sin(time * 0.083 + 0.7)) + pathUp * (7.0 * cos(time * 0.061));
+    float gravityInfluence;
+    world = ApplyGravityWarp(world, gravityCenter, gravity, gravityInfluence);
+    float3 forward = normalize(travelDirection + pathRight * (0.22 * sin(time * 0.067))
+        + pathUp * (0.15 * sin(time * 0.091 + 0.8)));
+    float3 right = normalize(cross(float3(0.0, 1.0, 0.0), forward));
+    float3 cameraUp = normalize(cross(forward, right));
+    float roll = 0.24 * sin(time * 0.057);
+    float rollSine, rollCosine;
+    sincos(roll, rollSine, rollCosine);
+    float3 rolledRight = right * rollCosine + cameraUp * rollSine;
+    float3 rolledUp = cameraUp * rollCosine - right * rollSine;
+    float3 relative = world - camera;
+    float3 view = float3(dot(relative, rolledRight), dot(relative, rolledUp), dot(relative, forward));
+    view = TumblingView(view);
+    float focalLength = 1.0 / tan(0.66);
+    float aspect = resolution.x / resolution.y;
+    static const float nearPlane = 0.16;
+    static const float farPlane = 170.0;
+    float distantFade = smoothstep(105.0, farPlane, view.z);
+    float nearFade = smoothstep(0.4, 5.0, view.z);
+    fade = lerp(1.0, 0.16, distantFade) * nearFade;
+    colorPhase = saturate(0.28 + 0.34 * sin(time * 0.20 + x * 0.045 + y * 0.052 + z * 0.038) + 0.72 * gravityInfluence);
+    return float4(view.x * focalLength / aspect, view.y * focalLength, view.z * farPlane / (farPlane - nearPlane)
+        - nearPlane * farPlane / (farPlane - nearPlane), view.z);
+}
+
 /// Maps a wireframe segment endpoint to a wave-surface grid sample.
 float4 InfiniteSurfacePosition(uint segment, uint endpoint, out float fade, out float colorPhase) {
     fade = 1.0;
     colorPhase = 0.0;
-    uint direction = segment / (93 * 92);
-    uint part = segment % (93 * 92);
-    float fixedIndex = float(part / 92) - 46.0;
-    float varyingIndex = float(part % 92 + endpoint) - 46.0;
+    uint direction = segment / ((INFINITE_GRID_CELLS + 1) * INFINITE_GRID_CELLS);
+    uint part = segment % ((INFINITE_GRID_CELLS + 1) * INFINITE_GRID_CELLS);
+    float fixedIndex = float(part / INFINITE_GRID_CELLS) - float(INFINITE_GRID_CELLS) * 0.5;
+    float varyingIndex = float(part % INFINITE_GRID_CELLS + endpoint) - float(INFINITE_GRID_CELLS) * 0.5;
     float2 index = direction == 0 ? float2(fixedIndex, varyingIndex) : float2(varyingIndex, fixedIndex);
     bool visible = true;
     float3 worldPoint = 0.0;
@@ -762,13 +816,15 @@ float3 LitMaterial(float3 baseColor, float3 normal, float3 viewPosition, float m
     return saturate(baseColor * materialBrightness * illumination + specular * 0.48);
 }
 
-/// Original material colours of the two surface flights.
+/// Native material colours of the flight effects.
 float3 FlightMaterialColor(float phase, uint patch, float chamber) {
     float3 color = float3(0.0, 0.0, 0.0);
     if (effect == 19) {
         color = lerp(float3(0.10, 0.72, 1.0), float3(0.72, 0.20, 1.0), phase);
-    } else {
+    } else if (effect == 20) {
         color = lerp(float3(0.18, 1.0, 0.63), float3(1.0, 0.31, 0.72), phase);
+    } else {
+        color = lerp(float3(0.10, 0.68, 1.0), float3(1.0, 0.38, 0.12), phase);
     }
     return color;
 }
@@ -782,15 +838,17 @@ VSOutput VSMain(uint vertexId : SV_VertexID) {
     VSOutput output;
     if (effect == 19) {
         output.position = InfiniteSurfacePosition(segment, endpoint, fade, colorPhase);
-    } else {
+    } else if (effect == 20) {
         output.position = MorphingSurfaceFlightPosition(segment, endpoint, fade, colorPhase);
+    } else {
+        output.position = GravityWarpedSpacePosition(segment, endpoint, fade, colorPhase);
     }
     float3 color = FlightMaterialColor(colorPhase, 0, 0.0);
     output.color = float4(color * fade, 1.0);
     return output;
 }
 
-/// Projects the finite mesh rim and the separate circles beyond it.
+/// Projects the funnel cross-sections, finite mesh rim and the separate circles beyond it.
 VSOutput FunnelCircleVS(uint vertexId : SV_VertexID) {
     uint circle = vertexId / (FUNNEL_CIRCLE_SEGMENTS * 2);
     uint segment = vertexId / 2 % FUNNEL_CIRCLE_SEGMENTS;
@@ -819,8 +877,7 @@ float4 PSMain(VSOutput input) : SV_TARGET {
     return input.color;
 }
 
-/// Samples the filled surface and reconstructs view coordinates before perspective division for hardware
-/// clipping.
+/// Samples the filled surface and reconstructs view coordinates before perspective division for hardware clipping.
 float4 SolidFlightSample(float2 uv, uint patch, out float3 view, out float4 material, out float3 world) {
     float fade = 1.0;
     float phase = 0.0;
@@ -828,16 +885,56 @@ float4 SolidFlightSample(float2 uv, uint patch, out float3 view, out float4 mate
     float4 position = 0.0;
     float halfFov = 0.61;
     if (effect == 19) {
-        position = InfiniteSurfaceSample(uv * 92.0 - 46.0, false, false, float3(0.0, 0.0, 0.0), fade, phase, world);
+        float2 grid = uv * float(INFINITE_GRID_CELLS) - float(INFINITE_GRID_CELLS) * 0.5;
+        position = InfiniteSurfaceSample(grid, false, false, float3(0.0, 0.0, 0.0), fade, phase, world);
     } else {
         position = MorphingSurfaceSample(uv * 112.0 - 56.0, false, false, float3(0.0, 0.0, 0.0), fade, phase, world);
+    }
+    if (surfaceShape == 2) {
+        float2 local = world.xz - funnelMotion.zw;
+        float radius = length(local);
+        float cutRadius = FunnelCutRadius();
+        if (radius < cutRadius) {
+            float2 direction = radius > 0.0 ? local / radius : float2(1.0, 0.0);
+            world = FunnelSurface(funnelMotion.zw + direction * cutRadius);
+            float unusedPhase;
+            float3 unusedPoint;
+            if (effect == 19) {
+                position = InfiniteSurfaceSample(float2(0.0, 0.0), true, false, world, fade, unusedPhase, unusedPoint);
+            } else {
+                position = MorphingSurfaceSample(float2(0.0, 0.0), true, false, world, fade, unusedPhase, unusedPoint);
+            }
+        }
     }
     view = float3(position.x * (resolution.x / resolution.y) * tan(halfFov), position.y * tan(halfFov), position.w);
     material = float4(FlightMaterialColor(phase, patch, chamber), fade);
     return position;
 }
 
-/// Computes filled-grid normals with finite differences large enough to remain stable during long flights.
+/// Transforms the analytic funnel-wall normal without sampling the flat area discarded inside its rim.
+float3 FunnelSurfaceNormal(float3 world, float3 viewPosition) {
+    float2 local = world.xz - funnelMotion.zw;
+    float formation = FunnelFormation();
+    float strength = formation * (formation * FUNNEL_DEPTH_FACTOR + (1.0 - formation) * FunnelRimDepth()
+        * FUNNEL_CENTER_SQUARED);
+    float denominator = dot(local, local) + FUNNEL_CENTER_SQUARED;
+    float2 gradient = 2.0 * strength * local / (denominator * denominator);
+    float3 normal = normalize(float3(gradient.x, -1.0, gradient.y));
+    float fade, colorPhase;
+    float3 unusedPoint;
+    float4 position;
+    if (effect == 19) {
+        position = InfiniteSurfaceSample(float2(0.0, 0.0), true, false, world + normal, fade, colorPhase, unusedPoint);
+    } else {
+        position = MorphingSurfaceSample(float2(0.0, 0.0), true, false, world + normal, fade, colorPhase, unusedPoint);
+    }
+    float3 normalView = float3(position.x * (resolution.x / resolution.y) * tan(0.61),
+        position.y * tan(0.61), position.w);
+    return normalize(normalView - viewPosition);
+}
+
+/// Uses a common funnel depth projection while retaining its cap and original distance clipping.
+/// Computes analytic funnel-wall normals and stable finite differences for the other surface modes.
 SolidSurfaceOutput SolidSurfaceVS(uint vertexId : SV_VertexID) {
     uint verticesPerPatch = (surfaceColumns + 1) * (surfaceRows + 1);
     uint patch = vertexId / verticesPerPatch;
@@ -847,25 +944,29 @@ SolidSurfaceOutput SolidSurfaceVS(uint vertexId : SV_VertexID) {
     SolidSurfaceOutput output;
     float3 world;
     output.position = SolidFlightSample(uv, patch, output.viewPosition, output.material, world);
-    output.funnelLocal = float2(0.0, 0.0);
+    output.clipDistance = float2(1.0, 1.0);
     if (surfaceShape == 2) {
-        output.funnelLocal = world.xz - funnelMotion.zw;
+        float formation = FunnelFormation();
+        output.clipDistance.x = formation > 0.0 ? world.y + formation * (FunnelRimDepth() - 0.0001) : 1.0;
+        output.clipDistance.y = output.position.w - output.position.z;
+        output.position.z = output.position.w * FUNNEL_FAR_PLANE / (FUNNEL_FAR_PLANE - SURFACE_NEAR_PLANE)
+            - SURFACE_NEAR_PLANE * FUNNEL_FAR_PLANE / (FUNNEL_FAR_PLANE - SURFACE_NEAR_PLANE);
+        output.normal = FunnelSurfaceNormal(world, output.viewPosition);
+    } else {
+        const float epsilon = max(0.0002, abs(time) * 0.00000001);
+        float3 uView, vView;
+        float3 unusedPoint;
+        float4 unusedMaterial;
+        SolidFlightSample(uv + float2(epsilon, 0), patch, uView, unusedMaterial, unusedPoint);
+        SolidFlightSample(uv + float2(0, epsilon), patch, vView, unusedMaterial, unusedPoint);
+        output.normal = normalize(cross(uView - output.viewPosition, vView - output.viewPosition));
     }
-    const float epsilon = max(0.0002, abs(time) * 0.00000001);
-    float3 uView, vView;
-    float3 unusedPoint;
-    float4 unusedMaterial;
-    SolidFlightSample(uv + float2(epsilon, 0), patch, uView, unusedMaterial, unusedPoint);
-    SolidFlightSample(uv + float2(0, epsilon), patch, vView, unusedMaterial, unusedPoint);
-    output.normal = normalize(cross(uView - output.viewPosition, vView - output.viewPosition));
     return output;
 }
 
 /// Uses the rasterized face for two-sided lighting; smooth normals must not flip inside a triangle.
 float4 SolidSurfacePS(SolidSurfaceOutput input, bool frontFace : SV_IsFrontFace) : SV_TARGET {
     if (surfaceShape == 2) {
-        float radius = FunnelCutRadius();
-        clip(dot(input.funnelLocal, input.funnelLocal) - radius * radius);
         clip(FunnelBodyVisibility() - 0.00001);
     }
     float3 normal = normalize(input.normal);

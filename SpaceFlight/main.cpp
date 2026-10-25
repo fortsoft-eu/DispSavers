@@ -96,8 +96,8 @@ constexpr wchar_t SCREEN_SAVER_ACTIVE_VALUE_NAME[] = L"ScreenSaveActive";
 
 /// Settings-window layout and animation constants
 constexpr int SETTINGS_WIDTH = 945;
-constexpr int SCREEN_SAVER_SETTINGS_HEIGHT = 453;
-constexpr int APPLICATION_SETTINGS_HEIGHT = 473;
+constexpr int SCREEN_SAVER_SETTINGS_HEIGHT = 473;
+constexpr int APPLICATION_SETTINGS_HEIGHT = 493;
 constexpr int PUSH_BUTTON_HEIGHT = 28;
 constexpr int ABOUT_ICON_SIZE = 32;
 constexpr int ABOUT_LARGE_ICON_SIZE = 48;
@@ -238,7 +238,7 @@ constexpr int ID_ALL_ANIMATIONS = ID_ALL_EFFECTS;
 constexpr int ID_NO_ANIMATIONS = ID_NO_EFFECTS;
 constexpr AnimationProperty ANIMATION_ENABLED_PROPERTY = AnimationProperty::EnabledEffects;
 constexpr std::uint32_t ALL_ANIMATION_MASK = ALL_EFFECT_MASK;
-constexpr int ANIMATION_RADIO_IDS[]{ ID_EFFECT_FIRST, ID_EFFECT_FIRST + 1 };
+constexpr int ANIMATION_RADIO_IDS[]{ ID_EFFECT_FIRST, ID_EFFECT_FIRST + 1, ID_EFFECT_FIRST + 2 };
 constexpr int SURFACE_SHAPE_RADIO_IDS[]{ ID_SURFACE_PLANE, ID_SURFACE_WAVES, ID_SURFACE_FUNNEL };
 constexpr AnimationRadioGroup ANIMATION_RADIO_GROUPS[]{
     { AnimationProperty::Effect, ANIMATION_RADIO_IDS },
@@ -2032,29 +2032,31 @@ static void UpdateMonitorAnimationControls(HWND window, SettingsWindowData& data
     for (const AnimationRadioGroup& group : ANIMATION_RADIO_GROUPS) {
         for (std::size_t index = 0; index < group.ids.size(); index++) {
             HWND radio = GetDlgItem(window, group.ids[index]);
-            const bool checked = selection.available
+            const bool available = selection.IsAvailable(group.property);
+            const bool checked = available
                 && !selection.IsMixed(group.property)
                 && selection.values.Value(group.property) == index;
             states.push_back(SettingsControlState{
                 radio,
-                selection.available,
+                available,
                 checked ? BST_CHECKED : BST_UNCHECKED,
                 std::nullopt,
                 std::nullopt,
-                selection.available && selection.IsMixed(group.property)
+                available && selection.IsMixed(group.property)
             });
         }
     }
     for (const AnimationControl& control : ANIMATION_CHECKBOXES) {
         HWND checkbox = GetDlgItem(window, control.id);
         if (checkbox) {
-            const bool enabled = selection.available
+            const bool available = selection.IsAvailable(control.property);
+            const bool enabled = available
                 && (control.dependency == AnimationProperty::Count
                     || selection.IsMixed(control.dependency)
                     || selection.values.Value(control.dependency) != 0);
-            const UINT state = selection.available && selection.IsMixed(control.property)
+            const UINT state = available && selection.IsMixed(control.property)
                 ? BST_INDETERMINATE
-                : selection.available && selection.values.Value(control.property) != 0 ? BST_CHECKED : BST_UNCHECKED;
+                : available && selection.values.Value(control.property) != 0 ? BST_CHECKED : BST_UNCHECKED;
             states.push_back(SettingsControlState{
                 checkbox,
                 enabled,
@@ -2375,23 +2377,26 @@ static void RenderSurfaceLoop(Application* application, RenderSurface* surface) 
         const MonitorAnimation animation = SurfaceAnimationSettings(*surface);
         const std::uint32_t effect = 1U << static_cast<unsigned>(animation.effect);
         const std::uint32_t enabled = animation.enabledEffects & effect;
-        surface->simulation.SetSurfaceShape(animation.surfaceShape, animation.effect);
+        const bool surfaceEffect = animation.effect != EffectKind::GravityWarpedSpaceFlight;
+        const bool cameraTumbling = animation.cameraTumbling;
+        surface->simulation.SetSurfaceShape(surfaceEffect ? animation.surfaceShape : SurfaceShape::Plane,
+            animation.effect);
         if (!application->paused.load(std::memory_order_relaxed)) {
             const double simulationSeconds =
                 frameSeconds * (application->mode == RunMode::Preview ? SYSTEM_PREVIEW_SPEED_MULTIPLIER : 1.0);
             surface->simulation.Step(simulationSeconds, animation.objectSpeedPercent / 100.0f, enabled,
-                animation.cameraTumbling, animation.cameraReversals);
+                cameraTumbling, animation.cameraReversals);
         }
         SceneState scene = surface->simulation.State();
-        if (!animation.cameraTumbling) {
+        if (!cameraTumbling) {
             scene.cameraRotation = { 0.0f, 0.0f, 0.0f, 1.0f };
         }
         scene.enabledEffects = enabled;
-        scene.mainLight = animation.mainLight;
-        scene.fillLight = animation.fillLight;
-        scene.ambientLight = animation.ambientLight;
-        scene.rimLight = animation.rimLight;
-        scene.infiniteSurfaceFilled = animation.textured;
+        scene.mainLight = surfaceEffect && animation.mainLight;
+        scene.fillLight = surfaceEffect && animation.fillLight;
+        scene.ambientLight = surfaceEffect && animation.ambientLight;
+        scene.rimLight = surfaceEffect && animation.rimLight;
+        scene.infiniteSurfaceFilled = surfaceEffect && animation.textured;
         scene.morphingSurfaceFilled = scene.infiniteSurfaceFilled;
         DrawSurface(*surface, scene, inspect);
         CompleteSurfaceFrame(*application, *surface);

@@ -445,13 +445,8 @@ void Simulation::ResetFunnel(bool entering) {
     state.funnelCapture = std::array<float, 4>{};
     state.funnelView = std::array<float, 4>{};
     state.funnelPath = std::array<float, 4>{ 0.0f, 0.0f, 0.0f, 3.0f };
-    state.funnelGrid = std::array<float, 4>{
-        state.motion.camera[0],
-        state.motion.pathPhases[0],
-        state.motion.pathPhases[1],
-        0.0f
-    };
     state.funnelHeading = 0.0f;
+    state.funnelAngularCorrection = 0.0f;
     state.funnelEntry = entering;
     funnelCaptured = false;
 }
@@ -506,16 +501,19 @@ void Simulation::PrepareFunnelCapture() {
     const double velocityZ = capturedVelocity[2];
     const double horizontalSpeed = std::hypot(velocityX, velocityZ);
     const double factor = sampledRadius / (horizontalSpeed * std::sqrt(1.0 + sampledCoefficient * sampledCoefficient));
-    state.funnelMotion[2] =
-        static_cast<float>(state.funnelCapture[0] + factor * (velocityX - direction * sampledCoefficient * velocityZ));
-    state.funnelMotion[3] =
-        static_cast<float>(state.funnelCapture[2] + factor * (velocityZ + direction * sampledCoefficient * velocityX));
+    const double spacing = funnelEffect == EffectKind::InfiniteSurface ? 1.5 : 3.0;
+    const double centerX = state.funnelCapture[0] + factor * (velocityX - direction * sampledCoefficient * velocityZ);
+    const double centerZ = state.funnelCapture[2] + factor * (velocityZ + direction * sampledCoefficient * velocityX);
+    state.funnelMotion[2] = static_cast<float>(std::round(centerX / spacing) * spacing);
+    state.funnelMotion[3] = static_cast<float>(std::round(centerZ / spacing) * spacing);
     state.funnelCycle[2] = static_cast<float>(direction);
     const double offsetX = static_cast<double>(state.funnelCapture[0]) - state.funnelMotion[2];
     const double offsetZ = static_cast<double>(state.funnelCapture[2]) - state.funnelMotion[3];
     const double radius = std::hypot(offsetX, offsetZ);
     const double coefficient = 18.84955592153876 / std::log(radius / 11.25);
-    const double radialSpeed = horizontalSpeed / std::sqrt(1.0 + coefficient * coefficient);
+    const double radialSpeed = -(velocityX * offsetX + velocityZ * offsetZ) / radius;
+    const double angularSpeed = direction * (offsetX * velocityZ - offsetZ * velocityX) / (radius * radius);
+    state.funnelAngularCorrection = static_cast<float>(angularSpeed - coefficient * radialSpeed / radius);
     constexpr double relaxation = 0.75;
     const double duration = state.funnelMotion[1];
     const double distance = 0.5 * duration * duration - relaxation * duration
@@ -563,7 +561,7 @@ void Simulation::UpdateFunnel(double seconds, SurfaceShape shape) {
             ResetFunnel(false);
         }
         funnelElapsed += seconds;
-        while(true) {
+        while (true) {
             PrepareFunnelCapture();
             if (funnelElapsed < funnelDuration) {
                 break;

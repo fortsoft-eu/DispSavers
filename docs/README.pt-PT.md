@@ -60,6 +60,6 @@ O FlightCorridor oferece Voo entre quatro superfícies deformáveis e Voo atrav�
 
 ## SpaceFlight
 
-O SpaceFlight oferece «Superfície ondulante infinita» e «Voo de longa distância — superfície deformável». Atribua um único voo a cada monitor: selecione a respetiva linha e o botão de opção correspondente.
+SpaceFlight: Superfície ondulante infinita; Voo de longa distância — superfície deformável; Voo pelo espaço deformado pela gravidade. Atribua um único voo a cada monitor: selecione a respetiva linha e o botão de opção correspondente.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.pt-PT.md)

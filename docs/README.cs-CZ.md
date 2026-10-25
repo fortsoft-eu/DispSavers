@@ -67,6 +67,6 @@ FlightCorridor nabízí Průlet mezi čtyřmi proměnlivými plochami a Průlet 
 
 ## SpaceFlight
 
-SpaceFlight nabízí „Nekonečná vlnící se plocha“ a „Dálkový let — proměnlivá plocha“. Každému monitoru přiřadíte právě jeden průlet: označte jeho řádek v seznamu a zvolte příslušný přepínač.
+SpaceFlight: Nekonečná vlnící se plocha; Dálkový let — proměnlivá plocha; Průlet gravitačně deformovaným prostorem. Každému monitoru přiřadíte právě jeden průlet: označte jeho řádek v seznamu a zvolte příslušný přepínač.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.cs-CZ.md)

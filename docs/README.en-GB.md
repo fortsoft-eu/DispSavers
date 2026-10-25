@@ -60,6 +60,6 @@ FlightCorridor offers Flight between four morphing surfaces and Flight through a
 
 ## SpaceFlight
 
-SpaceFlight offers “Infinite undulating surface” and “Long-distance flight — morphing surface”. Assign exactly one flight to each display: select its row in the list and choose the corresponding radio button.
+SpaceFlight: Infinite undulating surface; Long-distance flight — morphing surface; Flight through gravitationally warped space. Assign exactly one flight to each display: select its row in the list and choose the corresponding radio button.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.en-GB.md)

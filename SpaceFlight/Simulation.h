@@ -50,10 +50,10 @@ struct SceneState {
     std::array<float, 4> funnelMotion{};
     std::array<float, 4> funnelCycle{};
     std::array<float, 4> funnelCapture{};
-    std::array<float, 4> funnelGrid{};
     std::array<float, 4> funnelView{};
     std::array<float, 4> funnelPath{};
     float funnelHeading = 0.0f;
+    float funnelAngularCorrection = 0.0f;
     bool funnelEntry = false;
     bool mainLight = true;
     bool fillLight = false;

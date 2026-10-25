@@ -60,6 +60,6 @@ FlightCorridor tilbyr Flytur mellom fire formendrende flater og Flytur gjennom e
 
 ## SpaceFlight
 
-SpaceFlight tilbyr «Uendelig bølgende flate» og «Langdistanseflytur — formendrende flate». Tilordne nøyaktig én flytur til hver skjerm: velg raden og den tilsvarende alternativknappen.
+SpaceFlight: Uendelig bølgende flate; Langdistanseflytur — formendrende flate; Flytur gjennom gravitasjonskrummet rom. Tilordne nøyaktig én flytur til hver skjerm: velg raden og den tilsvarende alternativknappen.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.nb-NO.md)

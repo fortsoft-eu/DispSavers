@@ -60,6 +60,6 @@ FlightCorridor erbjuder Flygtur mellan fyra formföränderliga ytor och Flygtur 
 
 ## SpaceFlight
 
-SpaceFlight erbjuder ”Oändlig böljande yta” och ”Långdistansflygtur — formföränderlig yta”. Tilldela exakt en flygtur till varje bildskärm: välj dess rad och motsvarande alternativknapp.
+SpaceFlight: Oändlig böljande yta; Långdistansflygtur — formföränderlig yta; Flygtur genom gravitationellt krökt rum. Tilldela exakt en flygtur till varje bildskärm: välj dess rad och motsvarande alternativknapp.
 
 `Release\SpaceFlight.exe` · `Release\SpaceFlight.scr` · [SpaceFlight](../SpaceFlight/README.sv-SE.md)
