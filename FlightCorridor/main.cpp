@@ -4096,12 +4096,6 @@ static INT_PTR CALLBACK InformationDialogProc(HWND window, UINT message, WPARAM 
         SetWindowLongPtrW(window, DWLP_MSGRESULT, 0);
         return TRUE;
     }
-    if (message == WM_GETMINMAXINFO && window == helpWindow) {
-        SIZE size = InformationDialogUnits(window, 180, 110);
-        MINMAXINFO* information = reinterpret_cast<MINMAXINFO*>(lParam);
-        information->ptMinTrackSize = POINT{ size.cx, size.cy };
-        return TRUE;
-    }
     if (message == WM_DISPLAYCHANGE && window == aboutWindow) {
         LayoutInformationWindow(window);
         return TRUE;
