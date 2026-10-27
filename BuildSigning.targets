@@ -22,16 +22,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Last modified for version 1.1.0.0
+Last modified for version 1.2.2.1
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildThisFileDirectory)FlyingSolids\FlyingSolids.vcxproj.user" Condition="'$(TargetExt)' == '.scr' and Exists('$(MSBuildThisFileDirectory)FlyingSolids\FlyingSolids.vcxproj.user')"/>
+	<Import Project="$(MSBuildProjectDirectory)\$(TargetName).vcxproj.user" Condition="'$(TargetExt)' == '.scr' and Exists('$(MSBuildProjectDirectory)\$(TargetName).vcxproj.user')"/>
 	<PropertyGroup>
 		<BuildSigningEnabled Condition="'$(BuildSigningEnabled)' == ''">true</BuildSigningEnabled>
+		<BuildSignerName Condition="'$(BuildSignerName)' == ''">$([MSBuild]::GetRegistryValue('HKEY_CURRENT_USER\Environment', 'BUILD_SIGNER_NAME', ''))</BuildSignerName>
+		<BuildCertificateThumbprint Condition="'$(BuildCertificateThumbprint)' == ''">$([MSBuild]::GetRegistryValue('HKEY_CURRENT_USER\Environment', 'BUILD_CERTIFICATE_THUMBPRINT', ''))</BuildCertificateThumbprint>
+		<BuildSignToolPath Condition="'$(BuildSignToolPath)' == ''">$([MSBuild]::GetRegistryValue('HKEY_CURRENT_USER\Environment', 'BUILD_SIGNTOOL_PATH', ''))</BuildSignToolPath>
+		<BuildTimestampServer Condition="'$(BuildTimestampServer)' == ''">$([MSBuild]::GetRegistryValue('HKEY_CURRENT_USER\Environment', 'BUILD_TIMESTAMP_SERVER', ''))</BuildTimestampServer>
 		<_BuildSigningScript>$(MSBuildThisFileDirectory)BuildSigning.ps1</_BuildSigningScript>
 		<_BuildSigningTargets>$(MSBuildThisFileFullPath)</_BuildSigningTargets>
 		<_BuildSigningSchema>$(MSBuildThisFileDirectory)BuildSigning.xml</_BuildSigningSchema>
-		<_BuildSigningUserSettings>$(MSBuildThisFileDirectory)FlyingSolids\FlyingSolids.vcxproj.user</_BuildSigningUserSettings>
+		<_BuildSigningUserSettings>$(MSBuildProjectDirectory)\$(TargetName).vcxproj.user</_BuildSigningUserSettings>
 		<_BuildSigningEnvironment>BUILD_SIGNER_NAME=$(BuildSignerName);BUILD_CERTIFICATE_THUMBPRINT=$(BuildCertificateThumbprint);BUILD_SIGNTOOL_PATH=$(BuildSignToolPath);BUILD_TIMESTAMP_SERVER=$(BuildTimestampServer)</_BuildSigningEnvironment>
 	</PropertyGroup>
 	<ItemGroup Condition="'$(TargetExt)' == '.exe'">
@@ -45,7 +49,7 @@ Last modified for version 1.1.0.0
 		</ResourceCompile>
 	</ItemDefinitionGroup>
 	<Target Name="VerifyEmbeddedScreenSaverSignature" BeforeTargets="ResourceCompile" Condition="'$(DesignTimeBuild)' != 'true' and '$(BuildSigningEnabled)' == 'true' and '$(TargetExt)' == '.exe'">
-		<Exec Command="&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(_BuildSigningScript)&quot; -Path &quot;$(OutDir)FlyingSolids.scr&quot; -VerifyOnly" EnvironmentVariables="$(_BuildSigningEnvironment)"/>
+		<Exec Command="&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(_BuildSigningScript)&quot; -Path &quot;$(OutDir)$(TargetName).scr&quot; -VerifyOnly" EnvironmentVariables="$(_BuildSigningEnvironment)"/>
 	</Target>
 	<Target Name="SignBuiltBinary" BeforeTargets="PostBuildEvent" Condition="'$(DesignTimeBuild)' != 'true'">
 		<Exec Command="&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(_BuildSigningScript)&quot; -Path &quot;$(TargetPath)&quot;" EnvironmentVariables="$(_BuildSigningEnvironment)" Condition="'$(BuildSigningEnabled)' == 'true'"/>

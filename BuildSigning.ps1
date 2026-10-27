@@ -1,4 +1,6 @@
 ﻿<#
+This is open-source software licensed under the terms of the MIT License.
+
 Copyright (c) 2026 Petr Červinka - FortSoft <cervinka@fortsoft.eu>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Last modified for version 1.1.0.0
+Last modified for version 1.2.2.1
 #>
 
 [CmdletBinding()]
@@ -45,7 +47,7 @@ function Find-SignerCertificate {
     )
 
     if (-not $Name -and -not $Thumbprint) {
-        throw "Select a signer name or certificate thumbprint in FlyingSolids Project Properties > Signing."
+        throw "Select a signer name or certificate thumbprint in Project Properties > Signing."
     }
 
     $now = Get-Date
@@ -60,7 +62,8 @@ function Find-SignerCertificate {
             $_.NotBefore -le $now -and
             $_.NotAfter -gt $now -and
             (-not $normalizedThumbprint -or $_.Thumbprint -ieq $normalizedThumbprint) -and
-            (-not $Name -or $_.GetNameInfo([Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false) -ieq $Name)
+            (-not $Name -or
+                $_.GetNameInfo([Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false) -ieq $Name)
         } |
         Sort-Object NotAfter -Descending)
 
@@ -161,7 +164,7 @@ if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
 }
 
 if ([string]::IsNullOrWhiteSpace($TimestampServer)) {
-    throw "Set the RFC 3161 timestamp server URL in FlyingSolids Project Properties > Signing > Timestamp server."
+    throw "Set the RFC 3161 timestamp server URL in Project Properties > Signing > Timestamp server."
 }
 
 $certificate = Find-SignerCertificate -Name $SignerName -Thumbprint $CertificateThumbprint
@@ -173,7 +176,8 @@ if ($signature.Status -eq "Valid" -and
         $null -ne $signature.TimeStamperCertificate) {
     Confirm-BinarySignature -Path $Path -ToolPath $resolvedSignTool
 } elseif ($VerifyOnly) {
-    throw "The SCR must have a valid, timestamped signature from the configured signer before it can be embedded in EXE: $Path"
+    throw "The SCR must have a valid, timestamped signature from the configured signer " +
+        "before it can be embedded in EXE: $Path"
 } else {
     Sign-Binary -Path $Path -Certificate $certificate -ToolPath $resolvedSignTool -TimestampUrl $TimestampServer
 }
