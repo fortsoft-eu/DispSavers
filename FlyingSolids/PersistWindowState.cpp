@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.1
  */
 
 #define NOMINMAX
@@ -84,7 +84,8 @@ static BOOL CALLBACK CollectMonitor(HMONITOR monitor, HDC, RECT*, LPARAM paramet
         return TRUE;
     }
     SIZE_T bytes = static_cast<SIZE_T>(collection->count + 1) * sizeof(MonitorWorkArea);
-    void* memory = collection->areas ? HeapReAlloc(GetProcessHeap(), 0, collection->areas, bytes)
+    void* memory = collection->areas
+        ? HeapReAlloc(GetProcessHeap(), 0, collection->areas, bytes)
         : HeapAlloc(GetProcessHeap(), 0, bytes);
     if (!memory) {
         collection->error = ERROR_NOT_ENOUGH_MEMORY;
@@ -138,9 +139,11 @@ static UINT NearestMonitorWorkArea(const RECT& bounds, const MonitorWorkArea* ar
         IntersectRect(&intersection, &bounds, &monitor);
         LONGLONG area = (static_cast<LONGLONG>(intersection.right) - intersection.left)
             * (static_cast<LONGLONG>(intersection.bottom) - intersection.top);
-        LONG dx = bounds.right < monitor.left ? monitor.left - bounds.right
+        LONG dx = bounds.right < monitor.left
+            ? monitor.left - bounds.right
             : monitor.right < bounds.left ? bounds.left - monitor.right : 0;
-        LONG dy = bounds.bottom < monitor.top ? monitor.top - bounds.bottom
+        LONG dy = bounds.bottom < monitor.top
+            ? monitor.top - bounds.bottom
             : monitor.bottom < bounds.top ? bounds.top - monitor.bottom : 0;
         LONGLONG distance = Distance(dx, dy);
         if (area > greatest || area == greatest && distance < closest) {
@@ -238,9 +241,11 @@ static bool FitWindowToWorkAreas(RECT* bounds, const MonitorWorkArea* areas, UIN
                                 || !RegionContains(available, rectangle, outside, space)) {
                             continue;
                         }
-                        LONG candidateWidth = resizeWidth && width > space.right - space.left ? space.right - space.left
+                        LONG candidateWidth = resizeWidth && width > space.right - space.left
+                            ? space.right - space.left
                             : width;
-                        LONG candidateHeight = resizeHeight && height > space.bottom - space.top ? space.bottom - space.top
+                        LONG candidateHeight = resizeHeight && height > space.bottom - space.top
+                            ? space.bottom - space.top
                             : height;
                         if (candidateWidth < minimum.cx || candidateHeight < minimum.cy) {
                             continue;
@@ -445,7 +450,7 @@ void PersistWindowState::InitializeRegistryPath() {
     VersionResourceTranslation* translations = nullptr;
     UINT translationBytes = 0;
     if (GetFileVersionInfoW(module, 0, bytes, information) && VerQueryValueW(information, L"\\VarFileInfo\\Translation",
-            reinterpret_cast<void**>(&translations), &translationBytes)) {
+        reinterpret_cast<void**>(&translations), &translationBytes)) {
         for (UINT index = 0; index < translationBytes / sizeof(*translations); index++) {
             wchar_t query[64];
             wchar_t* company = nullptr;
@@ -455,13 +460,15 @@ void PersistWindowState::InitializeRegistryPath() {
             wsprintfW(query, L"\\StringFileInfo\\%04X%04X\\CompanyName",
                 translations[index].language, translations[index].codePage);
             if (!VerQueryValueW(information, query, reinterpret_cast<void**>(&company), &companyLength)
-                    || companyLength <= 1 || !company[0]) {
+                    || companyLength <= 1
+                    || !company[0]) {
                 continue;
             }
             wsprintfW(query, L"\\StringFileInfo\\%04X%04X\\ProductName",
                 translations[index].language, translations[index].codePage);
             if (!VerQueryValueW(information, query, reinterpret_cast<void**>(&product), &productLength)
-                    || productLength <= 1 || !product[0]) {
+                    || productLength <= 1
+                    || !product[0]) {
                 continue;
             }
             SIZE_T characters = static_cast<SIZE_T>(companyLength) + productLength + ARRAYSIZE(L"Software\\") - 1;
@@ -1033,8 +1040,13 @@ bool PersistWindowState::Attach(HWND target, const char* formIdentity) {
     bool restoreX = !disableSavePosition && !alreadyRunning && state.x != CW_USEDEFAULT;
     bool restoreY = !disableSavePosition && !alreadyRunning && state.y != CW_USEDEFAULT;
     bool defaultPosition = useWindowsDefaultLocation && (!restoreX || !restoreY);
-    bool defaultWidth = useWindowsDefaultSize && style & WS_THICKFRAME && !fixWidth && (!resizeWidth || state.width <= 0);
-    bool defaultHeight = useWindowsDefaultSize && style & WS_THICKFRAME && !fixHeight
+    bool defaultWidth = useWindowsDefaultSize
+        && style & WS_THICKFRAME
+        && !fixWidth
+        && (!resizeWidth || state.width <= 0);
+    bool defaultHeight = useWindowsDefaultSize
+        && style & WS_THICKFRAME
+        && !fixHeight
         && (!resizeHeight || state.height <= 0);
     bool defaultSize = defaultWidth || defaultHeight;
     if (defaultPosition || defaultSize) {
@@ -1108,7 +1120,8 @@ bool PersistWindowState::Attach(HWND target, const char* formIdentity) {
         positioned = SetWindowPos(window, after, placed.left, placed.top,
             placed.right - placed.left, placed.bottom - placed.top, flags) != FALSE;
     }
-    bool registered = positioned && SetPropW(window, placementProperty, this)
+    bool registered = positioned
+        && SetPropW(window, placementProperty, this)
         && SetPropA(window, instanceProperty, window);
     if (registered) {
         SetLastError(ERROR_SUCCESS);

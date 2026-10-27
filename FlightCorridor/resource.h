@@ -23,6 +23,9 @@
 #define ID_RECORD_RATE_LABEL            1706
 #define ID_RECORD_NOTE                  1707
 
+#define DIALOG_BUTTON_WIDTH_DLU                 43
+#define DIALOG_BUTTON_HEIGHT_DLU                12
+
 #define ABOUT_LICENSE_WIDTH_96DPI      508
 #define ABOUT_LICENSE_HEIGHT_96DPI     267
 

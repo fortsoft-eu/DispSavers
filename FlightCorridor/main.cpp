@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.2.0
+ * Last modified for version 1.2.2.1
  */
 
 #define NOMINMAX
@@ -46,6 +46,7 @@
 #include <RestartManager.h>
 #include <shlobj.h>
 #include <shellapi.h>
+#include <usp10.h>
 #include <uxtheme.h>
 #include <vssym32.h>
 #include <winver.h>
@@ -375,7 +376,7 @@ struct SettingsWindowData {
     bool appMode = false;
     bool screenSaverSettings = false;
     bool previewActive = false;
-    AppLanguage language = AppLanguage::EnglishUs;
+    AppLanguage language = LANG_EN_US;
     bool updating = false;
 
     /// Virtual content dimensions used by the scrollable layout
@@ -387,19 +388,24 @@ struct SettingsWindowData {
 struct RecordingWindowData {
     AppSettings* settings = nullptr;
     HWND owner = nullptr;
-    AppLanguage language = AppLanguage::EnglishUs;
+    AppLanguage language = LANG_EN_US;
     HFONT font = nullptr;
     bool initialized = false;
 };
 
-/// Stores the system font and initial button and license dimensions for an information dialog.
+/// Stores the interface font and initial license dimensions for an information dialog.
 struct InformationWindowLayout {
     HFONT font = nullptr;
-    SIZE button = {};
     SIZE license = {};
     UINT dpi = 96;
     bool ownsFont = false;
     bool initialized = false;
+};
+
+/// Retains native Unicode line-break analysis for the last information-edit text.
+struct InformationWordBreakState {
+    SCRIPT_STRING_ANALYSIS analysis = nullptr;
+    std::wstring text;
 };
 
 /// Presentation state and resources owned by a Help or About window.
@@ -410,7 +416,7 @@ struct InformationWindowData {
     bool initialized = false;
     bool help = false;
     bool appMode = false;
-    AppLanguage language = AppLanguage::EnglishUs;
+    AppLanguage language = LANG_EN_US;
 };
 
 /// Window and virtual-client dimensions selected for the current work area.
@@ -457,11 +463,12 @@ static HWND recordingSettingsWindow = nullptr;
 /// System fonts and reference information-window dimensions
 static InformationWindowLayout helpWindowLayout;
 static InformationWindowLayout aboutWindowLayout;
+static InformationWordBreakState informationWordBreakState;
 static wchar_t aboutTooltipText[256] = {};
 
 /// Cross-section forward declarations
 
-static void LayoutInformationWindow(HWND window);
+static void LayoutInformationWindow(HWND window, bool resize = true);
 
 /// Aligns native text-bearing controls using their current fonts and theme content rectangles.
 static void AlignSettingsControl(HWND control, HWND reference, LONG baselineDistance = 0);
@@ -497,7 +504,7 @@ static void RefreshRecordingSettingsWindow(HWND window, RecordingWindowData& dat
 
 /// Resolves an explicit language preference or falls back to the operating system.
 static AppLanguage ResolvedLanguage(const AppSettings& settings) {
-    if (settings.language >= 0 && settings.language < static_cast<int>(AppLanguage::Count)) {
+    if (settings.language >= 0 && settings.language < static_cast<int>(LANG_COUNT)) {
         return static_cast<AppLanguage>(settings.language);
     }
     return DetectSystemLanguage();
@@ -668,7 +675,9 @@ static RenderSurface* PrimarySurface() {
 /// Reports whether the primary surface has a rendered frame and can accept capture commands.
 static bool HasReadyPrimarySurface() {
     RenderSurface* surface = PrimarySurface();
-    return surface && surface->renderer && surface->renderedFrames.load(std::memory_order_relaxed) != 0
+    return surface
+        && surface->renderer
+        && surface->renderedFrames.load(std::memory_order_relaxed) != 0
         && !surface->stopRequested.load(std::memory_order_relaxed);
 }
 
@@ -678,7 +687,8 @@ static bool HasReadyAnimationSurface() {
         return false;
     }
     for (const std::unique_ptr<RenderSurface>& surface : app->surfaces) {
-        if (surface->renderer && surface->renderedFrames.load(std::memory_order_relaxed) != 0
+        if (surface->renderer
+                && surface->renderedFrames.load(std::memory_order_relaxed) != 0
                 && !surface->stopRequested.load(std::memory_order_relaxed)) {
             return true;
         }
@@ -789,7 +799,8 @@ static bool ShouldInhibitScreenSaver() {
     }
     for (const std::unique_ptr<RenderSurface>& surface : app->surfaces) {
         const MonitorAnimation& animation = app->settings.AnimationForMonitor(surface->monitorDevice);
-        if (animation.Value(ANIMATION_ENABLED_PROPERTY) != 0 && surface->renderer
+        if (animation.Value(ANIMATION_ENABLED_PROPERTY) != 0
+                && surface->renderer
                 && surface->renderedFrames.load(std::memory_order_relaxed) != 0
                 && !surface->stopRequested.load(std::memory_order_relaxed)
                 && IsAnimationWindowVisible(surface->window)) {
@@ -832,7 +843,7 @@ static void UpdateScreenSaverInhibition() {
     REASON_CONTEXT reason{};
     reason.Version = POWER_REQUEST_CONTEXT_VERSION;
     reason.Flags = POWER_REQUEST_CONTEXT_SIMPLE_STRING;
-    reason.Reason.SimpleReasonString = const_cast<wchar_t*>(PreventScreenSaverText(ActiveLanguage()));
+    reason.Reason.SimpleReasonString = const_cast<wchar_t*>(GetLocalizedText(ActiveLanguage(), TXT_PREVENT_SCREEN_SAVER));
     HANDLE request = createRequest(&reason);
     if (request == INVALID_HANDLE_VALUE) {
         return;
@@ -1085,13 +1096,13 @@ static ScreenSaverFileUse CurrentScreenSaverFileUse() {
 static std::wstring UninstallationFailureStatus(AppLanguage language) {
     switch (CurrentScreenSaverFileUse()) {
         case ScreenSaverFileUse::Settings:
-            return UninstallationBlockedBySettingsText(language);
+            return GetLocalizedText(language, TXT_UNINSTALLATION_BLOCKED_BY_SETTINGS);
         case ScreenSaverFileUse::SystemPreview:
-            return UninstallationBlockedBySystemPreviewText(language);
+            return GetLocalizedText(language, TXT_UNINSTALLATION_BLOCKED_BY_SYSTEM_PREVIEW);
         case ScreenSaverFileUse::RunningSaver:
-            return UninstallationBlockedByRunningSaverText(language);
+            return GetLocalizedText(language, TXT_UNINSTALLATION_BLOCKED_BY_RUNNING_SAVER);
         default:
-            return UninstallationFailedText(language);
+            return GetLocalizedText(language, TXT_UNINSTALLATION_FAILED);
     }
 }
 
@@ -1206,17 +1217,17 @@ static bool PrimaryIsRecording() {
 
 /// Chooses the persistent status text implied by current runtime state.
 static const wchar_t* CurrentStatusText() {
-    const LocalizedText& strings = Text(ActiveLanguage());
+    const AppLanguage stringsLanguage = ActiveLanguage();
     if (!HasReadyPrimarySurface()) {
-        return ReadyStatusText(ActiveLanguage());
+        return GetLocalizedText(ActiveLanguage(), TXT_READY_STATUS);
     }
     if (PrimaryIsRecording()) {
-        return strings.recording;
+        return GetLocalizedText(stringsLanguage, TXT_RECORDING);
     }
     if (app && app->paused.load(std::memory_order_relaxed)) {
-        return PausedStatusText(ActiveLanguage());
+        return GetLocalizedText(ActiveLanguage(), TXT_PAUSED_STATUS);
     }
-    return strings.ready;
+    return GetLocalizedText(stringsLanguage, TXT_ANIMATION_RUNNING);
 }
 
 /// Restores persistent status after a transient notification expires.
@@ -1248,7 +1259,8 @@ static void RestoreDisabledControlFocus(HWND control, const SettingsWindowData* 
         return;
     }
     HWND parent = GetParent(control);
-    HWND next = data ? FindSettingsTabTarget(parent, *data, control, false)
+    HWND next = data
+        ? FindSettingsTabTarget(parent, *data, control, false)
         : GetNextDlgTabItem(parent, control, FALSE);
     if (next && next != control) {
         SetFocus(next);
@@ -1368,7 +1380,8 @@ static void AppendSettingsActionButtonStates(HWND window, const SettingsWindowDa
 static void UpdateSettingsActionButtons(HWND window) {
     UpdateScreenSaverInhibition();
     window = GetAncestor(window, GA_ROOT);
-    const SettingsWindowData* data = reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+    const SettingsWindowData* data =
+        reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
     if (!data || !data->settings) {
         return;
     }
@@ -1383,10 +1396,10 @@ static void UpdateRecordingButton() {
     if (!app || !app->controlWindow) {
         return;
     }
-    const LocalizedText& strings = Text(ActiveLanguage());
+    const AppLanguage stringsLanguage = ActiveLanguage();
     SetDlgItemTextW(SettingsContentWindow(app->controlWindow), ID_RECORD_TOGGLE, PrimaryIsRecording()
-        ? strings.stopRecording
-        : strings.startRecording);
+        ? GetLocalizedText(stringsLanguage, TXT_STOP_RECORDING)
+        : GetLocalizedText(stringsLanguage, TXT_START_RECORDING));
     UpdateSettingsActionButtons(app->controlWindow);
 }
 
@@ -1439,7 +1452,7 @@ static void StopRecording() {
     if (!surface || !surface->renderer || !StopSurfaceRecording(*surface)) {
         return;
     }
-    ShowTransientStatus(Text(ActiveLanguage()).recordingSaved);
+    ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_RECORDING_SAVED));
     UpdateRecordingButton();
 }
 
@@ -1454,7 +1467,7 @@ static void StartRecording(HWND owner) {
     }
     const unsigned recordingRate = surface->refreshRate;
     if (!CheckSurfaceRecordingSupport(*surface, recordingRate)) {
-        MessageBoxW(owner, Text(ActiveLanguage()).recordingFailed, PRODUCT_NAME, MB_OK | MB_ICONERROR);
+        MessageBoxW(owner, GetLocalizedText(ActiveLanguage(), TXT_RECORDING_FAILED), PRODUCT_NAME, MB_OK | MB_ICONERROR);
         return;
     }
     wchar_t file[MAX_PATH]{};
@@ -1474,9 +1487,9 @@ static void StartRecording(HWND owner) {
     }
     const bool started = StartSurfaceRecording(*surface, file, recordingRate);
     if (started) {
-        SetStatus(Text(ActiveLanguage()).recording);
+        SetStatus(GetLocalizedText(ActiveLanguage(), TXT_RECORDING));
     } else {
-        ShowTransientStatus(Text(ActiveLanguage()).recordingFailed);
+        ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_RECORDING_FAILED));
     }
     UpdateRecordingButton();
 }
@@ -1488,7 +1501,7 @@ static void SaveSnapshot(HWND owner) {
         return;
     }
     if (!CheckSurfaceSnapshotSupport(*surface)) {
-        MessageBoxW(owner, SnapshotFailedText(ActiveLanguage()), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+        MessageBoxW(owner, GetLocalizedText(ActiveLanguage(), TXT_SNAPSHOT_FAILED), PRODUCT_NAME, MB_OK | MB_ICONERROR);
         return;
     }
     wchar_t file[MAX_PATH]{};
@@ -1508,9 +1521,9 @@ static void SaveSnapshot(HWND owner) {
     }
     const bool saved = SaveSurfaceSnapshot(*surface, file);
     if (saved) {
-        ShowTransientStatus(SnapshotSavedText(ActiveLanguage()));
+        ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_SNAPSHOT_SAVED));
     } else {
-        ShowTransientStatus(SnapshotFailedText(ActiveLanguage()));
+        ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_SNAPSHOT_FAILED));
     }
 }
 
@@ -1526,8 +1539,8 @@ static void CloseApplication() {
         if (!owner || IsIconic(owner)) {
             owner = recording->window ? recording->window : app->controlWindow;
         }
-        const int result = MessageBoxW(owner, RecordingCloseWarningText(ActiveLanguage()), PRODUCT_NAME,
-            MB_OKCANCEL | MB_ICONWARNING | MB_DEFBUTTON2);
+        const int result = MessageBoxW(owner, GetLocalizedText(ActiveLanguage(), TXT_RECORDING_CLOSE_WARNING),
+            PRODUCT_NAME, MB_OKCANCEL | MB_ICONWARNING | MB_DEFBUTTON2);
         app->confirmingClose = false;
         if (result != IDOK) {
             return;
@@ -1668,7 +1681,7 @@ static std::wstring PreserveControlMnemonic(HWND control, const wchar_t* newText
 
 /// Returns the caption format of one project-specific animation slider.
 static const wchar_t* AnimationSliderFormat(AnimationProperty property, AppLanguage language) {
-    return property == AnimationProperty::ObjectSpeed ? Text(language).objectSpeed : L"";
+    return property == AnimationProperty::ObjectSpeed ? GetLocalizedText(language, TXT_OBJECT_SPEED) : L"";
 }
 
 /// Formats one slider caption without changing or painting its native label.
@@ -1992,8 +2005,9 @@ static void RememberSelectedAnimationMonitors(SettingsWindowData& data, const st
 /// Appends selected monitor row names to the localized settings title without changing output checkboxes.
 static void UpdateSettingsWindowCaption(HWND window, const SettingsWindowData& data,
         const std::vector<std::size_t>& selected) {
-    const LocalizedText& strings = Text(data.language);
-    std::wstring caption = data.appMode ? strings.controlTitle : strings.settingsTitle;
+    const AppLanguage stringsLanguage = data.language;
+    std::wstring caption = data.appMode ? GetLocalizedText(stringsLanguage, TXT_CONTROL_TITLE) :
+        GetLocalizedText(stringsLanguage, TXT_SETTINGS_TITLE);
     bool first = true;
     for (const std::size_t index : selected) {
         if (index >= data.monitorListEntries.size() || data.monitorListEntries[index].text[0].empty()) {
@@ -2126,17 +2140,17 @@ static void PopulateMonitorList(HWND window, SettingsWindowData& data) {
     const bool updating = data.updating;
     data.updating = true;
     WindowRedrawScope redraw(list);
-    const LocalizedText& strings = Text(data.language);
+    const AppLanguage stringsLanguage = data.language;
     const MonitorColumnText& monitorStrings = MonitorColumnsText(data.language);
     const wchar_t* columnTitles[]{
-        strings.monitor,
+        GetLocalizedText(stringsLanguage, TXT_MONITOR),
         monitorStrings.model,
-        strings.resolution,
+        GetLocalizedText(stringsLanguage, TXT_RESOLUTION),
         monitorStrings.refreshRate,
         monitorStrings.bitDepth,
         monitorStrings.colorFormat,
         monitorStrings.colorSpace,
-        strings.position
+        GetLocalizedText(stringsLanguage, TXT_POSITION)
     };
     LVCOLUMNW column{};
     column.mask = LVCF_TEXT;
@@ -2165,7 +2179,7 @@ static void PopulateMonitorList(HWND window, SettingsWindowData& data) {
         const MonitorDetails& details = entry.details;
         entry.text[0] = MonitorDisplayName(monitor.device);
         if (monitor.primary) {
-            entry.text[0] += std::wstring(L" (") + strings.primary + L")";
+            entry.text[0] += std::wstring(L" (") + GetLocalizedText(stringsLanguage, TXT_PRIMARY) + L")";
         }
         LVITEMW item{};
         item.mask = LVIF_TEXT | LVIF_PARAM;
@@ -2210,54 +2224,57 @@ static void PopulateMonitorList(HWND window, SettingsWindowData& data) {
 
 /// Applies localized captions only to this project's animation controls.
 static void ApplyAnimationCaptions(HWND window, const SettingsWindowData& data) {
-    const LocalizedText& strings = Text(data.language);
-    SetDlgItemTextW(window, ID_MONITOR_TEXTURE, FilledSurfaceText(data.language));
-    SetDlgItemTextW(window, ID_CAMERA_TUMBLING, CameraTumblingText(data.language));
-    SetDlgItemTextW(window, ID_CAMERA_REVERSALS, CameraReversalsText(data.language));
-    SetDlgItemTextW(window, ID_AMBIENT_LIGHT, AmbientLightText(data.language));
-    SetDlgItemTextW(window, ID_RIM_LIGHT, RimLightText(data.language));
-    SetDlgItemTextW(window, ID_MAIN_LIGHT, MainLightText(data.language));
-    SetDlgItemTextW(window, ID_FILL_LIGHT, FillLightText(data.language));
-    SetDlgItemTextW(window, ID_EFFECTS_GROUP, strings.flightEffects);
+    const AppLanguage stringsLanguage = data.language;
+    SetDlgItemTextW(window, ID_MONITOR_TEXTURE, GetLocalizedText(data.language, TXT_FILLED_SURFACE));
+    SetDlgItemTextW(window, ID_CAMERA_TUMBLING, GetLocalizedText(data.language, TXT_CAMERA_TUMBLING));
+    SetDlgItemTextW(window, ID_CAMERA_REVERSALS, GetLocalizedText(data.language, TXT_CAMERA_REVERSALS));
+    SetDlgItemTextW(window, ID_AMBIENT_LIGHT, GetLocalizedText(data.language, TXT_AMBIENT_LIGHT));
+    SetDlgItemTextW(window, ID_RIM_LIGHT, GetLocalizedText(data.language, TXT_RIM_LIGHT));
+    SetDlgItemTextW(window, ID_MAIN_LIGHT, GetLocalizedText(data.language, TXT_MAIN_LIGHT));
+    SetDlgItemTextW(window, ID_FILL_LIGHT, GetLocalizedText(data.language, TXT_FILL_LIGHT));
+    SetDlgItemTextW(window, ID_EFFECTS_GROUP, GetLocalizedText(stringsLanguage, TXT_FLIGHT_EFFECTS));
     for (std::size_t index = 0; index < EFFECT_COUNT; index++) {
-        SetDlgItemTextW(window, ID_EFFECT_FIRST + static_cast<int>(index), strings.effects[index]);
+        SetDlgItemTextW(window, ID_EFFECT_FIRST + static_cast<int>(index), GetLocalizedText(stringsLanguage,
+            EFFECT_TEXT_IDS[index]));
     }
 }
 
 /// Applies one language atomically to all settings and information windows.
 static void ApplyLocalizedCaptions(HWND window, SettingsWindowData& data) {
-    const LocalizedText& strings = Text(data.language);
+    const AppLanguage stringsLanguage = data.language;
     data.updating = true;
     window = SettingsContentWindow(window);
-    SetDlgItemTextW(window, ID_LANGUAGE_LABEL, strings.language);
+    SetDlgItemTextW(window, ID_LANGUAGE_LABEL, GetLocalizedText(stringsLanguage, TXT_LANGUAGE));
     if (data.appMode) {
-        SetDlgItemTextW(window, ID_PREVENT_SCREEN_SAVER, PreventScreenSaverText(data.language));
+        SetDlgItemTextW(window, ID_PREVENT_SCREEN_SAVER, GetLocalizedText(data.language, TXT_PREVENT_SCREEN_SAVER));
         if (data.settings) {
             SendDlgItemMessageW(window, ID_PREVENT_SCREEN_SAVER, BM_SETCHECK,
                 data.settings->preventScreenSaver ? BST_CHECKED : BST_UNCHECKED, 0);
         }
     }
     ApplyAnimationCaptions(window, data);
-    SetDlgItemTextW(window, ID_ALL_ANIMATIONS, strings.enableAll);
-    SetDlgItemTextW(window, ID_NO_ANIMATIONS, strings.disableAll);
-    SetDlgItemTextW(window, ID_OK, strings.ok);
-    SetDlgItemTextW(window, ID_CANCEL, strings.cancel);
+    SetDlgItemTextW(window, ID_ALL_ANIMATIONS, GetLocalizedText(stringsLanguage, TXT_ENABLE_ALL));
+    SetDlgItemTextW(window, ID_NO_ANIMATIONS, GetLocalizedText(stringsLanguage, TXT_DISABLE_ALL));
+    SetDlgItemTextW(window, ID_OK, GetLocalizedText(stringsLanguage, TXT_OK));
+    SetDlgItemTextW(window, ID_CANCEL, GetLocalizedText(stringsLanguage, TXT_CANCEL));
     SetDlgItemTextW(window, ID_PREVIEW_TOGGLE, data.previewActive
-        ? DisablePreviewText(data.language)
-        : EnablePreviewText(data.language));
-    SetDlgItemTextW(window, ID_RECORD_TOGGLE, PrimaryIsRecording() ? strings.stopRecording : strings.startRecording);
-    SetDlgItemTextW(window, ID_PAUSE, app && app->paused ? strings.resume : strings.pause);
+        ? GetLocalizedText(data.language, TXT_DISABLE_PREVIEW)
+        : GetLocalizedText(data.language, TXT_ENABLE_PREVIEW));
+    SetDlgItemTextW(window, ID_RECORD_TOGGLE, PrimaryIsRecording() ? GetLocalizedText(stringsLanguage,
+        TXT_STOP_RECORDING) : GetLocalizedText(stringsLanguage, TXT_START_RECORDING));
+    SetDlgItemTextW(window, ID_PAUSE, app && app->paused ? GetLocalizedText(stringsLanguage, TXT_RESUME) :
+        GetLocalizedText(stringsLanguage, TXT_PAUSE));
     SetDlgItemTextW(window, ID_INSTALL, IsScreenSaverInstalled()
-        ? UninstallScreenSaverText(data.language)
-        : strings.installScreenSaver);
-    SetDlgItemTextW(window, ID_RECORDING_SETTINGS, RecordingSettingsText(data.language).title);
-    SetDlgItemTextW(window, ID_SNAPSHOT, SnapshotButtonText(data.language));
-    SetDlgItemTextW(window, ID_HELP, HelpButtonText(data.language));
-    SetDlgItemTextW(window, ID_ABOUT, AboutButtonText(data.language));
+        ? GetLocalizedText(data.language, TXT_UNINSTALL_SCREEN_SAVER)
+        : GetLocalizedText(stringsLanguage, TXT_INSTALL_SCREEN_SAVER));
+    SetDlgItemTextW(window, ID_RECORDING_SETTINGS, GetLocalizedText(data.language, TXT_RECORDING_SETTINGS_TITLE));
+    SetDlgItemTextW(window, ID_SNAPSHOT, GetLocalizedText(data.language, TXT_SNAPSHOT));
+    SetDlgItemTextW(window, ID_HELP, GetLocalizedText(data.language, TXT_HELP));
+    SetDlgItemTextW(window, ID_ABOUT, GetLocalizedText(data.language, TXT_ABOUT));
     if (data.appMode) {
         RestoreCurrentStatus();
     }
-    SetDlgItemTextW(window, ID_MONITOR_GROUP, strings.animationMonitor);
+    SetDlgItemTextW(window, ID_MONITOR_GROUP, GetLocalizedText(stringsLanguage, TXT_ANIMATION_MONITOR));
     UpdateSliderLabels(window, data);
     PopulateMonitorList(window, data);
     AssignSettingsMnemonics(window);
@@ -2408,20 +2425,23 @@ static void StopAllRenderSurfaces(Application& application) {
     }
 }
 
+/// Returns the selected language; selector indices follow the language enum directly.
+static AppLanguage LanguageFromCombo(HWND combo) {
+    return static_cast<AppLanguage>(SendMessageW(combo, CB_GETCURSEL, 0, 0));
+}
+
+/// Adds supported language names in their defined display order.
+static void PopulateLanguageCombo(HWND combo) {
+    for (int language = 0; language < LANG_COUNT; language++) {
+        const wchar_t* name = GetLocalizedText(static_cast<AppLanguage>(language), TXT_LANGUAGE_NAME);
+        SendMessageW(combo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(name));
+    }
+}
+
 /// Applies the current system message font to one descendant control.
 static BOOL CALLBACK ApplySystemDialogFont(HWND child, LPARAM fontParameter) {
     SendMessageW(child, WM_SETFONT, fontParameter, TRUE);
     return TRUE;
-}
-
-/// Creates the font conventionally used by native Windows dialog controls.
-static HFONT CreateSystemDialogFont() {
-    NONCLIENTMETRICSW metrics{};
-    metrics.cbSize = sizeof(metrics);
-    if (SystemParametersInfoW(SPI_GETNONCLIENTMETRICS, sizeof(metrics), &metrics, 0)) {
-        return CreateFontIndirectW(&metrics.lfMessageFont);
-    }
-    return nullptr;
 }
 
 /// Creates the About license font using Consolas at the reference 8-point size.
@@ -2438,7 +2458,7 @@ static HFONT CreateAboutFont(HWND window) {
 
 /// Creates, owns and applies a system dialog font to all settings controls.
 static void ApplySystemDialogFont(HWND window, SettingsWindowData& data) {
-    data.systemDialogFont = CreateSystemDialogFont();
+    data.systemDialogFont = CreateSystemDialogFont(window);
     if (data.systemDialogFont) {
         EnumChildWindows(window, ApplySystemDialogFont, reinterpret_cast<LPARAM>(data.systemDialogFont));
     }
@@ -3021,37 +3041,41 @@ static void UpdateSettingsTextControlLayout(HWND parent) {
     }
 }
 
+/// Recognizes Unicode whitespace for license text and descriptive-text layout.
+static bool IsUnicodeWhitespace(wchar_t character) {
+    WORD type = 0;
+    return GetStringTypeW(CT_CTYPE1, &character, 1, &type) && (type & C1_SPACE) != 0;
+}
+
 /// Decodes the embedded UTF-8 license, removes an optional BOM and a case-insensitive MIT License heading, and trims
 /// outer whitespace. Accepts whitespace between heading words, preserves the license body, and normalizes line endings
 /// for the edit control.
 static std::wstring LoadLicenseText() {
-    const HMODULE module = GetModuleHandleW(nullptr);
-    HRSRC resource = FindResourceW(module, MAKEINTRESOURCEW(IDR_LICENSE), RT_RCDATA);
+    HRSRC resource = FindResourceW(app->instance, MAKEINTRESOURCEW(IDR_LICENSE), RT_RCDATA);
     if (resource == nullptr) {
         return std::wstring();
     }
-    HGLOBAL loadedResource = LoadResource(module, resource);
+    HGLOBAL loadedResource = LoadResource(app->instance, resource);
     if (loadedResource == nullptr) {
         return std::wstring();
     }
-    DWORD byteCount = SizeofResource(module, resource);
+    DWORD byteCount = SizeofResource(app->instance, resource);
     const char* bytes = static_cast<const char*>(LockResource(loadedResource));
     if (bytes == nullptr || byteCount == 0 || byteCount > static_cast<DWORD>(INT_MAX)) {
         return std::wstring();
     }
-    int characterCount = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, bytes, static_cast<int>(byteCount),
-        nullptr, 0);
+    int characterCount = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, bytes,
+        static_cast<int>(byteCount), nullptr, 0);
     if (characterCount <= 0) {
         return std::wstring();
     }
     std::wstring decoded(characterCount, L'\0');
-    const int convertedCount = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, bytes, static_cast<int>(byteCount),
-        decoded.data(), characterCount);
-    if (convertedCount != characterCount) {
+    if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, bytes, static_cast<int>(byteCount),
+        decoded.data(), characterCount) != characterCount) {
         return std::wstring();
     }
     size_t headingStart = !decoded.empty() && decoded.front() == L'\uFEFF' ? 1 : 0;
-    while (headingStart < decoded.size() && iswspace(decoded[headingStart])) {
+    while (headingStart < decoded.size() && IsUnicodeWhitespace(decoded[headingStart])) {
         headingStart++;
     }
     size_t headingEnd = decoded.find_first_of(L"\r\n", headingStart);
@@ -3059,7 +3083,7 @@ static std::wstring LoadLicenseText() {
     std::wstring normalizedHeading;
     bool whitespace = false;
     for (wchar_t character : heading) {
-        if (iswspace(character)) {
+        if (IsUnicodeWhitespace(character)) {
             whitespace = true;
         } else {
             if (whitespace && !normalizedHeading.empty()) {
@@ -3072,12 +3096,12 @@ static std::wstring LoadLicenseText() {
     size_t bodyStart = headingStart;
     if (_wcsicmp(normalizedHeading.c_str(), L"MIT License") == 0) {
         bodyStart = headingEnd == std::wstring::npos ? decoded.size() : headingEnd;
-        while (bodyStart < decoded.size() && iswspace(decoded[bodyStart])) {
+        while (bodyStart < decoded.size() && IsUnicodeWhitespace(decoded[bodyStart])) {
             bodyStart++;
         }
     }
     decoded.erase(0, bodyStart);
-    while (!decoded.empty() && iswspace(decoded.back())) {
+    while (!decoded.empty() && (decoded.back() == L'\0' || IsUnicodeWhitespace(decoded.back()))) {
         decoded.pop_back();
     }
     std::wstring result;
@@ -3103,33 +3127,30 @@ static std::wstring InformationControlText(HWND control) {
     return text;
 }
 
-/// Places Unicode information text on the clipboard with correct ownership transfer.
+/// Replaces clipboard contents with Unicode text, transferring the allocation to Windows only on success.
 static bool CopyInformationTextToClipboard(HWND owner, const std::wstring& text) {
-    if (text.empty() || !OpenClipboard(owner)) {
+    SIZE_T bytes = (text.size() + 1) * sizeof(wchar_t);
+    HGLOBAL memory = GlobalAlloc(GMEM_MOVEABLE, bytes);
+    if (memory == nullptr) {
         return false;
     }
-    EmptyClipboard();
-    const SIZE_T size = (text.size() + 1U) * sizeof(wchar_t);
-    HGLOBAL memory = GlobalAlloc(GMEM_MOVEABLE, size);
-    if (!memory) {
-        CloseClipboard();
-        return false;
-    }
-    void* destination = GlobalLock(memory);
-    if (!destination) {
+    void* target = GlobalLock(memory);
+    if (target == nullptr) {
         GlobalFree(memory);
-        CloseClipboard();
         return false;
     }
-    CopyMemory(destination, text.c_str(), size);
+    CopyMemory(target, text.c_str(), bytes);
     GlobalUnlock(memory);
-    if (!SetClipboardData(CF_UNICODETEXT, memory)) {
+    if (!OpenClipboard(owner)) {
         GlobalFree(memory);
-        CloseClipboard();
         return false;
+    }
+    bool copied = EmptyClipboard() && SetClipboardData(CF_UNICODETEXT, memory) != nullptr;
+    if (!copied) {
+        GlobalFree(memory);
     }
     CloseClipboard();
-    return true;
+    return copied;
 }
 
 /// Returns the executable's four-part product version, or a question mark if version information cannot be read.
@@ -3169,13 +3190,13 @@ static std::wstring GetApplicationVersion() {
 /// Builds localized product information including description, version, copyright, and target platform.
 static std::wstring AboutProductText(AppLanguage language) {
     std::wstring product = L"FlightCorridor\r\n";
-    product += AboutDescriptionText(language);
+    product += GetLocalizedText(language, TXT_ABOUT_DESCRIPTION);
     product += L"\r\n\r\n";
-    product += AboutVersionLabel(language);
+    product += GetLocalizedText(language, TXT_ABOUT_VERSION_LABEL);
     product += L" ";
     product += GetApplicationVersion();
     product += L"\r\nCopyright © Petr Červinka – FortSoft 2026\r\n";
-    product += AboutPlatformLabel(language);
+    product += GetLocalizedText(language, TXT_ABOUT_PLATFORM_LABEL);
     product += L" Win32 (x86)";
     return product;
 }
@@ -3194,7 +3215,7 @@ static std::wstring AboutLinkText() {
 static std::wstring AboutClipboardText(AppLanguage language) {
     std::wstring text = AboutProductText(language);
     text += L"\r\n";
-    text += AboutWebsiteLabel(language);
+    text += GetLocalizedText(language, TXT_ABOUT_WEBSITE_LABEL);
     text += L" ";
     text += WEBSITE_URL;
     return text;
@@ -3219,7 +3240,8 @@ static void OpenAboutWebsite() {
         const InformationWindowData* data =
             reinterpret_cast<const InformationWindowData*>(GetWindowLongPtrW(aboutWindow, DWLP_USER));
         if (data != nullptr) {
-            MessageBoxW(aboutWindow, AboutWebsiteFailedText(data->language), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+            MessageBoxW(aboutWindow, GetLocalizedText(data->language, TXT_ABOUT_WEBSITE_FAILED), PRODUCT_NAME, MB_OK |
+                MB_ICONERROR);
         }
     }
 }
@@ -3237,12 +3259,12 @@ static void ShowAboutContextMenu(HWND control, LPARAM lParam) {
         return;
     }
     if (controlId == ID_INFORMATION_LINK) {
-        AppendMenuW(menu, MF_STRING, ID_MENU_ABOUT_OPEN, OpenInBrowserText(data->language));
+        AppendMenuW(menu, MF_STRING, ID_MENU_ABOUT_OPEN, GetLocalizedText(data->language, TXT_OPEN_IN_BROWSER));
         AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
-        AppendMenuW(menu, MF_STRING, ID_MENU_ABOUT_COPY_URL, CopyUrlText(data->language));
+        AppendMenuW(menu, MF_STRING, ID_MENU_ABOUT_COPY_URL, GetLocalizedText(data->language, TXT_COPY_URL));
         AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
     }
-    AppendMenuW(menu, MF_STRING, ID_MENU_ABOUT_COPY_INFORMATION, CopyInformationText(data->language));
+    AppendMenuW(menu, MF_STRING, ID_MENU_ABOUT_COPY_INFORMATION, GetLocalizedText(data->language, TXT_COPY_INFORMATION));
     const POINT point = InformationMenuPoint(control, lParam);
     const UINT command = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_RIGHTBUTTON, point.x, point.y, 0, parent, nullptr);
     DestroyMenu(menu);
@@ -3250,11 +3272,13 @@ static void ShowAboutContextMenu(HWND control, LPARAM lParam) {
         OpenAboutWebsite();
     } else if (command == ID_MENU_ABOUT_COPY_URL) {
         if (!CopyInformationTextToClipboard(parent, WEBSITE_URL)) {
-            MessageBoxW(parent, AboutCopyUrlFailedText(data->language), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+            MessageBoxW(parent, GetLocalizedText(data->language, TXT_ABOUT_COPY_URL_FAILED), PRODUCT_NAME, MB_OK |
+                MB_ICONERROR);
         }
     } else if (command == ID_MENU_ABOUT_COPY_INFORMATION) {
         if (!CopyInformationTextToClipboard(parent, AboutClipboardText(data->language))) {
-            MessageBoxW(parent, AboutCopyInformationFailedText(data->language), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+            MessageBoxW(parent, GetLocalizedText(data->language, TXT_ABOUT_COPY_INFORMATION_FAILED), PRODUCT_NAME,
+                MB_OK | MB_ICONERROR);
         }
     }
 }
@@ -3283,36 +3307,7 @@ static LRESULT CALLBACK AboutControlSubclassProc(HWND window, UINT msg, WPARAM w
     return DefSubclassProc(window, msg, wParam, lParam);
 }
 
-/// Measures unwrapped license text in the edit's current font and toggles the horizontal scrollbar only when needed.
-/// Restores horizontal position to the start before hiding the bar; measurement also works while the bar is hidden.
-static void UpdateAboutLicenseScrollBar(HWND window) {
-    HDC dc = GetDC(window);
-    if (dc == nullptr) {
-        return;
-    }
-    HFONT font = reinterpret_cast<HFONT>(SendMessageW(window, WM_GETFONT, 0, 0));
-    HGDIOBJ previousFont = font == nullptr ? nullptr : SelectObject(dc, font);
-    std::wstring text = InformationControlText(window);
-    RECT textBounds = {};
-    DrawTextW(dc, text.c_str(), static_cast<int>(text.size()), &textBounds, DT_CALCRECT | DT_NOPREFIX | DT_EXPANDTABS);
-    if (previousFont != nullptr) {
-        SelectObject(dc, previousFont);
-    }
-    ReleaseDC(window, dc);
-    RECT format = {};
-    SendMessageW(window, EM_GETRECT, 0, reinterpret_cast<LPARAM>(&format));
-    bool needed = textBounds.right - textBounds.left > format.right - format.left;
-    bool visible = (GetWindowLongPtrW(window, GWL_STYLE) & WS_HSCROLL) != 0;
-    if (needed != visible) {
-        if (!needed) {
-            SendMessageW(window, WM_HSCROLL, SB_LEFT, 0);
-        }
-        ShowScrollBar(window, SB_HORZ, needed);
-    }
-}
-
-/// Lets the information window handle Enter, Escape and Tab from its read-only text field. Updates the About
-/// license horizontal scrollbar after native content or layout changes and removes the subclass on destruction.
+/// Lets information windows handle Enter, Escape and Tab from their read-only text fields.
 static LRESULT CALLBACK InformationTextSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam,
         UINT_PTR subclassId, DWORD_PTR referenceData) {
     UNREFERENCED_PARAMETER(referenceData);
@@ -3323,17 +3318,65 @@ static LRESULT CALLBACK InformationTextSubclassProc(HWND window, UINT msg, WPARA
         }
         return result;
     }
-    bool updateLicenseScroll = GetParent(window) == aboutWindow
-        && (msg == WM_SIZE || msg == WM_SETFONT || msg == WM_SETTEXT || msg == WM_THEMECHANGED);
-    if (updateLicenseScroll) {
-        LRESULT result = DefSubclassProc(window, msg, wParam, lParam);
-        UpdateAboutLicenseScrollBar(window);
-        return result;
-    }
     if (msg == WM_NCDESTROY) {
         RemoveWindowSubclass(window, InformationTextSubclassProc, subclassId);
     }
     return DefSubclassProc(window, msg, wParam, lParam);
+}
+
+/// Releases the cached Unicode boundary analysis and its retained text.
+static void ResetInformationWordBreak() {
+    if (informationWordBreakState.analysis != nullptr) {
+        if (FAILED(ScriptStringFree(&informationWordBreakState.analysis))) {
+            OutputDebugStringW(L"ScriptStringFree failed while clearing Unicode word-break analysis.\r\n");
+        }
+        informationWordBreakState.analysis = nullptr;
+    }
+    informationWordBreakState.text.clear();
+}
+
+/// Supplies the same native Unicode word and cluster boundaries to the Help and About edits.
+static int CALLBACK InformationWordBreakProc(wchar_t* text, int position, int length, int code) {
+    if (length <= 0) {
+        return 0;
+    }
+    position = std::clamp(position, 0, length);
+    if (informationWordBreakState.text.size() != static_cast<size_t>(length)
+            || wmemcmp(informationWordBreakState.text.c_str(), text, length) != 0) {
+        ResetInformationWordBreak();
+        informationWordBreakState.text.assign(text, length);
+        HRESULT status = ScriptStringAnalyse(nullptr, informationWordBreakState.text.c_str(), length, 0, -1,
+            SSA_BREAK, 0, nullptr, nullptr, nullptr, nullptr, nullptr, &informationWordBreakState.analysis);
+        if (FAILED(status)) {
+            ResetInformationWordBreak();
+            if (code == WB_ISDELIMITER) {
+                return position < length && IsUnicodeWhitespace(text[position]);
+            }
+            return code == WB_LEFT ? 0 : length;
+        }
+    }
+    const SCRIPT_LOGATTR* attributes = ScriptString_pLogAttr(informationWordBreakState.analysis);
+    if (code == WB_ISDELIMITER) {
+        return position < length && attributes[position].fWhiteSpace;
+    }
+    if (code == WB_LEFT) {
+        if (position == length) {
+            position--;
+        }
+        while (position > 0 && (!attributes[position].fCharStop
+                || !attributes[position].fSoftBreak && !attributes[position - 1].fWhiteSpace)) {
+            position--;
+        }
+    } else if (code == WB_RIGHT) {
+        if (position < length) {
+            position++;
+        }
+        while (position < length && (!attributes[position].fCharStop
+                || !attributes[position].fSoftBreak && !attributes[position - 1].fWhiteSpace)) {
+            position++;
+        }
+    }
+    return position;
 }
 
 /// Returns the native combo box contained in a ComboBoxEx control, or the supplied window otherwise.
@@ -3376,21 +3419,16 @@ static LONG GetSettingsButtonTextTop(HWND button, const WINDOWINFO& information,
     return content.top + (content.bottom - content.top - textHeight) / 2;
 }
 
-/// Calculates the vertical displacement needed to align control text with the reference baseline.
-static LONG GetSettingsControlBaselineAdjustment(HWND control, HWND reference, LONG baselineDistance) {
-    WINDOWINFO controlInfo = {};
-    controlInfo.cbSize = sizeof(controlInfo);
-    WINDOWINFO referenceInfo = {};
-    referenceInfo.cbSize = sizeof(referenceInfo);
-    if (control == nullptr
-            || reference == nullptr
-            || !GetWindowInfo(control, &controlInfo)
-            || !GetWindowInfo(reference, &referenceInfo)) {
-        return 0;
+/// Measures one control's rendered text baseline using its own font and native content rectangle.
+static bool GetSettingsControlBaseline(HWND control, LONG* baseline) {
+    WINDOWINFO information = {};
+    information.cbSize = sizeof(information);
+    if (control == nullptr || !GetWindowInfo(control, &information)) {
+        return false;
     }
     HDC dc = GetDC(control);
     if (dc == nullptr) {
-        return 0;
+        return false;
     }
     HFONT font = reinterpret_cast<HFONT>(SendMessageW(control, WM_GETFONT, 0, 0));
     HGDIOBJ previousFont = font == nullptr ? nullptr : SelectObject(dc, font);
@@ -3401,48 +3439,40 @@ static LONG GetSettingsControlBaselineAdjustment(HWND control, HWND reference, L
     }
     ReleaseDC(control, dc);
     if (!measured) {
-        return 0;
+        return false;
     }
     wchar_t className[32] = {};
-    GetClassNameW(reference, className, ARRAYSIZE(className));
-    LONG textTop = referenceInfo.rcClient.top;
+    GetClassNameW(control, className, ARRAYSIZE(className));
+    LONG textTop = information.rcClient.top;
     if (_wcsicmp(className, WC_COMBOBOXW) == 0 || _wcsicmp(className, WC_COMBOBOXEXW) == 0) {
         COMBOBOXINFO combo = {};
         combo.cbSize = sizeof(combo);
-        if (!GetComboBoxInfo(GetSettingsComboBox(reference), &combo)) {
-            return 0;
+        if (!GetComboBoxInfo(GetSettingsComboBox(control), &combo)) {
+            return false;
         }
         textTop += combo.rcItem.top + (combo.rcItem.bottom - combo.rcItem.top - metrics.tmHeight) / 2;
     } else if (_wcsicmp(className, L"EDIT") == 0) {
         RECT text = {};
-        SendMessageW(reference, EM_GETRECT, 0, reinterpret_cast<LPARAM>(&text));
+        SendMessageW(control, EM_GETRECT, 0, reinterpret_cast<LPARAM>(&text));
         textTop += text.top;
     } else if (_wcsicmp(className, L"BUTTON") == 0) {
-        textTop += GetSettingsButtonTextTop(reference, referenceInfo, metrics);
-    } else if (_wcsicmp(className, L"STATIC") == 0
-            && (GetWindowLongPtrW(reference, GWL_STYLE) & SS_CENTERIMAGE) != 0) {
-        textTop += (referenceInfo.rcClient.bottom - referenceInfo.rcClient.top - metrics.tmHeight) / 2;
+        textTop += GetSettingsButtonTextTop(control, information, metrics);
+    } else if (_wcsicmp(className, L"STATIC") == 0 && (GetWindowLongPtrW(control, GWL_STYLE) & SS_CENTERIMAGE) != 0) {
+        textTop += (information.rcClient.bottom - information.rcClient.top - metrics.tmHeight) / 2;
     }
-    wchar_t controlClass[32] = {};
-    GetClassNameW(control, controlClass, ARRAYSIZE(controlClass));
-    LONG controlTextTop = controlInfo.rcClient.top - controlInfo.rcWindow.top;
-    if (_wcsicmp(controlClass, WC_COMBOBOXW) == 0 || _wcsicmp(controlClass, WC_COMBOBOXEXW) == 0) {
-        COMBOBOXINFO combo = {};
-        combo.cbSize = sizeof(combo);
-        if (!GetComboBoxInfo(GetSettingsComboBox(control), &combo)) {
-            return 0;
-        }
-        controlTextTop += combo.rcItem.top + (combo.rcItem.bottom - combo.rcItem.top - metrics.tmHeight) / 2;
-    } else if (_wcsicmp(controlClass, L"EDIT") == 0) {
-        RECT text = {};
-        SendMessageW(control, EM_GETRECT, 0, reinterpret_cast<LPARAM>(&text));
-        controlTextTop += text.top;
-    } else if (_wcsicmp(controlClass, L"BUTTON") == 0) {
-        controlTextTop += GetSettingsButtonTextTop(control, controlInfo, metrics);
-    } else if (_wcsicmp(controlClass, L"STATIC") == 0 && (GetWindowLongPtrW(control, GWL_STYLE) & SS_CENTERIMAGE) != 0) {
-        controlTextTop += (controlInfo.rcClient.bottom - controlInfo.rcClient.top - metrics.tmHeight) / 2;
+    *baseline = textTop + metrics.tmAscent;
+    return true;
+}
+
+/// Calculates the displacement between independently measured control and reference text baselines.
+static LONG GetSettingsControlBaselineAdjustment(HWND control, HWND reference, LONG baselineDistance) {
+    LONG controlBaseline = 0;
+    LONG referenceBaseline = 0;
+    if (!GetSettingsControlBaseline(control, &controlBaseline)
+            || !GetSettingsControlBaseline(reference, &referenceBaseline)) {
+        return 0;
     }
-    return textTop + baselineDistance - controlTextTop - controlInfo.rcWindow.top;
+    return referenceBaseline + baselineDistance - controlBaseline;
 }
 
 /// Moves a control vertically without changing its size, activation or Z order.
@@ -3487,7 +3517,7 @@ static UiTextLine GetUiTextLine(HDC dc, const std::wstring& text) {
         FIXED{ 0, 1 }
     };
     for (wchar_t character : text) {
-        if (iswspace(character)) {
+        if (IsUnicodeWhitespace(character)) {
             continue;
         }
         GLYPHMETRICS glyph = {};
@@ -3517,7 +3547,7 @@ static std::wstring RemoveCaptionMnemonic(const std::wstring& caption) {
     return text;
 }
 
-/// Draws or measures word-wrapped text with explicit line breaks and typographic line spacing.
+/// Draws or measures descriptive text using the same word wrapping and current font's line height.
 static int DrawWordWrappedText(HDC dc, const std::wstring& text, const RECT& bounds, UINT prefix = DT_NOPREFIX) {
     TEXTMETRICW metrics = {};
     if (!GetTextMetricsW(dc, &metrics)) {
@@ -3553,11 +3583,12 @@ static int DrawWordWrappedText(HDC dc, const std::wstring& text, const RECT& bou
             y += lineHeight;
             continue;
         }
-        while (position < text.size() && iswspace(text[position]) && text[position] != L'\r' && text[position] != L'\n') {
+        while (position < text.size() && IsUnicodeWhitespace(text[position])
+                && text[position] != L'\r' && text[position] != L'\n') {
             position++;
         }
         size_t wordStart = position;
-        while (position < text.size() && !iswspace(text[position])) {
+        while (position < text.size() && !IsUnicodeWhitespace(text[position])) {
             position++;
         }
         if (wordStart == position) {
@@ -3650,18 +3681,14 @@ static RECT InformationControlRect(HWND window, int id) {
     return rect;
 }
 
-/// Captures the native button size, system font and reference license dimensions before layout.
+/// Captures the initial interface font and reference license dimensions before layout.
 static void InitializeInformationWindowLayout(HWND window, bool help) {
     InformationWindowLayout& layout = help ? helpWindowLayout : aboutWindowLayout;
-    RECT button = InformationControlRect(window, ID_INFORMATION_CLOSE);
     layout.font = reinterpret_cast<HFONT>(SendMessageW(window, WM_GETFONT, 0, 0));
-    layout.button = SIZE{ button.right - button.left, button.bottom - button.top };
     layout.dpi = GetSystemDialogDpi(window);
     if (!help) {
-        layout.license = SIZE{
-            MulDiv(ABOUT_LICENSE_WIDTH_96DPI, layout.dpi, 96),
-            MulDiv(ABOUT_LICENSE_HEIGHT_96DPI, layout.dpi, 96)
-        };
+        layout.license = SIZE{ MulDiv(ABOUT_LICENSE_WIDTH_96DPI, layout.dpi, 96),
+            MulDiv(ABOUT_LICENSE_HEIGHT_96DPI, layout.dpi, 96) };
     }
     layout.initialized = true;
 }
@@ -3711,8 +3738,8 @@ static SIZE InformationTextSize(HWND control) {
     return size;
 }
 
-/// Measures native dialog base units from the information window's interface font.
-static bool InformationDialogBaseUnits(HFONT font, SIZE* units) {
+/// Measures native dialog base units from the supplied interface font.
+static bool GetDialogFontBaseUnits(HFONT font, SIZE* units) {
     HDC dc = GetDC(nullptr);
     if (dc == nullptr) {
         return false;
@@ -3737,7 +3764,7 @@ static bool InformationDialogBaseUnits(HFONT font, SIZE* units) {
 static SIZE InformationDialogUnits(HWND window, int x, int y) {
     InformationWindowLayout& layout = window == helpWindow ? helpWindowLayout : aboutWindowLayout;
     SIZE units = {};
-    if (!InformationDialogBaseUnits(layout.font, &units)) {
+    if (!GetDialogFontBaseUnits(layout.font, &units)) {
         return SIZE{};
     }
     return SIZE{ MulDiv(x, units.cx, 4), MulDiv(y, units.cy, 8) };
@@ -3750,7 +3777,10 @@ static bool ApplyInformationWindowStyle(HWND window, bool updateFont) {
         return false;
     }
     InformationWindowLayout& layout = window == helpWindow ? helpWindowLayout : aboutWindowLayout;
-    HFONT font = updateFont ? CreateSystemDialogFont(window) : layout.font;
+    HFONT font = layout.font;
+    if (updateFont) {
+        font = CreateSystemDialogFont(window);
+    }
     if (font == nullptr) {
         return false;
     }
@@ -3808,8 +3838,29 @@ static bool ApplyInformationWindowStyle(HWND window, bool updateFont) {
     return true;
 }
 
-/// Places information controls using system-font dialog units and preserves the reference About license dimensions.
-static void LayoutInformationWindow(HWND window) {
+/// Fits the About window to its monitor work area after its natural layout, without saving the adjusted size.
+static void FitAboutWindowToWorkArea(HWND window) {
+    RECT bounds = {};
+    MONITORINFO monitor = { sizeof(monitor) };
+    if (!GetWindowRect(window, &bounds)
+            || !GetMonitorInfoW(MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST), &monitor)) {
+        return;
+    }
+    LONG width = std::min(bounds.right - bounds.left, monitor.rcWork.right - monitor.rcWork.left);
+    LONG height = std::min(bounds.bottom - bounds.top, monitor.rcWork.bottom - monitor.rcWork.top);
+    LONG left = std::clamp(bounds.left, monitor.rcWork.left, monitor.rcWork.right - width);
+    LONG top = std::clamp(bounds.top, monitor.rcWork.top, monitor.rcWork.bottom - height);
+    if (left != bounds.left
+            || top != bounds.top
+            || width != bounds.right - bounds.left
+            || height != bounds.bottom - bounds.top) {
+        SetWindowPos(window, nullptr, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
+    }
+}
+
+/// Builds the natural About layout from its fixed license dimensions, then fits it to the monitor work area.
+/// Resize notifications anchor the edit to the right and bottom edges and the Close button to the bottom right.
+static void LayoutInformationWindow(HWND window, bool resize) {
     InformationWindowLayout& layout = window == helpWindow ? helpWindowLayout : aboutWindowLayout;
     if (!layout.initialized || IsIconic(window)) {
         return;
@@ -3818,38 +3869,57 @@ static void LayoutInformationWindow(HWND window) {
     GetClientRect(window, &client);
     SIZE current = { client.right, client.bottom };
     UINT dpi = GetSystemDialogDpi(window);
-    SIZE margin = InformationDialogUnits(window, 10, 10);
+    SIZE margin = InformationDialogUnits(window, 8, 8);
     SIZE gap = InformationDialogUnits(window, 4, 6);
-    SIZE button = { MulDiv(layout.button.cx, dpi, layout.dpi), MulDiv(layout.button.cy, dpi, layout.dpi) };
+    SIZE button = InformationDialogUnits(window, DIALOG_BUTTON_WIDTH_DLU, DIALOG_BUTTON_HEIGHT_DLU);
     SIZE ideal = {};
-    SendDlgItemMessageW(window, ID_INFORMATION_CLOSE, BCM_GETIDEALSIZE, 0, reinterpret_cast<LPARAM>(&ideal));
+    HWND closeButton = GetDlgItem(window, ID_INFORMATION_CLOSE);
+    if (!SendMessageW(closeButton, BCM_GETIDEALSIZE, 0, reinterpret_cast<LPARAM>(&ideal))) {
+        HDC dc = GetDC(closeButton);
+        if (dc != nullptr) {
+            HFONT font = reinterpret_cast<HFONT>(SendMessageW(closeButton, WM_GETFONT, 0, 0));
+            HGDIOBJ previous = font == nullptr ? nullptr : SelectObject(dc, font);
+            std::wstring text = InformationControlText(closeButton);
+            RECT bounds = {};
+            DrawTextW(dc, text.c_str(), static_cast<int>(text.size()), &bounds, DT_CALCRECT | DT_SINGLELINE);
+            SIZE padding = InformationDialogUnits(window, 12, 0);
+            ideal.cx = bounds.right + padding.cx + 2 * GetSystemMetrics(SM_CXEDGE);
+            if (previous != nullptr) {
+                SelectObject(dc, previous);
+            }
+            ReleaseDC(closeButton, dc);
+        }
+    }
     button.cx = std::max(button.cx, ideal.cx);
     int textTop = margin.cy;
-    if (window == aboutWindow) {
+    if (window == aboutWindow && resize) {
         SIZE license = { MulDiv(layout.license.cx, dpi, layout.dpi), MulDiv(layout.license.cy, dpi, layout.dpi) };
-        client.right = license.cx + 2 * margin.cx;
-        SIZE iconPosition = InformationDialogUnits(window, 10, 10);
-        SetWindowPos(GetDlgItem(window, ID_INFORMATION_ICON), nullptr, iconPosition.cx, iconPosition.cy, 0, 0,
+        client.right = license.cx + 2 * InformationDialogUnits(window, 10, 0).cx;
+        SetWindowPos(GetDlgItem(window, ID_INFORMATION_ICON), nullptr, margin.cx, margin.cy, 0, 0,
             SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
         RECT icon = InformationControlRect(window, ID_INFORMATION_ICON);
-        SIZE productPosition = InformationDialogUnits(window, 0, 6);
+        SIZE productPosition = InformationDialogUnits(window, 0, 4);
         productPosition.cx = icon.right + icon.left;
         int width = client.right - margin.cx - productPosition.cx;
         int productHeight = InformationLabelHeight(GetDlgItem(window, ID_INFORMATION_PRODUCT), width);
-        PlaceInformationControl(window, ID_INFORMATION_PRODUCT, productPosition.cx, productPosition.cy, width,
-            productHeight);
+        PlaceInformationControl(window, ID_INFORMATION_PRODUCT, productPosition.cx, productPosition.cy,
+            width, productHeight);
         SIZE website = InformationTextSize(GetDlgItem(window, ID_INFORMATION_WEBSITE));
         int websiteY = productPosition.cy + productHeight + gap.cy;
         PlaceInformationControl(window, ID_INFORMATION_WEBSITE, productPosition.cx, websiteY, website.cx, website.cy);
         int linkX = productPosition.cx + website.cx + gap.cx;
         int linkWidth = client.right - margin.cx - linkX;
         SIZE idealLink = {};
-        LRESULT linkHeight = SendDlgItemMessageW(window, ID_INFORMATION_LINK, LM_GETIDEALSIZE, linkWidth,
+        int linkHeight = website.cy;
+        LRESULT height = SendDlgItemMessageW(window, ID_INFORMATION_LINK, LM_GETIDEALSIZE, linkWidth,
             reinterpret_cast<LPARAM>(&idealLink));
+        if (height > 0) {
+            linkHeight = static_cast<int>(height);
+        }
         if (idealLink.cx > 0 && idealLink.cx < linkWidth) {
             linkWidth = idealLink.cx;
         }
-        PlaceInformationControl(window, ID_INFORMATION_LINK, linkX, websiteY, linkWidth, static_cast<int>(linkHeight));
+        PlaceInformationControl(window, ID_INFORMATION_LINK, linkX, websiteY, linkWidth, linkHeight);
         AlignSettingsControl(GetDlgItem(window, ID_INFORMATION_LINK), GetDlgItem(window, ID_INFORMATION_WEBSITE));
         RECT link = InformationControlRect(window, ID_INFORMATION_LINK);
         textTop = std::max(websiteY + website.cy, link.bottom) + gap.cy;
@@ -3861,36 +3931,43 @@ static void LayoutInformationWindow(HWND window) {
                 bounds.bottom - bounds.top + client.bottom - current.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
         }
     }
+    if (window == aboutWindow && !resize) {
+        textTop = InformationControlRect(window, ID_INFORMATION_TEXT).top;
+    }
     int buttonY = client.bottom - margin.cy - button.cy;
-    PlaceInformationControl(window, ID_INFORMATION_CLOSE, client.right - margin.cx - button.cx, buttonY, button.cx,
-        button.cy);
-    PlaceInformationControl(window, ID_INFORMATION_TEXT, margin.cx, textTop, client.right - 2 * margin.cx,
-        buttonY - gap.cy - textTop);
+    PlaceInformationControl(window, ID_INFORMATION_CLOSE, client.right - margin.cx - button.cx, buttonY,
+        button.cx, button.cy);
+    PlaceInformationControl(window, ID_INFORMATION_TEXT, margin.cx, textTop,
+        client.right - 2 * margin.cx, buttonY - gap.cy - textTop);
     HWND grip = GetDlgItem(window, ID_INFORMATION_SIZE_GRIP);
     if (grip != nullptr) {
         int width = GetSystemMetrics(SM_CXVSCROLL);
         int height = GetSystemMetrics(SM_CYHSCROLL);
-        UINT flags = SWP_NOZORDER | SWP_NOACTIVATE | (IsZoomed(window) ? SWP_HIDEWINDOW : SWP_SHOWWINDOW);
-        SetWindowPos(grip, nullptr, client.right - width, client.bottom - height, width, height, flags);
+        UINT flags = SWP_NOACTIVATE | (IsZoomed(window) ? SWP_HIDEWINDOW : SWP_SHOWWINDOW);
+        SetWindowPos(grip, HWND_BOTTOM, client.right - width, client.bottom - height, width, height, flags);
+    }
+    if (window == aboutWindow && resize) {
+        FitAboutWindowToWorkArea(window);
     }
 }
 
 /// Refreshes localized content and geometry of one information window.
 static void RefreshInformationWindow(HWND window, InformationWindowData& data) {
     const std::wstring title = data.help
-        ? HelpButtonText(data.language)
-        : std::wstring(AboutButtonText(data.language)) + L" FlightCorridor";
+        ? GetLocalizedText(data.language, TXT_HELP)
+        : std::wstring(GetLocalizedText(data.language, TXT_ABOUT)) + L" FlightCorridor";
     SetWindowTextW(window, title.c_str());
     std::vector<wchar_t> usedMnemonics;
-    const std::wstring closeCaption = UniqueMnemonic(CloseButtonText(data.language), usedMnemonics);
+    const std::wstring closeCaption = UniqueMnemonic(GetLocalizedText(data.language, TXT_CLOSE), usedMnemonics);
     SetDlgItemTextW(window, ID_INFORMATION_CLOSE, closeCaption.c_str());
     if (data.help) {
-        SetDlgItemTextW(window, ID_INFORMATION_TEXT, HelpBodyText(data.language, data.appMode));
+        SetDlgItemTextW(window, ID_INFORMATION_TEXT, GetLocalizedText(data.language, data.appMode ?
+            TXT_APPLICATION_HELP : TXT_SCREEN_SAVER_HELP));
     } else {
         const std::wstring product = AboutProductText(data.language);
         const std::wstring link = AboutLinkText();
         SetDlgItemTextW(window, ID_INFORMATION_PRODUCT, product.c_str());
-        SetDlgItemTextW(window, ID_INFORMATION_WEBSITE, AboutWebsiteLabel(data.language));
+        SetDlgItemTextW(window, ID_INFORMATION_WEBSITE, GetLocalizedText(data.language, TXT_ABOUT_WEBSITE_LABEL));
         SetDlgItemTextW(window, ID_INFORMATION_LINK, link.c_str());
     }
     LayoutInformationWindow(window);
@@ -3908,7 +3985,7 @@ static bool HandleInformationNotification(HWND window, LPARAM lParam) {
                 reinterpret_cast<const InformationWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
             if (data != nullptr) {
                 NMTTDISPINFOW* information = reinterpret_cast<NMTTDISPINFOW*>(lParam);
-                swprintf_s(aboutTooltipText, AboutVisitTooltipText(data->language), WEBSITE_URL);
+                swprintf_s(aboutTooltipText, GetLocalizedText(data->language, TXT_ABOUT_VISIT_TOOLTIP), WEBSITE_URL);
                 information->lpszText = aboutTooltipText;
             }
             return true;
@@ -4009,7 +4086,7 @@ static INT_PTR CALLBACK InformationDialogProc(HWND window, UINT message, WPARAM 
         return TRUE;
     }
     if (message == WM_SIZE) {
-        LayoutInformationWindow(window);
+        LayoutInformationWindow(window, false);
         return TRUE;
     }
     if (message == WM_DRAWITEM && wParam == ID_INFORMATION_PRODUCT) {
@@ -4023,6 +4100,10 @@ static INT_PTR CALLBACK InformationDialogProc(HWND window, UINT message, WPARAM 
         SIZE size = InformationDialogUnits(window, 180, 110);
         MINMAXINFO* information = reinterpret_cast<MINMAXINFO*>(lParam);
         information->ptMinTrackSize = POINT{ size.cx, size.cy };
+        return TRUE;
+    }
+    if (message == WM_DISPLAYCHANGE && window == aboutWindow) {
+        LayoutInformationWindow(window);
         return TRUE;
     }
     if (message == WM_THEMECHANGED || message == WM_SETTINGCHANGE) {
@@ -4042,6 +4123,7 @@ static INT_PTR CALLBACK InformationDialogProc(HWND window, UINT message, WPARAM 
             DeleteObject(layout.font);
         }
         layout = {};
+        ResetInformationWordBreak();
         if (window == aboutWindow) {
             if (aboutTooltip != nullptr) {
                 DestroyWindow(aboutTooltip);
@@ -4212,8 +4294,8 @@ static bool PositionInformationWindowByWindowsDefault(HWND window) {
     if (!positioned) {
         return false;
     }
-    return SetWindowPos(window, nullptr, bounds.left, bounds.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE)
-        != FALSE;
+    return SetWindowPos(window, nullptr, bounds.left, bounds.top, 0, 0,
+        SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE) != FALSE;
 }
 
 /// Creates or activates Help or About using a system-font dialog template, localized content and saved placement.
@@ -4263,19 +4345,31 @@ static void ShowInformationWindow(HWND owner, bool help, AppLanguage language, b
     SendMessageW(*target, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(app->programIcons.Large()));
     SendMessageW(*target, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(app->programIcons.Small()));
     HWND text = GetDlgItem(*target, ID_INFORMATION_TEXT);
-    SetWindowSubclass(text, InformationTextSubclassProc, INFORMATION_TEXT_SUBCLASS_ID, 0);
+    SendMessageW(text, EM_SETWORDBREAKPROC, 0, reinterpret_cast<LPARAM>(InformationWordBreakProc));
+    if (!SetWindowSubclass(text, InformationTextSubclassProc, INFORMATION_TEXT_SUBCLASS_ID, 0)) {
+        DestroyWindow(*target);
+        return;
+    }
     if (!help) {
-        SetWindowTextW(text, LoadLicenseText().c_str());
+        std::wstring license = LoadLicenseText();
+        SetWindowTextW(text, license.empty() ? GetLocalizedText(language, TXT_ABOUT_LICENSE_UNAVAILABLE) :
+            license.c_str());
         const int controls[] = {
-            ID_INFORMATION_PRODUCT,
-            ID_INFORMATION_WEBSITE,
-            ID_INFORMATION_LINK,
-            ID_INFORMATION_ICON
+            ID_INFORMATION_PRODUCT, ID_INFORMATION_WEBSITE,
+            ID_INFORMATION_LINK, ID_INFORMATION_ICON
         };
         for (int id : controls) {
-            SetWindowSubclass(GetDlgItem(*target, id), AboutControlSubclassProc, ABOUT_CONTROL_SUBCLASS, 0);
+            if (!SetWindowSubclass(GetDlgItem(*target, id), AboutControlSubclassProc,
+                ABOUT_CONTROL_SUBCLASS, 0)) {
+                DestroyWindow(*target);
+                return;
+            }
         }
         aboutTooltip = CreateControlTooltip(*target, GetDlgItem(*target, ID_INFORMATION_LINK), LPSTR_TEXTCALLBACKW);
+        if (aboutTooltip == nullptr) {
+            DestroyWindow(*target);
+            return;
+        }
     }
     RefreshInformationWindow(*target, *data);
     SendMessageW(text, EM_SETSEL, 0, 0);
@@ -4525,7 +4619,7 @@ static SIZE LayoutRecordingSettings(HWND window) {
 /// Recreates the shared system font and recalculates dialog geometry after metric, theme or DPI changes.
 static void RefreshRecordingSettingsFont(HWND window, RecordingWindowData& data) {
     const HFONT previous = data.font;
-    data.font = CreateSystemDialogFont();
+    data.font = CreateSystemDialogFont(window);
     if (data.font) {
         SendMessageW(window, WM_SETFONT, reinterpret_cast<WPARAM>(data.font), FALSE);
         EnumChildWindows(window, ApplySystemDialogFont, reinterpret_cast<LPARAM>(data.font));
@@ -4546,16 +4640,16 @@ static void RefreshRecordingSettingsFont(HWND window, RecordingWindowData& data)
 
 /// Refreshes localized recording captions without changing the font, geometry or unconfirmed choices.
 static void RefreshRecordingSettingsWindow(HWND window, RecordingWindowData& data) {
-    const RecordingText& strings = RecordingSettingsText(data.language);
-    const LocalizedText& common = Text(data.language);
-    SetWindowTextW(window, strings.title);
-    SetDlgItemTextW(window, ID_RECORD_VIEWPORT, strings.viewport);
-    SetDlgItemTextW(window, ID_RECORD_TV, strings.television);
-    SetDlgItemTextW(window, ID_RECORD_SIZE_LABEL, strings.resolution);
-    SetDlgItemTextW(window, ID_RECORD_RATE_LABEL, strings.frameRate);
-    SetDlgItemTextW(window, ID_RECORD_NOTE, strings.note);
-    SetDlgItemTextW(window, IDOK, common.ok);
-    SetDlgItemTextW(window, IDCANCEL, common.cancel);
+    const AppLanguage stringsLanguage = data.language;
+    const AppLanguage commonLanguage = data.language;
+    SetWindowTextW(window, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_TITLE));
+    SetDlgItemTextW(window, ID_RECORD_VIEWPORT, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_VIEWPORT));
+    SetDlgItemTextW(window, ID_RECORD_TV, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_TELEVISION));
+    SetDlgItemTextW(window, ID_RECORD_SIZE_LABEL, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_RESOLUTION));
+    SetDlgItemTextW(window, ID_RECORD_RATE_LABEL, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_FRAME_RATE));
+    SetDlgItemTextW(window, ID_RECORD_NOTE, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_NOTE));
+    SetDlgItemTextW(window, IDOK, GetLocalizedText(commonLanguage, TXT_OK));
+    SetDlgItemTextW(window, IDCANCEL, GetLocalizedText(commonLanguage, TXT_CANCEL));
 }
 
 /// Restores saved recording-window coordinates or centers its first opening, using shared work-area clamping.
@@ -4599,7 +4693,8 @@ static void InitializeRecordingSettings(HWND window, RecordingWindowData& data) 
             reinterpret_cast<LPARAM>(RecordingResolutionText(index)));
     }
     for (unsigned index = 0; index < 4; index++) {
-        SendDlgItemMessageW(window, ID_RECORD_RATE, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(RecordingRateText(index)));
+        SendDlgItemMessageW(window, ID_RECORD_RATE, CB_ADDSTRING, 0,
+            reinterpret_cast<LPARAM>(RecordingRateText(index)));
     }
     SendDlgItemMessageW(window, ID_RECORD_SIZE, CB_SETCURSEL, data.settings->recording.resolution, 0);
     SendDlgItemMessageW(window, ID_RECORD_RATE, CB_SETCURSEL, data.settings->recording.rate, 0);
@@ -4635,7 +4730,8 @@ static INT_PTR CALLBACK RecordingSettingsProc(HWND window, UINT msg, WPARAM wPar
             if (!data) {
                 break;
             }
-            if (HIWORD(wParam) == CBN_DROPDOWN && (LOWORD(wParam) == ID_RECORD_SIZE || LOWORD(wParam) == ID_RECORD_RATE)) {
+            if (HIWORD(wParam) == CBN_DROPDOWN
+                    && (LOWORD(wParam) == ID_RECORD_SIZE || LOWORD(wParam) == ID_RECORD_RATE)) {
                 UpdateComboBoxDropDownSize(reinterpret_cast<HWND>(lParam));
                 return TRUE;
             }
@@ -4778,7 +4874,8 @@ static bool StartSettingsPreview(HWND settingsWindow, SettingsWindowData& data) 
     if (!created || app->surfaces.empty()) {
         DestroySettingsPreviewSurfaces(*app);
         app->mode = RunMode::Application;
-        MessageBoxW(settingsWindow, Text(data.language).rendererFailed, PRODUCT_NAME, MB_OK | MB_ICONERROR);
+        MessageBoxW(settingsWindow, GetLocalizedText(data.language, TXT_RENDERER_FAILED), PRODUCT_NAME,
+            MB_OK | MB_ICONERROR);
         return false;
     }
     data.previewActive = true;
@@ -4884,9 +4981,8 @@ static int CreateAnimationCheckboxControls(HWND window, int top, int rowHeight) 
     for (const AnimationCheckboxPlacement& placement : ANIMATION_CHECKBOX_PLACEMENTS) {
         const int columnLeft = columnX[placement.column];
         const int rowTop = top + placement.row * rowHeight;
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE,
-            columnLeft, rowTop, checkboxWidth, rowHeight + 1, window, reinterpret_cast<HMENU>(placement.id), nullptr,
-            nullptr);
+        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnLeft,
+            rowTop, checkboxWidth, rowHeight + 1, window, reinterpret_cast<HMENU>(placement.id), nullptr, nullptr);
         rows = std::max(rows, placement.row + 1);
     }
     return top + rows * rowHeight;
@@ -4969,21 +5065,16 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
     }
     CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, 18, top, 196, 22, window,
         reinterpret_cast<HMENU>(ID_LANGUAGE_LABEL), nullptr, nullptr);
-    HWND languageCombo = CreateWindowExW(0, WC_COMBOBOXW, L"",
-        WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_TABSTOP | CBS_DROPDOWNLIST,
-        171, top - 4, 274, 400, window, reinterpret_cast<HMENU>(ID_LANGUAGE), nullptr, nullptr);
+    HWND languageCombo = CreateWindowExW(0, WC_COMBOBOXW, L"", WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
+        | CBS_DROPDOWNLIST, 171, top - 4, 274, 400, window, reinterpret_cast<HMENU>(ID_LANGUAGE), nullptr, nullptr);
     if (data->appMode) {
         CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX, rightSliderX, top,
             checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_PREVENT_SCREEN_SAVER), nullptr, nullptr);
         SetTimer(settingsWindow, ID_SCREEN_SAVER_CHECK_TIMER, SCREEN_SAVER_CHECK_INTERVAL, nullptr);
     }
-    for (std::size_t index = 0; index < LANGUAGE_COUNT; index++) {
-        const AppLanguage language = LanguageAtIndex(static_cast<int>(index));
-        SendMessageW(languageCombo, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(Text(language).languageName));
-    }
-    SendMessageW(languageCombo, CB_SETCURSEL, LanguageIndex(data->language), 0);
+    PopulateLanguageCombo(languageCombo);
+    SendMessageW(languageCombo, CB_SETCURSEL, data->language, 0);
     const int actionButtonsTop = CreateAnimationControls(window, top, data->contentWidth);
-
     CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, data->appMode ? 14 : 24, actionButtonsTop,
         150, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_ALL_ANIMATIONS), nullptr, nullptr);
     CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, data->appMode ? 171 : 181, actionButtonsTop,
@@ -5264,8 +5355,8 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 EnableSettingsControl(GetDlgItem(controls, ID_INSTALL), true);
                 if (data) {
                     SetDlgItemTextW(controls, ID_INSTALL, IsScreenSaverInstalled()
-                        ? UninstallScreenSaverText(data->language)
-                        : Text(data->language).installScreenSaver);
+                        ? GetLocalizedText(data->language, TXT_UNINSTALL_SCREEN_SAVER)
+                        : GetLocalizedText(data->language, TXT_INSTALL_SCREEN_SAVER));
                     AssignSettingsMnemonics(window);
                     UpdateSettingsTextControlLayout(window);
                 }
@@ -5273,11 +5364,11 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     const std::wstring failure = UninstallationFailureStatus(ActiveLanguage());
                     ShowTransientStatus(failure.c_str());
                 } else if (uninstalling) {
-                    ShowTransientStatus(UninstallationSucceededText(ActiveLanguage()));
+                    ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_UNINSTALLATION_SUCCEEDED));
                 } else if (exitCode == 0) {
-                    ShowTransientStatus(Text(ActiveLanguage()).installationSucceeded);
+                    ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_INSTALLATION_SUCCEEDED));
                 } else {
-                    ShowTransientStatus(Text(ActiveLanguage()).installationFailed);
+                    ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_INSTALLATION_FAILED));
                 }
                 return 0;
             }
@@ -5293,7 +5384,8 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     for (const AnimationSliderControl& control : ANIMATION_SLIDERS) {
                         if (control.id == id) {
                             const auto value = static_cast<std::uint32_t>(SendMessageW(slider, TBM_GETPOS, 0, 0));
-                            SetSelectedMonitorValue(window, *data, control.property, value, LOWORD(wParam) == TB_ENDTRACK);
+                            SetSelectedMonitorValue(window, *data, control.property, value, LOWORD(wParam)
+                                == TB_ENDTRACK);
                             break;
                         }
                     }
@@ -5342,8 +5434,7 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     return 0;
                 }
                 if (LOWORD(wParam) == ID_LANGUAGE && HIWORD(wParam) == CBN_SELCHANGE && !data->updating) {
-                    data->language = LanguageAtIndex(static_cast<int>(SendDlgItemMessageW(controls, ID_LANGUAGE,
-                        CB_GETCURSEL, 0, 0)));
+                    data->language = LanguageFromCombo(GetDlgItem(controls, ID_LANGUAGE));
                     data->settings->language = static_cast<int>(data->language);
                     ApplyLocalizedCaptions(window, *data);
                     if (data->appMode) {
@@ -5375,8 +5466,8 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                         case ID_PAUSE:
                             app->paused.store(!app->paused.load(std::memory_order_relaxed), std::memory_order_relaxed);
                             SetDlgItemTextW(controls, ID_PAUSE, app->paused.load(std::memory_order_relaxed)
-                                ? Text(data->language).resume
-                                : Text(data->language).pause);
+                                ? GetLocalizedText(data->language, TXT_RESUME)
+                                : GetLocalizedText(data->language, TXT_PAUSE));
                             RestoreCurrentStatus();
                             return 0;
                         case ID_INSTALL:
@@ -5604,7 +5695,8 @@ static bool ShowSettings(HINSTANCE instance, HWND owner, AppSettings& settings) 
     if (owner) {
         EnableWindow(owner, FALSE);
     }
-    HWND window = CreateWindowExW(extendedStyle, SETTINGS_CLASS, Text(data->language).settingsTitle, layout.style,
+    HWND window = CreateWindowExW(extendedStyle, SETTINGS_CLASS, GetLocalizedText(data->language, TXT_SETTINGS_TITLE),
+        layout.style,
         CW_USEDEFAULT, CW_USEDEFAULT, layout.width, layout.height, owner, nullptr, instance, data.get());
     if (!window) {
         if (owner) {
@@ -5677,8 +5769,7 @@ static void ApplyAnimationMonitors() {
     for (std::size_t index = 0; index < app->surfaces.size();) {
         RenderSurface& surface = *app->surfaces[index];
         const std::size_t monitor = MonitorIndexForDevice(monitors, surface.monitorDevice);
-        const bool keep = &surface == recording
-            || monitor < monitors.size()
+        const bool keep = &surface == recording || monitor < monitors.size()
             && std::find(requested.begin(), requested.end(), monitor) != requested.end()
             && EqualRect(&surface.bounds, &monitors[monitor].rect);
         if (keep) {
@@ -5714,7 +5805,9 @@ static void ApplyAnimationMonitors() {
             }
         }
     }
-    app->settings.animationMonitorDevice = created.empty() ? NO_ANIMATION_MONITORS : JoinMonitorDevices(monitors, created);
+    app->settings.animationMonitorDevice = created.empty()
+        ? NO_ANIMATION_MONITORS
+        : JoinMonitorDevices(monitors, created);
     if (recording && !MonitorDeviceSelected(app->settings.animationMonitorDevice, recording->monitorDevice)) {
         app->settings.animationMonitorDevice = created.empty()
             ? recording->monitorDevice
@@ -5780,7 +5873,7 @@ static HWND CreateApplicationWindow(Application& application, SettingsWindowData
         y = std::clamp(application.settings.controlWindowY, static_cast<int>(area.top),
             std::max(static_cast<int>(area.top), static_cast<int>(area.bottom) - layout.height));
     }
-    HWND window = CreateWindowExW(extendedStyle, SETTINGS_CLASS, Text(data->language).controlTitle,
+    HWND window = CreateWindowExW(extendedStyle, SETTINGS_CLASS, GetLocalizedText(data->language, TXT_CONTROL_TITLE),
         layout.style | WS_VISIBLE, x, y, layout.width, layout.height, nullptr, nullptr, application.instance, data);
     if (!window) {
         delete data;
@@ -5954,9 +6047,9 @@ static void RequestScreenSaverChange(HWND owner) {
     execute.nShow = SW_SHOWNORMAL;
     if (!ShellExecuteExW(&execute) || !execute.hProcess) {
         if (uninstall) {
-            ShowTransientStatus(UninstallationFailedText(ActiveLanguage()));
+            ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_UNINSTALLATION_FAILED));
         } else {
-            ShowTransientStatus(Text(ActiveLanguage()).installationFailed);
+            ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_INSTALLATION_FAILED));
         }
         return;
     }
@@ -6160,12 +6253,13 @@ static void StartDefaultApplicationAnimation(Application& application, SettingsW
     PopulateMonitorList(application.controlWindow, data);
     data.updating = wasUpdating;
     if (application.surfaces.empty()) {
-        ShowTransientStatus(Text(data.language).rendererFailed);
+        ShowTransientStatus(GetLocalizedText(data.language, TXT_RENDERER_FAILED));
         return;
     }
     application.paused.store(false, std::memory_order_relaxed);
     HWND controls = SettingsContentWindow(application.controlWindow);
-    const std::wstring pauseCaption = PreserveControlMnemonic(GetDlgItem(controls, ID_PAUSE), Text(data.language).pause);
+    const std::wstring pauseCaption = PreserveControlMnemonic(GetDlgItem(controls, ID_PAUSE),
+        GetLocalizedText(data.language, TXT_PAUSE));
     SetDlgItemTextW(controls, ID_PAUSE, pauseCaption.c_str());
     UpdateRecordingButton();
     RestoreCurrentStatus();
@@ -6446,7 +6540,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstan
                 DestroyWindow(surface->window);
             }
         }
-        MessageBoxW(nullptr, Text(ActiveLanguage()).rendererFailed, PRODUCT_NAME, MB_OK | MB_ICONERROR);
+        MessageBoxW(nullptr, GetLocalizedText(ActiveLanguage(), TXT_RENDERER_FAILED), PRODUCT_NAME, MB_OK | MB_ICONERROR);
         delete appSettingsData;
         return 1;
     }

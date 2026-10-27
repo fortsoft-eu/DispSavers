@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.1
  */
 
 #define NOMINMAX
@@ -87,7 +87,8 @@ static void ReadDisplayConfigTargetDetails(const DISPLAYCONFIG_PATH_INFO& path,
     const UINT32 modeIndex = path.targetInfo.modeInfoIdx;
     if (modeIndex < modes.size()) {
         const DISPLAYCONFIG_MODE_INFO& mode = modes[modeIndex];
-        if (mode.infoType == DISPLAYCONFIG_MODE_INFO_TYPE_TARGET && mode.id == path.targetInfo.id
+        if (mode.infoType == DISPLAYCONFIG_MODE_INFO_TYPE_TARGET
+                && mode.id == path.targetInfo.id
                 && mode.adapterId.HighPart == path.targetInfo.adapterId.HighPart
                 && mode.adapterId.LowPart == path.targetInfo.adapterId.LowPart) {
             const DISPLAYCONFIG_RATIONAL signalRate = mode.targetMode.targetVideoSignalInfo.vSyncFreq;

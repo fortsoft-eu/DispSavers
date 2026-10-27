@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.2.0
+ * Last modified for version 1.2.2.1
  */
 
 #pragma once
@@ -30,4 +30,6 @@
 
 UINT GetSystemDialogDpi(HWND window);
 HFONT CreateSystemDialogFont(HWND window);
-DLGTEMPLATE* LoadSystemDialogTemplate(HINSTANCE instance, UINT resourceId, HWND owner);
+
+/// Uses a supplied or system font for the copied dialog template; a supplied font remains owned by the caller.
+DLGTEMPLATE* LoadSystemDialogTemplate(HINSTANCE instance, UINT resourceId, HWND owner, HFONT dialogFont = nullptr);

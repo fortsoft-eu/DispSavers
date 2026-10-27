@@ -21,90 +21,154 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.2.0
+ * Last modified for version 1.2.2.1
  */
 
 #pragma once
 
 #include "Effects.h"
 #include <array>
+#include <initializer_list>
 
-/// Supported user-interface languages in combo-box display order.
-enum class AppLanguage : int {
-    Czech,
-    EnglishUs,
-    EnglishUk,
-    EnglishAu,
-    German,
-    French,
-    Spanish,
-    Italian,
-    Portuguese,
-    Polish,
-    Slovak,
-    Danish,
-    Finnish,
-    Icelandic,
-    Norwegian,
-    Swedish,
-    Turkish,
-    Estonian,
-    Irish,
-    Lithuanian,
-    Latvian,
-    Hungarian,
-    Maltese,
-    Dutch,
-    Romanian,
-    Greek,
-    Bosnian,
-    Croatian,
-    Slovenian,
-    Montenegrin,
-    Belarusian,
-    Bulgarian,
-    Macedonian,
-    Serbian,
-    Ukrainian,
-    Russian,
-    Count
+/// Append new languages before LANG_COUNT to preserve existing stored identifiers.
+enum AppLanguage {
+    LANG_CS,
+    LANG_EN_US,
+    LANG_EN_GB,
+    LANG_EN_AU,
+    LANG_DE,
+    LANG_FR,
+    LANG_ES,
+    LANG_IT,
+    LANG_PT,
+    LANG_PL,
+    LANG_SK,
+    LANG_DA,
+    LANG_FI,
+    LANG_IS,
+    LANG_NB,
+    LANG_SV,
+    LANG_TR,
+    LANG_ET,
+    LANG_GA,
+    LANG_LT,
+    LANG_LV,
+    LANG_HU,
+    LANG_MT,
+    LANG_NL,
+    LANG_RO,
+    LANG_EL,
+    LANG_BS,
+    LANG_HR,
+    LANG_SL,
+    LANG_CNR,
+    LANG_BE,
+    LANG_BG,
+    LANG_MK,
+    LANG_SR,
+    LANG_UK,
+    LANG_RU,
+    LANG_COUNT
 };
 
-/// Core localized strings displayed by both settings-window variants.
+/// Named translation keys used by this application.
+enum TextId {
+    TXT_LANGUAGE_NAME,
+    TXT_CONTROL_TITLE,
+    TXT_SETTINGS_TITLE,
+    TXT_LANGUAGE,
+    TXT_OBJECT_SPEED,
+    TXT_FLIGHT_EFFECTS,
+    TXT_ENABLE_ALL,
+    TXT_DISABLE_ALL,
+    TXT_ANIMATION_MONITOR,
+    TXT_MONITOR,
+    TXT_RESOLUTION,
+    TXT_POSITION,
+    TXT_PRIMARY,
+    TXT_OK,
+    TXT_CANCEL,
+    TXT_START_RECORDING,
+    TXT_STOP_RECORDING,
+    TXT_PAUSE,
+    TXT_RESUME,
+    TXT_INSTALL_SCREEN_SAVER,
+    TXT_EXIT,
+    TXT_ANIMATION_RUNNING,
+    TXT_RECORDING,
+    TXT_RECORDING_SAVED,
+    TXT_RECORDING_FAILED,
+    TXT_INSTALLATION_FAILED,
+    TXT_INSTALLATION_SUCCEEDED,
+    TXT_RENDERER_FAILED,
+    TXT_EFFECT_CORRIDOR,
+    TXT_EFFECT_FUNNEL,
+    TXT_RECORDING_CLOSE_WARNING,
+    TXT_ABOUT_VISIT_TOOLTIP,
+    TXT_ABOUT_WEBSITE_FAILED,
+    TXT_ABOUT_COPY_URL_FAILED,
+    TXT_ABOUT_COPY_INFORMATION_FAILED,
+    TXT_ENABLE_PREVIEW,
+    TXT_DISABLE_PREVIEW,
+    TXT_PAUSED_STATUS,
+    TXT_PREVENT_SCREEN_SAVER,
+    TXT_READY_STATUS,
+    TXT_HELP,
+    TXT_ABOUT,
+    TXT_CLOSE,
+    TXT_SNAPSHOT,
+    TXT_SNAPSHOT_SAVED,
+    TXT_SNAPSHOT_FAILED,
+    TXT_UNINSTALL_SCREEN_SAVER,
+    TXT_UNINSTALLATION_SUCCEEDED,
+    TXT_UNINSTALLATION_FAILED,
+    TXT_UNINSTALLATION_BLOCKED_BY_SETTINGS,
+    TXT_UNINSTALLATION_BLOCKED_BY_SYSTEM_PREVIEW,
+    TXT_UNINSTALLATION_BLOCKED_BY_RUNNING_SAVER,
+    TXT_ABOUT_DESCRIPTION,
+    TXT_ABOUT_VERSION_LABEL,
+    TXT_ABOUT_PLATFORM_LABEL,
+    TXT_ABOUT_WEBSITE_LABEL,
+    TXT_OPEN_IN_BROWSER,
+    TXT_COPY_URL,
+    TXT_COPY_INFORMATION,
+    TXT_MAIN_LIGHT,
+    TXT_FILL_LIGHT,
+    TXT_AMBIENT_LIGHT,
+    TXT_RIM_LIGHT,
+    TXT_FILLED_SURFACE,
+    TXT_CAMERA_TUMBLING,
+    TXT_CAMERA_REVERSALS,
+    TXT_ABOUT_LICENSE_UNAVAILABLE,
+    TXT_MONITOR_COLUMN_MODEL,
+    TXT_MONITOR_COLUMN_REFRESH_RATE,
+    TXT_MONITOR_COLUMN_BIT_DEPTH,
+    TXT_MONITOR_COLUMN_COLOR_FORMAT,
+    TXT_MONITOR_COLUMN_COLOR_SPACE,
+    TXT_MONITOR_CHANNEL_DEPTH_FORMAT,
+    TXT_MONITOR_PIXEL_DEPTH_FORMAT,
+    TXT_RECORDING_SETTINGS_TITLE,
+    TXT_RECORDING_SETTINGS_VIEWPORT,
+    TXT_RECORDING_SETTINGS_TELEVISION,
+    TXT_RECORDING_SETTINGS_RESOLUTION,
+    TXT_RECORDING_SETTINGS_FRAME_RATE,
+    TXT_RECORDING_SETTINGS_NOTE,
+    TXT_APPLICATION_HELP,
+    TXT_SCREEN_SAVER_HELP,
+    TXT_COUNT
+};
+
+/// Associates one immutable translation with its named text key during compilation.
 struct LocalizedText {
-    const wchar_t* languageName;
-    const wchar_t* controlTitle;
-    const wchar_t* settingsTitle;
-    const wchar_t* language;
-    const wchar_t* objectSpeed;
-    const wchar_t* flightEffects;
-    const wchar_t* enableAll;
-    const wchar_t* disableAll;
-    const wchar_t* animationMonitor;
-    const wchar_t* monitor;
-    const wchar_t* resolution;
-    const wchar_t* position;
-    const wchar_t* primary;
-    const wchar_t* ok;
-    const wchar_t* cancel;
-    const wchar_t* startRecording;
-    const wchar_t* stopRecording;
-    const wchar_t* pause;
-    const wchar_t* resume;
-    const wchar_t* installScreenSaver;
-    const wchar_t* exit;
-    const wchar_t* ready;
-    const wchar_t* recording;
-    const wchar_t* recordingSaved;
-    const wchar_t* recordingFailed;
-    const wchar_t* installationFailed;
-    const wchar_t* installationSucceeded;
-    const wchar_t* rendererFailed;
-    std::array<const wchar_t*, EFFECT_COUNT> effects;
+    TextId id;
+    const wchar_t* text;
 };
 
-/// Number of selectable user-interface languages.
-inline constexpr std::size_t LANGUAGE_COUNT = static_cast<std::size_t>(AppLanguage::Count);
+/// Associates a complete translation table with one existing application language identifier.
+struct LocalizedLanguage {
+    AppLanguage id;
+    const wchar_t* texts[TXT_COUNT];
+};
 
 /// Localized monitor-detail column captions and bit-depth formats.
 struct MonitorColumnText {
@@ -117,158 +181,78 @@ struct MonitorColumnText {
     const wchar_t* pixelDepth;
 };
 
-/// Captions and usage note displayed by the recording-settings dialog.
-struct RecordingText {
-    const wchar_t* title;
-    const wchar_t* viewport;
-    const wchar_t* television;
-    const wchar_t* resolution;
-    const wchar_t* frameRate;
-    const wchar_t* note;
+/// Maps animation kinds to their named translation keys.
+inline constexpr TextId EFFECT_TEXT_IDS[] = {
+    TXT_EFFECT_CORRIDOR,
+    TXT_EFFECT_FUNNEL,
 };
 
-/// Returns localized recording-settings captions.
-const RecordingText& RecordingSettingsText(AppLanguage language);
+static_assert(std::size(EFFECT_TEXT_IDS) == EFFECT_COUNT);
 
-/// Returns the warning displayed before closing an application with an active recording.
-const wchar_t* RecordingCloseWarningText(AppLanguage language);
-
-/// Returns one of the three TV resolution captions.
-const wchar_t* RecordingResolutionText(unsigned index);
-
-/// Returns one of the four exact TV frame-rate captions.
-const wchar_t* RecordingRateText(unsigned index);
-
-/// Core language-table access and conversion
-
-/// Returns the core text record, normalizing unsupported language values to US English.
-const LocalizedText& Text(AppLanguage language);
+/// Returns a borrowed, immutable translation identified by the language enum and a named text key.
+const wchar_t* GetLocalizedText(AppLanguage language, TextId id);
 
 /// Returns localized monitor-detail column captions and bit-depth formats.
-const MonitorColumnText& MonitorColumnsText(AppLanguage language);
+MonitorColumnText MonitorColumnsText(AppLanguage language);
 
-/// Maps the current user's Windows UI language to the nearest supported language.
+/// Maps the current user's Windows UI language to a supported language.
 AppLanguage DetectSystemLanguage();
 
-/// Maps unsupported persisted language values to US English.
+/// Replaces an invalid persisted language value with the application default.
 AppLanguage NormalizeLanguage(int language);
 
-/// Returns a supported language's position in the language selector.
-int LanguageIndex(AppLanguage language);
+/// Returns one of the three language-independent TV resolution captions.
+const wchar_t* RecordingResolutionText(unsigned index);
 
-/// Resolves a language-selector index, using US English for an invalid index.
-AppLanguage LanguageAtIndex(int index);
+/// Returns one of the four language-independent exact TV frame-rate captions.
+const wchar_t* RecordingRateText(unsigned index);
 
-/// Supplementary settings-window strings
+/// Builds one language at compile time and rejects missing, duplicate, empty, or invalid text entries.
+consteval LocalizedLanguage DefineLanguage(AppLanguage language, std::initializer_list<LocalizedText> entries) {
+    if (entries.size() != TXT_COUNT) {
+        throw "Every language must define every TextId exactly once.";
+    }
+    LocalizedLanguage result = { language, {} };
+    for (const LocalizedText& entry : entries) {
+        int id = static_cast<int>(entry.id);
+        if (id < 0 || id >= TXT_COUNT) {
+            throw "Invalid translation TextId.";
+        }
+        if (entry.text == nullptr || entry.text[0] == L'\0') {
+            throw "A translation cannot be null or empty.";
+        }
+        if (result.texts[id] != nullptr) {
+            throw "Duplicate translation TextId.";
+        }
+        result.texts[id] = entry.text;
+    }
+    return result;
+}
 
-/// Returns the localized option that inhibits the screen saver during visible animation.
-const wchar_t* PreventScreenSaverText(AppLanguage language);
-
-/// Returns the localized command that starts the settings preview.
-const wchar_t* EnablePreviewText(AppLanguage language);
-
-/// Returns the localized command that stops the settings preview.
-const wchar_t* DisablePreviewText(AppLanguage language);
-
-/// Returns the localized status text for paused animation.
-const wchar_t* PausedStatusText(AppLanguage language);
-
-/// Returns the localized ready status when no animation surface is rendering.
-const wchar_t* ReadyStatusText(AppLanguage language);
-
-/// Returns the localized Help button caption.
-const wchar_t* HelpButtonText(AppLanguage language);
-
-/// Returns the localized About button caption.
-const wchar_t* AboutButtonText(AppLanguage language);
-
-/// Returns the localized Close button caption.
-const wchar_t* CloseButtonText(AppLanguage language);
-
-/// Returns the localized snapshot button caption.
-const wchar_t* SnapshotButtonText(AppLanguage language);
-
-/// Returns the localized status text for a successfully saved snapshot.
-const wchar_t* SnapshotSavedText(AppLanguage language);
-
-/// Returns the localized status text for a failed snapshot.
-const wchar_t* SnapshotFailedText(AppLanguage language);
-
-/// Screen-saver installation strings
-
-/// Returns the localized command that uninstalls the screen saver.
-const wchar_t* UninstallScreenSaverText(AppLanguage language);
-
-/// Returns the localized status text for successful screen-saver uninstallation.
-const wchar_t* UninstallationSucceededText(AppLanguage language);
-
-/// Returns the generic localized screen-saver uninstallation failure text.
-const wchar_t* UninstallationFailedText(AppLanguage language);
-
-/// Returns the instruction to close settings that prevent screen-saver uninstallation.
-const wchar_t* UninstallationBlockedBySettingsText(AppLanguage language);
-
-/// Returns the instruction to close the Windows preview that prevents screen-saver uninstallation.
-const wchar_t* UninstallationBlockedBySystemPreviewText(AppLanguage language);
-
-/// Returns the instruction to stop an active screen saver before uninstalling it.
-const wchar_t* UninstallationBlockedByRunningSaverText(AppLanguage language);
-
-/// Help and About dialog strings
-
-/// Returns localized Help content for standalone or screen-saver settings.
-const wchar_t* HelpBodyText(AppLanguage language, bool appMode);
-
-/// Returns the localized one-line product description.
-const wchar_t* AboutDescriptionText(AppLanguage language);
-
-/// Returns the localized product-version label.
-const wchar_t* AboutVersionLabel(AppLanguage language);
-
-/// Returns the localized target-platform label.
-const wchar_t* AboutPlatformLabel(AppLanguage language);
-
-/// Returns the localized website label.
-const wchar_t* AboutWebsiteLabel(AppLanguage language);
-
-/// Returns the localized About website tooltip.
-const wchar_t* AboutVisitTooltipText(AppLanguage language);
-
-/// Returns the localized website-opening failure message.
-const wchar_t* AboutWebsiteFailedText(AppLanguage language);
-
-/// Returns the localized URL-copying failure message.
-const wchar_t* AboutCopyUrlFailedText(AppLanguage language);
-
-/// Returns the localized product-information-copying failure message.
-const wchar_t* AboutCopyInformationFailedText(AppLanguage language);
-
-/// Returns the localized context command that opens the product website.
-const wchar_t* OpenInBrowserText(AppLanguage language);
-
-/// Returns the localized context command that copies the website URL.
-const wchar_t* CopyUrlText(AppLanguage language);
-
-/// Returns the localized context command that copies product information.
-const wchar_t* CopyInformationText(AppLanguage language);
-
-/// Returns the selected monitors' texture checkbox caption.
-const wchar_t* FilledSurfaceText(AppLanguage language);
-
-/// Returns the selected monitors' free camera-tumbling option.
-const wchar_t* CameraTumblingText(AppLanguage language);
-
-/// Returns the selected monitors’ optional camera stops and reversals caption.
-const wchar_t* CameraReversalsText(AppLanguage language);
-
-/// Returns the selected monitors' main-light checkbox caption.
-const wchar_t* MainLightText(AppLanguage language);
-
-/// Returns the selected monitors' fill-light checkbox caption.
-const wchar_t* FillLightText(AppLanguage language);
-
-/// Returns the localized ambient-light checkbox caption.
-const wchar_t* AmbientLightText(AppLanguage language);
-
-/// Returns the localized rim-light checkbox caption.
-const wchar_t* RimLightText(AppLanguage language);
+/// Indexes complete languages by AppLanguage at compile time, independently of their source order.
+/// Rejects missing, duplicate, or invalid language identifiers before any executable can be produced.
+consteval std::array<LocalizedLanguage, LANG_COUNT> DefineLocalization(
+        std::initializer_list<LocalizedLanguage> languages) {
+    if (languages.size() != LANG_COUNT) {
+        throw "Every AppLanguage must have a complete translation table.";
+    }
+    std::array<LocalizedLanguage, LANG_COUNT> result = {};
+    std::array<bool, LANG_COUNT> included = {};
+    for (const LocalizedLanguage& language : languages) {
+        int id = static_cast<int>(language.id);
+        if (id < 0 || id >= LANG_COUNT) {
+            throw "Invalid localization AppLanguage.";
+        }
+        if (included[id]) {
+            throw "Duplicate localization AppLanguage.";
+        }
+        for (const wchar_t* text : language.texts) {
+            if (text == nullptr || text[0] == L'\0') {
+                throw "Every language must contain a nonempty translation for every TextId.";
+            }
+        }
+        result[id] = language;
+        included[id] = true;
+    }
+    return result;
+}

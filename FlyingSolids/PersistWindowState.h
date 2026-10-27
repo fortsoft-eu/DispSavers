@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.2.2.1
  */
 
 #pragma once
@@ -68,6 +68,7 @@ typedef void (*PersistWindowStateEventHandler)(PersistWindowState*, const Persis
 
 /// Restores and persists native window bounds, show state and instance registration.
 class PersistWindowState {
+
 private:
     HWND window;
     HANDLE instanceMutex;
