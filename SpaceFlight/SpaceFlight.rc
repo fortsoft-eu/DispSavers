@@ -73,8 +73,8 @@ BEGIN
     LTEXT           "",ID_RECORD_RATE_LABEL,19,56,73,10
     COMBOBOX        ID_RECORD_RATE,95,53,143,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
     LTEXT           "",ID_RECORD_NOTE,10,70,228,18
-    DEFPUSHBUTTON   "",IDOK,134,94,50,14,WS_GROUP
-    PUSHBUTTON      "",IDCANCEL,188,94,50,14
+    DEFPUSHBUTTON   "",IDOK,149,92,43,12,WS_GROUP
+    PUSHBUTTON      "",IDCANCEL,198,92,43,12
 END
 
 
@@ -118,8 +118,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,2,2,1
- PRODUCTVERSION 1,2,2,1
+ FILEVERSION 1,2,2,2
+ PRODUCTVERSION 1,2,2,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -136,12 +136,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FortSoft"
             VALUE "FileDescription", "SpaceFlight"
-            VALUE "FileVersion", "1.2.2.1"
+            VALUE "FileVersion", "1.2.2.2"
             VALUE "InternalName", "SpaceFlight.exe"
             VALUE "LegalCopyright", "Copyright © Petr Červinka — FortSoft 2026"
             VALUE "OriginalFilename", "SpaceFlight.exe"
             VALUE "ProductName", "SpaceFlight"
-            VALUE "ProductVersion", "1.2.2.1"
+            VALUE "ProductVersion", "1.2.2.2"
         END
     END
     BLOCK "VarFileInfo"

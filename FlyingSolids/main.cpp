@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.2.1
+ * Last modified for version 1.2.2.2
  */
 
 #define NOMINMAX
@@ -3366,7 +3366,7 @@ static int CALLBACK InformationWordBreakProc(wchar_t* text, int position, int le
             position--;
         }
         while (position > 0 && (!attributes[position].fCharStop
-                || !attributes[position].fSoftBreak && !attributes[position - 1].fWhiteSpace)) {
+            || !attributes[position].fSoftBreak && !attributes[position - 1].fWhiteSpace)) {
             position--;
         }
     } else if (code == WB_RIGHT) {
@@ -3374,7 +3374,7 @@ static int CALLBACK InformationWordBreakProc(wchar_t* text, int position, int le
             position++;
         }
         while (position < length && (!attributes[position].fCharStop
-                || !attributes[position].fSoftBreak && !attributes[position - 1].fWhiteSpace)) {
+            || !attributes[position].fSoftBreak && !attributes[position - 1].fWhiteSpace)) {
             position++;
         }
     }
@@ -4531,51 +4531,108 @@ static void UpdateComboBoxDropDownSize(HWND combo) {
     SendMessageW(combo, CB_SETDROPPEDWIDTH, width, 0);
 }
 
-/// Preserves main-form margins and About button sizes, scaling the dialog and combos with its font and DPI.
+/// Converts dialog units using the supplied font metrics rather than fixed pixel assumptions.
+static SIZE DialogUnits(HFONT font, int x, int y) {
+    HDC dc = GetDC(nullptr);
+    SIZE extent = SIZE{};
+    TEXTMETRICW metrics = TEXTMETRICW{};
+    if (!dc) {
+        return SIZE{ x, y };
+    }
+    HGDIOBJ old = SelectObject(dc, font);
+    GetTextExtentPoint32W(dc, L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 52, &extent);
+    GetTextMetricsW(dc, &metrics);
+    SelectObject(dc, old);
+    ReleaseDC(nullptr, dc);
+    int baseX = (extent.cx / 26 + 1) / 2;
+    return SIZE{ MulDiv(x, baseX, 4), MulDiv(y, metrics.tmHeight, 8) };
+}
+
+/// Copies control text into a null-terminated process-heap buffer owned by the caller.
+static wchar_t* CopyControlText(HWND control) {
+    int length = GetWindowTextLengthW(control);
+    wchar_t* text =
+        static_cast<wchar_t*>(HeapAlloc(GetProcessHeap(), 0, (static_cast<SIZE_T>(length) + 1) * sizeof(wchar_t)));
+    if (text) {
+        GetWindowTextW(control, text, length + 1);
+    }
+    return text;
+}
+
+/// Expands a native button only as needed for its current localized text and native padding.
+static SIZE PreferredButtonSize(HWND button, const SIZE& minimum) {
+    SIZE size = SIZE{};
+    if (!SendMessageW(button, BCM_GETIDEALSIZE, 0, reinterpret_cast<LPARAM>(&size))) {
+        wchar_t* text = CopyControlText(button);
+        HDC dc = GetDC(button);
+        if (text && dc) {
+            HFONT font = reinterpret_cast<HFONT>(SendMessageW(button, WM_GETFONT, 0, 0));
+            HGDIOBJ previous = font ? SelectObject(dc, font) : nullptr;
+            RECT bounds = RECT{};
+            DrawTextW(dc, text, -1, &bounds, DT_CALCRECT | DT_SINGLELINE);
+            SIZE padding = DialogUnits(font, 12, 0);
+            size.cx = bounds.right + padding.cx + 2 * GetSystemMetrics(SM_CXEDGE);
+            size.cy = bounds.bottom + 2 * GetSystemMetrics(SM_CYEDGE);
+            if (previous) {
+                SelectObject(dc, previous);
+            }
+        }
+        if (dc) {
+            ReleaseDC(button, dc);
+        }
+        if (text) {
+            HeapFree(GetProcessHeap(), 0, text);
+        }
+    }
+    if (size.cx < minimum.cx) {
+        size.cx = minimum.cx;
+    }
+    if (size.cy < minimum.cy) {
+        size.cy = minimum.cy;
+    }
+    return size;
+}
+
+/// Uses 8-DLU margins and native caption-sized buttons while preserving the main-form row spacing.
 static SIZE LayoutRecordingSettings(HWND window) {
     const RecordingWindowData* recordingData =
         reinterpret_cast<const RecordingWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
     const HWND owner = recordingData ? recordingData->owner : nullptr;
-    const SettingsWindowData* data = owner
-        ? reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(owner, GWLP_USERDATA))
-        : nullptr;
+    HFONT font = recordingData == nullptr ? nullptr : recordingData->font;
     RECT languageLabel{};
-    RECT languageCombo{};
     RECT firstRadio{};
     RECT secondRadio{};
     RECT monitorLabel{};
     RECT firstButton{};
     RECT secondButton{};
-    RECT bottomButton{};
     RecordingReferenceRect(owner, ID_LANGUAGE_LABEL, languageLabel);
-    RecordingReferenceRect(owner, ID_LANGUAGE, languageCombo);
     RecordingReferenceRect(owner, ID_ANIMATION_PRIMARY, firstRadio);
     RecordingReferenceRect(owner, ID_ANIMATION_SECONDARY, secondRadio);
     RecordingReferenceRect(owner, ID_MONITOR_GROUP, monitorLabel);
     RecordingReferenceRect(owner, ID_ALL_ANIMATIONS, firstButton);
     RecordingReferenceRect(owner, ID_NO_ANIMATIONS, secondButton);
-    RecordingReferenceRect(owner, data && data->appMode ? ID_RECORDING_SETTINGS : ID_OK, bottomButton);
-    const int margin = languageLabel.left;
-    const int top = std::min(languageLabel.top, languageCombo.top);
+    const SIZE margins = DialogUnits(font, 8, 8);
+    const int margin = margins.cx;
+    const int top = margins.cy;
     const int radioHeight = firstRadio.bottom - firstRadio.top;
     const int radioStep = secondRadio.top - firstRadio.top;
     const int rowGap = std::max(0L, monitorLabel.top - firstButton.bottom);
-    RECT buttonGeometry = { 0, 0, 50, 14 };
-    MapDialogRect(window, &buttonGeometry);
-    const int buttonHeight = buttonGeometry.bottom;
-    const int buttonWidth = buttonGeometry.right;
-    const int buttonGap = secondButton.left - firstButton.right;
-    const int bottomMargin = data ? std::max(0, data->contentHeight - static_cast<int>(bottomButton.bottom)) : margin;
-    RECT horizontal{ 0, 0, 249, 0 };
-    MapDialogRect(window, &horizontal);
-    RECT comboGeometry{ 0, 0, RECORDING_COMBO_WIDTH_DLU, 90 };
-    MapDialogRect(window, &comboGeometry);
-    const int comboWidth = comboGeometry.right;
-    const int width = horizontal.right;
+    SIZE buttonSize = DialogUnits(font, DIALOG_BUTTON_WIDTH_DLU, DIALOG_BUTTON_HEIGHT_DLU);
+    constexpr int buttons[]{ IDOK, IDCANCEL };
+    for (int id : buttons) {
+        const SIZE preferred = PreferredButtonSize(GetDlgItem(window, id), buttonSize);
+        buttonSize.cx = preferred.cx;
+    }
+    const int buttonHeight = buttonSize.cy;
+    const int buttonWidth = buttonSize.cx;
+    const int buttonGap = DialogUnits(font, 6, 0).cx;
+    const int labelGap = secondButton.left - firstButton.right;
+    const int bottomMargin = margins.cy;
+    const SIZE comboGeometry = DialogUnits(font, RECORDING_COMBO_WIDTH_DLU, 90);
+    const int comboWidth = comboGeometry.cx;
+    const int width = DialogUnits(font, 249, 0).cx;
     const int comboLeft = width - margin - comboWidth;
-    RECT indent{ 0, 0, 9, 0 };
-    MapDialogRect(window, &indent);
-    const int labelLeft = margin + indent.right;
+    const int labelLeft = margin + DialogUnits(font, 9, 0).cx;
     const int textWidth = width - 2 * margin;
     const int televisionTop = top + radioStep + 4;
     SetWindowPos(GetDlgItem(window, ID_RECORD_VIEWPORT), nullptr, margin, top, textWidth, radioHeight,
@@ -4583,24 +4640,22 @@ static SIZE LayoutRecordingSettings(HWND window) {
     SetWindowPos(GetDlgItem(window, ID_RECORD_TV), nullptr, margin, televisionTop, textWidth, radioHeight,
         SWP_NOZORDER | SWP_NOACTIVATE);
     const int firstComboTop = televisionTop + radioHeight + rowGap;
-    SetWindowPos(GetDlgItem(window, ID_RECORD_SIZE), nullptr, comboLeft, firstComboTop, comboWidth,
-        comboGeometry.bottom, SWP_NOZORDER | SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(window, ID_RECORD_SIZE), nullptr, comboLeft, firstComboTop, comboWidth, comboGeometry.cy,
+        SWP_NOZORDER | SWP_NOACTIVATE);
     RECT comboBounds{};
     GetWindowRect(GetDlgItem(window, ID_RECORD_SIZE), &comboBounds);
     const int comboHeight = comboBounds.bottom - comboBounds.top;
     const int secondComboTop = firstComboTop + comboHeight + rowGap;
-    SetWindowPos(GetDlgItem(window, ID_RECORD_RATE), nullptr, comboLeft, secondComboTop, comboWidth,
-        comboGeometry.bottom, SWP_NOZORDER | SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(window, ID_RECORD_RATE), nullptr, comboLeft, secondComboTop, comboWidth, comboGeometry.cy,
+        SWP_NOZORDER | SWP_NOACTIVATE);
     const int labelHeight = languageLabel.bottom - languageLabel.top;
-    const int labelWidth = comboLeft - labelLeft - buttonGap;
+    const int labelWidth = comboLeft - labelLeft - labelGap;
     SetWindowPos(GetDlgItem(window, ID_RECORD_SIZE_LABEL), nullptr, labelLeft, firstComboTop, labelWidth, labelHeight,
         SWP_NOZORDER | SWP_NOACTIVATE);
     SetWindowPos(GetDlgItem(window, ID_RECORD_RATE_LABEL), nullptr, labelLeft, secondComboTop, labelWidth, labelHeight,
         SWP_NOZORDER | SWP_NOACTIVATE);
     const int noteTop = secondComboTop + comboHeight + rowGap;
-    RECT noteGeometry{ 0, 0, 0, 8 };
-    MapDialogRect(window, &noteGeometry);
-    const int noteHeight = noteGeometry.bottom;
+    const int noteHeight = DialogUnits(font, 0, 8).cy;
     SetWindowPos(GetDlgItem(window, ID_RECORD_NOTE), nullptr, margin, noteTop, textWidth, noteHeight,
         SWP_NOZORDER | SWP_NOACTIVATE);
     const int buttonsTop = noteTop + noteHeight + rowGap;
@@ -4614,7 +4669,9 @@ static SIZE LayoutRecordingSettings(HWND window) {
     AlignSettingsButton(GetDlgItem(window, IDCANCEL), GetDlgItem(window, IDOK));
     UpdateComboBoxDropDownSize(GetDlgItem(window, ID_RECORD_SIZE));
     UpdateComboBoxDropDownSize(GetDlgItem(window, ID_RECORD_RATE));
-    const SIZE size{ width, buttonsTop + buttonHeight + bottomMargin };
+    const RECT acceptBounds = InformationControlRect(window, IDOK);
+    const RECT cancelBounds = InformationControlRect(window, IDCANCEL);
+    const SIZE size{ width, std::max(acceptBounds.bottom, cancelBounds.bottom) + bottomMargin };
     return size;
 }
 
@@ -4640,7 +4697,7 @@ static void RefreshRecordingSettingsFont(HWND window, RecordingWindowData& data)
         SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
 }
 
-/// Refreshes localized recording captions without changing the font, geometry or unconfirmed choices.
+/// Refreshes localized recording captions and fits the buttons without altering unconfirmed choices.
 static void RefreshRecordingSettingsWindow(HWND window, RecordingWindowData& data) {
     const AppLanguage stringsLanguage = data.language;
     const AppLanguage commonLanguage = data.language;
@@ -4652,6 +4709,7 @@ static void RefreshRecordingSettingsWindow(HWND window, RecordingWindowData& dat
     SetDlgItemTextW(window, ID_RECORD_NOTE, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_NOTE));
     SetDlgItemTextW(window, IDOK, GetLocalizedText(commonLanguage, TXT_OK));
     SetDlgItemTextW(window, IDCANCEL, GetLocalizedText(commonLanguage, TXT_CANCEL));
+    LayoutRecordingSettings(window);
 }
 
 /// Restores saved recording-window coordinates or centers its first opening, using shared work-area clamping.
