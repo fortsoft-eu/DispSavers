@@ -2557,7 +2557,7 @@ static void UpdateSettingsControlMetrics(HWND window) {
         { ID_MAIN_LIGHT, ID_FILL_LIGHT }
     };
     AlignSettingsControlRows(window, sceneCheckboxes, std::size(sceneCheckboxes));
-    for (const int (&column)[2] : lightRows) {
+    for (const int(&column)[2] : lightRows) {
         AlignSettingsControlRows(window, column, std::size(column));
     }
     const int effects[]{ ID_EFFECT_0, ID_EFFECT_1, ID_EFFECT_2 };
@@ -4892,11 +4892,11 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 if (data->appMode && app) {
                     switch (LOWORD(wParam)) {
                         case ID_SYSTEM_SCREEN_SAVER:
-                    if (data->appMode && !OpenSystemScreenSaverSettings(window)) {
-                        ShowTransientStatus(GetLocalizedText(data->language, TXT_SYSTEM_SCREEN_SAVER_FAILED));
-                    }
-                    return 0;
-                case ID_PREVENT_SCREEN_SAVER:
+                            if (data->appMode && !OpenSystemScreenSaverSettings(window)) {
+                                ShowTransientStatus(GetLocalizedText(data->language, TXT_SYSTEM_SCREEN_SAVER_FAILED));
+                            }
+                            return 0;
+                        case ID_PREVENT_SCREEN_SAVER:
                             if (data->settings) {
                                 data->settings->preventScreenSaver = SendDlgItemMessageW(controls,
                                     ID_PREVENT_SCREEN_SAVER, BM_GETCHECK, 0, 0) == BST_CHECKED;

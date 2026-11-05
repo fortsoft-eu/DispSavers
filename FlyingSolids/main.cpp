@@ -2543,7 +2543,7 @@ static void UpdateSettingsControlMetrics(HWND window) {
         { ID_AMBIENT_LIGHT, ID_RIM_LIGHT },
         { ID_MAIN_LIGHT, ID_FILL_LIGHT }
     };
-    for (const int (&column)[2] : sceneRows) {
+    for (const int(&column)[2] : sceneRows) {
         AlignSettingsControlRows(window, column, std::size(column));
     }
     const int solidRows[][10]{
@@ -2582,7 +2582,7 @@ static void UpdateSettingsControlMetrics(HWND window) {
             ID_SOLID_TORUS
         }
     };
-    for (const int (&column)[10] : solidRows) {
+    for (const int(&column)[10] : solidRows) {
         AlignSettingsControlRows(window, column, std::size(column));
     }
     HWND preventScreenSaver = GetDlgItem(window, ID_PREVENT_SCREEN_SAVER);
@@ -4895,11 +4895,11 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 if (data->appMode && app) {
                     switch (LOWORD(wParam)) {
                         case ID_SYSTEM_SCREEN_SAVER:
-                    if (data->appMode && !OpenSystemScreenSaverSettings(window)) {
-                        ShowTransientStatus(GetLocalizedText(data->language, TXT_SYSTEM_SCREEN_SAVER_FAILED));
-                    }
-                    return 0;
-                case ID_PREVENT_SCREEN_SAVER:
+                            if (data->appMode && !OpenSystemScreenSaverSettings(window)) {
+                                ShowTransientStatus(GetLocalizedText(data->language, TXT_SYSTEM_SCREEN_SAVER_FAILED));
+                            }
+                            return 0;
+                        case ID_PREVENT_SCREEN_SAVER:
                             if (data->settings) {
                                 data->settings->preventScreenSaver = SendDlgItemMessageW(controls,
                                     ID_PREVENT_SCREEN_SAVER, BM_GETCHECK, 0, 0) == BST_CHECKED;

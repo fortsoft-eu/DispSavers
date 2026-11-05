@@ -77,7 +77,7 @@
 #pragma comment(lib, "uxtheme.lib")
 #pragma comment(lib, "Version.lib")
 
- /// Window classes and product constants
+/// Window classes and product constants
 constexpr wchar_t PRODUCT_NAME[] = L"FlightCorridor";
 constexpr wchar_t RENDER_CLASS[] = L"FortSoft.FlightCorridor.Render";
 constexpr wchar_t SETTINGS_CLASS[] = L"FortSoft.FlightCorridor.Settings";
@@ -4851,11 +4851,11 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 if (data->appMode && app) {
                     switch (LOWORD(wParam)) {
                         case ID_SYSTEM_SCREEN_SAVER:
-                    if (data->appMode && !OpenSystemScreenSaverSettings(window)) {
-                        ShowTransientStatus(GetLocalizedText(data->language, TXT_SYSTEM_SCREEN_SAVER_FAILED));
-                    }
-                    return 0;
-                case ID_PREVENT_SCREEN_SAVER:
+                            if (data->appMode && !OpenSystemScreenSaverSettings(window)) {
+                                ShowTransientStatus(GetLocalizedText(data->language, TXT_SYSTEM_SCREEN_SAVER_FAILED));
+                            }
+                            return 0;
+                        case ID_PREVENT_SCREEN_SAVER:
                             if (data->settings) {
                                 data->settings->preventScreenSaver = SendDlgItemMessageW(controls,
                                     ID_PREVENT_SCREEN_SAVER, BM_GETCHECK, 0, 0) == BST_CHECKED;

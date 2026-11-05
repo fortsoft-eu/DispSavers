@@ -3430,7 +3430,7 @@ static bool StartRenderSurfaces() {
     const unsigned height = static_cast<unsigned>(app->worldBounds.bottom - app->worldBounds.top);
     app->minimumCellSize = std::max({
         1U,
-        (width + maximum - 1) / maximum, 
+        (width + maximum - 1) / maximum,
         (height + maximum - 1) / maximum
     });
     app->settings.cellSize = std::max(app->settings.cellSize, app->minimumCellSize);
