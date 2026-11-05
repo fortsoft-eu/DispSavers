@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.3.0.0
  */
 
 static const float PI = 3.14159265358979323846;
@@ -80,12 +80,14 @@ float AnchoredFlightGridCoordinate(float cameraCoordinate, float index, float sp
 
 /// Calculates the corridor's smoothly varying horizontal center.
 float CorridorCenterX(float z) {
-    return (13.0 * sin(z * 0.028 + pathPhases.x) + 6.0 * sin(z * 0.011 + 1.2 + pathPhases.y)) * surfaceVariations.y;
+    return (13.0 * sin(z * 0.028 + pathPhases.x) + 6.0 * sin(z * 0.011 + 1.2 + pathPhases.y))
+        * surfaceVariations.y;
 }
 
 /// Calculates the corridor's smoothly varying base height.
 float CorridorBaseHeight(float z) {
-    return (6.0 * sin(z * 0.022 + 0.4 + pathPhases.z) + 3.0 * sin(z * 0.047 + 1.1 + pathPhases.w)) * surfaceVariations.x;
+    return (6.0 * sin(z * 0.022 + 0.4 + pathPhases.z) + 3.0 * sin(z * 0.047 + 1.1 + pathPhases.w))
+        * surfaceVariations.x;
 }
 
 /// Blends the corridor's waves, banking, saddle and arch shapes.
@@ -162,8 +164,8 @@ float4 CorridorSurfaceSample(float u, float zIndex, uint surface, out float fade
     float cameraZ = time * 4.6;
     float cameraX = CorridorCenterX(cameraZ);
     float2 cameraXZ = float2(cameraX, cameraZ);
-    float cameraY = CorridorMidHeight(cameraX, cameraZ, cameraXZ) + 0.35 * sin(time * 0.13 + animationPhases.w)
-        * cameraVariations.y;
+    float cameraY = CorridorMidHeight(cameraX, cameraZ, cameraXZ) + 0.35
+        * sin(time * 0.13 + animationPhases.w) * cameraVariations.y;
     float3 camera = float3(cameraX, cameraY, cameraZ);
     float z = AnchoredFlightGridCoordinate(cameraZ, zIndex, 3.0);
     float centerX = CorridorCenterX(z);
@@ -185,7 +187,8 @@ float4 CorridorSurfaceSample(float u, float zIndex, uint surface, out float fade
             + 1.20 * u * u * cos(z * 0.015 - time * 0.091 + animationPhases.y)) * surfaceVariations.y;
         world = float3(centerX + side * halfWidth + sharedHorizontalBend, y, z);
     }
-    float targetZ = cameraZ + 34.0 * cameraVariations.w + 5.0 * sin(time * 0.061 + animationPhases.w) * cameraVariations.w;
+    float targetZ = cameraZ + 34.0 * cameraVariations.w + 5.0 * sin(time * 0.061 + animationPhases.w)
+        * cameraVariations.w;
     float targetX = CorridorCenterX(targetZ);
     float targetY = CorridorMidHeight(targetX, targetZ, cameraXZ);
     float3 forward = normalize(BendCorridor(float3(targetX, targetY, targetZ) - camera));
@@ -266,7 +269,8 @@ float3 FunnelPoint(float pathPosition, float angle, out float chamberAmount) {
 }
 
 /// Projects a funnel grid sample and computes distance fading, color variation and chamber expansion.
-float4 FunnelSurfaceSample(float angle, float pathIndex, out float fade, out float colorPhase, out float chamberAmount) {
+float4 FunnelSurfaceSample(float angle, float pathIndex, out float fade, out float colorPhase,
+        out float chamberAmount) {
     float cameraPath = time * 4.5;
     float cameraRadius = FunnelRadius(cameraPath);
     float3 cameraCenter = FunnelCenter(cameraPath);
@@ -430,7 +434,8 @@ float4 SolidFlightSample(float2 uv, uint patch, out float3 view, out float4 mate
             - FLIGHT_HALF_DEPTH_INDEX, fade, phase, chamber);
         halfFov = 0.66;
     }
-    view = float3(position.x * (resolution.x / resolution.y) * tan(halfFov), position.y * tan(halfFov), position.w);
+    view = float3(position.x * (resolution.x / resolution.y) * tan(halfFov), position.y * tan(halfFov),
+        position.w);
     material = float4(FlightMaterialColor(phase, patch, chamber), fade);
     return position;
 }

@@ -21,15 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.2
+ * Last modified for version 1.3.0.0
  */
 
 #pragma once
 
 #include <windows.h>
+#include <vector>
 
 /// Owns the large and small application icons loaded from a Windows system library.
 class ProgramIcons {
+    /// Large and small system icons cached for one window DPI.
+    struct IconPair {
+        UINT dpi;
+        HICON large;
+        HICON smallIcon;
+    };
 
 public:
     /// Creates an empty icon owner.
@@ -50,6 +57,9 @@ public:
     /// Loads an icon at the requested pixel size; the caller must release it with DestroyIcon.
     HICON LoadSized(UINT size) const;
 
+    /// Applies the cached large and small system icons selected for this window DPI.
+    void Apply(HWND window) const;
+
     /// Returns the large application icon, or null when loading has failed.
     HICON Large() const;
 
@@ -62,4 +72,5 @@ private:
 
     HICON large = nullptr;
     HICON smallIcon = nullptr;
+    mutable std::vector<IconPair> windowIcons;
 };

@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.3.0.0
  */
 
 #pragma once
 
-#include "Effects.h"
+#include "main.h"
 #include <vector>
 
 /// Shared dimensions of the analytically rendered spherocylinder
@@ -37,7 +37,8 @@ inline constexpr float CAPSULE_HALF_LENGTH = .75f;
 inline constexpr float SPHERICAL_LAYER_HALF_THICKNESS = .55f;
 inline constexpr float SPHEROPLATELET_OUTER_RADIUS = 1.1f;
 inline constexpr float SPHEROPLATELET_ROUNDING_RADIUS = .25f;
-inline constexpr float SPHEROPLATELET_DISC_RADIUS = SPHEROPLATELET_OUTER_RADIUS - SPHEROPLATELET_ROUNDING_RADIUS;
+inline constexpr float SPHEROPLATELET_DISC_RADIUS =
+    SPHEROPLATELET_OUTER_RADIUS - SPHEROPLATELET_ROUNDING_RADIUS;
 
 /// Shared cylinder and half-torus dimensions of the rounded hollow cylinder.
 inline constexpr float ROUNDED_HOLLOW_CYLINDER_OUTER_RADIUS = 1.0f;

@@ -15,10 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppSettings.h">
+    <ClInclude Include="AboutForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Effects.h">
+    <ClInclude Include="HelpForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AppSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Localization.h">
@@ -37,6 +43,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PersistWindowState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PackedResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ProgramIcons.h">
@@ -75,11 +84,23 @@
     </Manifest>
   </ItemGroup>
   <ItemGroup>
+    <None Include="prepare.ps1">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="ResourcePacker.cs">
+      <Filter>Source Files</Filter>
+    </None>
     <None Include="..\license.txt">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AboutForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HelpForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="AppSettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -102,6 +123,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PersistWindowState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PackedResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ProgramIcons.cpp">

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.2.0
+ * Last modified for version 1.3.0.0
  */
 
 /// Per-frame camera, lighting and scene parameters shared with the CPU renderer.
@@ -83,6 +83,7 @@ static const float FUNNEL_TILT_RATE = 0.4;
 static const float FUNNEL_TILT_DELAY = 0.75;
 static const uint FUNNEL_CIRCLE_SEGMENTS = 128;
 static const uint INFINITE_GRID_CELLS = 220;
+static const uint INFINITE_WIRE_GRID_CELLS = INFINITE_GRID_CELLS / 2;
 static const float INFINITE_GRID_SPACING = 1.5;
 
 /// Interpolates deformation progress with zero velocity and acceleration at both endpoints.
@@ -374,8 +375,7 @@ float3 FunnelCirclePoint(uint circle, uint segment, uint endpoint, out float vis
         float duration = circle == 0 ? FUNNEL_RIM_FADE_DURATION : 3.0;
         visibility = SurfaceEase((elapsed - formationEnd) / duration) * FunnelBodyVisibility();
         if (circle >= 2) {
-            float gridSpacing = effect == 19 ? INFINITE_GRID_SPACING : 3.0;
-            radius = FUNNEL_CUTOFF_RADIUS * 2.0 - float(circle - 2) * gridSpacing;
+            radius = FUNNEL_CUTOFF_RADIUS * 2.0 - float(circle - 2) * 3.0;
             depth = -FunnelDeformedHeight(radius);
         }
     } else {
@@ -752,15 +752,22 @@ float4 GravityWarpedSpacePosition(uint segment, uint endpoint, out float fade, o
 float4 InfiniteSurfacePosition(uint segment, uint endpoint, out float fade, out float colorPhase) {
     fade = 1.0;
     colorPhase = 0.0;
-    uint direction = segment / ((INFINITE_GRID_CELLS + 1) * INFINITE_GRID_CELLS);
-    uint part = segment % ((INFINITE_GRID_CELLS + 1) * INFINITE_GRID_CELLS);
-    float fixedIndex = float(part / INFINITE_GRID_CELLS) - float(INFINITE_GRID_CELLS) * 0.5;
-    float varyingIndex = float(part % INFINITE_GRID_CELLS + endpoint) - float(INFINITE_GRID_CELLS) * 0.5;
+    uint direction = segment / ((INFINITE_WIRE_GRID_CELLS + 1) * INFINITE_WIRE_GRID_CELLS);
+    uint part = segment % ((INFINITE_WIRE_GRID_CELLS + 1) * INFINITE_WIRE_GRID_CELLS);
+    float fixedIndex = float(part / INFINITE_WIRE_GRID_CELLS) - float(INFINITE_WIRE_GRID_CELLS) * 0.5;
+    float varyingIndex = float(part % INFINITE_WIRE_GRID_CELLS + endpoint) - float(INFINITE_WIRE_GRID_CELLS) * 0.5;
     float2 index = direction == 0 ? float2(fixedIndex, varyingIndex) : float2(varyingIndex, fixedIndex);
+    float2 camera = InfiniteCameraXZ(time);
+    if (surfaceShape == 2) {
+        float3 velocity;
+        camera = FunnelCamera(float3(camera.x, InfiniteCameraHeight(time), camera.y), velocity).xz;
+    }
+    float2 anchor = floor(camera / INFINITE_GRID_SPACING);
+    index = index * 2.0 + floor(anchor * 0.5) * 2.0 - anchor;
     bool visible = true;
     float3 worldPoint = 0.0;
     if (surfaceShape == 2) {
-        float step = endpoint == 0 ? 1.0 : -1.0;
+        float step = endpoint == 0 ? 2.0 : -2.0;
         float2 other = index + (direction == 0 ? float2(0.0, step) : float2(step, 0.0));
         worldPoint = FunnelWireEndpoint(index, other, visible);
         visible = visible && FunnelBodyVisibility() > 0.0;

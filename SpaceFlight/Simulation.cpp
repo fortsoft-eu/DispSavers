@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
@@ -67,7 +67,8 @@ std::uint32_t Simulation::NextCryptographicRandom() {
 float Simulation::CryptographicRandom(float low, float high) {
     constexpr double inverseRange = 1.0 / 4294967296.0;
     const double unit = static_cast<double>(NextCryptographicRandom()) * inverseRange;
-    return static_cast<float>(static_cast<double>(low) + (static_cast<double>(high) - static_cast<double>(low)) * unit);
+    return static_cast<float>(static_cast<double>(low)
+        + (static_cast<double>(high) - static_cast<double>(low)) * unit);
 }
 
 /// Keeps funnel entropy independent of the order in which motion and capture boundaries occur within a frame.
@@ -80,7 +81,8 @@ float Simulation::CryptographicFunnelRandom(float low, float high) {
     }
     constexpr double inverseRange = 1.0 / 4294967296.0;
     const double unit = static_cast<double>(randomBuffer[--funnelRandomBufferPosition]) * inverseRange;
-    return static_cast<float>(static_cast<double>(low) + (static_cast<double>(high) - static_cast<double>(low)) * unit);
+    return static_cast<float>(static_cast<double>(low)
+        + (static_cast<double>(high) - static_cast<double>(low)) * unit);
 }
 
 /// Draws independent bounded variations without replacing the original surfaces or palettes.
@@ -119,7 +121,8 @@ void Simulation::UpdateMotionParameters() {
         transitionTo.pathPhases = transitionFrom.pathPhases;
         transitionDuration = CryptographicRandom(45.0f, 90.0f);
     }
-    const float progress = static_cast<float>(std::clamp((elapsed - transitionStart) / transitionDuration, 0.0, 1.0));
+    const float progress = static_cast<float>(
+        std::clamp((elapsed - transitionStart) / transitionDuration, 0.0, 1.0));
     const float amount = progress * progress * progress * (progress * (progress * 6.0f - 15.0f) + 10.0f);
     BlendMotionValues(state.motion.phases, transitionFrom.phases, transitionTo.phases, amount);
     BlendMotionValues(state.motion.waves, transitionFrom.waves, transitionTo.waves, amount);
@@ -144,8 +147,10 @@ static double MotionEase(double progress) {
 }
 
 /// Integrates a local angular velocity without changing orientation when the rotation axis changes.
-static void RotateCamera(std::array<double, 4>& rotation, const std::array<double, 3>& velocity, double seconds) {
-    const double length = std::sqrt(velocity[0] * velocity[0] + velocity[1] * velocity[1] + velocity[2] * velocity[2]);
+static void RotateCamera(std::array<double, 4>& rotation, const std::array<double, 3>& velocity,
+        double seconds) {
+    const double length = std::sqrt(velocity[0] * velocity[0] + velocity[1] * velocity[1]
+        + velocity[2] * velocity[2]);
     if (length == 0.0) {
         return;
     }
@@ -274,7 +279,8 @@ void Simulation::UpdateCameraRotation(double seconds, bool enabled, bool reversa
         const double factor = TumblingSpeedFactor(reversalTime + step * 0.5);
         std::array<double, 3> velocity{};
         for (std::size_t index = 0; index < velocity.size(); index++) {
-            velocity[index] = (tumblingFrom[index] + (tumblingTo[index] - tumblingFrom[index]) * amount) * factor;
+            velocity[index] = (tumblingFrom[index]
+                + (tumblingTo[index] - tumblingFrom[index]) * amount) * factor;
         }
         RotateCamera(cameraOrientation, velocity, step);
         if (cruising) {
@@ -295,14 +301,18 @@ std::array<double, 3> Simulation::NativeCameraPosition(double sampleTime) const 
     const MotionParameters& motion = state.motion;
     std::array<double, 3> position{};
     if (funnelEffect == EffectKind::InfiniteSurface) {
-        position[0] = sampleTime * 1.15 + 4.0 * std::sin(sampleTime * 0.071 + motion.pathPhases[0]) * motion.camera[0];
-        position[2] = sampleTime * 0.82 + 3.2 * std::cos(sampleTime * 0.053 + motion.pathPhases[1]) * motion.camera[0];
+        position[0] = sampleTime * 1.15 + 4.0 * std::sin(sampleTime * 0.071 + motion.pathPhases[0])
+            * motion.camera[0];
+        position[2] = sampleTime * 0.82 + 3.2 * std::cos(sampleTime * 0.053 + motion.pathPhases[1])
+            * motion.camera[0];
         const double side = std::sin(sampleTime * 0.115 + 0.65 + motion.pathPhases[2]);
         const double distance = 0.5 + 0.5 * std::sin(sampleTime * 0.17 + 0.8 + motion.pathPhases[3]);
         position[1] = (3.0 + 9.0 * distance) * side * motion.camera[1];
     } else {
-        position[0] = sampleTime * 3.20 + 18.0 * std::sin(sampleTime * 0.031 + motion.pathPhases[0]) * motion.camera[0];
-        position[2] = sampleTime * 2.15 + 14.0 * std::cos(sampleTime * 0.027 + motion.pathPhases[1]) * motion.camera[0];
+        position[0] = sampleTime * 3.20 + 18.0 * std::sin(sampleTime * 0.031 + motion.pathPhases[0])
+            * motion.camera[0];
+        position[2] = sampleTime * 2.15 + 14.0 * std::cos(sampleTime * 0.027 + motion.pathPhases[1])
+            * motion.camera[0];
         const double altitude = 0.5 + 0.5 * std::sin(sampleTime * 0.087 + 0.6 + motion.phases[3]);
         position[1] = (7.0 + 11.0 * altitude) * motion.camera[1];
     }
@@ -312,7 +322,8 @@ std::array<double, 3> Simulation::NativeCameraPosition(double sampleTime) const 
 /// Evaluates free-flight velocity, including the derivatives of changing motion parameters.
 std::array<double, 3> Simulation::NativeCameraVelocity(double sampleTime) const {
     const double progress = std::clamp((elapsed - transitionStart) / transitionDuration, 0.0, 1.0);
-    const double first = 30.0 * progress * progress * (progress - 1.0) * (progress - 1.0) / transitionDuration;
+    const double first = 30.0 * progress * progress * (progress - 1.0) * (progress - 1.0)
+        / transitionDuration;
     const MotionParameters& motion = state.motion;
     const double amplitude = motion.camera[0];
     const double amplitudeRate = (transitionTo.camera[0] - transitionFrom.camera[0]) * first;
@@ -352,15 +363,18 @@ std::array<double, 3> Simulation::NativeCameraVelocity(double sampleTime) const 
 }
 
 /// Returns free-flight yaw rate, pitch and pitch rate for a continuous transition into the funnel.
-std::array<double, 3> Simulation::NativeViewMotion(double sampleTime, double height, double heightVelocity) const {
+std::array<double, 3> Simulation::NativeViewMotion(double sampleTime, double height,
+        double heightVelocity) const {
     const double progress = std::clamp((elapsed - transitionStart) / transitionDuration, 0.0, 1.0);
-    const double first = 30.0 * progress * progress * (progress - 1.0) * (progress - 1.0) / transitionDuration;
+    const double first = 30.0 * progress * progress * (progress - 1.0) * (progress - 1.0)
+        / transitionDuration;
     const MotionParameters& motion = state.motion;
     const double amplitude = motion.camera[0];
     const double amplitudeRate = (transitionTo.camera[0] - transitionFrom.camera[0]) * first;
     if (funnelEffect == EffectKind::InfiniteSurface) {
         const double yawPhase = sampleTime * 0.047 + motion.pathPhases[1];
-        const double yawRate = 0.13 + 0.70 * (0.047 * std::cos(yawPhase) * amplitude + std::sin(yawPhase) * amplitudeRate);
+        const double yawRate = 0.13 + 0.70 * (0.047 * std::cos(yawPhase) * amplitude
+            + std::sin(yawPhase) * amplitudeRate);
         const double viewPhase = sampleTime * 0.23 + 2.0 + motion.phases[1];
         const double phaseRate = 0.23 + (transitionTo.phases[1] - transitionFrom.phases[1]) * first;
         const double viewAmount = 0.56 + 0.44 * std::sin(viewPhase);
@@ -375,23 +389,28 @@ std::array<double, 3> Simulation::NativeViewMotion(double sampleTime, double hei
     const double zPhase = sampleTime * 0.027 + motion.pathPhases[1];
     const double velocityX = 3.20 + 0.558 * std::cos(xPhase) * amplitude;
     const double velocityZ = 2.15 - 0.378 * std::sin(zPhase) * amplitude;
-    const double velocityXRate = 0.558 * (-0.031 * std::sin(xPhase) * amplitude + std::cos(xPhase) * amplitudeRate);
-    const double velocityZRate = -0.378 * (0.027 * std::cos(zPhase) * amplitude + std::sin(zPhase) * amplitudeRate);
+    const double velocityXRate = 0.558 * (-0.031 * std::sin(xPhase) * amplitude
+        + std::cos(xPhase) * amplitudeRate);
+    const double velocityZRate = -0.378 * (0.027 * std::cos(zPhase) * amplitude
+        + std::sin(zPhase) * amplitudeRate);
     const double headingRate = (velocityX * velocityZRate - velocityZ * velocityXRate)
         / (velocityX * velocityX + velocityZ * velocityZ);
     const double trackingPhase = sampleTime * 0.079 + 1.7 + motion.pathPhases[2];
     const double distance = (28.0 + 16.0 * std::sin(trackingPhase)) * motion.camera[3];
     const double distanceRate = 1.264 * std::cos(trackingPhase) * motion.camera[3]
-        + (28.0 + 16.0 * std::sin(trackingPhase)) * (transitionTo.camera[3] - transitionFrom.camera[3]) * first;
+        + (28.0 + 16.0 * std::sin(trackingPhase))
+            * (transitionTo.camera[3] - transitionFrom.camera[3]) * first;
     const double lateralPhase = sampleTime * 0.041 + 0.9 + motion.pathPhases[3];
     const double lateral = 7.0 * std::sin(lateralPhase) * amplitude;
-    const double lateralRate = 0.287 * std::cos(lateralPhase) * amplitude + 7.0 * std::sin(lateralPhase) * amplitudeRate;
+    const double lateralRate = 0.287 * std::cos(lateralPhase) * amplitude
+        + 7.0 * std::sin(lateralPhase) * amplitudeRate;
     const double squaredLength = distance * distance + lateral * lateral;
     const double length = std::sqrt(squaredLength);
     const double lengthRate = (distance * distanceRate + lateral * lateralRate) / length;
     const double yawRate = headingRate + (distance * lateralRate - lateral * distanceRate) / squaredLength;
     const double pitch = std::atan2(-height, length);
-    const double pitchRate = (height * lengthRate - length * heightVelocity) / (squaredLength + height * height);
+    const double pitchRate = (height * lengthRate - length * heightVelocity)
+        / (squaredLength + height * height);
     return std::array<double, 3>{ yawRate, pitch, pitchRate };
 }
 
@@ -403,11 +422,13 @@ std::array<double, 3> Simulation::FunnelRadialMotion(double pathTime) const {
     const double initialRadius = std::hypot(offsetX, offsetZ);
     const double decay = std::exp(-pathTime / relaxation);
     const double ramp = pathTime - relaxation * (1.0 - decay);
-    const double distance = 0.5 * pathTime * pathTime - relaxation * pathTime + relaxation * relaxation * (1.0 - decay);
+    const double distance = 0.5 * pathTime * pathTime - relaxation * pathTime
+        + relaxation * relaxation * (1.0 - decay);
     const double plunge = std::max(0.0, pathTime - state.funnelMotion[1]);
     const double radius = initialRadius - state.funnelPath[0] * pathTime - state.funnelPath[1] * distance
         - 0.03 * plunge * plunge * plunge * plunge;
-    const double velocity = state.funnelPath[0] + state.funnelPath[1] * ramp + 0.12 * plunge * plunge * plunge;
+    const double velocity = state.funnelPath[0] + state.funnelPath[1] * ramp
+        + 0.12 * plunge * plunge * plunge;
     const double acceleration = state.funnelPath[1] * (1.0 - decay) + 0.36 * plunge * plunge;
     return std::array<double, 3>{ radius, velocity, acceleration };
 }
@@ -422,7 +443,8 @@ void Simulation::ResetFunnel(bool entering) {
         constexpr double twoPi = 6.28318530717958647692;
         const double safeStart = std::asin(0.35);
         const double safeEnd = twoPi * 0.5 - safeStart - 8.0 * 0.115;
-        double phase = std::fmod((cycleStart + captureStart) * 0.115 + 0.65 + state.motion.pathPhases[2], twoPi);
+        double phase = std::fmod((cycleStart + captureStart) * 0.115 + 0.65
+            + state.motion.pathPhases[2], twoPi);
         if (phase < 0.0) {
             phase += twoPi;
         }
@@ -461,16 +483,20 @@ void Simulation::PrepareFunnelCapture() {
     const MotionParameters& motion = state.motion;
     if (funnelEffect == EffectKind::InfiniteSurface) {
         state.funnelHeading = static_cast<float>(captureTime * 0.13
-            + 0.70 * std::sin(captureTime * 0.047 + motion.pathPhases[1]) * motion.camera[0] + motion.pathPhases[2]);
+            + 0.70 * std::sin(captureTime * 0.047 + motion.pathPhases[1])
+                * motion.camera[0] + motion.pathPhases[2]);
     } else {
-        const double velocityX = 3.20 + 0.558 * std::cos(captureTime * 0.031 + motion.pathPhases[0]) * motion.camera[0];
-        const double velocityZ = 2.15 - 0.378 * std::sin(captureTime * 0.027 + motion.pathPhases[1]) * motion.camera[0];
+        const double velocityX = 3.20 + 0.558 * std::cos(captureTime * 0.031 + motion.pathPhases[0])
+            * motion.camera[0];
+        const double velocityZ = 2.15 - 0.378 * std::sin(captureTime * 0.027 + motion.pathPhases[1])
+            * motion.camera[0];
         const double length = std::hypot(velocityX, velocityZ);
         const double headingX = velocityX / length;
         const double headingZ = velocityZ / length;
         const double trackingPhase = 0.5 + 0.5 * std::sin(captureTime * 0.079 + 1.7 + motion.pathPhases[2]);
         const double trackingDistance = (12.0 + 32.0 * trackingPhase) * motion.camera[3];
-        const double lateral = 7.0 * std::sin(captureTime * 0.041 + 0.9 + motion.pathPhases[3]) * motion.camera[0];
+        const double lateral = 7.0 * std::sin(captureTime * 0.041 + 0.9 + motion.pathPhases[3])
+            * motion.camera[0];
         const double targetX = headingX * trackingDistance - headingZ * lateral;
         const double targetZ = headingZ * trackingDistance + headingX * lateral;
         state.funnelHeading = static_cast<float>(std::atan2(targetZ, targetX));
@@ -487,7 +513,8 @@ void Simulation::PrepareFunnelCapture() {
         static_cast<float>(nativeVelocity[1]),
         static_cast<float>(nativeVelocity[2])
     };
-    const std::array<double, 3> view = NativeViewMotion(captureTime, state.funnelCapture[1], capturedVelocity[1]);
+    const std::array<double, 3> view = NativeViewMotion(captureTime, state.funnelCapture[1],
+        capturedVelocity[1]);
     state.funnelView = std::array<float, 4>{
         static_cast<float>(view[0]),
         static_cast<float>(view[1]),
@@ -500,10 +527,13 @@ void Simulation::PrepareFunnelCapture() {
     const double velocityX = capturedVelocity[0];
     const double velocityZ = capturedVelocity[2];
     const double horizontalSpeed = std::hypot(velocityX, velocityZ);
-    const double factor = sampledRadius / (horizontalSpeed * std::sqrt(1.0 + sampledCoefficient * sampledCoefficient));
-    const double spacing = funnelEffect == EffectKind::InfiniteSurface ? 1.5 : 3.0;
-    const double centerX = state.funnelCapture[0] + factor * (velocityX - direction * sampledCoefficient * velocityZ);
-    const double centerZ = state.funnelCapture[2] + factor * (velocityZ + direction * sampledCoefficient * velocityX);
+    const double factor = sampledRadius
+        / (horizontalSpeed * std::sqrt(1.0 + sampledCoefficient * sampledCoefficient));
+    constexpr double spacing = 3.0;
+    const double centerX = state.funnelCapture[0] + factor * (velocityX
+        - direction * sampledCoefficient * velocityZ);
+    const double centerZ = state.funnelCapture[2] + factor * (velocityZ
+        + direction * sampledCoefficient * velocityX);
     state.funnelMotion[2] = static_cast<float>(std::round(centerX / spacing) * spacing);
     state.funnelMotion[3] = static_cast<float>(std::round(centerZ / spacing) * spacing);
     state.funnelCycle[2] = static_cast<float>(direction);
@@ -522,7 +552,9 @@ void Simulation::PrepareFunnelCapture() {
     const double denominator = radius * radius + 0.00390625;
     const double slope = 7125.0 * radius / (denominator * denominator);
     const double heightDelta = capturedVelocity[1] + slope * radialSpeed;
-    const double heightRelaxation = heightDelta < 0.0 ? std::min(3.0, state.funnelCapture[1] / (-4.0 * heightDelta)) : 3.0;
+    const double heightRelaxation = heightDelta < 0.0
+        ? std::min(3.0, state.funnelCapture[1] / (-4.0 * heightDelta))
+        : 3.0;
     state.funnelPath = std::array<float, 4>{
         static_cast<float>(radialSpeed),
         static_cast<float>(radialAcceleration),
@@ -569,7 +601,8 @@ void Simulation::UpdateFunnel(double seconds, SurfaceShape shape) {
             funnelElapsed -= funnelDuration;
             ResetFunnel(true);
         }
-        state.funnelMotion[0] = std::min(static_cast<float>(funnelElapsed / funnelDuration), std::nextafter(1.0f, 0.0f));
+        state.funnelMotion[0] = std::min(static_cast<float>(funnelElapsed / funnelDuration),
+            std::nextafter(1.0f, 0.0f));
         state.funnelView[3] =
             funnelCaptured ? static_cast<float>(std::max(0.0, funnelElapsed - state.funnelCycle[3])) : 0.0f;
     }
@@ -582,7 +615,8 @@ void Simulation::SetSurfaceShape(SurfaceShape shape, EffectKind effect) {
         surfaceActivationStart = elapsed;
         state.surfaceActivation = shape == SurfaceShape::Funnel ? 1.0f : 0.0f;
     }
-    const bool restart = shape == SurfaceShape::Funnel && state.surfaceShape == shape && funnelEffect != effect;
+    const bool restart = shape == SurfaceShape::Funnel && state.surfaceShape == shape
+        && funnelEffect != effect;
     funnelEffect = effect;
     if (restart) {
         funnelElapsed = 0.0;
@@ -627,7 +661,8 @@ void Simulation::Step(double seconds, float speed, std::uint32_t selectedEffects
         state.enabledEffects = selectedEffects & ALL_EFFECT_MASK;
         UpdateMotionParameters();
         if (state.surfaceShape == SurfaceShape::Waves && state.surfaceActivation < 1.0f) {
-            state.surfaceActivation = static_cast<float>(MotionEase((elapsed - surfaceActivationStart) / 4.0));
+            state.surfaceActivation =
+                static_cast<float>(MotionEase((elapsed - surfaceActivationStart) / 4.0));
         }
         UpdateCameraRotation(seconds * speed, cameraTumbling, cameraReversals);
         UpdateFunnel(seconds * speed, state.surfaceShape);

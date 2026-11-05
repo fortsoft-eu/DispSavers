@@ -21,17 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.2.1
+ * Last modified for version 1.3.0.0
  */
 
 #pragma once
 
-#include "Effects.h"
+#include "main.h"
 #include <array>
-#include <initializer_list>
 
 /// Append new languages before LANG_COUNT to preserve existing stored identifiers.
-enum AppLanguage {
+enum AppLanguage : int {
     LANG_CS,
     LANG_EN_US,
     LANG_EN_GB,
@@ -72,7 +71,7 @@ enum AppLanguage {
 };
 
 /// Named translation keys used by this application.
-enum TextId {
+enum TextId : int {
     TXT_LANGUAGE_NAME,
     TXT_CONTROL_TITLE,
     TXT_SETTINGS_TITLE,
@@ -159,6 +158,10 @@ enum TextId {
     TXT_SURFACE_SHAPE_PLANE,
     TXT_SURFACE_SHAPE_WAVES,
     TXT_SURFACE_SHAPE_FUNNEL,
+    TXT_INSTALLING_SCREEN_SAVER,
+    TXT_UNINSTALLING_SCREEN_SAVER,
+    TXT_SYSTEM_SCREEN_SAVER,
+    TXT_SYSTEM_SCREEN_SAVER_FAILED,
     TXT_COUNT
 };
 
@@ -191,6 +194,7 @@ inline constexpr TextId EFFECT_TEXT_IDS[] = {
     TXT_EFFECT_MORPHING_SURFACE,
     TXT_EFFECT_GRAVITY_WARPED_SPACE_FLIGHT,
 };
+
 static_assert(std::size(EFFECT_TEXT_IDS) == EFFECT_COUNT);
 
 /// Maps surface deformations to their named translation keys.
@@ -199,6 +203,7 @@ inline constexpr TextId SURFACE_SHAPE_TEXT_IDS[] = {
     TXT_SURFACE_SHAPE_WAVES,
     TXT_SURFACE_SHAPE_FUNNEL,
 };
+
 static_assert(std::size(SURFACE_SHAPE_TEXT_IDS) == 3);
 
 /// Returns a borrowed, immutable translation identified by the language enum and a named text key.
@@ -218,53 +223,3 @@ const wchar_t* RecordingResolutionText(unsigned index);
 
 /// Returns one of the four language-independent exact TV frame-rate captions.
 const wchar_t* RecordingRateText(unsigned index);
-
-/// Builds one language at compile time and rejects missing, duplicate, empty, or invalid text entries.
-consteval LocalizedLanguage DefineLanguage(AppLanguage language, std::initializer_list<LocalizedText> entries) {
-    if (entries.size() != TXT_COUNT) {
-        throw "Every language must define every TextId exactly once.";
-    }
-    LocalizedLanguage result = { language, {} };
-    for (const LocalizedText& entry : entries) {
-        int id = static_cast<int>(entry.id);
-        if (id < 0 || id >= TXT_COUNT) {
-            throw "Invalid translation TextId.";
-        }
-        if (entry.text == nullptr || entry.text[0] == L'\0') {
-            throw "A translation cannot be null or empty.";
-        }
-        if (result.texts[id] != nullptr) {
-            throw "Duplicate translation TextId.";
-        }
-        result.texts[id] = entry.text;
-    }
-    return result;
-}
-
-/// Indexes complete languages by AppLanguage at compile time, independently of their source order.
-/// Rejects missing, duplicate, or invalid language identifiers before any executable can be produced.
-consteval std::array<LocalizedLanguage, LANG_COUNT> DefineLocalization(
-        std::initializer_list<LocalizedLanguage> languages) {
-    if (languages.size() != LANG_COUNT) {
-        throw "Every AppLanguage must have a complete translation table.";
-    }
-    std::array<LocalizedLanguage, LANG_COUNT> result = {};
-    std::array<bool, LANG_COUNT> included = {};
-    for (const LocalizedLanguage& language : languages) {
-        int id = static_cast<int>(language.id);
-        if (id < 0 || id >= LANG_COUNT) {
-            throw "Invalid localization AppLanguage.";
-        }
-        if (included[id]) {
-            throw "Duplicate localization AppLanguage.";
-        }
-        for (const wchar_t* text : language.texts) {
-            if (text == nullptr || text[0] == L'\0') {
-                throw "Every language must contain a nonempty translation for every TextId.";
-            }
-        }
-        result[id] = language;
-        included[id] = true;
-    }
-    return result;
-}

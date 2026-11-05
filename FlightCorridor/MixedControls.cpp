@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.2.0
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
@@ -55,8 +55,8 @@ constexpr UINT_PTR MIXED_CONTROL_SUBCLASS = 0xF506;
 constexpr WORD MIXED_DITHER_BITS[]{ 0x0055, 0x00AA, 0x0055, 0x00AA, 0x0055, 0x00AA, 0x0055, 0x00AA };
 
 /// Adds mixed-state feedback without replacing native mouse capture, focus, keyboard handling or painting.
-static LRESULT CALLBACK MixedControlsProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam, UINT_PTR subclassId,
-    DWORD_PTR referenceData);
+static LRESULT CALLBACK MixedControlsProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam,
+    UINT_PTR subclassId, DWORD_PTR referenceData);
 
 /// Finds state owned by this control subclass without changing the native window data.
 static MixedControlsState* ControlState(HWND window) {
@@ -73,7 +73,8 @@ static bool AreVisualStylesActive() {
 
 /// Tests the native raster's RGB value without depending on its unused alpha byte.
 static bool IsPaintedPixel(const DWORD* pixels, LONG width, LONG x, LONG y, DWORD background) {
-    const std::size_t index = static_cast<std::size_t>(y) * static_cast<std::size_t>(width) + static_cast<std::size_t>(x);
+    const std::size_t index =
+        static_cast<std::size_t>(y) * static_cast<std::size_t>(width) + static_cast<std::size_t>(x);
     return (pixels[index] & 0x00FFFFFF) != background;
 }
 
@@ -88,7 +89,8 @@ static bool IsPaintedColumn(const DWORD* pixels, LONG width, LONG height, LONG x
 }
 
 /// Measures the native circle on its outer half so caption and focus pixels cannot extend its bounds.
-static RECT RadioPixelBounds(const DWORD* pixels, LONG width, LONG height, DWORD background, bool rightAligned) {
+static RECT RadioPixelBounds(const DWORD* pixels, LONG width, LONG height, DWORD background,
+        bool rightAligned) {
     RECT glyph{ 0, height, width, 0 };
     if (rightAligned) {
         while (glyph.right > 0 && !IsPaintedColumn(pixels, width, height, glyph.right - 1, background)) {
@@ -124,8 +126,9 @@ static HRGN CreatePaintedPixelRegion(const DWORD* pixels, const RECT& bounds, bo
     const LONG width = bounds.right - bounds.left;
     const LONG height = bounds.bottom - bounds.top;
     const COLORREF color = GetSysColor(COLOR_BTNFACE);
-    const DWORD background =
-        static_cast<DWORD>(GetRValue(color)) << 16 | static_cast<DWORD>(GetGValue(color)) << 8 | GetBValue(color);
+    const DWORD background = static_cast<DWORD>(GetRValue(color)) << 16
+        | static_cast<DWORD>(GetGValue(color)) << 8
+        | GetBValue(color);
     const RECT glyph = radio
         ? RadioPixelBounds(pixels, width, height, background, rightAligned)
         : RECT{ 0, 0, width, height };
@@ -158,7 +161,8 @@ static HRGN CreatePaintedPixelRegion(const DWORD* pixels, const RECT& bounds, bo
     return region;
 }
 
-/// Reads the image Windows has just painted rather than predicting the control's glyph position or silhouette.
+/// Reads the image Windows has just painted rather than predicting the control's glyph position or
+/// silhouette.
 static HRGN CreatePaintedControlRegion(HDC source, const RECT& bounds, bool radio, bool rightAligned) {
     const LONG width = bounds.right - bounds.left;
     const LONG height = bounds.bottom - bounds.top;
@@ -254,7 +258,8 @@ static RECT RadioCaptureRect(const NMCUSTOMDRAW& draw) {
     SIZE glyph{ GetSystemMetrics(SM_CXMENUCHECK), GetSystemMetrics(SM_CYMENUCHECK) };
     HTHEME theme = GetWindowTheme(window);
     if (AreVisualStylesActive() && theme) {
-        GetThemePartSize(theme, draw.hdc, BP_RADIOBUTTON, RadioButtonThemeState(draw), &bounds, TS_DRAW, &glyph);
+        GetThemePartSize(theme, draw.hdc, BP_RADIOBUTTON, RadioButtonThemeState(draw), &bounds, TS_DRAW,
+            &glyph);
     }
     const LONG width = std::min(bounds.right - bounds.left, glyph.cx);
     const LONG_PTR style = GetWindowLongPtrW(window, GWL_STYLE);
@@ -267,7 +272,8 @@ static RECT RadioCaptureRect(const NMCUSTOMDRAW& draw) {
     return bounds;
 }
 
-/// Repaints push-button text with its unchanged native font, content rectangle, mnemonic and pressed alignment.
+/// Repaints push-button text with its unchanged native font, content rectangle, mnemonic and pressed
+/// alignment.
 static void DrawMixedPushButtonText(const NMCUSTOMDRAW& draw, RECT content, bool themed) {
     const HWND window = draw.hdr.hwndFrom;
     HFONT font = reinterpret_cast<HFONT>(SendMessageW(window, WM_GETFONT, 0, 0));
@@ -284,8 +290,12 @@ static void DrawMixedPushButtonText(const NMCUSTOMDRAW& draw, RECT content, bool
     caption.resize(static_cast<std::size_t>(length));
     const LRESULT uiState = SendMessageW(window, WM_QUERYUISTATE, 0, 0);
     UINT format = DT_SINGLELINE | DT_END_ELLIPSIS;
-    format |= (style & BS_CENTER) == BS_LEFT ? DT_LEFT : (style & BS_CENTER) == BS_RIGHT ? DT_RIGHT : DT_CENTER;
-    format |= (style & BS_VCENTER) == BS_TOP ? DT_TOP : (style & BS_VCENTER) == BS_BOTTOM ? DT_BOTTOM : DT_VCENTER;
+    format |= (style & BS_CENTER) == BS_LEFT
+        ? DT_LEFT
+        : (style & BS_CENTER) == BS_RIGHT ? DT_RIGHT : DT_CENTER;
+    format |= (style & BS_VCENTER) == BS_TOP
+        ? DT_TOP
+        : (style & BS_VCENTER) == BS_BOTTOM ? DT_BOTTOM : DT_VCENTER;
     if ((uiState & UISF_HIDEACCEL) != 0) {
         format |= DT_HIDEPREFIX;
     }
@@ -310,8 +320,9 @@ static void DrawMixedButton(const NMCUSTOMDRAW& draw, MixedControlKind kind) {
     if (kind == MixedControlKind::PushButton) {
         GetClientRect(window, &interior);
         RECT content = interior;
-        if (!themed || FAILED(GetThemeBackgroundContentRect(GetWindowTheme(window), draw.hdc, BP_PUSHBUTTON,
-            PushButtonThemeState(draw), &interior, &content))) {
+        if (!themed
+            || FAILED(GetThemeBackgroundContentRect(GetWindowTheme(window), draw.hdc, BP_PUSHBUTTON,
+                PushButtonThemeState(draw), &interior, &content))) {
             InflateRect(&content, -2 * GetSystemMetrics(SM_CXBORDER), -2 * GetSystemMetrics(SM_CYBORDER));
         }
         interior = content;
@@ -434,7 +445,8 @@ bool MixedControls::Attach(HWND window) {
             return false;
         }
     }
-    if (!SetWindowSubclass(window, MixedControlsProc, MIXED_CONTROL_SUBCLASS, reinterpret_cast<DWORD_PTR>(state.get()))) {
+    if (!SetWindowSubclass(window, MixedControlsProc, MIXED_CONTROL_SUBCLASS,
+            reinterpret_cast<DWORD_PTR>(state.get()))) {
         return false;
     }
     state.release();

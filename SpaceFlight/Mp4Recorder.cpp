@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
@@ -137,7 +137,12 @@ struct RecordingTable {
             if (size < header || size > std::uint64_t(end) - start) {
                 throw std::runtime_error("Invalid MP4 box size.");
             }
-            const RecordingBox box{ start, start + header, start + std::size_t(size), std::uint32_t(Read(start + 4)) };
+            const RecordingBox box{
+                start,
+                start + header,
+                start + std::size_t(size),
+                std::uint32_t(Read(start + 4))
+            };
             result.push_back(box);
             start += std::size_t(size);
         }
@@ -236,7 +241,8 @@ struct Mp4Recorder::Impl {
     /// Resamples and encodes a source image using capture time rather than worker completion time.
     HRESULT EncodeFrame(RecordingFrame& frame);
 
-    /// Repeats the last encoded image through the requested TV stop time without extending encoding time into playback.
+    /// Repeats the last encoded image through the requested TV stop time without extending encoding time into
+    /// playback.
     HRESULT FillUntil(LONGLONG time);
 
     /// Reads elapsed capture time from the immutable session clock.
@@ -276,8 +282,9 @@ struct Mp4Recorder::Impl {
 /// Disables temporal blending for integral rate ratios and for NTSC output on a 60 Hz monitor.
 void RecordingFormat::SetMonitorRate(unsigned rate, unsigned divisor) {
     temporalBlend = !(std::uint64_t(rate) * denominator % (std::uint64_t(numerator) * divisor) == 0
-        || std::uint64_t(rate) == std::uint64_t(60) * divisor && denominator == 1001 && (numerator == 60000
-            || numerator == 30000));
+        || std::uint64_t(rate) == std::uint64_t(60) * divisor
+            && denominator == 1001
+            && (numerator == 60000 || numerator == 30000));
 }
 
 /// Derives each boundary directly from its frame index without accumulating rounding errors.
@@ -308,7 +315,8 @@ RECT RecordingFormat::Viewport(POINT base) const {
 }
 
 /// Selects TV presets or the native viewport recording format.
-RecordingFormat RecordingOptions::Format(unsigned nativeWidth, unsigned nativeHeight, unsigned nativeRate) const {
+RecordingFormat RecordingOptions::Format(unsigned nativeWidth, unsigned nativeHeight,
+        unsigned nativeRate) const {
     RecordingFormat format;
     format.width = nativeWidth;
     format.height = nativeHeight;
@@ -339,14 +347,16 @@ RecordingFormat RecordingOptions::Format(unsigned nativeWidth, unsigned nativeHe
 static std::uint32_t BlendRecordingPixel(std::uint32_t first, std::uint32_t second, unsigned weight) {
     std::uint32_t result = 0;
     for (int shift = 0; shift <= 16; shift += 8) {
-        const std::uint32_t mixed = (first >> shift & 255) * (65536 - weight) + (second >> shift & 255) * weight + 32768;
+        const std::uint32_t mixed =
+            (first >> shift & 255) * (65536 - weight) + (second >> shift & 255) * weight + 32768;
         result |= mixed >> 16 << shift;
     }
     return result;
 }
 
 /// Returns a temporally blended source frame without altering either retained image.
-static RecordingImage BlendRecordingImages(const RecordingImage& first, const RecordingImage& second, unsigned weight) {
+static RecordingImage BlendRecordingImages(const RecordingImage& first, const RecordingImage& second,
+        unsigned weight) {
     RecordingImage result = first;
     for (std::size_t index = 0; index < result.pixels.size(); index++) {
         result.pixels[index] = BlendRecordingPixel(first.pixels[index], second.pixels[index], weight);
@@ -361,7 +371,8 @@ static constexpr double RecordingCoordinate(int pixel, int origin, int extent, u
 
 /// Mixes packed RGB channels using an eight-bit interpolation weight.
 static constexpr std::uint32_t MixRecordingPixel(std::uint32_t first, std::uint32_t second, unsigned weight) {
-    const std::uint32_t redBlueMixed = (first & 0xff00ff) * (256 - weight) + (second & 0xff00ff) * weight + 0x800080;
+    const std::uint32_t redBlueMixed =
+        (first & 0xff00ff) * (256 - weight) + (second & 0xff00ff) * weight + 0x800080;
     const std::uint32_t greenMixed = (first & 0xff00) * (256 - weight) + (second & 0xff00) * weight + 0x8000;
     const std::uint32_t redBlue = redBlueMixed >> 8 & 0xff00ff;
     const std::uint32_t green = greenMixed >> 8 & 0xff00;
@@ -376,7 +387,8 @@ static void ScaleRecordingImage(const RecordingImage& image, unsigned width, uns
     const int right = std::min(LONG(width), image.area.right);
     std::vector<RecordingColumn> columns(std::size_t(right - left));
     for (int x = left; x < right; x++) {
-        const double source = RecordingCoordinate(x, image.area.left, image.area.right - image.area.left, image.width);
+        const double source =
+            RecordingCoordinate(x, image.area.left, image.area.right - image.area.left, image.width);
         const unsigned first = unsigned(source);
         const RecordingColumn column{
             first,
@@ -386,7 +398,8 @@ static void ScaleRecordingImage(const RecordingImage& image, unsigned width, uns
         columns[x - left] = column;
     }
     for (int y = std::max(0L, image.area.top); y < std::min(LONG(height), image.area.bottom); y++) {
-        const double source = RecordingCoordinate(y, image.area.top, image.area.bottom - image.area.top, image.height);
+        const double source =
+            RecordingCoordinate(y, image.area.top, image.area.bottom - image.area.top, image.height);
         const unsigned first = unsigned(source);
         const unsigned second = std::min(first + 1, image.height - 1);
         const unsigned weight = unsigned(std::lround((source - first) * 256));
@@ -420,8 +433,8 @@ static void ConvertRecordingNv12(const std::vector<std::uint32_t>& rgb, unsigned
     std::uint8_t* chroma = luminance + std::size_t(width) * height;
     for (std::size_t index = 0; index < rgb.size(); index++) {
         const std::uint32_t pixel = rgb[index];
-        const int mixed = 11966 * RecordingComponent(pixel, 16) + 40254 * RecordingComponent(pixel, 8) + 4064
-            * RecordingComponent(pixel, 0) + 32768;
+        const int mixed = 11966 * RecordingComponent(pixel, 16) + 40254 * RecordingComponent(pixel, 8)
+            + 4064 * RecordingComponent(pixel, 0) + 32768;
         luminance[index] = std::uint8_t(std::clamp(16 + (mixed >> 16), 16, 235));
     }
     for (unsigned y = 0; y < height; y += 2) {
@@ -440,17 +453,20 @@ static void ConvertRecordingNv12(const std::vector<std::uint32_t>& rgb, unsigned
                 }
             }
             const std::size_t index = std::size_t(y / 2) * width + x;
-            chroma[index] =
-                std::uint8_t(std::clamp(128 + RoundRecordingChroma(-6596 * red - 22189 * green + 28784 * blue), 16, 240));
-            chroma[index + 1] =
-                std::uint8_t(std::clamp(128 + RoundRecordingChroma(28784 * red - 26145 * green - 2639 * blue), 16, 240));
+            chroma[index] = std::uint8_t(std::clamp(
+                128 + RoundRecordingChroma(-6596 * red - 22189 * green + 28784 * blue), 16, 240));
+            chroma[index + 1] = std::uint8_t(std::clamp(
+                128 + RoundRecordingChroma(28784 * red - 26145 * green - 2639 * blue), 16, 240));
         }
     }
 }
 
 /// Builds an MP4 box identifier in network byte order.
 static constexpr std::uint32_t RecordingTag(char first, char second, char third, char fourth) {
-    return std::uint32_t(first) << 24 | std::uint32_t(second) << 16 | std::uint32_t(third) << 8 | std::uint32_t(fourth);
+    return std::uint32_t(first) << 24
+        | std::uint32_t(second) << 16
+        | std::uint32_t(third) << 8
+        | std::uint32_t(fourth);
 }
 
 /// Reads a big-endian value from one already bounded top-level box header.
@@ -534,7 +550,8 @@ static void NormalizeRecordingTiming(const std::filesystem::path& path, const Re
             continue;
         }
         const RecordingBox trackHeader = table.Child(track, RecordingTag('t', 'k', 'h', 'd'));
-        const std::size_t trackDurationOffset = trackHeader.data + (table.Read(trackHeader.data, 1) != 0 ? 28 : 20);
+        const std::size_t trackDurationOffset =
+            trackHeader.data + (table.Read(trackHeader.data, 1) != 0 ? 28 : 20);
         const std::size_t trackDurationSize = table.DurationSize(trackHeader);
         const RecordingBox media = table.Child(track, RecordingTag('m', 'd', 'i', 'a'));
         const RecordingBox handler = table.Child(media, RecordingTag('h', 'd', 'l', 'r'));
@@ -564,10 +581,18 @@ static void NormalizeRecordingTiming(const std::filesystem::path& path, const Re
                 }
                 if (!hasAspect) {
                     aspectInsert = entry.end;
-                    aspectParents = std::vector<RecordingBox>{ track, media, info, samples, description, entry };
+                    aspectParents = std::vector<RecordingBox>{
+                        track,
+                        media,
+                        info,
+                        samples,
+                        description,
+                        entry
+                    };
                 }
             }
-            table.Write(trackHeader.end - 8, (std::uint64_t(format.width) * format.aspectX << 16) / format.aspectY);
+            table.Write(trackHeader.end - 8,
+                (std::uint64_t(format.width) * format.aspectX << 16) / format.aspectY);
             const std::uint64_t count = table.Read(times.data + 4);
             std::uint64_t duration = 0;
             if (count > (std::uint64_t(times.end) - times.data - 8) / 8) {
@@ -577,8 +602,8 @@ static void NormalizeRecordingTiming(const std::filesystem::path& path, const Re
                 const std::size_t entry = times.data + 8 + std::size_t(index) * 8;
                 const std::uint64_t runs = table.Read(entry);
                 const std::uint64_t old = table.Read(entry + 4);
-                const std::uint64_t frames =
-                    (old * format.numerator + oldScale * format.denominator / 2) / (oldScale * format.denominator);
+                const std::uint64_t frames = (old * format.numerator + oldScale * format.denominator / 2)
+                    / (oldScale * format.denominator);
                 if (frames == 0) {
                     throw std::runtime_error("Invalid MP4 frame duration.");
                 }
@@ -597,7 +622,8 @@ static void NormalizeRecordingTiming(const std::filesystem::path& path, const Re
                 for (std::uint64_t index = 0; index < offsetCount; index++) {
                     const std::size_t entry = box.data + 12 + std::size_t(index) * 8;
                     const std::int64_t old = table.Read(box.data, 1) != 0
-                        ? std::int32_t(table.Read(entry)) : std::int64_t(table.Read(entry));
+                        ? std::int32_t(table.Read(entry))
+                        : std::int64_t(table.Read(entry));
                     const std::int64_t frames = std::int64_t(std::llround(double(old) * format.numerator
                         / (double(oldScale) * format.denominator)));
                     const std::int64_t offset = frames * format.denominator;
@@ -613,8 +639,8 @@ static void NormalizeRecordingTiming(const std::filesystem::path& path, const Re
             }
             table.Write(scaleOffset, format.numerator);
             table.Write(scaleOffset + 4, duration, table.DurationSize(header));
-            table.Write(trackDurationOffset, (duration * movieScale + format.numerator - 1) / format.numerator,
-                trackDurationSize);
+            table.Write(trackDurationOffset,
+                (duration * movieScale + format.numerator - 1) / format.numerator, trackDurationSize);
         }
         movieDuration = std::max(movieDuration, table.Read(trackDurationOffset, trackDurationSize));
     }
@@ -708,9 +734,10 @@ static HRESULT CopyImageRows(BYTE* destination, LONG destinationStride, const BY
     return S_OK;
 }
 
-/// Uses the available system image-copy function, falling back to row copying only when neither export exists.
-static HRESULT CopyImageCompatible(BYTE* destination, LONG destinationStride, const BYTE* source, LONG sourceStride,
-        DWORD rowBytes, DWORD rowCount) {
+/// Uses the available system image-copy function, falling back to row copying only when neither export
+/// exists.
+static HRESULT CopyImageCompatible(BYTE* destination, LONG destinationStride, const BYTE* source,
+        LONG sourceStride, DWORD rowBytes, DWORD rowCount) {
     static const CopyImageFunction copyImage = ResolveCopyImageFunction();
     if (copyImage) {
         return copyImage(destination, destinationStride, source, sourceStride, rowBytes, rowCount);
@@ -872,10 +899,10 @@ HRESULT Mp4Recorder::Impl::CreateWriter(bool hardware) {
         result = ConfigureVideoType(outputType.Get(), MFVideoFormat_H264, format);
     }
     if (SUCCEEDED(result)) {
-        const std::uint64_t estimatedBitRate =
-            static_cast<std::uint64_t>(format.width) * format.height * format.numerator / format.denominator
-            / (format.television ? 3 : 10);
-        const UINT32 bitRate = static_cast<UINT32>(std::clamp<std::uint64_t>(estimatedBitRate, 4'000'000, 80'000'000));
+        const std::uint64_t estimatedBitRate = static_cast<std::uint64_t>(format.width) * format.height
+            * format.numerator / format.denominator / (format.television ? 3 : 10);
+        const UINT32 bitRate =
+            static_cast<UINT32>(std::clamp<std::uint64_t>(estimatedBitRate, 4'000'000, 80'000'000));
         result = outputType->SetUINT32(MF_MT_AVG_BITRATE, bitRate);
     }
     if (SUCCEEDED(result)) {
@@ -887,9 +914,12 @@ HRESULT Mp4Recorder::Impl::CreateWriter(bool hardware) {
     ComPtr<IMFMediaType> inputType;
     result = MFCreateMediaType(&inputType);
     if (SUCCEEDED(result)) {
-        result = ConfigureVideoType(inputType.Get(), format.television ? MFVideoFormat_NV12 : MFVideoFormat_RGB32, format);
+        result = ConfigureVideoType(inputType.Get(),
+            format.television ? MFVideoFormat_NV12 : MFVideoFormat_RGB32, format);
     }
-    const UINT32 imageSize = format.television ? format.width * format.height * 3 / 2 : format.width * format.height * 4;
+    const UINT32 imageSize = format.television
+        ? format.width * format.height * 3 / 2
+        : format.width * format.height * 4;
     if (SUCCEEDED(result)) {
         result = inputType->SetUINT32(MF_MT_DEFAULT_STRIDE, format.width * (format.television ? 1 : 4));
     }
@@ -972,7 +1002,8 @@ HRESULT Mp4Recorder::Impl::EncodeFrame(RecordingFrame& source) {
             && sampleTime < source.time;
         const std::vector<std::uint8_t>* pixels = &converted;
         if (blend) {
-            const unsigned weight = unsigned((sampleTime - previousImageTime) * 65536 / (source.time - previousImageTime));
+            const unsigned weight = unsigned((sampleTime - previousImageTime) * 65536
+                / (source.time - previousImageTime));
             const RecordingImage blended = BlendRecordingImages(previousImage, image, weight);
             ScaleRecordingImage(blended, format.width, format.height, scaled);
             ConvertRecordingNv12(scaled, format.width, format.height, converted);
@@ -981,7 +1012,8 @@ HRESULT Mp4Recorder::Impl::EncodeFrame(RecordingFrame& source) {
             pixels = &previousConverted;
         } else {
             const RecordingImage* selected = !previousImage.pixels.empty() && sampleTime <= previousImageTime
-                ? &previousImage : &image;
+                ? &previousImage
+                : &image;
             if (selected == prepared && previousPrepared) {
                 pixels = &previousConverted;
             } else {
@@ -1193,8 +1225,8 @@ HRESULT Mp4Recorder::Impl::CollectReadbacks(ID3D11DeviceContext* context, bool w
             return mapResult;
         }
         const DWORD rowBytes = width * 4;
-        const HRESULT copyResult = CopyImageCompatible(reinterpret_cast<BYTE*>(image.pixels.data()), LONG(rowBytes),
-            static_cast<const BYTE*>(mapped.pData), LONG(mapped.RowPitch), rowBytes, height);
+        const HRESULT copyResult = CopyImageCompatible(reinterpret_cast<BYTE*>(image.pixels.data()),
+            LONG(rowBytes), static_cast<const BYTE*>(mapped.pData), LONG(mapped.RowPitch), rowBytes, height);
         context->Unmap(oldest->texture.Get(), 0);
         oldest->pending = false;
         if (FAILED(copyResult)) {
@@ -1251,9 +1283,19 @@ bool Mp4Recorder::Start(ID3D11Device* device, const wchar_t* filePath, UINT widt
         const RecordingFormat& format) {
     Stop();
     impl->lastError.store(S_OK, std::memory_order_relaxed);
-    if (!device || !filePath || !*filePath || width == 0 || height == 0 || format.width == 0 || format.height == 0
-            || format.numerator == 0 || format.denominator == 0 || format.aspectX == 0 || format.aspectY == 0
-            || std::uint64_t(width) * height > MAXDWORD / 4 || std::uint64_t(format.width) * format.height > MAXDWORD / 4
+    if (!device
+            || !filePath
+            || !*filePath
+            || width == 0
+            || height == 0
+            || format.width == 0
+            || format.height == 0
+            || format.numerator == 0
+            || format.denominator == 0
+            || format.aspectX == 0
+            || format.aspectY == 0
+            || std::uint64_t(width) * height > MAXDWORD / 4
+            || std::uint64_t(format.width) * format.height > MAXDWORD / 4
             || format.television && (format.width % 2 != 0 || format.height % 2 != 0)) {
         impl->SetError(E_INVALIDARG);
         return false;
@@ -1359,7 +1401,8 @@ HRESULT Mp4Recorder::FinishStop() {
     return LastError();
 }
 
-/// Schedules GPU copies and hands completed pixels to the worker without resampling, encoding or waiting for the GPU.
+/// Schedules GPU copies and hands completed pixels to the worker without resampling, encoding or waiting for
+/// the GPU.
 bool Mp4Recorder::CaptureFrame(ID3D11DeviceContext* context, ID3D11Texture2D* source) {
     if (!IsRecording() || !context || !source) {
         return false;

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
@@ -44,18 +44,21 @@ extern "C" const TryAcquireSRWLockFunction
 static TryAcquireSRWLockFunction ResolveTryAcquireSRWLockFunction() {
     const HMODULE kernel = GetModuleHandleW(L"kernel32.dll");
     if (kernel) {
-        return reinterpret_cast<TryAcquireSRWLockFunction>(GetProcAddress(kernel, "TryAcquireSRWLockExclusive"));
+        return reinterpret_cast<TryAcquireSRWLockFunction>(GetProcAddress(kernel,
+            "TryAcquireSRWLockExclusive"));
     }
     return nullptr;
 }
 
-/// Acquires only an empty Vista SRW lock by atomically changing its state from zero to the exclusive ownership bit.
-/// The Vista SRW representation is required here; contended and shared states are left unchanged.
+/// Acquires only an empty Vista SRW lock by atomically changing its state from zero to the exclusive
+/// ownership bit. The Vista SRW representation is required here; contended and shared states are left
+/// unchanged.
 static BOOLEAN TryAcquireVistaSRWLock(PSRWLOCK lock) {
     return InterlockedCompareExchangePointer(&lock->Ptr, reinterpret_cast<void*>(1), nullptr) == nullptr;
 }
 
-/// Uses the native Windows function when present, otherwise performs a nonblocking Vista-compatible acquisition.
+/// Uses the native Windows function when present, otherwise performs a nonblocking Vista-compatible
+/// acquisition.
 static BOOLEAN WINAPI TryAcquireSRWLockCompatible(PSRWLOCK lock) {
     static const TryAcquireSRWLockFunction tryAcquire = ResolveTryAcquireSRWLockFunction();
     if (tryAcquire) {

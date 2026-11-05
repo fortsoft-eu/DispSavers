@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.2.0
+ * Last modified for version 1.3.0.0
  */
 
 #pragma once
 
-#include "Effects.h"
+#include "main.h"
 #include "Mp4Recorder.h"
 #include "PersistWindowState.h"
 #include <cstdint>
@@ -109,8 +109,6 @@ struct AppSettings {
     std::wstring selectedAnimationMonitors;
     bool allAnimationMonitorsSelected = true;
     bool preventScreenSaver = false;
-    int controlWindowX = (std::numeric_limits<int>::min)();
-    int controlWindowY = (std::numeric_limits<int>::min)();
     PersistWindowStateData helpWindowState;
     PersistWindowStateData aboutWindowState;
     int recordingSettingsX = (std::numeric_limits<int>::min)();
@@ -128,10 +126,12 @@ struct AppSettings {
     MonitorSelection SelectionForMonitors(const std::vector<std::wstring>& devices);
 
     /// Reports whether any selected monitor supports and uses the requested property value.
-    bool HasMonitorValue(const std::vector<std::wstring>& devices, AnimationProperty property, std::uint32_t value) const;
+    bool HasMonitorValue(const std::vector<std::wstring>& devices, AnimationProperty property,
+        std::uint32_t value) const;
 
     /// Changes one property only on the selected display identities.
-    void SetMonitorValue(const std::vector<std::wstring>& devices, AnimationProperty property, std::uint32_t value);
+    void SetMonitorValue(const std::vector<std::wstring>& devices, AnimationProperty property,
+        std::uint32_t value);
 
     /// Loads the selected profile from the current user's registry hive.
     void Load(SettingsProfile selectedProfile);

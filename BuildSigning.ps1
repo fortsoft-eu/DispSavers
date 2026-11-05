@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Last modified for version 1.2.2.1
+Last modified for version 1.3.0.0
 #>
 
 [CmdletBinding()]
@@ -39,7 +39,8 @@ $ErrorActionPreference = "Stop"
 $securityModule = Join-Path $PSHOME "Modules\Microsoft.PowerShell.Security\Microsoft.PowerShell.Security.psd1"
 Import-Module -Name $securityModule
 
-# Returns the newest valid current-user code-signing certificate with a private key matching the requested selector.
+# Returns the newest valid current-user code-signing certificate with a private key matching
+# the requested selector.
 function Find-SignerCertificate {
     param (
         [string]$Name,
@@ -63,13 +64,15 @@ function Find-SignerCertificate {
             $_.NotAfter -gt $now -and
             (-not $normalizedThumbprint -or $_.Thumbprint -ieq $normalizedThumbprint) -and
             (-not $Name -or
-                $_.GetNameInfo([Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false) -ieq $Name)
+                $_.GetNameInfo([Security.Cryptography.X509Certificates.X509NameType]::SimpleName,
+                    $false) -ieq $Name)
         } |
         Sort-Object NotAfter -Descending)
 
     $certificate = $certificates | Select-Object -First 1
     if (-not $certificate) {
-        throw "The requested valid code-signing certificate with a private key was not found in CurrentUser\My."
+        throw `
+            "The requested valid code-signing certificate with a private key was not found in CurrentUser\My."
     }
     return $certificate
 }
@@ -118,7 +121,8 @@ function Find-SignTool {
         }
     }
 
-    throw "signtool.exe was not found. Install the Windows SDK or set its path in Project Properties > Signing."
+    throw `
+        "signtool.exe was not found. Install the Windows SDK or set its path in Project Properties > Signing."
 }
 
 # Verifies Authenticode trust and requires a trusted signature with a time-stamping certificate.
@@ -179,5 +183,6 @@ if ($signature.Status -eq "Valid" -and
     throw "The SCR must have a valid, timestamped signature from the configured signer " +
         "before it can be embedded in EXE: $Path"
 } else {
-    Sign-Binary -Path $Path -Certificate $certificate -ToolPath $resolvedSignTool -TimestampUrl $TimestampServer
+    Sign-Binary -Path $Path -Certificate $certificate -ToolPath $resolvedSignTool `
+        -TimestampUrl $TimestampServer
 }

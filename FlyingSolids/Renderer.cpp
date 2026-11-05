@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
@@ -240,15 +240,21 @@ struct Renderer::Impl {
         GetClientRect(window, &client);
         const UINT initialWidth = static_cast<UINT>(std::max(1L, client.right - client.left));
         const UINT initialHeight = static_cast<UINT>(std::max(1L, client.bottom - client.top));
-        constexpr D3D_FEATURE_LEVEL levels[]{ D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0 };
+        constexpr D3D_FEATURE_LEVEL levels[]{
+            D3D_FEATURE_LEVEL_11_0,
+            D3D_FEATURE_LEVEL_10_1,
+            D3D_FEATURE_LEVEL_10_0
+        };
         D3D_FEATURE_LEVEL created{};
-        HRESULT result = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_BGRA_SUPPORT,
-            levels, static_cast<UINT>(std::size(levels)), D3D11_SDK_VERSION, &device, &created, &context);
+        HRESULT result = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr,
+            D3D11_CREATE_DEVICE_BGRA_SUPPORT, levels, static_cast<UINT>(std::size(levels)),
+            D3D11_SDK_VERSION, &device, &created, &context);
         if (FAILED(result)) {
             device.Reset();
             context.Reset();
-            result = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_WARP, nullptr, D3D11_CREATE_DEVICE_BGRA_SUPPORT, levels,
-                static_cast<UINT>(std::size(levels)), D3D11_SDK_VERSION, &device, &created, &context);
+            result = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_WARP, nullptr,
+                D3D11_CREATE_DEVICE_BGRA_SUPPORT, levels, static_cast<UINT>(std::size(levels)),
+                D3D11_SDK_VERSION, &device, &created, &context);
         }
         if (FAILED(result)) {
             return false;
@@ -276,17 +282,20 @@ struct Renderer::Impl {
             flip.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
             flip.Flags = DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
             ComPtr<IDXGISwapChain1> flipChain;
-            result = factory2->CreateSwapChainForHwnd(device.Get(), window, &flip, nullptr, nullptr, &flipChain);
+            result = factory2->CreateSwapChainForHwnd(device.Get(), window, &flip, nullptr, nullptr,
+                &flipChain);
             if (FAILED(result)) {
                 flip.Flags = 0;
-                result = factory2->CreateSwapChainForHwnd(device.Get(), window, &flip, nullptr, nullptr, &flipChain);
+                result = factory2->CreateSwapChainForHwnd(device.Get(), window, &flip, nullptr, nullptr,
+                    &flipChain);
             }
             if (SUCCEEDED(result) && SUCCEEDED(flipChain.As(&swapChain))) {
                 flipPresentation = true;
                 swapChainFlags = flip.Flags;
                 if (flip.Flags & DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT) {
                     ComPtr<IDXGISwapChain2> swapChain2;
-                    if (SUCCEEDED(swapChain.As(&swapChain2)) && SUCCEEDED(swapChain2->SetMaximumFrameLatency(2))) {
+                    if (SUCCEEDED(swapChain.As(&swapChain2))
+                            && SUCCEEDED(swapChain2->SetMaximumFrameLatency(2))) {
                         frameLatencyWaitableObject = swapChain2->GetFrameLatencyWaitableObject();
                     }
                 }
@@ -337,8 +346,23 @@ struct Renderer::Impl {
             return false;
         }
         const D3D11_INPUT_ELEMENT_DESC elements[]{
-            D3D11_INPUT_ELEMENT_DESC{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            D3D11_INPUT_ELEMENT_DESC{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+            D3D11_INPUT_ELEMENT_DESC{
+                "POSITION",
+                0,
+                DXGI_FORMAT_R32G32B32_FLOAT,
+                0,
+                0,
+                D3D11_INPUT_PER_VERTEX_DATA,
+                0
+            }, D3D11_INPUT_ELEMENT_DESC{
+                "NORMAL",
+                0,
+                DXGI_FORMAT_R32G32B32_FLOAT,
+                0,
+                12,
+                D3D11_INPUT_PER_VERTEX_DATA,
+                0
+            }
         };
         if (FAILED(device->CreateInputLayout(elements, static_cast<UINT>(std::size(elements)),
             FlyingSolidsVertexShader,
@@ -428,9 +452,11 @@ struct Renderer::Impl {
         D3D11_RENDER_TARGET_VIEW_DESC targetDescription{};
         targetDescription.Format = RENDER_TARGET_FORMAT;
         targetDescription.ViewDimension = renderSamples > 1
-            ? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
+            ? D3D11_RTV_DIMENSION_TEXTURE2DMS
+            : D3D11_RTV_DIMENSION_TEXTURE2D;
         if (FAILED(device->CreateTexture2D(&colorDescription, nullptr, &sceneColor))
-                || FAILED(device->CreateRenderTargetView(sceneColor.Get(), &targetDescription, &renderTarget))) {
+            || FAILED(device->CreateRenderTargetView(sceneColor.Get(),
+                &targetDescription, &renderTarget))) {
             return false;
         }
         D3D11_TEXTURE2D_DESC depthDescription{};
@@ -458,12 +484,14 @@ struct Renderer::Impl {
         sceneColor.Reset();
         depthView.Reset();
         backBuffer.Reset();
-        if (SUCCEEDED(swapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, swapChainFlags))) {
+        if (SUCCEEDED(swapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN,
+                swapChainFlags))) {
             CreateTargets();
         }
     }
 
-    /// Completes every frame through the same offscreen-to-presentation path, independent of scene or draw mode.
+    /// Completes every frame through the same offscreen-to-presentation path, independent of scene or draw
+    /// mode.
     void CompleteFrame() const {
         context->OMSetRenderTargets(0, nullptr, nullptr);
         if (renderSamples > 1) {
@@ -526,7 +554,8 @@ struct Renderer::Impl {
             const std::size_t kind = instance % SOLID_COUNT;
             objects.positionAndScale[instance] =
                 ToFloat4(scene.solids[instance].position, MeshScale(kind) * scene.objectScale);
-            objects.rotationAndKind[instance] = ToFloat4(scene.solids[instance].rotation, static_cast<float>(kind));
+            objects.rotationAndKind[instance] =
+                ToFloat4(scene.solids[instance].rotation, static_cast<float>(kind));
         }
         context->UpdateSubresource(frameBuffer.Get(), 0, nullptr, &frame, 0, 0);
         context->UpdateSubresource(objectBuffer.Get(), 0, nullptr, &objects, 0, 0);
@@ -550,7 +579,12 @@ struct Renderer::Impl {
             ID3D11Buffer* vertices = mesh.vertices.Get();
             context->IASetVertexBuffers(0, 1, &vertices, &stride, &offset);
             context->IASetIndexBuffer(mesh.indices.Get(), DXGI_FORMAT_R32_UINT, 0);
-            const DrawConstants draw{ static_cast<unsigned>(kind), 0.0f, CAPSULE_RADIUS, CAPSULE_HALF_LENGTH };
+            const DrawConstants draw{
+                static_cast<unsigned>(kind),
+                0.0f,
+                CAPSULE_RADIUS,
+                CAPSULE_HALF_LENGTH
+            };
             context->UpdateSubresource(drawBuffer.Get(), 0, nullptr, &draw, 0, 0);
             const bool capsule = kind == static_cast<std::size_t>(SolidKind::Capsule);
             if (capsule) {
@@ -571,7 +605,9 @@ struct Renderer::Impl {
             InspectPixels();
         }
         if (presentFrame) {
-            const unsigned interval = (!outputFrameReady || frameLatencyWaitableObject) && syncInterval != 0 ? 1U : 0U;
+            const unsigned interval = (!outputFrameReady || frameLatencyWaitableObject) && syncInterval != 0
+                ? 1U
+                : 0U;
             outputFrameReady = false;
             swapChain->Present(interval, 0);
         }
@@ -609,7 +645,13 @@ struct Renderer::Impl {
 
     /// Encodes the last scene as a PNG without presentation, using memory when no output path is supplied.
     bool SaveSnapshot(const wchar_t* path) {
-        if (path && !*path || !device || !context || !backBuffer || width == 0 || height == 0 || !hasSnapshotScene) {
+        if (path && !*path
+                || !device
+                || !context
+                || !backBuffer
+                || width == 0
+                || height == 0
+                || !hasSnapshotScene) {
             return false;
         }
         Draw(snapshotScene, false, 0, false);
@@ -639,9 +681,11 @@ struct Renderer::Impl {
         ComPtr<IWICBitmapFrameEncode> frame;
         ComPtr<IPropertyBag2> properties;
         ComPtr<IStream> memory;
-        HRESULT result = CoCreateInstance(CLSID_WICImagingFactory2, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&factory));
+        HRESULT result = CoCreateInstance(CLSID_WICImagingFactory2, nullptr, CLSCTX_INPROC_SERVER,
+            IID_PPV_ARGS(&factory));
         if (result == REGDB_E_CLASSNOTREG) {
-            result = CoCreateInstance(CLSID_WICImagingFactory1, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&factory));
+            result = CoCreateInstance(CLSID_WICImagingFactory1, nullptr, CLSCTX_INPROC_SERVER,
+                IID_PPV_ARGS(&factory));
         }
         if (SUCCEEDED(result)) {
             result = factory->CreateStream(&stream);
@@ -826,8 +870,8 @@ bool Renderer::StartRecording(const wchar_t* path, unsigned frameRate, const Rec
 /// Tests the current GPU target and recording format without changing the active recorder.
 bool Renderer::CheckRecordingSupport(unsigned frameRate, const RecordingOptions& options) const {
     const RecordingFormat format = options.Format(impl->width, impl->height, frameRate);
-    const HRESULT result = Mp4Recorder::CheckSupport(impl->device.Get(), impl->context.Get(), impl->backBuffer.Get(),
-        impl->width, impl->height, format);
+    const HRESULT result = Mp4Recorder::CheckSupport(impl->device.Get(), impl->context.Get(),
+        impl->backBuffer.Get(), impl->width, impl->height, format);
     return SUCCEEDED(result);
 }
 

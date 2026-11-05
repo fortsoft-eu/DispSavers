@@ -21,15 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.2.2
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
+#include "AboutForm.h"
 #include "AppSettings.h"
+#include "HelpForm.h"
+#include "main.h"
 #include "Localization.h"
 #include "MixedControls.h"
 #include "ProgramIcons.h"
+#include "PackedResource.h"
 #include "PersistWindowState.h"
 #include "Renderer.h"
 #include "SelectionEdit.h"
@@ -80,7 +84,7 @@ constexpr wchar_t RENDER_CLASS[] = L"FortSoft.SpaceFlight.Render";
 constexpr wchar_t SETTINGS_CLASS[] = L"FortSoft.SpaceFlight.Settings";
 constexpr wchar_t INSTANCE_MUTEX[] = L"Local\\FortSoft.SpaceFlight.Standalone";
 constexpr wchar_t INSTANCE_WINDOW_PROPERTY[] = L"FortSoft.SpaceFlight.Standalone.Window";
-constexpr wchar_t WEBSITE_URL[] = L"https://fortsoft.cz/dispsavers/";
+constexpr wchar_t WEBSITE_URL[] = L"https://fortsoft.eu/dispsavers/";
 constexpr wchar_t SCREEN_SAVER_PATH_SUFFIX[] = L"\\SpaceFlight.scr";
 constexpr wchar_t SCREEN_SAVER_EXTENSION[] = L".scr";
 constexpr wchar_t STAGING_FILE_SUFFIX[] = L".installing";
@@ -97,13 +101,6 @@ constexpr wchar_t SCREEN_SAVER_PATH_VALUE_NAME[] = L"SCRNSAVE.EXE";
 constexpr wchar_t SCREEN_SAVER_ACTIVE_VALUE_NAME[] = L"ScreenSaveActive";
 
 /// Settings-window layout and animation constants
-constexpr int SETTINGS_WIDTH = 945;
-constexpr int SCREEN_SAVER_SETTINGS_HEIGHT = 473;
-constexpr int APPLICATION_SETTINGS_HEIGHT = 493;
-constexpr int PUSH_BUTTON_HEIGHT = 28;
-constexpr int ABOUT_ICON_SIZE = 32;
-constexpr int ABOUT_LARGE_ICON_SIZE = 48;
-constexpr int ABOUT_LARGE_ICON_DPI = 130;
 constexpr int RECORDING_COMBO_WIDTH_DLU = 130;
 constexpr int COMBO_BOX_MAX_VISIBLE_ITEMS = 13;
 constexpr int MONITOR_COLUMN_COUNT = 8;
@@ -117,10 +114,10 @@ constexpr UINT ACTIVATE_APPLICATION_WINDOW = WM_APP + 3;
 constexpr UINT UPDATE_SETTINGS_ACTION_BUTTONS = WM_APP + 4;
 constexpr UINT UPDATE_SETTINGS_CONTROL_METRICS = WM_APP + 5;
 constexpr UINT UPDATE_MONITOR_ANIMATION_CONTROLS = WM_APP + 6;
-constexpr UINT_PTR ABOUT_CONTROL_SUBCLASS = 0xF503;
 constexpr UINT_PTR INFORMATION_TEXT_SUBCLASS_ID = 0xF504;
 constexpr UINT_PTR COMBO_BOX_DROPDOWN_SUBCLASS_ID = 0xF505;
 constexpr UINT SCREEN_SAVER_CHECK_INTERVAL = 1000;
+constexpr UINT ANIMATION_CURSOR_HIDE_DELAY = 1000;
 
 /// Optional Windows 7 power-request entry points, resolved without raising the minimum supported system.
 using CreatePowerRequest = HANDLE(WINAPI*)(PREASON_CONTEXT);
@@ -157,48 +154,6 @@ enum class SettingsControlLayer {
     Label
 };
 
-/// Stable identifiers used by settings and information-window controls.
-enum ControlId {
-    ID_RECORD_TOGGLE = 1001,
-    ID_PAUSE,
-    ID_INSTALL,
-    ID_RECORDING_SETTINGS,
-    ID_SNAPSHOT,
-    ID_HELP,
-    ID_ABOUT,
-    ID_STATUS,
-    ID_LANGUAGE,
-    ID_OBJECT_SPEED,
-    ID_OK = IDOK,
-    ID_CANCEL = IDCANCEL,
-    ID_PREVIEW_TOGGLE = 1018,
-    ID_EFFECTS_GROUP,
-    ID_MONITOR_GROUP,
-    ID_LANGUAGE_LABEL = 1101,
-    ID_OBJECT_SPEED_LABEL,
-    ID_ALL_EFFECTS = 1150,
-    ID_NO_EFFECTS,
-    ID_MONITOR_LIST,
-    ID_MONITOR_TEXTURE = 1160,
-    ID_CAMERA_TUMBLING = 1161,
-    ID_PREVENT_SCREEN_SAVER = 1162,
-    ID_CAMERA_REVERSALS = 1163,
-    ID_MAIN_LIGHT = 1165,
-    ID_FILL_LIGHT,
-    ID_AMBIENT_LIGHT,
-    ID_RIM_LIGHT,
-    ID_SURFACE_PLANE = 1170,
-    ID_SURFACE_WAVES,
-    ID_SURFACE_FUNNEL,
-    ID_EFFECT_FIRST = 1200,
-    ID_INSTALL_POLL_TIMER = 1400,
-    ID_STATUS_RESET_TIMER,
-    ID_SCREEN_SAVER_CHECK_TIMER,
-    ID_MENU_ABOUT_OPEN = 1600,
-    ID_MENU_ABOUT_COPY_URL,
-    ID_MENU_ABOUT_COPY_INFORMATION
-};
-
 /// Controls describing one independent animation property.
 struct AnimationControl {
     int id;
@@ -217,6 +172,9 @@ struct AnimationSliderControl {
     int id;
     int labelId;
     AnimationProperty property;
+    int minimum;
+    int maximum;
+    int tickFrequency;
 };
 
 /// Column and row assigned to an animation checkbox in the settings window.
@@ -224,12 +182,6 @@ struct AnimationCheckboxPlacement {
     int id;
     int column;
     int row;
-};
-
-/// Text-bearing controls that share one rendered baseline.
-struct SettingsControlAlignment {
-    int control;
-    int reference;
 };
 
 constexpr int ID_ANIMATION_PRIMARY = ID_EFFECT_FIRST;
@@ -254,9 +206,18 @@ constexpr int ANIMATION_TAB_CHECKBOX_IDS[]{
     ID_MAIN_LIGHT,
     ID_FILL_LIGHT
 };
+
 constexpr AnimationSliderControl ANIMATION_SLIDERS[]{
-    { ID_OBJECT_SPEED, ID_OBJECT_SPEED_LABEL, AnimationProperty::ObjectSpeed }
+    AnimationSliderControl{
+        ID_OBJECT_SPEED,
+        ID_OBJECT_SPEED_LABEL,
+        AnimationProperty::ObjectSpeed,
+        0,
+        1600,
+        100
+    }
 };
+
 constexpr int OPAQUE_SETTINGS_LABEL_IDS[]{ ID_EFFECTS_GROUP, ID_MONITOR_GROUP };
 constexpr AnimationControl ANIMATION_CHECKBOXES[]{
     { ID_MONITOR_TEXTURE, AnimationProperty::Textured },
@@ -275,15 +236,6 @@ constexpr AnimationCheckboxPlacement ANIMATION_CHECKBOX_PLACEMENTS[]{
     { ID_RIM_LIGHT, 1, 1 },
     { ID_MAIN_LIGHT, 2, 0 },
     { ID_FILL_LIGHT, 2, 1 }
-};
-constexpr SettingsControlAlignment ANIMATION_CONTROL_ALIGNMENTS[]{
-    { ID_EFFECTS_GROUP, ID_OBJECT_SPEED_LABEL },
-    { ID_AMBIENT_LIGHT, ID_MONITOR_TEXTURE },
-    { ID_RIM_LIGHT, ID_CAMERA_TUMBLING },
-    { ID_MAIN_LIGHT, ID_MONITOR_TEXTURE },
-    { ID_FILL_LIGHT, ID_CAMERA_TUMBLING },
-    { ID_SURFACE_WAVES, ID_SURFACE_PLANE },
-    { ID_SURFACE_FUNNEL, ID_SURFACE_PLANE }
 };
 
 /// Stable source metadata and displayed values of one monitor-list item.
@@ -313,6 +265,10 @@ struct RenderSurface {
     std::unique_ptr<Renderer> renderer;
     unsigned refreshRate = 60;
     double refreshFrequency = 60.0;
+    POINT mousePosition{};
+    ULONGLONG mouseMoved = 0;
+    bool trackingMouse = false;
+    bool cursorHidden = false;
 
     /// Render-thread state
     std::thread renderThread;
@@ -353,6 +309,7 @@ struct Application {
     bool selfTestSnapshot = false;
 
     /// Screen-saver installation state
+    bool changingScreenSaver = false;
     bool uninstallingScreenSaver = false;
 };
 
@@ -409,40 +366,10 @@ struct RecordingWindowData {
     bool initialized = false;
 };
 
-/// Stores the interface font and initial license dimensions for an information dialog.
-struct InformationWindowLayout {
-    HFONT font = nullptr;
-    SIZE license = {};
-    UINT dpi = 96;
-    bool ownsFont = false;
-    bool initialized = false;
-};
-
 /// Retains native Unicode line-break analysis for the last information-edit text.
 struct InformationWordBreakState {
     SCRIPT_STRING_ANALYSIS analysis = nullptr;
     std::wstring text;
-};
-
-/// Presentation state and resources owned by a Help or About window.
-struct InformationWindowData {
-    AppSettings* settings = nullptr;
-    HICON icon = nullptr;
-    HFONT licenseFont = nullptr;
-    bool initialized = false;
-    bool help = false;
-    bool appMode = false;
-    AppLanguage language = LANG_EN_US;
-};
-
-/// Window and virtual-client dimensions selected for the current work area.
-struct SettingsWindowLayout {
-    DWORD style = 0;
-    DWORD scrollStyle = 0;
-    int width = 0;
-    int height = 0;
-    int contentWidth = 0;
-    int contentHeight = 0;
 };
 
 /// Scroll-bar identifier, virtual extent and visible page size.
@@ -469,25 +396,17 @@ struct UiTextLine {
 static Application* app = nullptr;
 
 /// Information windows
-static HWND helpWindow = nullptr;
-static HWND aboutWindow = nullptr;
-static HWND aboutTooltip = nullptr;
+static HelpForm helpForm;
+static AboutForm aboutForm;
+static PersistWindowState settingsWindowState;
 static PersistWindowState helpWindowState;
 static PersistWindowState aboutWindowState;
 static HWND recordingSettingsWindow = nullptr;
 
-/// System fonts and reference information-window dimensions
-static InformationWindowLayout helpWindowLayout;
-static InformationWindowLayout aboutWindowLayout;
+/// Native Unicode line-break analysis
 static InformationWordBreakState informationWordBreakState;
-static wchar_t aboutTooltipText[256] = {};
 
 /// Cross-section forward declarations
-
-static void LayoutInformationWindow(HWND window, bool resize = true);
-
-/// Aligns native text-bearing controls using their current fonts and theme content rectangles.
-static void AlignSettingsControl(HWND control, HWND reference, LONG baselineDistance = 0);
 
 /// Applies the selected animation monitors, creating or removing their render surfaces as needed.
 static void ApplyAnimationMonitors();
@@ -505,11 +424,17 @@ static void UpdateSettingsTextControlLayout(HWND parent);
 /// Aligns settings text baselines using native control metrics.
 static void UpdateSettingsControlMetrics(HWND window);
 
-/// Measures current items in the dropdown font immediately before opening, adding borders, padding, and scrollbar space.
-/// Limits the list to 13 visible items and keeps it at least as wide as its combo within the monitor work area.
+/// Owns settings controls, commands, scrolling, focus and persistence.
+/// Posted focus restoration never overrides a direct child-control click made while the message was pending.
+static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam);
+
+/// Measures current items in the dropdown font immediately before opening, adding borders, padding, and
+/// scrollbar space. Limits the list to 13 visible items and keeps it at least as wide as its combo within
+/// the monitor work area.
 static void UpdateComboBoxDropDownSize(HWND combo);
 
-/// Returns the next available control in the declared settings tab sequence, retaining a disabled source as its anchor.
+/// Returns the next available control in the declared settings tab sequence, retaining a disabled source as
+/// its anchor.
 static HWND FindSettingsTabTarget(HWND parent, const SettingsWindowData& data, HWND focused, bool backwards);
 
 /// Updates the language and presentation mode of all open information windows.
@@ -551,19 +476,22 @@ static BOOL CALLBACK CollectDisplayMonitor(HMONITOR monitor, HDC, LPRECT, LPARAM
     return TRUE;
 }
 
+/// Orders displays with the primary first, then by their top and left screen coordinates.
+static bool CompareDisplayMonitors(const DisplayMonitor& left, const DisplayMonitor& right) {
+    if (left.primary != right.primary) {
+        return left.primary;
+    }
+    if (left.rect.top != right.rect.top) {
+        return left.rect.top < right.rect.top;
+    }
+    return left.rect.left < right.rect.left;
+}
+
 /// Enumerates displays with the primary monitor first and stable geometric ordering.
 static std::vector<DisplayMonitor> AvailableMonitors() {
     std::vector<DisplayMonitor> monitors;
     EnumDisplayMonitors(nullptr, nullptr, CollectDisplayMonitor, reinterpret_cast<LPARAM>(&monitors));
-    std::stable_sort(monitors.begin(), monitors.end(), [](const DisplayMonitor& left, const DisplayMonitor& right) {
-        if (left.primary != right.primary) {
-            return left.primary;
-        }
-        if (left.rect.top != right.rect.top) {
-            return left.rect.top < right.rect.top;
-        }
-        return left.rect.left < right.rect.left;
-    });
+    std::stable_sort(monitors.begin(), monitors.end(), CompareDisplayMonitors);
     return monitors;
 }
 
@@ -578,7 +506,8 @@ static void InitializeMonitorAnimations(AppSettings& settings, const std::vector
 }
 
 /// Chooses the saved monitor, otherwise the first available secondary display.
-static std::size_t PreferredMonitorIndex(const std::vector<DisplayMonitor>& monitors, const std::wstring& device) {
+static std::size_t PreferredMonitorIndex(const std::vector<DisplayMonitor>& monitors,
+        const std::wstring& device) {
     for (std::size_t index = 0; index < monitors.size(); index++) {
         if (!device.empty() && _wcsicmp(monitors[index].device.c_str(), device.c_str()) == 0) {
             return index;
@@ -597,7 +526,8 @@ static bool MonitorDeviceSelected(const std::wstring& devices, const std::wstrin
     std::size_t begin = 0;
     while (begin <= devices.size()) {
         const std::size_t end = devices.find(L';', begin);
-        const std::wstring token = devices.substr(begin, end == std::wstring::npos ? std::wstring::npos : end - begin);
+        const std::wstring token =
+            devices.substr(begin, end == std::wstring::npos ? std::wstring::npos : end - begin);
         if (!token.empty() && _wcsicmp(token.c_str(), device.c_str()) == 0) {
             return true;
         }
@@ -643,7 +573,8 @@ static bool NoAnimationMonitorsSelected(const std::wstring& devices) {
 }
 
 /// Finds a device in the current monitor topology without depending on ListView row order.
-static std::size_t MonitorIndexForDevice(const std::vector<DisplayMonitor>& monitors, const std::wstring& device) {
+static std::size_t MonitorIndexForDevice(const std::vector<DisplayMonitor>& monitors,
+        const std::wstring& device) {
     for (std::size_t index = 0; index < monitors.size(); index++) {
         if (_wcsicmp(monitors[index].device.c_str(), device.c_str()) == 0) {
             return index;
@@ -730,11 +661,13 @@ static bool IsAnimationDesktopVisible() {
     }
     wchar_t inputName[256]{};
     wchar_t threadName[256]{};
-    DWORD required = 0;
-    const bool visible = GetUserObjectInformationW(inputDesktop, UOI_NAME, inputName, sizeof(inputName), &required)
-        && GetUserObjectInformationW(GetThreadDesktop(GetCurrentThreadId()), UOI_NAME, threadName, sizeof(threadName),
-            &required)
-        && _wcsicmp(inputName, threadName) == 0;
+    DWORD req = 0;
+    bool visible = GetUserObjectInformationW(inputDesktop, UOI_NAME, inputName, sizeof(inputName), &req);
+    if (visible) {
+        const HDESK threadDesktop = GetThreadDesktop(GetCurrentThreadId());
+        visible = GetUserObjectInformationW(threadDesktop, UOI_NAME, threadName, sizeof(threadName), &req)
+            && _wcsicmp(inputName, threadName) == 0;
+    }
     CloseDesktop(inputDesktop);
     return visible;
 }
@@ -779,7 +712,8 @@ static bool IsAnimationWindowVisible(HWND window) {
     RECT bounds{};
     MONITORINFO monitor{};
     monitor.cbSize = sizeof(monitor);
-    if (!GetClientRect(window, &bounds) || !GetMonitorInfoW(MonitorFromWindow(window, MONITOR_DEFAULTTONULL), &monitor)) {
+    if (!GetClientRect(window, &bounds)
+            || !GetMonitorInfoW(MonitorFromWindow(window, MONITOR_DEFAULTTONULL), &monitor)) {
         return false;
     }
     MapWindowPoints(window, HWND_DESKTOP, reinterpret_cast<POINT*>(&bounds), 2);
@@ -790,7 +724,9 @@ static bool IsAnimationWindowVisible(HWND window) {
     if (!visible) {
         return false;
     }
-    for (HWND covering = GetWindow(window, GW_HWNDPREV); covering; covering = GetWindow(covering, GW_HWNDPREV)) {
+    for (HWND covering = GetWindow(window, GW_HWNDPREV);
+            covering;
+            covering = GetWindow(covering, GW_HWNDPREV)) {
         if (IsUncloakedWindowVisible(covering) && IsOpaqueWindow(covering)) {
             SubtractCoveringWindow(visible, covering);
         }
@@ -803,8 +739,9 @@ static bool IsAnimationWindowVisible(HWND window) {
     return uncovered;
 }
 
-/// Enables screen-saver inhibition only for an opted-in, unpaused standalone animation that is actually visible.
-static bool ShouldInhibitScreenSaver() {
+/// Enables screen-saver inhibition only for an opted-in, unpaused standalone animation that is actually
+/// visible.
+bool ShouldInhibitScreenSaver() {
     if (!app
             || app->mode != RunMode::Application
             || !app->settings.preventScreenSaver
@@ -834,7 +771,8 @@ static void ReleaseScreenSaverInhibition(Application& application) {
     }
 }
 
-/// Uses a Windows 7 display request while animation is visible; older systems retain native SC_SCREENSAVE handling.
+/// Uses a Windows 7 display request while animation is visible; older systems retain native SC_SCREENSAVE
+/// handling.
 static void UpdateScreenSaverInhibition() {
     if (!app) {
         return;
@@ -852,14 +790,16 @@ static void UpdateScreenSaverInhibition() {
     }
     const CreatePowerRequest createRequest =
         reinterpret_cast<CreatePowerRequest>(GetProcAddress(kernel, "PowerCreateRequest"));
-    const SetPowerRequest setRequest = reinterpret_cast<SetPowerRequest>(GetProcAddress(kernel, "PowerSetRequest"));
+    const SetPowerRequest setRequest =
+        reinterpret_cast<SetPowerRequest>(GetProcAddress(kernel, "PowerSetRequest"));
     if (!createRequest || !setRequest) {
         return;
     }
     REASON_CONTEXT reason{};
     reason.Version = POWER_REQUEST_CONTEXT_VERSION;
     reason.Flags = POWER_REQUEST_CONTEXT_SIMPLE_STRING;
-    reason.Reason.SimpleReasonString = const_cast<wchar_t*>(GetLocalizedText(ActiveLanguage(), TXT_PREVENT_SCREEN_SAVER));
+    reason.Reason.SimpleReasonString = const_cast<wchar_t*>(GetLocalizedText(ActiveLanguage(),
+        TXT_PREVENT_SCREEN_SAVER));
     HANDLE request = createRequest(&reason);
     if (request == INVALID_HANDLE_VALUE) {
         return;
@@ -928,7 +868,7 @@ static std::wstring TimestampedFileName(const wchar_t* extension) {
     SYSTEMTIME localTime{};
     GetLocalTime(&localTime);
     wchar_t name[96]{};
-    swprintf_s(name, L"SpaceFlight-%04u-%02u-%02u-%02u-%02u-%02u.%s", localTime.wYear, localTime.wMonth,
+    swprintf_s(name, L"%s-%04u-%02u-%02u-%02u-%02u-%02u.%s", PRODUCT_NAME, localTime.wYear, localTime.wMonth,
         localTime.wDay, localTime.wHour, localTime.wMinute, localTime.wSecond, extension);
     return name;
 }
@@ -1004,7 +944,7 @@ static bool RemoveLegacyScreenSaverCopies() {
 }
 
 /// Recognizes canonical and historical installation paths.
-static bool IsSpaceFlightScreenSaverPath(const std::wstring& path) {
+static bool IsProductScreenSaverPath(const std::wstring& path) {
     if (SamePath(path, ScreenSaverDestinationPath())) {
         return true;
     }
@@ -1059,8 +999,10 @@ static ScreenSaverFileUse CurrentScreenSaverFileUse() {
     if (!restartManager) {
         return ScreenSaverFileUse::None;
     }
-    const StartSession startSession = reinterpret_cast<StartSession>(GetProcAddress(restartManager, "RmStartSession"));
-    const EndSession endSession = reinterpret_cast<EndSession>(GetProcAddress(restartManager, "RmEndSession"));
+    const StartSession startSession =
+        reinterpret_cast<StartSession>(GetProcAddress(restartManager, "RmStartSession"));
+    const EndSession endSession =
+        reinterpret_cast<EndSession>(GetProcAddress(restartManager, "RmEndSession"));
     const RegisterResources registerResources =
         reinterpret_cast<RegisterResources>(GetProcAddress(restartManager, "RmRegisterResources"));
     const GetList getList = reinterpret_cast<GetList>(GetProcAddress(restartManager, "RmGetList"));
@@ -1211,13 +1153,19 @@ static bool ActivateExistingApplication() {
 
 /// Returns the settings panel, or the settings window when no separate panel is used.
 static HWND SettingsContentWindow(HWND window) {
-    SettingsWindowData* data = reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+    SettingsWindowData* data =
+        reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
     return data && data->contentWindow ? data->contentWindow : window;
 }
 
 /// Replaces the single status-bar part without changing application state.
 static void SetStatus(const wchar_t* text) {
     if (app && app->status) {
+        if (app->changingScreenSaver) {
+            text = GetLocalizedText(ActiveLanguage(), app->uninstallingScreenSaver
+                ? TXT_UNINSTALLING_SCREEN_SAVER
+                : TXT_INSTALLING_SCREEN_SAVER);
+        }
         SendMessageW(app->status, SB_SETTEXTW, 0, reinterpret_cast<LPARAM>(text));
     }
 }
@@ -1262,7 +1210,8 @@ static void ShowTransientStatus(const wchar_t* text) {
     SetTimer(app->controlWindow, ID_STATUS_RESET_TIMER, 10000, nullptr);
 }
 
-/// Moves focus from a disabled control to the next available tab stop without overriding another focused window.
+/// Moves focus from a disabled control to the next available tab stop without overriding another focused
+/// window.
 static void RestoreDisabledControlFocus(HWND control, const SettingsWindowData* data = nullptr) {
     if (!IsWindow(control) || IsWindowEnabled(control)) {
         return;
@@ -1283,7 +1232,8 @@ static void RestoreDisabledControlFocus(HWND control, const SettingsWindowData* 
     }
 }
 
-/// Applies a standalone control state change and retains keyboard navigation when the focused control is disabled.
+/// Applies a standalone control state change and retains keyboard navigation when the focused control is
+/// disabled.
 static void EnableSettingsControl(HWND control, bool enabled, const SettingsWindowData* data = nullptr) {
     HWND focused = GetFocus();
     const bool restore = !enabled && focused && (focused == control || IsChild(control, focused));
@@ -1303,13 +1253,16 @@ static void ApplySettingsControlStates(std::vector<SettingsControlState> states)
         if (!state.window) {
             continue;
         }
-        if (state.enabled && static_cast<bool>(IsWindowEnabled(state.window)) == *state.enabled) {
+        if (state.enabled
+                && static_cast<bool>(IsWindowEnabled(state.window)) == *state.enabled) {
             state.enabled.reset();
         }
-        if (state.check && static_cast<UINT>(SendMessageW(state.window, BM_GETCHECK, 0, 0)) == *state.check) {
+        if (state.check
+                && static_cast<UINT>(SendMessageW(state.window, BM_GETCHECK, 0, 0)) == *state.check) {
             state.check.reset();
         }
-        if (state.position && static_cast<LONG>(SendMessageW(state.window, TBM_GETPOS, 0, 0)) == *state.position) {
+        if (state.position
+                && static_cast<LONG>(SendMessageW(state.window, TBM_GETPOS, 0, 0)) == *state.position) {
             state.position.reset();
         }
         if (state.mixed && MixedControls::IsMixed(state.window) == *state.mixed) {
@@ -1429,7 +1382,8 @@ static bool PrepareSurfaceRecordingStop(RenderSurface& surface) {
     return true;
 }
 
-/// Stops capture under the renderer lock, then finalizes the MP4 without blocking the surface's animation thread.
+/// Stops capture under the renderer lock, then finalizes the MP4 without blocking the surface's animation
+/// thread.
 static bool StopSurfaceRecording(RenderSurface& surface) {
     if (!PrepareSurfaceRecordingStop(surface)) {
         return false;
@@ -1462,13 +1416,21 @@ static bool SaveSurfaceSnapshot(RenderSurface& surface, const wchar_t* file) {
     return surface.renderer->SaveSnapshot(file);
 }
 
-/// Finalizes recording on the primary animation surface.
+/// Finalizes recording and reports encoder failures that occur before or during finalization.
 static void StopRecording() {
     RenderSurface* surface = PrimarySurface();
-    if (!surface || !surface->renderer || !StopSurfaceRecording(*surface)) {
+    if (!surface || !surface->renderer) {
         return;
     }
-    ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_RECORDING_SAVED));
+    HRESULT error = surface->renderer->RecordingError();
+    if (!StopSurfaceRecording(*surface)) {
+        return;
+    }
+    if (SUCCEEDED(error)) {
+        error = surface->renderer->RecordingError();
+    }
+    ShowTransientStatus(GetLocalizedText(ActiveLanguage(),
+        FAILED(error) ? TXT_RECORDING_FAILED : TXT_RECORDING_SAVED));
     UpdateRecordingButton();
 }
 
@@ -1483,7 +1445,8 @@ static void StartRecording(HWND owner) {
     }
     const unsigned recordingRate = surface->refreshRate;
     if (!CheckSurfaceRecordingSupport(*surface, recordingRate)) {
-        MessageBoxW(owner, GetLocalizedText(ActiveLanguage(), TXT_RECORDING_FAILED), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+        MessageBoxW(owner, GetLocalizedText(ActiveLanguage(), TXT_RECORDING_FAILED), PRODUCT_NAME,
+            MB_OK | MB_ICONERROR);
         return;
     }
     wchar_t file[MAX_PATH]{};
@@ -1501,7 +1464,11 @@ static void StartRecording(HWND owner) {
     if (!GetSaveFileNameW(&dialog)) {
         return;
     }
-    const bool started = StartSurfaceRecording(*surface, file, recordingRate);
+    surface = PrimarySurface();
+    if (!surface || !surface->renderer || app->closing.load(std::memory_order_relaxed)) {
+        return;
+    }
+    const bool started = StartSurfaceRecording(*surface, file, surface->refreshRate);
     if (started) {
         SetStatus(GetLocalizedText(ActiveLanguage(), TXT_RECORDING));
     } else {
@@ -1510,14 +1477,15 @@ static void StartRecording(HWND owner) {
     UpdateRecordingButton();
 }
 
-/// Prompts for a PNG path and captures the current primary surface.
+/// Prompts for a PNG path, reacquires the current output and reports the snapshot result.
 static void SaveSnapshot(HWND owner) {
     RenderSurface* surface = PrimarySurface();
     if (!app || app->mode != RunMode::Application || !surface || !surface->renderer) {
         return;
     }
     if (!CheckSurfaceSnapshotSupport(*surface)) {
-        MessageBoxW(owner, GetLocalizedText(ActiveLanguage(), TXT_SNAPSHOT_FAILED), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+        MessageBoxW(owner, GetLocalizedText(ActiveLanguage(), TXT_SNAPSHOT_FAILED), PRODUCT_NAME,
+            MB_OK | MB_ICONERROR);
         return;
     }
     wchar_t file[MAX_PATH]{};
@@ -1533,6 +1501,10 @@ static void SaveSnapshot(HWND owner) {
     dialog.lpstrInitialDir = initialDirectory.empty() ? nullptr : initialDirectory.c_str();
     dialog.Flags = OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST;
     if (!GetSaveFileNameW(&dialog)) {
+        return;
+    }
+    surface = PrimarySurface();
+    if (!surface || !surface->renderer || app->closing.load(std::memory_order_relaxed)) {
         return;
     }
     const bool saved = SaveSurfaceSnapshot(*surface, file);
@@ -1577,7 +1549,7 @@ static wchar_t MnemonicKey(wchar_t character) {
 }
 
 /// Assigns the preferred or first available single-character mnemonic to a caption.
-static std::wstring UniqueMnemonic(const wchar_t* text, std::vector<wchar_t>& usedMnemonics) {
+std::wstring UniqueMnemonic(const wchar_t* text, std::vector<wchar_t>& usedMnemonics) {
     std::wstring plainText;
     std::size_t preferredPosition = std::wstring::npos;
     for (std::size_t index = 0; text[index] != L'\0'; index++) {
@@ -1701,8 +1673,8 @@ static const wchar_t* AnimationSliderFormat(AnimationProperty property, AppLangu
 }
 
 /// Formats one slider caption without changing or painting its native label.
-static std::wstring AnimationSliderCaption(HWND label, const SettingsWindowData& data, const MonitorSelection& selection,
-        const AnimationSliderControl& control) {
+static std::wstring AnimationSliderCaption(HWND label, const SettingsWindowData& data,
+        const MonitorSelection& selection, const AnimationSliderControl& control) {
     std::wstring caption = AnimationSliderFormat(control.property, data.language);
     if (!selection.available || selection.IsMixed(control.property)) {
         const std::size_t number = caption.find(L"%d");
@@ -1787,8 +1759,10 @@ static int CompareMonitorValues(Value left, Value right) {
     return 0;
 }
 
-/// Compares exact fractional refresh rates, placing unavailable values before known values in ascending order.
-static int CompareMonitorRefreshRates(const DISPLAYCONFIG_RATIONAL& left, const DISPLAYCONFIG_RATIONAL& right) {
+/// Compares exact fractional refresh rates, placing unavailable values before known values in ascending
+/// order.
+static int CompareMonitorRefreshRates(const DISPLAYCONFIG_RATIONAL& left,
+        const DISPLAYCONFIG_RATIONAL& right) {
     const bool leftKnown = left.Numerator != 0 && left.Denominator != 0;
     const bool rightKnown = right.Numerator != 0 && right.Denominator != 0;
     const int availability = CompareMonitorValues(leftKnown, rightKnown);
@@ -1816,19 +1790,22 @@ static int CALLBACK CompareMonitorListEntries(LPARAM left, LPARAM right, LPARAM 
     const MonitorListEntry& rightEntry = data->monitorListEntries[rightIndex];
     int comparison = 0;
     if (data->monitorSortColumn == 3) {
-        comparison = CompareMonitorRefreshRates(leftEntry.details.refreshRate, rightEntry.details.refreshRate);
+        comparison = CompareMonitorRefreshRates(leftEntry.details.refreshRate,
+            rightEntry.details.refreshRate);
     } else if (data->monitorSortColumn == 4) {
-        const UINT leftDepth =
-            leftEntry.details.bitsPerColor != 0 ? leftEntry.details.bitsPerColor : leftEntry.details.bitsPerPixel;
-        const UINT rightDepth =
-            rightEntry.details.bitsPerColor != 0 ? rightEntry.details.bitsPerColor : rightEntry.details.bitsPerPixel;
+        const UINT leftDepth = leftEntry.details.bitsPerColor != 0
+            ? leftEntry.details.bitsPerColor
+            : leftEntry.details.bitsPerPixel;
+        const UINT rightDepth = rightEntry.details.bitsPerColor != 0
+            ? rightEntry.details.bitsPerColor
+            : rightEntry.details.bitsPerPixel;
         comparison = CompareMonitorValues(leftDepth, rightDepth);
         if (comparison == 0) {
             comparison = _wcsicmp(leftEntry.text[4].c_str(), rightEntry.text[4].c_str());
         }
     } else {
-        comparison =
-            _wcsicmp(leftEntry.text[data->monitorSortColumn].c_str(), rightEntry.text[data->monitorSortColumn].c_str());
+        comparison = _wcsicmp(leftEntry.text[data->monitorSortColumn].c_str(),
+            rightEntry.text[data->monitorSortColumn].c_str());
     }
     if (comparison != 0) {
         return data->monitorSortAscending ? comparison : -comparison;
@@ -1948,10 +1925,13 @@ static void RestoreRecordingMonitorCheckState(HWND list, SettingsWindowData& dat
 }
 
 /// Selects all monitor rows with Ctrl+A without changing checkbox states.
-static LRESULT CALLBACK MonitorListSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam, UINT_PTR subclassId,
-        DWORD_PTR referenceData) {
+static LRESULT CALLBACK MonitorListSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam,
+        UINT_PTR subclassId, DWORD_PTR referenceData) {
     UNREFERENCED_PARAMETER(referenceData);
-    bool selectAll = msg == WM_KEYDOWN && wParam == L'A' && GetKeyState(VK_CONTROL) < 0 && GetKeyState(VK_MENU) >= 0;
+    bool selectAll = msg == WM_KEYDOWN
+        && wParam == L'A'
+        && GetKeyState(VK_CONTROL) < 0
+        && GetKeyState(VK_MENU) >= 0;
     if (selectAll) {
         ListView_SetItemState(window, -1, LVIS_SELECTED, LVIS_SELECTED);
         return 0;
@@ -1981,10 +1961,12 @@ static std::vector<std::size_t> SelectedAnimationMonitorIndices(HWND list, const
     return selected;
 }
 
-/// Reads the current row selection without repainting controls or persisting transient intermediate selections.
+/// Reads the current row selection without repainting controls or persisting transient intermediate
+/// selections.
 static std::vector<std::size_t> UpdateSelectedAnimationDevices(HWND window, SettingsWindowData& data) {
     window = SettingsContentWindow(window);
-    const std::vector<std::size_t> selected = SelectedAnimationMonitorIndices(GetDlgItem(window, ID_MONITOR_LIST), data);
+    const std::vector<std::size_t> selected =
+        SelectedAnimationMonitorIndices(GetDlgItem(window, ID_MONITOR_LIST), data);
     data.selectedAnimationDevices.clear();
     for (const std::size_t index : selected) {
         data.selectedAnimationDevices.push_back(data.monitors[index].device);
@@ -2001,11 +1983,14 @@ static void AppendAnimationObjectControlStates(HWND window, const MonitorSelecti
 }
 
 /// Persists row selection independently of pending animation settings and output checkboxes.
-static void RememberSelectedAnimationMonitors(SettingsWindowData& data, const std::vector<std::size_t>& selected) {
+static void RememberSelectedAnimationMonitors(SettingsWindowData& data,
+        const std::vector<std::size_t>& selected) {
     if (data.updating || !data.monitorSelectionInitialized || !data.settings) {
         return;
     }
-    const std::wstring devices = selected.empty() ? NO_ANIMATION_MONITORS : JoinMonitorDevices(data.monitors, selected);
+    const std::wstring devices = selected.empty()
+        ? NO_ANIMATION_MONITORS
+        : JoinMonitorDevices(data.monitors, selected);
     const bool allSelected = data.monitors.empty()
         ? data.settings->allAnimationMonitorsSelected
         : selected.size() == data.monitors.size();
@@ -2022,8 +2007,9 @@ static void RememberSelectedAnimationMonitors(SettingsWindowData& data, const st
 static void UpdateSettingsWindowCaption(HWND window, const SettingsWindowData& data,
         const std::vector<std::size_t>& selected) {
     const AppLanguage stringsLanguage = data.language;
-    std::wstring caption = data.appMode ? GetLocalizedText(stringsLanguage, TXT_CONTROL_TITLE) :
-        GetLocalizedText(stringsLanguage, TXT_SETTINGS_TITLE);
+    std::wstring caption = data.appMode
+        ? GetLocalizedText(stringsLanguage, TXT_CONTROL_TITLE)
+        : GetLocalizedText(stringsLanguage, TXT_SETTINGS_TITLE);
     bool first = true;
     for (const std::size_t index : selected) {
         if (index >= data.monitorListEntries.size() || data.monitorListEntries[index].text[0].empty()) {
@@ -2074,9 +2060,14 @@ static void UpdateMonitorAnimationControls(HWND window, SettingsWindowData& data
                 && (control.dependency == AnimationProperty::Count
                     || selection.IsMixed(control.dependency)
                     || selection.values.Value(control.dependency) != 0);
-            const UINT state = available && selection.IsMixed(control.property)
-                ? BST_INDETERMINATE
-                : available && selection.values.Value(control.property) != 0 ? BST_CHECKED : BST_UNCHECKED;
+            UINT state = BST_UNCHECKED;
+            if (available) {
+                if (selection.IsMixed(control.property)) {
+                    state = BST_INDETERMINATE;
+                } else if (selection.values.Value(control.property) != 0) {
+                    state = BST_CHECKED;
+                }
+            }
             states.push_back(SettingsControlState{
                 checkbox,
                 enabled,
@@ -2115,7 +2106,8 @@ static void UpdateMonitorAnimationControls(HWND window, SettingsWindowData& data
     UpdateScreenSaverInhibition();
 }
 
-/// Coalesces native row notifications and paints only the final selection after the current input is processed.
+/// Coalesces native row notifications and paints only the final selection after the current input is
+/// processed.
 static void ScheduleMonitorAnimationControlsUpdate(HWND window, SettingsWindowData& data) {
     UpdateSelectedAnimationDevices(window, data);
     if (!data.monitorSelectionUpdatePending) {
@@ -2145,6 +2137,62 @@ static void SetSelectedMonitorValue(HWND window, SettingsWindowData& data, Anima
     CommitMonitorAnimation(window, data, save);
 }
 
+/// Updates the common monitor-column captions without changing column widths or row contents.
+static void UpdateMonitorListColumns(HWND list, AppLanguage language) {
+    const MonitorColumnText strings = MonitorColumnsText(language);
+    const wchar_t* titles[]{
+        GetLocalizedText(language, TXT_MONITOR),
+        strings.model,
+        GetLocalizedText(language, TXT_RESOLUTION),
+        strings.refreshRate,
+        strings.bitDepth,
+        strings.colorFormat,
+        strings.colorSpace,
+        GetLocalizedText(language, TXT_POSITION)
+    };
+    LVCOLUMNW column{};
+    column.mask = LVCF_TEXT;
+    for (int index = 0; index < MONITOR_COLUMN_COUNT; index++) {
+        column.pszText = const_cast<LPWSTR>(titles[index]);
+        ListView_SetColumn(list, index, &column);
+    }
+}
+
+/// Formats the shared monitor details once for display and native list sorting.
+static void UpdateMonitorListEntry(MonitorListEntry& entry, const DisplayMonitor& monitor,
+        const MonitorDetails& details, AppLanguage language) {
+    entry.details = details;
+    entry.text[0] = MonitorDisplayName(monitor.device);
+    if (monitor.primary) {
+        entry.text[0] += std::wstring(L" (") + GetLocalizedText(language, TXT_PRIMARY) + L")";
+    }
+    entry.text[1] = details.model.empty() ? L"—" : details.model;
+    wchar_t value[96]{};
+    swprintf_s(value, L"%ld × %ld", monitor.rect.right - monitor.rect.left,
+        monitor.rect.bottom - monitor.rect.top);
+    entry.text[2] = value;
+    entry.text[3] = MonitorRefreshRateText(details);
+    entry.text[4] = MonitorBitDepthText(details, language);
+    entry.text[5] = MonitorColorFormatText(details.colorEncoding);
+    entry.text[6] = MonitorColorSpaceText(details.colorSpace);
+    swprintf_s(value, L"x=%ld, y=%ld", monitor.rect.left, monitor.rect.top);
+    entry.text[7] = value;
+}
+
+/// Inserts one monitor row with the stable display index used by sorting and selection handling.
+static int InsertMonitorListEntry(HWND list, std::size_t index, MonitorListEntry& entry) {
+    LVITEMW item{};
+    item.mask = LVIF_TEXT | LVIF_PARAM;
+    item.iItem = static_cast<int>(index);
+    item.pszText = entry.text[0].data();
+    item.lParam = static_cast<LPARAM>(index);
+    const int row = ListView_InsertItem(list, &item);
+    for (int columnIndex = 1; columnIndex < MONITOR_COLUMN_COUNT; columnIndex++) {
+        ListView_SetItemText(list, row, columnIndex, entry.text[columnIndex].data());
+    }
+    return row;
+}
+
 /// Rebuilds monitor rows while keeping output checkboxes separate from persistent row selection.
 static void PopulateMonitorList(HWND window, SettingsWindowData& data) {
     window = SettingsContentWindow(window);
@@ -2164,30 +2212,16 @@ static void PopulateMonitorList(HWND window, SettingsWindowData& data) {
     const bool updating = data.updating;
     data.updating = true;
     WindowRedrawScope redraw(list);
-    const AppLanguage stringsLanguage = data.language;
-    const MonitorColumnText& monitorStrings = MonitorColumnsText(data.language);
-    const wchar_t* columnTitles[]{
-        GetLocalizedText(stringsLanguage, TXT_MONITOR),
-        monitorStrings.model,
-        GetLocalizedText(stringsLanguage, TXT_RESOLUTION),
-        monitorStrings.refreshRate,
-        monitorStrings.bitDepth,
-        monitorStrings.colorFormat,
-        monitorStrings.colorSpace,
-        GetLocalizedText(stringsLanguage, TXT_POSITION)
-    };
-    LVCOLUMNW column{};
-    column.mask = LVCF_TEXT;
-    for (int index = 0; index < static_cast<int>(std::size(columnTitles)); index++) {
-        column.pszText = const_cast<LPWSTR>(columnTitles[index]);
-        ListView_SetColumn(list, index, &column);
-    }
+    UpdateMonitorListColumns(list, data.language);
     ListView_DeleteAllItems(list);
     const std::vector<MonitorDetails> monitorDetails = ReadMonitorDetails(data.monitors);
     data.monitorListEntries.resize(data.monitors.size());
-    std::vector<std::size_t> selected = SelectedMonitorIndices(data.monitors, data.settings->animationMonitorDevice);
+    std::vector<std::size_t> selected =
+        SelectedMonitorIndices(data.monitors, data.settings->animationMonitorDevice);
     bool selEmpty = selected.empty();
-    if (selEmpty && !data.monitors.empty() && !NoAnimationMonitorsSelected(data.settings->animationMonitorDevice)) {
+    if (selEmpty
+            && !data.monitors.empty()
+            && !NoAnimationMonitorsSelected(data.settings->animationMonitorDevice)) {
         selected.push_back(PreferredMonitorIndex(data.monitors, data.settings->animationMonitorDevice));
         selEmpty = false;
     }
@@ -2199,36 +2233,15 @@ static void PopulateMonitorList(HWND window, SettingsWindowData& data) {
     for (std::size_t index = 0; index < data.monitors.size(); index++) {
         const DisplayMonitor& monitor = data.monitors[index];
         MonitorListEntry& entry = data.monitorListEntries[index];
-        entry.details = monitorDetails[index];
-        const MonitorDetails& details = entry.details;
-        entry.text[0] = MonitorDisplayName(monitor.device);
-        if (monitor.primary) {
-            entry.text[0] += std::wstring(L" (") + GetLocalizedText(stringsLanguage, TXT_PRIMARY) + L")";
-        }
-        LVITEMW item{};
-        item.mask = LVIF_TEXT | LVIF_PARAM;
-        item.iItem = static_cast<int>(index);
-        item.pszText = entry.text[0].data();
-        item.lParam = static_cast<LPARAM>(index);
-        const int row = ListView_InsertItem(list, &item);
-        entry.text[1] = details.model.empty() ? L"—" : details.model;
-        wchar_t value[96]{};
-        swprintf_s(value, L"%ld × %ld", monitor.rect.right - monitor.rect.left, monitor.rect.bottom - monitor.rect.top);
-        entry.text[2] = value;
-        entry.text[3] = MonitorRefreshRateText(details);
-        entry.text[4] = MonitorBitDepthText(details, data.language);
-        entry.text[5] = MonitorColorFormatText(details.colorEncoding);
-        entry.text[6] = MonitorColorSpaceText(details.colorSpace);
-        swprintf_s(value, L"x=%ld, y=%ld", monitor.rect.left, monitor.rect.top);
-        entry.text[7] = value;
-        for (int columnIndex = 1; columnIndex < MONITOR_COLUMN_COUNT; columnIndex++) {
-            ListView_SetItemText(list, row, columnIndex, entry.text[columnIndex].data());
-        }
+        UpdateMonitorListEntry(entry, monitor, monitorDetails[index], data.language);
+        const int row = InsertMonitorListEntry(list, index, entry);
         if (data.appMode) {
-            ListView_SetCheckState(list, row, std::find(selected.begin(), selected.end(), index) != selected.end());
+            ListView_SetCheckState(list, row, std::find(selected.begin(), selected.end(), index)
+                != selected.end());
         }
         if (data.settings->allAnimationMonitorsSelected
-                || std::find(editedDevices.begin(), editedDevices.end(), monitor.device) != editedDevices.end()) {
+            || std::find(editedDevices.begin(), editedDevices.end(), monitor.device)
+                != editedDevices.end()) {
             ListView_SetItemState(list, row, LVIS_SELECTED, LVIS_SELECTED);
         }
     }
@@ -2274,7 +2287,10 @@ static void ApplyLocalizedCaptions(HWND window, SettingsWindowData& data) {
     window = SettingsContentWindow(window);
     SetDlgItemTextW(window, ID_LANGUAGE_LABEL, GetLocalizedText(stringsLanguage, TXT_LANGUAGE));
     if (data.appMode) {
-        SetDlgItemTextW(window, ID_PREVENT_SCREEN_SAVER, GetLocalizedText(data.language, TXT_PREVENT_SCREEN_SAVER));
+        SetDlgItemTextW(window, ID_SYSTEM_SCREEN_SAVER,
+            GetLocalizedText(data.language, TXT_SYSTEM_SCREEN_SAVER));
+        SetDlgItemTextW(window, ID_PREVENT_SCREEN_SAVER, GetLocalizedText(data.language,
+            TXT_PREVENT_SCREEN_SAVER));
         if (data.settings) {
             SendDlgItemMessageW(window, ID_PREVENT_SCREEN_SAVER, BM_SETCHECK,
                 data.settings->preventScreenSaver ? BST_CHECKED : BST_UNCHECKED, 0);
@@ -2288,14 +2304,17 @@ static void ApplyLocalizedCaptions(HWND window, SettingsWindowData& data) {
     SetDlgItemTextW(window, ID_PREVIEW_TOGGLE, data.previewActive
         ? GetLocalizedText(data.language, TXT_DISABLE_PREVIEW)
         : GetLocalizedText(data.language, TXT_ENABLE_PREVIEW));
-    SetDlgItemTextW(window, ID_RECORD_TOGGLE, PrimaryIsRecording() ? GetLocalizedText(stringsLanguage,
-        TXT_STOP_RECORDING) : GetLocalizedText(stringsLanguage, TXT_START_RECORDING));
-    SetDlgItemTextW(window, ID_PAUSE, app && app->paused ? GetLocalizedText(stringsLanguage, TXT_RESUME) :
-        GetLocalizedText(stringsLanguage, TXT_PAUSE));
+    SetDlgItemTextW(window, ID_RECORD_TOGGLE, PrimaryIsRecording()
+        ? GetLocalizedText(stringsLanguage, TXT_STOP_RECORDING)
+        : GetLocalizedText(stringsLanguage, TXT_START_RECORDING));
+    SetDlgItemTextW(window, ID_PAUSE, app && app->paused
+        ? GetLocalizedText(stringsLanguage, TXT_RESUME)
+        : GetLocalizedText(stringsLanguage, TXT_PAUSE));
     SetDlgItemTextW(window, ID_INSTALL, IsScreenSaverInstalled()
         ? GetLocalizedText(data.language, TXT_UNINSTALL_SCREEN_SAVER)
         : GetLocalizedText(stringsLanguage, TXT_INSTALL_SCREEN_SAVER));
-    SetDlgItemTextW(window, ID_RECORDING_SETTINGS, GetLocalizedText(data.language, TXT_RECORDING_SETTINGS_TITLE));
+    SetDlgItemTextW(window, ID_RECORDING_SETTINGS, GetLocalizedText(data.language,
+        TXT_RECORDING_SETTINGS_TITLE));
     SetDlgItemTextW(window, ID_SNAPSHOT, GetLocalizedText(data.language, TXT_SNAPSHOT));
     SetDlgItemTextW(window, ID_HELP, GetLocalizedText(data.language, TXT_HELP));
     SetDlgItemTextW(window, ID_ABOUT, GetLocalizedText(data.language, TXT_ABOUT));
@@ -2377,7 +2396,8 @@ static void RenderSurfaceLoop(Application* application, RenderSurface* surface) 
     const double rate = std::clamp(surface->refreshFrequency, 24.0, 360.0);
     const double frameSeconds = 1.0 / rate;
     const double periodTicks = static_cast<double>(frequency.QuadPart) / rate;
-    const bool inspect = application->mode == RunMode::SelfTest || application->mode == RunMode::SelfTestAllMonitors;
+    const bool inspect = application->mode == RunMode::SelfTest
+        || application->mode == RunMode::SelfTestAllMonitors;
     bool presentationPaced = UsesPresentationPacing(*surface, inspect);
     HANDLE timer = nullptr;
     if (!presentationPaced) {
@@ -2401,17 +2421,16 @@ static void RenderSurfaceLoop(Application* application, RenderSurface* surface) 
         const std::uint32_t effect = 1U << static_cast<unsigned>(animation.effect);
         const std::uint32_t enabled = animation.enabledEffects & effect;
         const bool surfaceEffect = animation.effect != EffectKind::GravityWarpedSpaceFlight;
-        const bool cameraTumbling = animation.cameraTumbling;
         surface->simulation.SetSurfaceShape(surfaceEffect ? animation.surfaceShape : SurfaceShape::Plane,
             animation.effect);
         if (!application->paused.load(std::memory_order_relaxed)) {
-            const double simulationSeconds =
-                frameSeconds * (application->mode == RunMode::Preview ? SYSTEM_PREVIEW_SPEED_MULTIPLIER : 1.0);
-            surface->simulation.Step(simulationSeconds, animation.objectSpeedPercent / 100.0f, enabled, cameraTumbling,
-                animation.cameraReversals);
+            const double simulationSeconds = frameSeconds
+                * (application->mode == RunMode::Preview ? SYSTEM_PREVIEW_SPEED_MULTIPLIER : 1.0);
+            surface->simulation.Step(simulationSeconds, animation.objectSpeedPercent / 100.0f, enabled,
+                animation.cameraTumbling, animation.cameraReversals);
         }
         SceneState scene = surface->simulation.State();
-        if (!cameraTumbling) {
+        if (!animation.cameraTumbling) {
             scene.cameraRotation = { 0.0f, 0.0f, 0.0f, 1.0f };
         }
         scene.enabledEffects = enabled;
@@ -2424,7 +2443,8 @@ static void RenderSurfaceLoop(Application* application, RenderSurface* surface) 
         DrawSurface(*surface, scene, inspect);
         CompleteSurfaceFrame(*application, *surface);
         if (!presentationPaced) {
-            WaitForRenderDeadline(timer, static_cast<double>(frameStarted.QuadPart) + periodTicks, frequency.QuadPart);
+            WaitForRenderDeadline(timer, static_cast<double>(frameStarted.QuadPart) + periodTicks,
+                frequency.QuadPart);
         }
     }
     if (timer) {
@@ -2476,29 +2496,9 @@ static BOOL CALLBACK ApplySystemDialogFont(HWND child, LPARAM fontParameter) {
     return TRUE;
 }
 
-/// Creates the About license font using Consolas at the reference 8-point size.
-/// The caller owns the returned GDI font, which may be null on failure.
-static HFONT CreateAboutFont(HWND window) {
-    LOGFONTW font = {};
-    font.lfHeight = -MulDiv(8, GetSystemDialogDpi(window), 72);
-    font.lfWeight = FW_NORMAL;
-    font.lfCharSet = ANSI_CHARSET;
-    font.lfPitchAndFamily = FIXED_PITCH | FF_MODERN;
-    wcsncpy_s(font.lfFaceName, L"Consolas", _TRUNCATE);
-    return CreateFontIndirectW(&font);
-}
-
-/// Creates, owns and applies a system dialog font to all settings controls.
-static void ApplySystemDialogFont(HWND window, SettingsWindowData& data) {
-    data.systemDialogFont = CreateSystemDialogFont(window);
-    if (data.systemDialogFont) {
-        EnumChildWindows(window, ApplySystemDialogFont, reinterpret_cast<LPARAM>(data.systemDialogFont));
-    }
-    UpdateSettingsControlMetrics(window);
-}
-
 /// Aligns a settings push button or checkbox with adjacent text using their shared application font.
-/// Accounts for classic buttons' inclusive text rectangles and preserves size, horizontal position, and Z order.
+/// Accounts for classic buttons' inclusive text rectangles and preserves size, horizontal position,
+/// and Z order.
 static void AlignSettingsButton(HWND button, HWND reference) {
     AlignSettingsControl(button, reference);
 }
@@ -2508,57 +2508,67 @@ static void AlignSettingsLabel(HWND label, HWND reference) {
     AlignSettingsControl(label, reference);
 }
 
-/// Aligns mixed settings rows after the shared font, theme, DPI or native control metrics change.
+/// Opens the Windows screen-saver control panel without changing its current settings.
+static bool OpenSystemScreenSaverSettings(HWND owner) {
+    BOOL wow64 = FALSE;
+    if (!IsWow64Process(GetCurrentProcess(), &wow64)) {
+        return false;
+    }
+    wchar_t directory[MAX_PATH]{};
+    const UINT length = GetWindowsDirectoryW(directory, MAX_PATH);
+    if (length == 0 || length >= MAX_PATH) {
+        return false;
+    }
+    const std::wstring executable = std::wstring(directory, length)
+        + (wow64 ? L"\\Sysnative\\control.exe" : L"\\System32\\control.exe");
+    const HINSTANCE result = ShellExecuteW(owner, L"open", executable.c_str(),
+        L"desk.cpl,screensaver,@screensaver", nullptr, SW_SHOWNORMAL);
+    return reinterpret_cast<INT_PTR>(result) > 32;
+}
+
+/// Reuses the first control's RC row height as one rounded pixel distance between every text baseline.
+static void AlignSettingsControlRows(HWND window, const int* ids, std::size_t count) {
+    HWND reference = GetDlgItem(window, ids[0]);
+    RECT bounds{};
+    if (!GetWindowRect(reference, &bounds)) {
+        return;
+    }
+    const LONG rowDistance = bounds.bottom - bounds.top;
+    for (std::size_t index = 1; index < count; ++index) {
+        HWND control = GetDlgItem(window, ids[index]);
+        AlignSettingsControl(control, reference, rowDistance);
+        reference = control;
+    }
+}
+
+/// Aligns settings rows after the shared font, theme, DPI or native control metrics change.
 static void UpdateSettingsControlMetrics(HWND window) {
     window = SettingsContentWindow(window);
     UpdateComboBoxDropDownSize(GetDlgItem(window, ID_LANGUAGE));
     AlignSettingsControl(GetDlgItem(window, ID_LANGUAGE_LABEL), GetDlgItem(window, ID_LANGUAGE));
-    AlignSettingsControl(GetDlgItem(window, ID_PREVENT_SCREEN_SAVER), GetDlgItem(window, ID_LANGUAGE));
-    for (const SettingsControlAlignment& alignment : ANIMATION_CONTROL_ALIGNMENTS) {
-        AlignSettingsControl(GetDlgItem(window, alignment.control), GetDlgItem(window, alignment.reference));
+    const int sceneCheckboxes[]{
+        ID_MONITOR_TEXTURE,
+        ID_CAMERA_TUMBLING,
+        ID_CAMERA_REVERSALS,
+        ID_SURFACE_PLANE
+    };
+    const int lightRows[][2]{
+        { ID_AMBIENT_LIGHT, ID_RIM_LIGHT },
+        { ID_MAIN_LIGHT, ID_FILL_LIGHT }
+    };
+    AlignSettingsControlRows(window, sceneCheckboxes, std::size(sceneCheckboxes));
+    for (const int (&column)[2] : lightRows) {
+        AlignSettingsControlRows(window, column, std::size(column));
     }
-}
-
-/// Calculates a scrollable fixed-content window that fits the monitor work area.
-static SettingsWindowLayout GetSettingsWindowLayout(bool appMode, DWORD extendedStyle, const RECT& workArea) {
-    SettingsWindowLayout layout{};
-    const DWORD baseStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN | (appMode ? WS_MINIMIZEBOX : 0);
-    const int desiredWidth = SETTINGS_WIDTH;
-    const int desiredHeight = appMode ? APPLICATION_SETTINGS_HEIGHT : SCREEN_SAVER_SETTINGS_HEIGHT;
-    RECT frame{};
-    AdjustWindowRectEx(&frame, baseStyle, FALSE, extendedStyle);
-    layout.contentWidth = desiredWidth - (frame.right - frame.left);
-    const int totalClientHeight = desiredHeight - (frame.bottom - frame.top);
-    layout.contentHeight = totalClientHeight - (appMode ? 22 : 0);
-    const int workWidth = std::max(1L, workArea.right - workArea.left);
-    const int workHeight = std::max(1L, workArea.bottom - workArea.top);
-    const int horizontalScrollHeight = GetSystemMetrics(SM_CYHSCROLL);
-    const int verticalScrollWidth = GetSystemMetrics(SM_CXVSCROLL);
-    bool horizontalScroll = desiredWidth > workWidth;
-    bool verticalScroll = desiredHeight > workHeight;
-    for (int pass = 0; pass < 2; pass++) {
-        layout.width = std::min(workWidth, desiredWidth + (verticalScroll ? verticalScrollWidth : 0));
-        layout.height = std::min(workHeight, desiredHeight + (horizontalScroll ? horizontalScrollHeight : 0));
-        if (layout.width - (verticalScroll ? verticalScrollWidth : 0) < desiredWidth) {
-            horizontalScroll = true;
-        }
-        if (layout.height - (horizontalScroll ? horizontalScrollHeight : 0) < desiredHeight) {
-            verticalScroll = true;
-        }
+    const int effects[]{ ID_EFFECT_0, ID_EFFECT_1, ID_EFFECT_2 };
+    AlignSettingsControl(GetDlgItem(window, ID_SURFACE_WAVES), GetDlgItem(window, ID_SURFACE_PLANE));
+    AlignSettingsControl(GetDlgItem(window, ID_SURFACE_FUNNEL), GetDlgItem(window, ID_SURFACE_PLANE));
+    AlignSettingsControlRows(window, effects, std::size(effects));
+    HWND preventScreenSaver = GetDlgItem(window, ID_PREVENT_SCREEN_SAVER);
+    if (preventScreenSaver) {
+        AlignSettingsControl(preventScreenSaver, GetDlgItem(window, ID_LANGUAGE));
+        AlignSettingsControl(GetDlgItem(window, ID_SYSTEM_SCREEN_SAVER), GetDlgItem(window, ID_LANGUAGE));
     }
-    layout.width = std::min(workWidth, desiredWidth + (verticalScroll ? verticalScrollWidth : 0));
-    layout.height = std::min(workHeight, desiredHeight + (horizontalScroll ? horizontalScrollHeight : 0));
-    layout.style = baseStyle;
-    if (horizontalScroll) {
-        layout.scrollStyle |= WS_HSCROLL;
-    }
-    if (verticalScroll) {
-        layout.scrollStyle |= WS_VSCROLL;
-    }
-    if (!appMode) {
-        layout.style |= layout.scrollStyle;
-    }
-    return layout;
 }
 
 /// Returns the visible client height of the scrollable settings content.
@@ -2570,14 +2580,16 @@ static int SettingsViewportHeight(HWND window, const SettingsWindowData& data) {
 
 /// Sizes the settings panel above the fixed status bar without changing control geometry.
 static void LayoutSettingsContent(HWND window, const SettingsWindowData& data) {
-    if (!data.contentWindow || !app || !app->status) {
+    if (!data.contentWindow) {
         return;
     }
-    SendMessageW(app->status, WM_SIZE, 0, 0);
     RECT client{};
     RECT status{};
     GetClientRect(window, &client);
-    GetWindowRect(app->status, &status);
+    if (data.appMode) {
+        SendMessageW(app->status, WM_SIZE, 0, 0);
+        GetWindowRect(app->status, &status);
+    }
     const int height = std::max(0L, client.bottom - client.top - (status.bottom - status.top));
     SetWindowPos(data.contentWindow, nullptr, 0, 0, client.right - client.left, height,
         SWP_NOZORDER | SWP_NOACTIVATE | SWP_SHOWWINDOW);
@@ -2593,8 +2605,8 @@ static void MoveSettingsChildren(HWND window, int deltaX, int deltaY) {
             RECT rect{};
             GetWindowRect(child, &rect);
             MapWindowPoints(HWND_DESKTOP, window, reinterpret_cast<POINT*>(&rect), 2);
-            positions = DeferWindowPos(positions, child, nullptr, rect.left + deltaX, rect.top + deltaY, 0, 0,
-                SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+            positions = DeferWindowPos(positions, child, nullptr, rect.left + deltaX,
+                rect.top + deltaY, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
         }
         child = next;
     }
@@ -2611,8 +2623,15 @@ static void UpdateSettingsScrollBars(HWND window, SettingsWindowData& data, bool
     GetClientRect(window, &client);
     const LONG_PTR style = GetWindowLongPtrW(window, GWL_STYLE);
     const ScrollBarData bars[]{
-        ScrollBarData{ SB_HORZ, data.contentWidth, static_cast<UINT>(std::max(0L, client.right - client.left)) },
-        ScrollBarData{ SB_VERT, data.contentHeight, static_cast<UINT>(SettingsViewportHeight(window, data)) }
+        ScrollBarData{
+            SB_HORZ,
+            data.contentWidth,
+            static_cast<UINT>(std::max(0L, client.right - client.left))
+        }, ScrollBarData{
+            SB_VERT,
+            data.contentHeight,
+            static_cast<UINT>(SettingsViewportHeight(window, data))
+        }
     };
     for (const ScrollBarData& bar : bars) {
         const LONG_PTR flag = bar.bar == SB_HORZ ? WS_HSCROLL : WS_VSCROLL;
@@ -2783,7 +2802,8 @@ static void EnsureSettingsControlVisible(HWND window, SettingsWindowData& data, 
     }
 }
 
-/// Selects the focused native pushbutton as the Enter default, otherwise restoring the form's original default.
+/// Selects the focused native pushbutton as the Enter default, otherwise restoring the form's original
+/// default.
 static void UpdateSettingsDefaultButton(HWND window, SettingsWindowData& data, HWND focused) {
     HWND button = nullptr;
     if (!data.appMode) {
@@ -2812,10 +2832,12 @@ static void UpdateSettingsDefaultButton(HWND window, SettingsWindowData& data, H
 }
 
 /// Tracks native default-button state and requests visibility after tab-stop focus changes.
-static LRESULT CALLBACK SettingsTabStopSubclass(HWND control, UINT msg, WPARAM wParam, LPARAM lParam, UINT_PTR subclassId,
-        DWORD_PTR) {
+static LRESULT CALLBACK SettingsTabStopSubclass(HWND control, UINT msg, WPARAM wParam, LPARAM lParam,
+        UINT_PTR subclassId, DWORD_PTR referenceData) {
+    UNREFERENCED_PARAMETER(referenceData);
     HWND parent = GetParent(control);
-    SettingsWindowData* data = reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(parent, GWLP_USERDATA));
+    SettingsWindowData* data =
+        reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(parent, GWLP_USERDATA));
     if (msg == WM_SETFONT || msg == WM_THEMECHANGED || msg == WM_DPICHANGED_AFTERPARENT) {
         PostMessageW(GetAncestor(control, GA_ROOT), UPDATE_SETTINGS_CONTROL_METRICS, 0, 0);
     }
@@ -2854,7 +2876,7 @@ static SettingsControlLayer GetSettingsControlLayer(HWND control) {
     GetClassNameW(control, className, static_cast<int>(std::size(className)));
     if (_wcsicmp(className, L"STATIC") == 0) {
         if ((GetWindowLongPtrW(control, GWL_STYLE) & SS_TYPEMASK) == SS_ETCHEDHORZ
-                || (GetWindowLongPtrW(control, GWL_EXSTYLE) & WS_EX_STATICEDGE) != 0) {
+                || (GetWindowLongPtrW(control, GWL_EXSTYLE) & (WS_EX_STATICEDGE | WS_EX_CLIENTEDGE)) != 0) {
             return SettingsControlLayer::Foreground;
         }
         return SettingsControlLayer::Label;
@@ -2899,6 +2921,7 @@ static std::vector<int> SettingsTabOrder(const SettingsWindowData& data) {
     std::vector<int> order{ ID_LANGUAGE };
     if (data.appMode) {
         order.push_back(ID_PREVENT_SCREEN_SAVER);
+        order.push_back(ID_SYSTEM_SCREEN_SAVER);
     }
     for (const AnimationSliderControl& control : ANIMATION_SLIDERS) {
         order.push_back(control.id);
@@ -2933,7 +2956,8 @@ static std::vector<int> SettingsTabOrder(const SettingsWindowData& data) {
     return order;
 }
 
-/// Returns the next available control in the declared settings tab sequence, retaining a disabled source as its anchor.
+/// Returns the next available control in the declared settings tab sequence, retaining a disabled source as
+/// its anchor.
 static HWND FindSettingsTabTarget(HWND parent, const SettingsWindowData& data, HWND focused, bool backwards) {
     parent = SettingsContentWindow(parent);
     std::vector<HWND> controls;
@@ -2960,7 +2984,8 @@ static HWND FindSettingsTabTarget(HWND parent, const SettingsWindowData& data, H
         }
         if (control) {
             const bool anchor = focused == control || IsChild(control, focused);
-            if (anchor || IsWindowVisible(control)
+            if (anchor
+                || IsWindowVisible(control)
                     && IsWindowEnabled(control)
                     && (radioGroup || (GetWindowLongPtrW(control, GWL_STYLE) & WS_TABSTOP) != 0)) {
                 controls.push_back(control);
@@ -3023,21 +3048,12 @@ static bool MoveSettingsTabFocus(HWND parent, const SettingsWindowData& data, bo
     return !nativeNavigation;
 }
 
-/// Extends text controls to the content edge and restores their clipping Z-order.
+/// Restores native clipping styles and Z-order without changing resource control geometry.
 static void UpdateSettingsTextControlLayout(HWND parent) {
     parent = SettingsContentWindow(parent);
     RECT client{};
     if (!parent || !GetClientRect(parent, &client)) {
         return;
-    }
-    int right = std::max(18L, client.right - 17);
-    SettingsWindowData* data = reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(parent, GWLP_USERDATA));
-    if (data && data->contentWidth > 0) {
-        SCROLLINFO horizontal{};
-        horizontal.cbSize = sizeof(horizontal);
-        horizontal.fMask = SIF_POS;
-        GetScrollInfo(parent, SB_HORZ, &horizontal);
-        right = std::max(18, data->contentWidth - 17 - horizontal.nPos);
     }
     std::vector<PositionedControl> controls;
     for (HWND control = GetWindow(parent, GW_CHILD); control; control = GetWindow(control, GW_HWNDNEXT)) {
@@ -3053,7 +3069,7 @@ static void UpdateSettingsTextControlLayout(HWND parent) {
                 [id](const AnimationSliderControl& control) { return control.labelId == id; });
             const bool opaqueLabel = sliderLabel
                 || std::find(std::begin(OPAQUE_SETTINGS_LABEL_IDS), std::end(OPAQUE_SETTINGS_LABEL_IDS), id)
-                != std::end(OPAQUE_SETTINGS_LABEL_IDS);
+                    != std::end(OPAQUE_SETTINGS_LABEL_IDS);
             LONG_PTR style = GetWindowLongPtrW(control, GWL_STYLE);
             style |= WS_CLIPSIBLINGS;
             if (layer == SettingsControlLayer::Label) {
@@ -3064,110 +3080,20 @@ static void UpdateSettingsTextControlLayout(HWND parent) {
                     : extended | WS_EX_TRANSPARENT);
             }
             SetWindowLongPtrW(control, GWL_STYLE, style);
-            if (!sliderLabel) {
-                rect.right = std::max(rect.left + 1, static_cast<LONG>(right));
-            }
-            SetWindowPos(control, nullptr, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top,
-                SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOCOPYBITS);
         }
         controls.push_back(PositionedControl{ control, rect });
     }
     std::stable_sort(controls.begin(), controls.end(), CompareSettingsControls);
     HWND previous = nullptr;
     for (const PositionedControl& control : controls) {
-        SetWindowPos(control.window, previous, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOCOPYBITS);
+        SetWindowPos(control.window, previous, 0, 0, 0, 0,
+            SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOCOPYBITS);
         previous = control.window;
     }
 }
 
-/// Recognizes Unicode whitespace for license text and descriptive-text layout.
-static bool IsUnicodeWhitespace(wchar_t character) {
-    WORD type = 0;
-    return GetStringTypeW(CT_CTYPE1, &character, 1, &type) && (type & C1_SPACE) != 0;
-}
-
-/// Decodes the embedded UTF-8 license, removes an optional BOM and a case-insensitive MIT License heading, and trims
-/// outer whitespace. Accepts whitespace between heading words, preserves the license body, and normalizes line endings
-/// for the edit control.
-static std::wstring LoadLicenseText() {
-    HRSRC resource = FindResourceW(app->instance, MAKEINTRESOURCEW(IDR_LICENSE), RT_RCDATA);
-    if (resource == nullptr) {
-        return std::wstring();
-    }
-    HGLOBAL loadedResource = LoadResource(app->instance, resource);
-    if (loadedResource == nullptr) {
-        return std::wstring();
-    }
-    DWORD byteCount = SizeofResource(app->instance, resource);
-    const char* bytes = static_cast<const char*>(LockResource(loadedResource));
-    if (bytes == nullptr || byteCount == 0 || byteCount > static_cast<DWORD>(INT_MAX)) {
-        return std::wstring();
-    }
-    int characterCount = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, bytes,
-        static_cast<int>(byteCount), nullptr, 0);
-    if (characterCount <= 0) {
-        return std::wstring();
-    }
-    std::wstring decoded(characterCount, L'\0');
-    if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, bytes, static_cast<int>(byteCount),
-        decoded.data(), characterCount) != characterCount) {
-        return std::wstring();
-    }
-    size_t headingStart = !decoded.empty() && decoded.front() == L'\uFEFF' ? 1 : 0;
-    while (headingStart < decoded.size() && IsUnicodeWhitespace(decoded[headingStart])) {
-        headingStart++;
-    }
-    size_t headingEnd = decoded.find_first_of(L"\r\n", headingStart);
-    std::wstring heading = decoded.substr(headingStart, headingEnd - headingStart);
-    std::wstring normalizedHeading;
-    bool whitespace = false;
-    for (wchar_t character : heading) {
-        if (IsUnicodeWhitespace(character)) {
-            whitespace = true;
-        } else {
-            if (whitespace && !normalizedHeading.empty()) {
-                normalizedHeading += L' ';
-            }
-            normalizedHeading += character;
-            whitespace = false;
-        }
-    }
-    size_t bodyStart = headingStart;
-    if (_wcsicmp(normalizedHeading.c_str(), L"MIT License") == 0) {
-        bodyStart = headingEnd == std::wstring::npos ? decoded.size() : headingEnd;
-        while (bodyStart < decoded.size() && IsUnicodeWhitespace(decoded[bodyStart])) {
-            bodyStart++;
-        }
-    }
-    decoded.erase(0, bodyStart);
-    while (!decoded.empty() && (decoded.back() == L'\0' || IsUnicodeWhitespace(decoded.back()))) {
-        decoded.pop_back();
-    }
-    std::wstring result;
-    result.reserve(decoded.size() + 32);
-    for (size_t index = 0; index < decoded.size(); index++) {
-        if (decoded[index] == L'\n' && (index == 0 || decoded[index - 1] != L'\r')) {
-            result += L'\r';
-        }
-        result += decoded[index];
-    }
-    return result;
-}
-
-/// Retrieves the complete Unicode text of an information-window control.
-static std::wstring InformationControlText(HWND control) {
-    const int length = GetWindowTextLengthW(control);
-    if (length <= 0) {
-        return std::wstring{};
-    }
-    std::wstring text(static_cast<std::size_t>(length) + 1U, L'\0');
-    GetWindowTextW(control, text.data(), length + 1);
-    text.resize(static_cast<std::size_t>(length));
-    return text;
-}
-
 /// Replaces clipboard contents with Unicode text, transferring the allocation to Windows only on success.
-static bool CopyInformationTextToClipboard(HWND owner, const std::wstring& text) {
+bool CopyTextToClipboard(HWND owner, const std::wstring& text) {
     SIZE_T bytes = (text.size() + 1) * sizeof(wchar_t);
     HGLOBAL memory = GlobalAlloc(GMEM_MOVEABLE, bytes);
     if (memory == nullptr) {
@@ -3192,162 +3118,29 @@ static bool CopyInformationTextToClipboard(HWND owner, const std::wstring& text)
     return copied;
 }
 
-/// Returns the executable's four-part product version, or a question mark if version information cannot be read.
-static std::wstring GetApplicationVersion() {
-    wchar_t path[MAX_PATH] = {};
-    if (GetModuleFileNameW(nullptr, path, ARRAYSIZE(path)) == 0) {
-        return L"?";
-    }
-    DWORD ignored = 0;
-    DWORD size = GetFileVersionInfoSizeW(path, &ignored);
-    if (size == 0) {
-        return L"?";
-    }
-    std::vector<BYTE> data(size);
-    if (!GetFileVersionInfoW(path, 0, size, data.data())) {
-        return L"?";
-    }
-    VS_FIXEDFILEINFO* information = nullptr;
-    UINT informationSize = 0;
-    bool invalidVersionInfo =
-        !VerQueryValueW(data.data(), L"\\", reinterpret_cast<void**>(&information), &informationSize)
-        || information == nullptr
-        || informationSize < sizeof(VS_FIXEDFILEINFO)
-        || information->dwSignature != VS_FFI_SIGNATURE;
-    if (invalidVersionInfo) {
-        return L"?";
-    }
-    wchar_t version[48] = {};
-    swprintf_s(version, L"%u.%u.%u.%u",
-        HIWORD(information->dwProductVersionMS),
-        LOWORD(information->dwProductVersionMS),
-        HIWORD(information->dwProductVersionLS),
-        LOWORD(information->dwProductVersionLS));
-    return version;
+/// Resolves the standalone Close caption through the application's existing mnemonic allocator.
+std::wstring Mnemonic(AppLanguage language, TextId id) {
+    std::vector<wchar_t> usedMnemonics;
+    return UniqueMnemonic(GetLocalizedText(language, id), usedMnemonics);
 }
 
-/// Builds localized product information including description, version, copyright, and target platform.
-static std::wstring AboutProductText(AppLanguage language) {
-    std::wstring product = L"SpaceFlight\r\n";
-    product += GetLocalizedText(language, TXT_ABOUT_DESCRIPTION);
-    product += L"\r\n\r\n";
-    product += GetLocalizedText(language, TXT_ABOUT_VERSION_LABEL);
-    product += L" ";
-    product += GetApplicationVersion();
-    product += L"\r\nCopyright © Petr Červinka – FortSoft 2026\r\n";
-    product += GetLocalizedText(language, TXT_ABOUT_PLATFORM_LABEL);
-    product += L" Win32 (x86)";
-    return product;
+/// Recognizes Unicode whitespace for license text and descriptive-text layout.
+bool IsUnicodeWhitespace(wchar_t character) {
+    WORD type = 0;
+    return GetStringTypeW(CT_CTYPE1, &character, 1, &type) && (type & C1_SPACE) != 0;
 }
 
-/// Builds the SysLink markup for the product website.
-static std::wstring AboutLinkText() {
-    std::wstring link = L"<a href=\"";
-    link += WEBSITE_URL;
-    link += L"\">";
-    link += WEBSITE_URL;
-    link += L"</a>";
-    return link;
-}
-
-/// Builds the plain-text About representation used by the copy command.
-static std::wstring AboutClipboardText(AppLanguage language) {
-    std::wstring text = AboutProductText(language);
-    text += L"\r\n";
-    text += GetLocalizedText(language, TXT_ABOUT_WEBSITE_LABEL);
-    text += L" ";
-    text += WEBSITE_URL;
+/// Returns an owned copy of a control's current Unicode text.
+std::wstring GetControlText(HWND control) {
+    int length = GetWindowTextLengthW(control);
+    std::wstring text(static_cast<size_t>(length) + 1, L'\0');
+    int copied = GetWindowTextW(control, text.data(), static_cast<int>(text.size()));
+    text.resize(copied);
     return text;
 }
 
-/// Chooses a screen coordinate for pointer- or keyboard-invoked context menus.
-static POINT InformationMenuPoint(HWND control, LPARAM lParam) {
-    POINT point = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-    if (lParam == -1) {
-        RECT rectangle = {};
-        GetWindowRect(control, &rectangle);
-        point.x = rectangle.left;
-        point.y = rectangle.bottom;
-    }
-    return point;
-}
-
-/// Opens the About website and reports failures in the selected application language.
-static void OpenAboutWebsite() {
-    HINSTANCE result = ShellExecuteW(aboutWindow, SHELL_OPEN_VERB, WEBSITE_URL, nullptr, nullptr, SW_SHOWNORMAL);
-    if (reinterpret_cast<INT_PTR>(result) <= 32) {
-        const InformationWindowData* data =
-            reinterpret_cast<const InformationWindowData*>(GetWindowLongPtrW(aboutWindow, DWLP_USER));
-        if (data != nullptr) {
-            MessageBoxW(aboutWindow, GetLocalizedText(data->language, TXT_ABOUT_WEBSITE_FAILED), PRODUCT_NAME, MB_OK |
-                MB_ICONERROR);
-        }
-    }
-}
-
-/// Displays the localized context menu for About labels and website link.
-static void ShowAboutContextMenu(HWND control, LPARAM lParam) {
-    HWND parent = GetParent(control);
-    InformationWindowData* data = reinterpret_cast<InformationWindowData*>(GetWindowLongPtrW(parent, DWLP_USER));
-    if (!data) {
-        return;
-    }
-    const int controlId = GetDlgCtrlID(control);
-    HMENU menu = CreatePopupMenu();
-    if (!menu) {
-        return;
-    }
-    if (controlId == ID_INFORMATION_LINK) {
-        AppendMenuW(menu, MF_STRING, ID_MENU_ABOUT_OPEN, GetLocalizedText(data->language, TXT_OPEN_IN_BROWSER));
-        AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
-        AppendMenuW(menu, MF_STRING, ID_MENU_ABOUT_COPY_URL, GetLocalizedText(data->language, TXT_COPY_URL));
-        AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
-    }
-    AppendMenuW(menu, MF_STRING, ID_MENU_ABOUT_COPY_INFORMATION, GetLocalizedText(data->language, TXT_COPY_INFORMATION));
-    const POINT point = InformationMenuPoint(control, lParam);
-    const UINT command = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_RIGHTBUTTON, point.x, point.y, 0, parent, nullptr);
-    DestroyMenu(menu);
-    if (command == ID_MENU_ABOUT_OPEN) {
-        OpenAboutWebsite();
-    } else if (command == ID_MENU_ABOUT_COPY_URL) {
-        if (!CopyInformationTextToClipboard(parent, WEBSITE_URL)) {
-            MessageBoxW(parent, GetLocalizedText(data->language, TXT_ABOUT_COPY_URL_FAILED), PRODUCT_NAME, MB_OK |
-                MB_ICONERROR);
-        }
-    } else if (command == ID_MENU_ABOUT_COPY_INFORMATION) {
-        if (!CopyInformationTextToClipboard(parent, AboutClipboardText(data->language))) {
-            MessageBoxW(parent, GetLocalizedText(data->language, TXT_ABOUT_COPY_INFORMATION_FAILED), PRODUCT_NAME,
-                MB_OK | MB_ICONERROR);
-        }
-    }
-}
-
-/// Adds the About context menu to product and website controls and removes the subclass on destruction.
-static LRESULT CALLBACK AboutControlSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam, UINT_PTR subclassId,
-        DWORD_PTR referenceData) {
-    UNREFERENCED_PARAMETER(referenceData);
-    if (msg == WM_CONTEXTMENU) {
-        ShowAboutContextMenu(window, lParam);
-        return 0;
-    }
-    if (GetDlgCtrlID(window) == ID_INFORMATION_LINK) {
-        if (msg == WM_SETCURSOR && LOWORD(lParam) == HTCLIENT) {
-            SetCursor(LoadCursorW(nullptr, IDC_HAND));
-            return TRUE;
-        }
-        if (msg == WM_MBUTTONUP) {
-            OpenAboutWebsite();
-            return 0;
-        }
-    }
-    if (msg == WM_NCDESTROY) {
-        RemoveWindowSubclass(window, AboutControlSubclassProc, subclassId);
-    }
-    return DefSubclassProc(window, msg, wParam, lParam);
-}
-
 /// Lets information windows handle Enter, Escape and Tab from their read-only text fields.
-static LRESULT CALLBACK InformationTextSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam,
+LRESULT CALLBACK InformationTextSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam,
         UINT_PTR subclassId, DWORD_PTR referenceData) {
     UNREFERENCED_PARAMETER(referenceData);
     if (msg == WM_GETDLGCODE) {
@@ -3364,7 +3157,7 @@ static LRESULT CALLBACK InformationTextSubclassProc(HWND window, UINT msg, WPARA
 }
 
 /// Releases the cached Unicode boundary analysis and its retained text.
-static void ResetInformationWordBreak() {
+void ResetInformationWordBreak() {
     if (informationWordBreakState.analysis != nullptr) {
         if (FAILED(ScriptStringFree(&informationWordBreakState.analysis))) {
             OutputDebugStringW(L"ScriptStringFree failed while clearing Unicode word-break analysis.\r\n");
@@ -3375,7 +3168,7 @@ static void ResetInformationWordBreak() {
 }
 
 /// Supplies the same native Unicode word and cluster boundaries to the Help and About edits.
-static int CALLBACK InformationWordBreakProc(wchar_t* text, int position, int length, int code) {
+int CALLBACK InformationWordBreakProc(wchar_t* text, int position, int length, int code) {
     if (length <= 0) {
         return 0;
     }
@@ -3403,7 +3196,7 @@ static int CALLBACK InformationWordBreakProc(wchar_t* text, int position, int le
             position--;
         }
         while (position > 0 && (!attributes[position].fCharStop
-            || !attributes[position].fSoftBreak && !attributes[position - 1].fWhiteSpace)) {
+                || !attributes[position].fSoftBreak && !attributes[position - 1].fWhiteSpace)) {
             position--;
         }
     } else if (code == WB_RIGHT) {
@@ -3411,7 +3204,7 @@ static int CALLBACK InformationWordBreakProc(wchar_t* text, int position, int le
             position++;
         }
         while (position < length && (!attributes[position].fCharStop
-            || !attributes[position].fSoftBreak && !attributes[position - 1].fWhiteSpace)) {
+                || !attributes[position].fSoftBreak && !attributes[position - 1].fWhiteSpace)) {
             position++;
         }
     }
@@ -3437,7 +3230,7 @@ static LONG GetSettingsButtonTextTop(HWND button, const WINDOWINFO& information,
         information.rcClient.bottom - information.rcClient.top
     };
     LONG textHeight = metrics.tmHeight;
-    HTHEME theme = GetWindowTheme(button);
+    HTHEME theme = OpenThemeData(button, L"Button");
     if (theme == nullptr) {
         content.bottom -= GetSystemMetrics(SM_CYBORDER);
     } else {
@@ -3445,15 +3238,20 @@ static LONG GetSettingsButtonTextTop(HWND button, const WINDOWINFO& information,
         if (type == BS_PUSHBUTTON || type == BS_DEFPUSHBUTTON) {
             RECT themedContent = {};
             if (SUCCEEDED(GetThemeBackgroundContentRect(theme, nullptr, BP_PUSHBUTTON, PBS_NORMAL,
-                &content, &themedContent))) {
+                    &content, &themedContent))) {
                 content = themedContent;
             }
-        } else if (type == BS_CHECKBOX || type == BS_AUTOCHECKBOX || type == BS_3STATE || type == BS_AUTO3STATE) {
+        } else if (type == BS_CHECKBOX
+                || type == BS_AUTOCHECKBOX
+                || type == BS_3STATE
+                || type == BS_AUTO3STATE) {
             SIZE glyph = {};
-            if (SUCCEEDED(GetThemePartSize(theme, nullptr, BP_CHECKBOX, CBS_UNCHECKEDNORMAL, nullptr, TS_TRUE, &glyph))) {
+            if (SUCCEEDED(GetThemePartSize(theme, nullptr, BP_CHECKBOX, CBS_UNCHECKEDNORMAL, nullptr,
+                    TS_TRUE, &glyph))) {
                 textHeight = std::max(textHeight, glyph.cy);
             }
         }
+        CloseThemeData(theme);
     }
     return content.top + (content.bottom - content.top - textHeight) / 2;
 }
@@ -3496,7 +3294,8 @@ static bool GetSettingsControlBaseline(HWND control, LONG* baseline) {
         textTop += text.top;
     } else if (_wcsicmp(className, L"BUTTON") == 0) {
         textTop += GetSettingsButtonTextTop(control, information, metrics);
-    } else if (_wcsicmp(className, L"STATIC") == 0 && (GetWindowLongPtrW(control, GWL_STYLE) & SS_CENTERIMAGE) != 0) {
+    } else if (_wcsicmp(className, L"STATIC") == 0
+            && (GetWindowLongPtrW(control, GWL_STYLE) & SS_CENTERIMAGE) != 0) {
         textTop += (information.rcClient.bottom - information.rcClient.top - metrics.tmHeight) / 2;
     }
     *baseline = textTop + metrics.tmAscent;
@@ -3526,9 +3325,11 @@ static void OffsetSettingsControl(HWND control, LONG distance) {
         SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOCOPYBITS);
 }
 
-/// Aligns a control's text baseline with the reference, allowing an explicit baseline distance.
-static void AlignSettingsControl(HWND control, HWND reference, LONG baselineDistance) {
-    OffsetSettingsControl(control, GetSettingsControlBaselineAdjustment(control, reference, baselineDistance));
+/// Aligns a settings label, edit, combo, push button, or checkbox to adjacent text plus an optional baseline
+/// distance. Uses native content rectangles and preserves size, horizontal position, and Z order.
+void AlignSettingsControl(HWND control, HWND reference, LONG baselineDistance) {
+    OffsetSettingsControl(control,
+        GetSettingsControlBaselineAdjustment(control, reference, baselineDistance));
 }
 
 /// Derives text-line metrics from the selected font and glyph extents without clipping the supplied text.
@@ -3546,7 +3347,8 @@ static UiTextLine GetUiTextLine(HDC dc, const std::wstring& text) {
         return line;
     }
     UiTextLine typographic = {
-        outline->otmAscent, std::abs(outline->otmDescent),
+        outline->otmAscent,
+        std::abs(outline->otmDescent),
         static_cast<LONG>(outline->otmLineGap)
     };
     MAT2 transform = {
@@ -3566,7 +3368,8 @@ static UiTextLine GetUiTextLine(HDC dc, const std::wstring& text) {
                 static_cast<LONG>(glyph.gmBlackBoxY) - glyph.gmptGlyphOrigin.y);
         }
     }
-    if (typographic.ascent + typographic.descent + typographic.gap < metrics.tmHeight + metrics.tmExternalLeading) {
+    if (typographic.ascent + typographic.descent + typographic.gap
+            < metrics.tmHeight + metrics.tmExternalLeading) {
         line = typographic;
     }
     return line;
@@ -3587,7 +3390,8 @@ static std::wstring RemoveCaptionMnemonic(const std::wstring& caption) {
 }
 
 /// Draws or measures descriptive text using the same word wrapping and current font's line height.
-static int DrawWordWrappedText(HDC dc, const std::wstring& text, const RECT& bounds, UINT prefix = DT_NOPREFIX) {
+static int DrawWordWrappedText(HDC dc, const std::wstring& text, const RECT& bounds,
+        UINT prefix = DT_NOPREFIX) {
     TEXTMETRICW metrics = {};
     if (!GetTextMetricsW(dc, &metrics)) {
         return 0;
@@ -3622,8 +3426,10 @@ static int DrawWordWrappedText(HDC dc, const std::wstring& text, const RECT& bou
             y += lineHeight;
             continue;
         }
-        while (position < text.size() && IsUnicodeWhitespace(text[position])
-                && text[position] != L'\r' && text[position] != L'\n') {
+        while (position < text.size()
+                && IsUnicodeWhitespace(text[position])
+                && text[position] != L'\r'
+                && text[position] != L'\n') {
             position++;
         }
         size_t wordStart = position;
@@ -3671,7 +3477,7 @@ static int DrawWordWrappedText(HDC dc, const std::wstring& text, const RECT& bou
 }
 
 /// Paints owner-drawn product text using the control font, enabled-state color and parent background.
-static INT_PTR DrawWrappedTextItem(const DRAWITEMSTRUCT* item) {
+INT_PTR DrawWrappedTextItem(const DRAWITEMSTRUCT* item) {
     int savedState = SaveDC(item->hDC);
     DrawThemeParentBackground(item->hwndItem, item->hDC, nullptr);
     SetBkMode(item->hDC, TRANSPARENT);
@@ -3680,7 +3486,7 @@ static INT_PTR DrawWrappedTextItem(const DRAWITEMSTRUCT* item) {
     if (font != nullptr) {
         SelectObject(item->hDC, font);
     }
-    std::wstring text = InformationControlText(item->hwndItem);
+    std::wstring text = GetControlText(item->hwndItem);
     RECT textRect = item->rcItem;
     UINT prefix = DT_NOPREFIX;
     DrawWordWrappedText(item->hDC, text, textRect, prefix);
@@ -3689,7 +3495,7 @@ static INT_PTR DrawWrappedTextItem(const DRAWITEMSTRUCT* item) {
 }
 
 /// Creates a nonactivating tooltip for a child control, destroying it if registration fails.
-static HWND CreateControlTooltip(HWND parent, HWND control, const wchar_t* text) {
+HWND CreateControlTooltip(HWND parent, HWND control, const wchar_t* text) {
     if (parent == nullptr || control == nullptr || text == nullptr) {
         return nullptr;
     }
@@ -3720,20 +3526,9 @@ static RECT InformationControlRect(HWND window, int id) {
     return rect;
 }
 
-/// Captures the initial interface font and reference license dimensions before layout.
-static void InitializeInformationWindowLayout(HWND window, bool help) {
-    InformationWindowLayout& layout = help ? helpWindowLayout : aboutWindowLayout;
-    layout.font = reinterpret_cast<HFONT>(SendMessageW(window, WM_GETFONT, 0, 0));
-    layout.dpi = GetSystemDialogDpi(window);
-    if (!help) {
-        layout.license = SIZE{ MulDiv(ABOUT_LICENSE_WIDTH_96DPI, layout.dpi, 96),
-            MulDiv(ABOUT_LICENSE_HEIGHT_96DPI, layout.dpi, 96) };
-    }
-    layout.initialized = true;
-}
-
-/// Positions an information-window child without activation or Z-order changes, enforcing positive dimensions.
-static void PlaceInformationControl(HWND window, int id, int x, int y, int width, int height) {
+/// Positions an information-window child without activation or Z-order changes, enforcing positive
+/// dimensions.
+void PlaceInformationControl(HWND window, int id, int x, int y, int width, int height) {
     HWND control = GetDlgItem(window, id);
     int controlWidth = std::max(1, width);
     int controlHeight = std::max(1, height);
@@ -3743,12 +3538,12 @@ static void PlaceInformationControl(HWND window, int id, int x, int y, int width
 
 /// Measures a label's wrapped height at the requested width using its actual font, or returns zero if a DC is
 /// unavailable.
-static int InformationLabelHeight(HWND control, int width) {
+int InformationLabelHeight(HWND control, int width) {
     HDC dc = GetDC(control);
     if (dc == nullptr) {
         return 0;
     }
-    std::wstring text = InformationControlText(control);
+    std::wstring text = GetControlText(control);
     HFONT font = reinterpret_cast<HFONT>(SendMessageW(control, WM_GETFONT, 0, 0));
     HGDIOBJ oldFont = font == nullptr ? nullptr : SelectObject(dc, font);
     RECT bounds = { 0, 0, std::max(1, width), 0 };
@@ -3760,25 +3555,8 @@ static int InformationLabelHeight(HWND control, int width) {
     return height;
 }
 
-/// Measures unwrapped information text using the control's current font.
-static SIZE InformationTextSize(HWND control) {
-    SIZE size = {};
-    HDC dc = GetDC(control);
-    if (dc != nullptr) {
-        HFONT font = reinterpret_cast<HFONT>(SendMessageW(control, WM_GETFONT, 0, 0));
-        HGDIOBJ previous = font == nullptr ? nullptr : SelectObject(dc, font);
-        std::wstring text = InformationControlText(control);
-        GetTextExtentPoint32W(dc, text.c_str(), static_cast<int>(text.size()), &size);
-        if (previous != nullptr) {
-            SelectObject(dc, previous);
-        }
-        ReleaseDC(control, dc);
-    }
-    return size;
-}
-
 /// Measures native dialog base units from the supplied interface font.
-static bool GetDialogFontBaseUnits(HFONT font, SIZE* units) {
+bool GetDialogFontBaseUnits(HFONT font, SIZE* units) {
     HDC dc = GetDC(nullptr);
     if (dc == nullptr) {
         return false;
@@ -3786,8 +3564,8 @@ static bool GetDialogFontBaseUnits(HFONT font, SIZE* units) {
     HGDIOBJ previous = font == nullptr ? nullptr : SelectObject(dc, font);
     SIZE alphabet = {};
     TEXTMETRICW metrics = {};
-    bool measured = GetTextExtentPoint32W(dc, L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz", 52, &alphabet)
-        && GetTextMetricsW(dc, &metrics);
+    bool measured = GetTextExtentPoint32W(dc, L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+        52, &alphabet) && GetTextMetricsW(dc, &metrics);
     if (measured) {
         units->cx = (alphabet.cx / 26 + 1) / 2;
         units->cy = metrics.tmHeight;
@@ -3800,128 +3578,29 @@ static bool GetDialogFontBaseUnits(HFONT font, SIZE* units) {
 }
 
 /// Converts current information-dialog font units to native pixel dimensions.
-static SIZE InformationDialogUnits(HWND window, int x, int y) {
-    InformationWindowLayout& layout = window == helpWindow ? helpWindowLayout : aboutWindowLayout;
+SIZE InformationDialogUnits(HFONT font, int x, int y) {
     SIZE units = {};
-    if (!GetDialogFontBaseUnits(layout.font, &units)) {
+    if (!GetDialogFontBaseUnits(font, &units)) {
         return SIZE{};
     }
     return SIZE{ MulDiv(x, units.cx, 4), MulDiv(y, units.cy, 8) };
 }
 
-/// Applies the system interface font and current theme while keeping the About license in Consolas.
-static bool ApplyInformationWindowStyle(HWND window, bool updateFont) {
-    InformationWindowData* data = reinterpret_cast<InformationWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
-    if (data == nullptr) {
-        return false;
-    }
-    InformationWindowLayout& layout = window == helpWindow ? helpWindowLayout : aboutWindowLayout;
-    HFONT font = layout.font;
-    if (updateFont) {
-        font = CreateSystemDialogFont(window);
-    }
-    if (font == nullptr) {
-        return false;
-    }
-    HFONT licenseFont = window == aboutWindow ? CreateAboutFont(window) : nullptr;
-    if (window == aboutWindow && licenseFont == nullptr) {
-        if (updateFont) {
-            DeleteObject(font);
-        }
-        return false;
-    }
-    HFONT previousFont = layout.ownsFont ? layout.font : nullptr;
-    layout.font = font;
-    layout.ownsFont = updateFont;
-    SendMessageW(window, WM_SETFONT, reinterpret_cast<WPARAM>(font), FALSE);
-    const int ids[] = {
-        ID_INFORMATION_PRODUCT,
-        ID_INFORMATION_WEBSITE,
-        ID_INFORMATION_LINK,
-        ID_INFORMATION_TEXT,
-        ID_INFORMATION_CLOSE
-    };
-    const wchar_t* theme = nullptr;
-    for (int id : ids) {
-        HWND control = GetDlgItem(window, id);
-        if (control == nullptr) {
-            continue;
-        }
-        HFONT selected = id == ID_INFORMATION_TEXT && licenseFont != nullptr ? licenseFont : font;
-        SendMessageW(control, WM_SETFONT, reinterpret_cast<WPARAM>(selected), FALSE);
-        SetWindowTheme(control, theme, theme);
-    }
-    if (previousFont != nullptr) {
-        DeleteObject(previousFont);
-    }
-    if (window == aboutWindow) {
-        if (data->licenseFont != nullptr) {
-            DeleteObject(data->licenseFont);
-        }
-        data->licenseFont = licenseFont;
-        int size = GetSystemDialogDpi(window) >= ABOUT_LARGE_ICON_DPI ? ABOUT_LARGE_ICON_SIZE : ABOUT_ICON_SIZE;
-        HICON icon = app->programIcons.LoadSized(size);
-        if (icon == nullptr) {
-            return false;
-        }
-        SendDlgItemMessageW(window, ID_INFORMATION_ICON, STM_SETICON, reinterpret_cast<WPARAM>(icon), 0);
-        if (data->icon != nullptr) {
-            DestroyIcon(data->icon);
-        }
-        data->icon = icon;
-        SetWindowPos(GetDlgItem(window, ID_INFORMATION_ICON), nullptr, 0, 0, size, size,
-            SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
-    }
-    LayoutInformationWindow(window);
-    RedrawWindow(window, nullptr, nullptr, RDW_INVALIDATE | RDW_ERASE | RDW_FRAME | RDW_ALLCHILDREN);
-    return true;
-}
-
-/// Fits the About window to its monitor work area after its natural layout, without saving the adjusted size.
-static void FitAboutWindowToWorkArea(HWND window) {
-    RECT bounds = {};
-    MONITORINFO monitor = { sizeof(monitor) };
-    if (!GetWindowRect(window, &bounds)
-            || !GetMonitorInfoW(MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST), &monitor)) {
-        return;
-    }
-    LONG width = std::min(bounds.right - bounds.left, monitor.rcWork.right - monitor.rcWork.left);
-    LONG height = std::min(bounds.bottom - bounds.top, monitor.rcWork.bottom - monitor.rcWork.top);
-    LONG left = std::clamp(bounds.left, monitor.rcWork.left, monitor.rcWork.right - width);
-    LONG top = std::clamp(bounds.top, monitor.rcWork.top, monitor.rcWork.bottom - height);
-    if (left != bounds.left
-            || top != bounds.top
-            || width != bounds.right - bounds.left
-            || height != bounds.bottom - bounds.top) {
-        SetWindowPos(window, nullptr, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
-    }
-}
-
-/// Builds the natural About layout from its fixed license dimensions, then fits it to the monitor work area.
-/// Resize notifications anchor the edit to the right and bottom edges and the Close button to the bottom right.
-static void LayoutInformationWindow(HWND window, bool resize) {
-    InformationWindowLayout& layout = window == helpWindow ? helpWindowLayout : aboutWindowLayout;
-    if (!layout.initialized || IsIconic(window)) {
-        return;
-    }
-    RECT client = {};
-    GetClientRect(window, &client);
-    SIZE current = { client.right, client.bottom };
-    UINT dpi = GetSystemDialogDpi(window);
-    SIZE margin = InformationDialogUnits(window, 8, 8);
-    SIZE gap = InformationDialogUnits(window, 4, 6);
-    SIZE button = InformationDialogUnits(window, DIALOG_BUTTON_WIDTH_DLU, DIALOG_BUTTON_HEIGHT_DLU);
+/// Measures the common native Close button using its current font and existing dialog-unit minimum and
+/// padding.
+SIZE InformationButtonSize(HWND window, HFONT font) {
+    SIZE button = InformationDialogUnits(font, DIALOG_BUTTON_WIDTH_DLU, DIALOG_BUTTON_HEIGHT_DLU);
     SIZE ideal = {};
-    HWND closeButton = GetDlgItem(window, ID_INFORMATION_CLOSE);
+    HWND closeButton = GetDlgItem(window, ID_INFO_CLOSE);
     if (!SendMessageW(closeButton, BCM_GETIDEALSIZE, 0, reinterpret_cast<LPARAM>(&ideal))) {
         HDC dc = GetDC(closeButton);
         if (dc != nullptr) {
-            HFONT font = reinterpret_cast<HFONT>(SendMessageW(closeButton, WM_GETFONT, 0, 0));
-            HGDIOBJ previous = font == nullptr ? nullptr : SelectObject(dc, font);
-            std::wstring text = InformationControlText(closeButton);
+            HFONT controlFont = reinterpret_cast<HFONT>(SendMessageW(closeButton, WM_GETFONT, 0, 0));
+            HGDIOBJ previous = controlFont == nullptr ? nullptr : SelectObject(dc, controlFont);
+            std::wstring text = GetControlText(closeButton);
             RECT bounds = {};
             DrawTextW(dc, text.c_str(), static_cast<int>(text.size()), &bounds, DT_CALCRECT | DT_SINGLELINE);
-            SIZE padding = InformationDialogUnits(window, 12, 0);
+            SIZE padding = InformationDialogUnits(font, 12, 0);
             ideal.cx = bounds.right + padding.cx + 2 * GetSystemMetrics(SM_CXEDGE);
             if (previous != nullptr) {
                 SelectObject(dc, previous);
@@ -3930,111 +3609,7 @@ static void LayoutInformationWindow(HWND window, bool resize) {
         }
     }
     button.cx = std::max(button.cx, ideal.cx);
-    int textTop = margin.cy;
-    if (window == aboutWindow && resize) {
-        SIZE license = { MulDiv(layout.license.cx, dpi, layout.dpi), MulDiv(layout.license.cy, dpi, layout.dpi) };
-        client.right = license.cx + 2 * InformationDialogUnits(window, 10, 0).cx;
-        SetWindowPos(GetDlgItem(window, ID_INFORMATION_ICON), nullptr, margin.cx, margin.cy, 0, 0,
-            SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-        RECT icon = InformationControlRect(window, ID_INFORMATION_ICON);
-        SIZE productPosition = InformationDialogUnits(window, 0, 4);
-        productPosition.cx = icon.right + icon.left;
-        int width = client.right - margin.cx - productPosition.cx;
-        int productHeight = InformationLabelHeight(GetDlgItem(window, ID_INFORMATION_PRODUCT), width);
-        PlaceInformationControl(window, ID_INFORMATION_PRODUCT, productPosition.cx, productPosition.cy,
-            width, productHeight);
-        SIZE website = InformationTextSize(GetDlgItem(window, ID_INFORMATION_WEBSITE));
-        int websiteY = productPosition.cy + productHeight + gap.cy;
-        PlaceInformationControl(window, ID_INFORMATION_WEBSITE, productPosition.cx, websiteY, website.cx, website.cy);
-        int linkX = productPosition.cx + website.cx + gap.cx;
-        int linkWidth = client.right - margin.cx - linkX;
-        SIZE idealLink = {};
-        int linkHeight = website.cy;
-        LRESULT height = SendDlgItemMessageW(window, ID_INFORMATION_LINK, LM_GETIDEALSIZE, linkWidth,
-            reinterpret_cast<LPARAM>(&idealLink));
-        if (height > 0) {
-            linkHeight = static_cast<int>(height);
-        }
-        if (idealLink.cx > 0 && idealLink.cx < linkWidth) {
-            linkWidth = idealLink.cx;
-        }
-        PlaceInformationControl(window, ID_INFORMATION_LINK, linkX, websiteY, linkWidth, linkHeight);
-        AlignSettingsControl(GetDlgItem(window, ID_INFORMATION_LINK), GetDlgItem(window, ID_INFORMATION_WEBSITE));
-        RECT link = InformationControlRect(window, ID_INFORMATION_LINK);
-        textTop = std::max(websiteY + website.cy, link.bottom) + gap.cy;
-        client.bottom = textTop + license.cy + gap.cy + button.cy + margin.cy;
-        if (client.right != current.cx || client.bottom != current.cy) {
-            RECT bounds = {};
-            GetWindowRect(window, &bounds);
-            SetWindowPos(window, nullptr, 0, 0, bounds.right - bounds.left + client.right - current.cx,
-                bounds.bottom - bounds.top + client.bottom - current.cy, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
-        }
-    }
-    if (window == aboutWindow && !resize) {
-        textTop = InformationControlRect(window, ID_INFORMATION_TEXT).top;
-    }
-    int buttonY = client.bottom - margin.cy - button.cy;
-    PlaceInformationControl(window, ID_INFORMATION_CLOSE, client.right - margin.cx - button.cx, buttonY,
-        button.cx, button.cy);
-    PlaceInformationControl(window, ID_INFORMATION_TEXT, margin.cx, textTop,
-        client.right - 2 * margin.cx, buttonY - gap.cy - textTop);
-    HWND grip = GetDlgItem(window, ID_INFORMATION_SIZE_GRIP);
-    if (grip != nullptr) {
-        int width = GetSystemMetrics(SM_CXVSCROLL);
-        int height = GetSystemMetrics(SM_CYHSCROLL);
-        UINT flags = SWP_NOACTIVATE | (IsZoomed(window) ? SWP_HIDEWINDOW : SWP_SHOWWINDOW);
-        SetWindowPos(grip, HWND_BOTTOM, client.right - width, client.bottom - height, width, height, flags);
-    }
-    if (window == aboutWindow && resize) {
-        FitAboutWindowToWorkArea(window);
-    }
-}
-
-/// Refreshes localized content and geometry of one information window.
-static void RefreshInformationWindow(HWND window, InformationWindowData& data) {
-    const std::wstring title = data.help
-        ? GetLocalizedText(data.language, TXT_HELP)
-        : std::wstring(GetLocalizedText(data.language, TXT_ABOUT)) + L" SpaceFlight";
-    SetWindowTextW(window, title.c_str());
-    std::vector<wchar_t> usedMnemonics;
-    const std::wstring closeCaption = UniqueMnemonic(GetLocalizedText(data.language, TXT_CLOSE), usedMnemonics);
-    SetDlgItemTextW(window, ID_INFORMATION_CLOSE, closeCaption.c_str());
-    if (data.help) {
-        SetDlgItemTextW(window, ID_INFORMATION_TEXT, GetLocalizedText(data.language, data.appMode ?
-            TXT_APPLICATION_HELP : TXT_SCREEN_SAVER_HELP));
-    } else {
-        const std::wstring product = AboutProductText(data.language);
-        const std::wstring link = AboutLinkText();
-        SetDlgItemTextW(window, ID_INFORMATION_PRODUCT, product.c_str());
-        SetDlgItemTextW(window, ID_INFORMATION_WEBSITE, GetLocalizedText(data.language, TXT_ABOUT_WEBSITE_LABEL));
-        SetDlgItemTextW(window, ID_INFORMATION_LINK, link.c_str());
-    }
-    LayoutInformationWindow(window);
-    if (!data.help && aboutTooltip != nullptr) {
-        SendMessageW(aboutTooltip, TTM_UPDATE, 0, 0);
-    }
-}
-
-/// Handles mouse or keyboard activation of the website link in an information window.
-static bool HandleInformationNotification(HWND window, LPARAM lParam) {
-    const NMHDR* header = reinterpret_cast<const NMHDR*>(lParam);
-    if (header) {
-        if (header->hwndFrom == aboutTooltip && header->code == TTN_GETDISPINFOW) {
-            const InformationWindowData* data =
-                reinterpret_cast<const InformationWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
-            if (data != nullptr) {
-                NMTTDISPINFOW* information = reinterpret_cast<NMTTDISPINFOW*>(lParam);
-                swprintf_s(aboutTooltipText, GetLocalizedText(data->language, TXT_ABOUT_VISIT_TOOLTIP), WEBSITE_URL);
-                information->lpszText = aboutTooltipText;
-            }
-            return true;
-        }
-        if (header->idFrom == ID_INFORMATION_LINK && (header->code == NM_CLICK || header->code == NM_RETURN)) {
-            OpenAboutWebsite();
-            return true;
-        }
-    }
-    return false;
+    return button;
 }
 
 /// Captures the form's screen position, using and translating its normal placement when minimized.
@@ -4068,132 +3643,10 @@ static void SaveFormPosition(HWND window, int* x, int* y) {
     *y = rect.top;
 }
 
-/// Persists captured placement without committing pending animation preferences.
-static void InformationWindowStateSaved(PersistWindowState* sender, const PersistWindowStateEventArgs&, void* context) {
-    const InformationWindowData* data = static_cast<const InformationWindowData*>(context);
-    if (!data || !data->initialized || !data->settings) {
-        return;
-    }
-    PersistWindowStateData& saved = data->help ? data->settings->helpWindowState : data->settings->aboutWindowState;
-    saved = sender->GetState();
-    data->settings->SaveWindowPositions();
-}
-
-/// Captures an initialized information window and invokes its persistence callback.
-static void SaveInformationWindowPosition(const InformationWindowData* data) {
-    if (!data || !data->initialized || !data->settings) {
-        return;
-    }
-    PersistWindowState& placement = data->help ? helpWindowState : aboutWindowState;
-    placement.Save();
-}
-
-/// Releases the icon and fonts owned by one information window and clears their handles.
-static void DestroyInformationWindowResources(InformationWindowData& data) {
-    if (data.icon != nullptr) {
-        DestroyIcon(data.icon);
-        data.icon = nullptr;
-    }
-    if (data.licenseFont) {
-        DeleteObject(data.licenseFont);
-        data.licenseFont = nullptr;
-    }
-}
-
-/// Leaves native dialog navigation to Windows and forwards the existing information-window actions and notifications.
-static INT_PTR CALLBACK InformationDialogProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
-    if (message == WM_INITDIALOG) {
-        InformationWindowData* data = reinterpret_cast<InformationWindowData*>(lParam);
-        SetWindowLongPtrW(window, DWLP_USER, lParam);
-        HWND& target = data->help ? helpWindow : aboutWindow;
-        target = window;
-        return FALSE;
-    }
-    if (window != helpWindow && window != aboutWindow) {
-        return FALSE;
-    }
-    InformationWindowData* data = reinterpret_cast<InformationWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
-    if (message == WM_SYSCOMMAND && (wParam & 0xFFF0) == SC_SCREENSAVE && ShouldInhibitScreenSaver()) {
-        return TRUE;
-    }
-    if (message == WM_EXITSIZEMOVE || message == WM_SYSCOMMAND && (wParam & 0xFFF0) == SC_MINIMIZE) {
-        SaveInformationWindowPosition(data);
-    }
-    if (message == WM_CLOSE
-            || message == WM_COMMAND && (LOWORD(wParam) == ID_INFORMATION_CLOSE || LOWORD(wParam) == IDCANCEL)) {
-        DestroyWindow(window);
-        return TRUE;
-    }
-    if (message == WM_SIZE) {
-        LayoutInformationWindow(window, false);
-        return TRUE;
-    }
-    if (message == WM_DRAWITEM && wParam == ID_INFORMATION_PRODUCT) {
-        return DrawWrappedTextItem(reinterpret_cast<const DRAWITEMSTRUCT*>(lParam));
-    }
-    if (message == WM_NOTIFY && HandleInformationNotification(window, lParam)) {
-        SetWindowLongPtrW(window, DWLP_MSGRESULT, 0);
-        return TRUE;
-    }
-    if (message == WM_DISPLAYCHANGE && window == aboutWindow) {
-        LayoutInformationWindow(window);
-        return TRUE;
-    }
-    if (message == WM_THEMECHANGED || message == WM_SETTINGCHANGE) {
-        ApplyInformationWindowStyle(window, true);
-        return TRUE;
-    }
-    if (message == WM_DPICHANGED) {
-        const RECT* bounds = reinterpret_cast<const RECT*>(lParam);
-        SetWindowPos(window, nullptr, bounds->left, bounds->top, bounds->right - bounds->left,
-            bounds->bottom - bounds->top, SWP_NOZORDER | SWP_NOACTIVATE);
-        ApplyInformationWindowStyle(window, true);
-        return TRUE;
-    }
-    if (message == WM_NCDESTROY) {
-        InformationWindowLayout& layout = window == helpWindow ? helpWindowLayout : aboutWindowLayout;
-        if (layout.ownsFont) {
-            DeleteObject(layout.font);
-        }
-        layout = {};
-        ResetInformationWordBreak();
-        if (window == aboutWindow) {
-            if (aboutTooltip != nullptr) {
-                DestroyWindow(aboutTooltip);
-                aboutTooltip = nullptr;
-            }
-            aboutWindow = nullptr;
-        } else if (window == helpWindow) {
-            helpWindow = nullptr;
-        }
-        if (data != nullptr) {
-            PersistWindowState& placement = data->help ? helpWindowState : aboutWindowState;
-            placement.SetSavedHandler(nullptr);
-            DestroyInformationWindowResources(*data);
-            if (data->initialized) {
-                delete data;
-            }
-            SetWindowLongPtrW(window, DWLP_USER, 0);
-        }
-    }
-    return FALSE;
-}
-
 /// Relocalizes all currently open information and recording-settings windows.
 static void RefreshInformationWindows(AppLanguage language, bool appMode) {
-    const HWND windows[]{ helpWindow, aboutWindow };
-    for (HWND window : windows) {
-        if (!window || !IsWindow(window)) {
-            continue;
-        }
-        InformationWindowData* data = reinterpret_cast<InformationWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
-        if (!data) {
-            continue;
-        }
-        data->language = language;
-        data->appMode = appMode;
-        RefreshInformationWindow(window, *data);
-    }
+    helpForm.Refresh(language, appMode);
+    aboutForm.Refresh(language);
     if (recordingSettingsWindow && IsWindow(recordingSettingsWindow)) {
         RecordingWindowData* data =
             reinterpret_cast<RecordingWindowData*>(GetWindowLongPtrW(recordingSettingsWindow, DWLP_USER));
@@ -4204,7 +3657,17 @@ static void RefreshInformationWindows(AppLanguage language, bool appMode) {
     }
 }
 
-/// Restores and activates a valid window, temporarily attaching input queues when the foreground thread differs.
+/// Refreshes both information forms from the owning settings window's current language and mode.
+void RefreshInformationWindows(HWND owner) {
+    const SettingsWindowData* data =
+        reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(owner, GWLP_USERDATA));
+    if (data != nullptr) {
+        RefreshInformationWindows(data->language, data->appMode);
+    }
+}
+
+/// Restores and activates a valid window, temporarily attaching input queues when the foreground thread
+/// differs.
 static bool SetForegroundWindowEx(HWND window) {
     if (window == nullptr || !IsWindow(window)) {
         return false;
@@ -4245,24 +3708,21 @@ static void ClampFormPosition(int* x, int* y, int width, int height) {
 
 /// Closes independent information and recording-settings windows before their settings storage is released.
 static void CloseInformationWindows() {
-    if (helpWindow != nullptr) {
-        SendMessageW(helpWindow, WM_CLOSE, 0, 0);
-    }
-    if (aboutWindow != nullptr) {
-        SendMessageW(aboutWindow, WM_CLOSE, 0, 0);
-    }
+    helpForm.Close();
+    aboutForm.Close();
     if (recordingSettingsWindow != nullptr) {
         SendMessageW(recordingSettingsWindow, WM_CLOSE, 0, 0);
     }
 }
 
-/// Keeps independent information and recording-settings windows synchronized with the settings form's topmost policy.
-static void UpdateInformationWindowsTopmost(HWND settingsWindow) {
+/// Keeps independent information and recording-settings windows synchronized with the settings form's
+/// topmost policy.
+void UpdateInformationWindowsTopmost(HWND settingsWindow) {
     HWND position = HWND_NOTOPMOST;
     if ((GetWindowLongPtrW(settingsWindow, GWL_EXSTYLE) & WS_EX_TOPMOST) != 0) {
         position = HWND_TOPMOST;
     }
-    const HWND windows[]{ helpWindow, aboutWindow, recordingSettingsWindow };
+    const HWND windows[]{ helpForm.GetWindow(), aboutForm.GetWindow(), recordingSettingsWindow };
     for (HWND window : windows) {
         if (window != nullptr) {
             SetWindowPos(window, position, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
@@ -4295,7 +3755,7 @@ static bool AnimationOverlapsControlWindow(HWND window) {
 
 /// Keeps only an animation-overlapped standalone form and its information windows topmost.
 static void UpdateControlWindowTopmost(HWND window) {
-    if (!app || app->mode != RunMode::Application || !window || window != app->controlWindow) {
+    if (!app || !window || window != app->controlWindow) {
         return;
     }
     const bool required = AnimationOverlapsControlWindow(window);
@@ -4311,8 +3771,9 @@ static void UpdateControlWindowTopmost(HWND window) {
     UpdateInformationWindowsTopmost(window);
 }
 
-/// Obtains native CW_USEDEFAULT placement from an invisible overlapped window and moves the hidden dialog there.
-static bool PositionInformationWindowByWindowsDefault(HWND window) {
+/// Obtains native CW_USEDEFAULT placement from an invisible overlapped window and moves the hidden dialog
+/// there.
+bool PositionInformationWindowByWindowsDefault(HWND window) {
     RECT bounds = {};
     if (!GetWindowRect(window, &bounds)) {
         return false;
@@ -4331,97 +3792,20 @@ static bool PositionInformationWindowByWindowsDefault(HWND window) {
         SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE) != FALSE;
 }
 
-/// Creates or activates Help or About using a system-font dialog template, localized content and saved placement.
+/// Creates or activates the independent Help or About form using the application's current preferences.
 static void ShowInformationWindow(HWND owner, bool help, AppLanguage language, bool appMode) {
-    HWND* target = help ? &helpWindow : &aboutWindow;
-    PersistWindowState& placement = help ? helpWindowState : aboutWindowState;
-    InformationWindowLayout& layout = help ? helpWindowLayout : aboutWindowLayout;
-    if (*target != nullptr && IsWindow(*target)) {
-        placement.BringToFront();
-        return;
-    }
     const SettingsWindowData* settingsData =
         reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(owner, GWLP_USERDATA));
     if (settingsData == nullptr || settingsData->settings == nullptr) {
         return;
     }
-    layout = {};
-    placement.SetSavingOptions(PersistWindowStateSavingOptions::None);
-    placement.SetDetectionOptions(WindowDetectionOptions::NoDetection);
-    placement.SetUseWindowsDefaultLocation(false);
-    placement.SetUseWindowsDefaultSize(false);
-    placement.Load(help ? settingsData->settings->helpWindowState : settingsData->settings->aboutWindowState);
-    std::unique_ptr<InformationWindowData> data = std::make_unique<InformationWindowData>();
-    data->settings = settingsData->settings;
-    data->help = help;
-    data->appMode = appMode;
-    data->language = language;
-    UINT resource = help ? IDD_HELP : IDD_ABOUT;
-    DLGTEMPLATE* definition = LoadSystemDialogTemplate(app->instance, resource, nullptr);
-    if (definition == nullptr) {
-        return;
+    if (help) {
+        helpForm.Show(owner, app->instance, *settingsData->settings, app->programIcons,
+            helpWindowState, language, appMode);
+    } else {
+        aboutForm.Show(owner, app->instance, *settingsData->settings, app->programIcons,
+            aboutWindowState, language);
     }
-    *target = CreateDialogIndirectParamW(app->instance, definition, nullptr, InformationDialogProc,
-        reinterpret_cast<LPARAM>(data.get()));
-    HeapFree(GetProcessHeap(), 0, definition);
-    if (*target == nullptr) {
-        return;
-    }
-    InitializeInformationWindowLayout(*target, help);
-    if (!InstallSelectionEditHandler(GetDlgItem(*target, ID_INFORMATION_TEXT))
-            || !ApplyInformationWindowStyle(*target, false)) {
-        DestroyWindow(*target);
-        return;
-    }
-    SetWindowTheme(*target, nullptr, nullptr);
-    SendDlgItemMessageW(*target, ID_INFORMATION_TEXT, EM_SETLIMITTEXT, 0x7FFFFFFE, 0);
-    SendMessageW(*target, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(app->programIcons.Large()));
-    SendMessageW(*target, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(app->programIcons.Small()));
-    HWND text = GetDlgItem(*target, ID_INFORMATION_TEXT);
-    SendMessageW(text, EM_SETWORDBREAKPROC, 0, reinterpret_cast<LPARAM>(InformationWordBreakProc));
-    if (!SetWindowSubclass(text, InformationTextSubclassProc, INFORMATION_TEXT_SUBCLASS_ID, 0)) {
-        DestroyWindow(*target);
-        return;
-    }
-    if (!help) {
-        std::wstring license = LoadLicenseText();
-        SetWindowTextW(text, license.empty() ? GetLocalizedText(language, TXT_ABOUT_LICENSE_UNAVAILABLE) :
-            license.c_str());
-        const int controls[] = {
-            ID_INFORMATION_PRODUCT, ID_INFORMATION_WEBSITE,
-            ID_INFORMATION_LINK, ID_INFORMATION_ICON
-        };
-        for (int id : controls) {
-            if (!SetWindowSubclass(GetDlgItem(*target, id), AboutControlSubclassProc,
-                ABOUT_CONTROL_SUBCLASS, 0)) {
-                DestroyWindow(*target);
-                return;
-            }
-        }
-        aboutTooltip = CreateControlTooltip(*target, GetDlgItem(*target, ID_INFORMATION_LINK), LPSTR_TEXTCALLBACKW);
-        if (aboutTooltip == nullptr) {
-            DestroyWindow(*target);
-            return;
-        }
-    }
-    RefreshInformationWindow(*target, *data);
-    SendMessageW(text, EM_SETSEL, 0, 0);
-    placement.SetDisableSaveSize(!help);
-    placement.SetDisableSaveWindowState(!help);
-    placement.SetSavedHandler(InformationWindowStateSaved, data.get());
-    data->initialized = true;
-    data.release();
-    const PersistWindowStateData& saved = placement.GetState();
-    bool defaultPosition = saved.x == CW_USEDEFAULT || saved.y == CW_USEDEFAULT;
-    if (defaultPosition && !PositionInformationWindowByWindowsDefault(*target)
-            || !placement.Attach(*target, help ? "Help" : "About")) {
-        DestroyWindow(*target);
-        return;
-    }
-    LayoutInformationWindow(*target);
-    UpdateInformationWindowsTopmost(owner);
-    SetFocus(GetDlgItem(*target, ID_INFORMATION_CLOSE));
-    placement.Show();
 }
 
 /// Enables the controls specific to TV recording.
@@ -4431,17 +3815,6 @@ static void UpdateRecordingSettingsControls(HWND window) {
     for (int id : controls) {
         EnableSettingsControl(GetDlgItem(window, id), enabled);
     }
-}
-
-/// Reads a main-form control rectangle in unscrolled content coordinates.
-static bool RecordingReferenceRect(HWND owner, int id, RECT& bounds) {
-    const HWND content = SettingsContentWindow(owner);
-    if (!GetWindowRect(GetDlgItem(content, id), &bounds)) {
-        return false;
-    }
-    MapWindowPoints(nullptr, content, reinterpret_cast<POINT*>(&bounds), 2);
-    OffsetRect(&bounds, GetScrollPos(content, SB_HORZ), GetScrollPos(content, SB_VERT));
-    return true;
 }
 
 /// Adjusts a dropdown's pending position and size to the monitor work area before it becomes visible.
@@ -4462,7 +3835,9 @@ static LRESULT CALLBACK ComboBoxDropDownSubclassProc(HWND window, UINT msg, WPAR
                 && GetWindowRect(combo, &comboRect)) {
             LONG workWidth = information.rcWork.right - information.rcWork.left;
             if (workWidth > 0) {
-                LONG currentWidth = position->flags & SWP_NOSIZE ? current.right - current.left : position->cx;
+                LONG currentWidth = position->flags & SWP_NOSIZE
+                    ? current.right - current.left
+                    : position->cx;
                 LONG minimumWidth = std::max(1L, comboRect.right - comboRect.left);
                 LONG width = std::max(minimumWidth, std::min(currentWidth, workWidth));
                 LONG left = position->flags & SWP_NOMOVE ? current.left : position->x;
@@ -4491,8 +3866,9 @@ static LRESULT CALLBACK ComboBoxDropDownSubclassProc(HWND window, UINT msg, WPAR
     return DefSubclassProc(window, msg, wParam, lParam);
 }
 
-/// Measures current items in the dropdown font immediately before opening, adding borders, padding, and scrollbar space.
-/// Limits the list to 13 visible items and keeps it at least as wide as its combo within the monitor work area.
+/// Measures current items in the dropdown font immediately before opening, adding borders, padding, and
+/// scrollbar space. Limits the list to 13 visible items and keeps it at least as wide as its combo within
+/// the monitor work area.
 static void UpdateComboBoxDropDownSize(HWND combo) {
     if (combo == nullptr) {
         return;
@@ -4515,7 +3891,8 @@ static void UpdateComboBoxDropDownSize(HWND combo) {
         font = reinterpret_cast<HFONT>(SendMessageW(combo, WM_GETFONT, 0, 0));
     }
     if (font == nullptr) {
-        font = static_cast<HFONT>(GetStockObject(DEFAULT_GUI_FONT));
+        ReleaseDC(list, dc);
+        return;
     }
     HGDIOBJ previousFont = SelectObject(dc, font);
     LONG maximumWidth = 0;
@@ -4582,8 +3959,8 @@ static SIZE DialogUnits(HFONT font, int x, int y) {
 /// Copies control text into a null-terminated process-heap buffer owned by the caller.
 static wchar_t* CopyControlText(HWND control) {
     int length = GetWindowTextLengthW(control);
-    wchar_t* text =
-        static_cast<wchar_t*>(HeapAlloc(GetProcessHeap(), 0, (static_cast<SIZE_T>(length) + 1) * sizeof(wchar_t)));
+    wchar_t* text = static_cast<wchar_t*>(HeapAlloc(GetProcessHeap(), 0,
+        (static_cast<SIZE_T>(length) + 1) * sizeof(wchar_t)));
     if (text) {
         GetWindowTextW(control, text, length + 1);
     }
@@ -4624,30 +4001,23 @@ static SIZE PreferredButtonSize(HWND button, const SIZE& minimum) {
     return size;
 }
 
-/// Uses 8-DLU margins and native caption-sized buttons while preserving the main-form row spacing.
+/// Uses reference row spacing, native font metrics and 8-DLU margins independently of the owner form.
 static SIZE LayoutRecordingSettings(HWND window) {
     const RecordingWindowData* recordingData =
         reinterpret_cast<const RecordingWindowData*>(GetWindowLongPtrW(window, DWLP_USER));
-    const HWND owner = recordingData ? recordingData->owner : nullptr;
     HFONT font = recordingData == nullptr ? nullptr : recordingData->font;
-    RECT languageLabel{};
-    RECT firstRadio{};
-    RECT secondRadio{};
-    RECT monitorLabel{};
-    RECT firstButton{};
-    RECT secondButton{};
-    RecordingReferenceRect(owner, ID_LANGUAGE_LABEL, languageLabel);
-    RecordingReferenceRect(owner, ID_ANIMATION_PRIMARY, firstRadio);
-    RecordingReferenceRect(owner, ID_ANIMATION_SECONDARY, secondRadio);
-    RecordingReferenceRect(owner, ID_MONITOR_GROUP, monitorLabel);
-    RecordingReferenceRect(owner, ID_ALL_ANIMATIONS, firstButton);
-    RecordingReferenceRect(owner, ID_NO_ANIMATIONS, secondButton);
     const SIZE margins = DialogUnits(font, 8, 8);
     const int margin = margins.cx;
     const int top = margins.cy;
-    const int radioHeight = firstRadio.bottom - firstRadio.top;
-    const int radioStep = secondRadio.top - firstRadio.top;
-    const int rowGap = std::max(0L, monitorLabel.top - firstButton.bottom);
+    const SIZE spacing = DialogUnits(font, 2, 5);
+    int radioHeight = 21;
+    for (int id : { ID_RECORD_VIEWPORT, ID_RECORD_TV }) {
+        SIZE preferred{};
+        SendDlgItemMessageW(window, id, BCM_GETIDEALSIZE, 0, reinterpret_cast<LPARAM>(&preferred));
+        radioHeight = std::max(radioHeight, static_cast<int>(preferred.cy));
+    }
+    constexpr int radioStep = 20;
+    const int rowGap = std::max(9L, spacing.cy);
     SIZE buttonSize = DialogUnits(font, DIALOG_BUTTON_WIDTH_DLU, DIALOG_BUTTON_HEIGHT_DLU);
     constexpr int buttons[]{ IDOK, IDCANCEL };
     for (int id : buttons) {
@@ -4657,7 +4027,7 @@ static SIZE LayoutRecordingSettings(HWND window) {
     const int buttonHeight = buttonSize.cy;
     const int buttonWidth = buttonSize.cx;
     const int buttonGap = DialogUnits(font, 6, 0).cx;
-    const int labelGap = secondButton.left - firstButton.right;
+    const int labelGap = std::max(4L, spacing.cx);
     const int bottomMargin = margins.cy;
     const SIZE comboGeometry = DialogUnits(font, RECORDING_COMBO_WIDTH_DLU, 90);
     const int comboWidth = comboGeometry.cx;
@@ -4665,34 +4035,35 @@ static SIZE LayoutRecordingSettings(HWND window) {
     const int comboLeft = width - margin - comboWidth;
     const int labelLeft = margin + DialogUnits(font, 9, 0).cx;
     const int textWidth = width - 2 * margin;
-    const int televisionTop = top + radioStep + 4;
+    const int televisionTop = std::max(top + radioStep + 4,
+        top + radioHeight + static_cast<int>(DialogUnits(font, 0, 1).cy));
     SetWindowPos(GetDlgItem(window, ID_RECORD_VIEWPORT), nullptr, margin, top, textWidth, radioHeight,
         SWP_NOZORDER | SWP_NOACTIVATE);
     SetWindowPos(GetDlgItem(window, ID_RECORD_TV), nullptr, margin, televisionTop, textWidth, radioHeight,
         SWP_NOZORDER | SWP_NOACTIVATE);
     const int firstComboTop = televisionTop + radioHeight + rowGap;
-    SetWindowPos(GetDlgItem(window, ID_RECORD_SIZE), nullptr, comboLeft, firstComboTop, comboWidth, comboGeometry.cy,
-        SWP_NOZORDER | SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(window, ID_RECORD_SIZE), nullptr, comboLeft, firstComboTop, comboWidth,
+        comboGeometry.cy, SWP_NOZORDER | SWP_NOACTIVATE);
     RECT comboBounds{};
     GetWindowRect(GetDlgItem(window, ID_RECORD_SIZE), &comboBounds);
     const int comboHeight = comboBounds.bottom - comboBounds.top;
     const int secondComboTop = firstComboTop + comboHeight + rowGap;
-    SetWindowPos(GetDlgItem(window, ID_RECORD_RATE), nullptr, comboLeft, secondComboTop, comboWidth, comboGeometry.cy,
-        SWP_NOZORDER | SWP_NOACTIVATE);
-    const int labelHeight = languageLabel.bottom - languageLabel.top;
+    SetWindowPos(GetDlgItem(window, ID_RECORD_RATE), nullptr, comboLeft, secondComboTop, comboWidth,
+        comboGeometry.cy, SWP_NOZORDER | SWP_NOACTIVATE);
+    const int labelHeight = std::max(22L, DialogUnits(font, 0, 8).cy);
     const int labelWidth = comboLeft - labelLeft - labelGap;
-    SetWindowPos(GetDlgItem(window, ID_RECORD_SIZE_LABEL), nullptr, labelLeft, firstComboTop, labelWidth, labelHeight,
-        SWP_NOZORDER | SWP_NOACTIVATE);
-    SetWindowPos(GetDlgItem(window, ID_RECORD_RATE_LABEL), nullptr, labelLeft, secondComboTop, labelWidth, labelHeight,
-        SWP_NOZORDER | SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(window, ID_RECORD_SIZE_LABEL), nullptr, labelLeft, firstComboTop, labelWidth,
+        labelHeight, SWP_NOZORDER | SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(window, ID_RECORD_RATE_LABEL), nullptr, labelLeft, secondComboTop, labelWidth,
+        labelHeight, SWP_NOZORDER | SWP_NOACTIVATE);
     const int noteTop = secondComboTop + comboHeight + rowGap;
     const int noteHeight = DialogUnits(font, 0, 8).cy;
     SetWindowPos(GetDlgItem(window, ID_RECORD_NOTE), nullptr, margin, noteTop, textWidth, noteHeight,
         SWP_NOZORDER | SWP_NOACTIVATE);
     const int buttonsTop = noteTop + noteHeight + rowGap;
     const int cancelLeft = width - margin - buttonWidth;
-    SetWindowPos(GetDlgItem(window, IDOK), nullptr, cancelLeft - buttonGap - buttonWidth, buttonsTop, buttonWidth,
-        buttonHeight, SWP_NOZORDER | SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(window, IDOK), nullptr, cancelLeft - buttonGap - buttonWidth, buttonsTop,
+        buttonWidth, buttonHeight, SWP_NOZORDER | SWP_NOACTIVATE);
     SetWindowPos(GetDlgItem(window, IDCANCEL), nullptr, cancelLeft, buttonsTop, buttonWidth, buttonHeight,
         SWP_NOZORDER | SWP_NOACTIVATE);
     AlignSettingsLabel(GetDlgItem(window, ID_RECORD_SIZE_LABEL), GetDlgItem(window, ID_RECORD_SIZE));
@@ -4708,6 +4079,7 @@ static SIZE LayoutRecordingSettings(HWND window) {
 
 /// Recreates the shared system font and recalculates dialog geometry after metric, theme or DPI changes.
 static void RefreshRecordingSettingsFont(HWND window, RecordingWindowData& data) {
+    app->programIcons.Apply(window);
     const HFONT previous = data.font;
     data.font = CreateSystemDialogFont(window);
     if (data.font) {
@@ -4730,16 +4102,25 @@ static void RefreshRecordingSettingsFont(HWND window, RecordingWindowData& data)
 
 /// Refreshes localized recording captions and fits the buttons without altering unconfirmed choices.
 static void RefreshRecordingSettingsWindow(HWND window, RecordingWindowData& data) {
+    app->programIcons.Apply(window);
     const AppLanguage stringsLanguage = data.language;
     const AppLanguage commonLanguage = data.language;
-    SetWindowTextW(window, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_TITLE));
-    SetDlgItemTextW(window, ID_RECORD_VIEWPORT, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_VIEWPORT));
-    SetDlgItemTextW(window, ID_RECORD_TV, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_TELEVISION));
-    SetDlgItemTextW(window, ID_RECORD_SIZE_LABEL, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_RESOLUTION));
-    SetDlgItemTextW(window, ID_RECORD_RATE_LABEL, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_FRAME_RATE));
-    SetDlgItemTextW(window, ID_RECORD_NOTE, GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_NOTE));
-    SetDlgItemTextW(window, IDOK, GetLocalizedText(commonLanguage, TXT_OK));
-    SetDlgItemTextW(window, IDCANCEL, GetLocalizedText(commonLanguage, TXT_CANCEL));
+    SetWindowTextW(window,
+        GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_TITLE));
+    SetDlgItemTextW(window, ID_RECORD_VIEWPORT,
+        GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_VIEWPORT));
+    SetDlgItemTextW(window, ID_RECORD_TV,
+        GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_TELEVISION));
+    SetDlgItemTextW(window, ID_RECORD_SIZE_LABEL,
+        GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_RESOLUTION));
+    SetDlgItemTextW(window, ID_RECORD_RATE_LABEL,
+        GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_FRAME_RATE));
+    SetDlgItemTextW(window, ID_RECORD_NOTE,
+        GetLocalizedText(stringsLanguage, TXT_RECORDING_SETTINGS_NOTE));
+    SetDlgItemTextW(window, IDOK,
+        GetLocalizedText(commonLanguage, TXT_OK));
+    SetDlgItemTextW(window, IDCANCEL,
+        GetLocalizedText(commonLanguage, TXT_CANCEL));
     LayoutRecordingSettings(window);
 }
 
@@ -4799,7 +4180,8 @@ static void InitializeRecordingSettings(HWND window, RecordingWindowData& data) 
 static void SaveRecordingSettings(HWND window, RecordingWindowData& data) {
     RecordingOptions selected;
     selected.television = SendDlgItemMessageW(window, ID_RECORD_TV, BM_GETCHECK, 0, 0) == BST_CHECKED;
-    selected.resolution = std::clamp(int(SendDlgItemMessageW(window, ID_RECORD_SIZE, CB_GETCURSEL, 0, 0)), 0, 2);
+    selected.resolution =
+        std::clamp(int(SendDlgItemMessageW(window, ID_RECORD_SIZE, CB_GETCURSEL, 0, 0)), 0, 2);
     selected.rate = std::clamp(int(SendDlgItemMessageW(window, ID_RECORD_RATE, CB_GETCURSEL, 0, 0)), 0, 3);
     data.settings->recording = selected;
     data.settings->Save();
@@ -4857,8 +4239,9 @@ static INT_PTR CALLBACK RecordingSettingsProc(HWND window, UINT msg, WPARAM wPar
         case WM_DPICHANGED:
             if (data) {
                 const RECT* suggested = reinterpret_cast<const RECT*>(lParam);
-                SetWindowPos(window, nullptr, suggested->left, suggested->top, suggested->right - suggested->left,
-                    suggested->bottom - suggested->top, SWP_NOZORDER | SWP_NOACTIVATE);
+                SetWindowPos(window, nullptr, suggested->left, suggested->top,
+                    suggested->right - suggested->left, suggested->bottom - suggested->top,
+                    SWP_NOZORDER | SWP_NOACTIVATE);
                 RefreshRecordingSettingsFont(window, *data);
             }
             return TRUE;
@@ -4890,7 +4273,8 @@ static INT_PTR CALLBACK RecordingSettingsProc(HWND window, UINT msg, WPARAM wPar
     return FALSE;
 }
 
-/// Creates or restores independent modeless recording settings, matching Help and About activation and topmost policy.
+/// Creates or restores independent modeless recording settings, matching Help and About activation and
+/// topmost policy.
 static void ShowRecordingSettings(HWND owner, SettingsWindowData& settingsData) {
     if (recordingSettingsWindow && IsWindow(recordingSettingsWindow)) {
         SetForegroundWindowEx(recordingSettingsWindow);
@@ -4903,15 +4287,18 @@ static void ShowRecordingSettings(HWND owner, SettingsWindowData& settingsData) 
     data->settings = settingsData.settings;
     data->owner = owner;
     data->language = settingsData.language;
-    recordingSettingsWindow = CreateDialogParamW(app->instance, MAKEINTRESOURCEW(IDD_RECORDING_SETTINGS), nullptr,
+    DLGTEMPLATE* definition = LoadSystemDialogTemplate(app->instance, IDD_RECORDING_SETTINGS, nullptr);
+    if (definition == nullptr) {
+        return;
+    }
+    recordingSettingsWindow = CreateDialogIndirectParamW(app->instance, definition, nullptr,
         RecordingSettingsProc, reinterpret_cast<LPARAM>(data.get()));
+    HeapFree(GetProcessHeap(), 0, definition);
     if (!recordingSettingsWindow) {
         return;
     }
     data->initialized = true;
     data.release();
-    SendMessageW(recordingSettingsWindow, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(app->programIcons.Large()));
-    SendMessageW(recordingSettingsWindow, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(app->programIcons.Small()));
     UpdateInformationWindowsTopmost(owner);
     ShowWindow(recordingSettingsWindow, SW_SHOW);
     SetForegroundWindowEx(recordingSettingsWindow);
@@ -4976,28 +4363,20 @@ static bool StartSettingsPreview(HWND settingsWindow, SettingsWindowData& data) 
     return true;
 }
 
-/// Persists the non-minimized control-window position for its active profile.
-static void SaveControlWindowPosition(HWND window, SettingsWindowData* data) {
-    if (!data || !data->settings || IsIconic(window)) {
-        return;
-    }
-    RECT bounds{};
-    if (!GetWindowRect(window, &bounds)) {
-        return;
-    }
-    data->settings->controlWindowX = bounds.left;
-    data->settings->controlWindowY = bounds.top;
-    if (data->appMode) {
-        data->settings->Save();
-    }
+/// Attaches position-only persistence to the EXE or SCR settings window.
+static bool AttachSettingsWindowState(HWND window, bool applicationMode) {
+    settingsWindowState.SetDetectionOptions(WindowDetectionOptions::NoDetection);
+    settingsWindowState.SetDisableSaveSize(true);
+    settingsWindowState.SetDisableSaveWindowState(true);
+    settingsWindowState.SetUseWindowsDefaultSize(false);
+    return settingsWindowState.Attach(window,
+        applicationMode ? "ApplicationSettings" : "ScreenSaverSettings");
 }
 
 /// Restores original preferences while preserving remembered window positions and selected monitor rows.
 static void RestoreOriginalSettings(SettingsWindowData& data) {
     data.original.selectedAnimationMonitors = data.settings->selectedAnimationMonitors;
     data.original.allAnimationMonitorsSelected = data.settings->allAnimationMonitorsSelected;
-    data.original.controlWindowX = data.settings->controlWindowX;
-    data.original.controlWindowY = data.settings->controlWindowY;
     data.original.helpWindowState = data.settings->helpWindowState;
     data.original.aboutWindowState = data.settings->aboutWindowState;
     data.original.recordingSettingsX = data.settings->recordingSettingsX;
@@ -5019,7 +4398,8 @@ static INT_PTR ForwardSettingsPanelNotification(HWND window, UINT msg, WPARAM wP
 
 /// Forwards panel notifications to the settings window and updates the panel's native scroll bars.
 static INT_PTR CALLBACK SettingsPanelProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam) {
-    SettingsWindowData* data = reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+    SettingsWindowData* data =
+        reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
     if (msg == WM_INITDIALOG) {
         SetWindowLongPtrW(window, GWLP_USERDATA, lParam);
         return FALSE;
@@ -5044,16 +4424,10 @@ static INT_PTR CALLBACK SettingsPanelProc(HWND window, UINT msg, WPARAM wParam, 
     return FALSE;
 }
 
-/// Creates the native monitor list for both profiles; only standalone mode exposes output checkboxes.
-static void CreateSettingsMonitorList(HWND window, const SettingsWindowData& data, int monitorTop, int contentMargin,
-        int fullControlWidth) {
-    CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | SS_LEFTNOWORDWRAP, contentMargin,
-        monitorTop, fullControlWidth, 22, window, reinterpret_cast<HMENU>(ID_MONITOR_GROUP), nullptr, nullptr);
-    HWND monitorList = CreateWindowExW(WS_EX_CLIENTEDGE, WC_LISTVIEWW, L"",
-        WS_CHILD | WS_VISIBLE | WS_TABSTOP | LVS_REPORT | LVS_SHOWSELALWAYS, contentMargin, monitorTop + 20,
-        fullControlWidth, 108, window, reinterpret_cast<HMENU>(ID_MONITOR_LIST), nullptr, nullptr);
-    ListView_SetExtendedListViewStyle(monitorList,
-        LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_DOUBLEBUFFER | (data.appMode ? LVS_EX_CHECKBOXES : 0U));
+/// Initializes the resource monitor list with native columns and the selected invocation mode.
+static void InitializeSettingsMonitorList(HWND monitorList, const SettingsWindowData& data) {
+    ListView_SetExtendedListViewStyle(monitorList, LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES
+        | LVS_EX_DOUBLEBUFFER | (data.appMode ? LVS_EX_CHECKBOXES : 0U));
     LVCOLUMNW column{};
     column.mask = LVCF_TEXT | LVCF_SUBITEM;
     column.pszText = const_cast<LPWSTR>(L"");
@@ -5062,58 +4436,6 @@ static void CreateSettingsMonitorList(HWND window, const SettingsWindowData& dat
         ListView_InsertColumn(monitorList, index, &column);
     }
     SetWindowSubclass(monitorList, MonitorListSubclassProc, ID_MONITOR_LIST, 0);
-}
-
-/// Creates three columns of animation and lighting options.
-static int CreateAnimationCheckboxControls(HWND window, int top, int rowHeight) {
-    constexpr int columnX[]{ 24, 320, 617 };
-    constexpr int checkboxWidth = 288;
-    int rows = 0;
-    for (const AnimationCheckboxPlacement& placement : ANIMATION_CHECKBOX_PLACEMENTS) {
-        const int columnLeft = columnX[placement.column];
-        const int rowTop = top + placement.row * rowHeight;
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_GROUP | BS_3STATE, columnLeft,
-            rowTop, checkboxWidth, rowHeight + 1, window, reinterpret_cast<HMENU>(placement.id), nullptr, nullptr);
-        rows = std::max(rows, placement.row + 1);
-    }
-    for (std::size_t index = 0; index < std::size(SURFACE_SHAPE_RADIO_IDS); index++) {
-        const DWORD style = WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | (index == 0 ? WS_TABSTOP | WS_GROUP : 0U);
-        CreateWindowExW(0, L"BUTTON", L"", style, columnX[index], top + rows * rowHeight, checkboxWidth,
-            rowHeight + 1, window, reinterpret_cast<HMENU>(SURFACE_SHAPE_RADIO_IDS[index]), nullptr, nullptr);
-    }
-    return top + (rows + 1) * rowHeight;
-}
-
-/// Places animation choices beside the speed slider and three columns of options below their shared separator.
-static int CreateAnimationControls(HWND window, int top, int contentWidth) {
-    constexpr int contentMargin = 18;
-    constexpr int sliderWidth = 435;
-    constexpr int rightSliderX = 476;
-    constexpr int radioLeft = rightSliderX;
-    CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, contentMargin, top + 28, sliderWidth, 22, window,
-        reinterpret_cast<HMENU>(ID_OBJECT_SPEED_LABEL), nullptr, nullptr);
-    HWND objectSlider = CreateWindowExW(0, TRACKBAR_CLASSW, L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | TBS_AUTOTICKS,
-        contentMargin, top + 50, sliderWidth, 34, window, reinterpret_cast<HMENU>(ID_OBJECT_SPEED), nullptr, nullptr);
-    SendMessageW(objectSlider, TBM_SETRANGE, TRUE, MAKELONG(0, 1600));
-    SendMessageW(objectSlider, TBM_SETTICFREQ, 100, 0);
-    const int effectsTop = top + 28;
-    CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, rightSliderX, effectsTop, sliderWidth, 22, window,
-        reinterpret_cast<HMENU>(ID_EFFECTS_GROUP), nullptr, nullptr);
-    constexpr int rowHeight = 20;
-    const int radioWidth = std::max(1, contentWidth - contentMargin - radioLeft);
-    for (std::size_t index = 0; index < EFFECT_COUNT; index++) {
-        const int rowTop = effectsTop + 22 + static_cast<int>(index) * rowHeight;
-        const DWORD style = WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON | (index == 0 ? WS_TABSTOP | WS_GROUP : 0U);
-        CreateWindowExW(0, L"BUTTON", L"", style, radioLeft, rowTop, radioWidth, rowHeight + 1, window,
-            reinterpret_cast<HMENU>(ID_EFFECT_FIRST + index), nullptr, nullptr);
-    }
-    constexpr int separatorHeight = 2;
-    constexpr int separatorGap = 8;
-    const int separatorTop = effectsTop + 22 + static_cast<int>(EFFECT_COUNT) * rowHeight + separatorGap;
-    CreateWindowExW(WS_EX_STATICEDGE, L"STATIC", L"", WS_CHILD | WS_VISIBLE, contentMargin, separatorTop,
-        std::max(1, contentWidth - 2 * contentMargin), separatorHeight, window, nullptr, nullptr, nullptr);
-    const int optionsTop = separatorTop + separatorHeight + separatorGap;
-    return CreateAnimationCheckboxControls(window, optionsTop, rowHeight) + 7;
 }
 
 /// Attaches mixed-value feedback to sliders, radio buttons and per-monitor action buttons only.
@@ -5135,137 +4457,58 @@ static bool AttachMixedSettingsControls(HWND window) {
     return true;
 }
 
-/// Creates and initializes the standalone and screen-saver settings controls.
-static LRESULT CreateSettingsControls(HWND window, SettingsWindowData* data) {
-    const HWND settingsWindow = window;
-    const int top = 10;
-    constexpr int contentMargin = 18;
-    const int fullControlWidth = data->contentWidth - 2 * contentMargin;
-    constexpr int rightSliderX = 476;
-    constexpr int checkboxWidth = 288;
-    if (data->appMode) {
+/// Creates the resource panel; Windows maps every control from DLU using the current dialog font.
+static LRESULT CreateSettingsControls(HWND window, SettingsWindowData& data) {
+    if (data.appMode) {
         if (!SetPropW(window, INSTANCE_WINDOW_PROPERTY, window)) {
             return -1;
         }
-        app->status = CreateWindowExW(0, STATUSCLASSNAMEW, L"", WS_CHILD | WS_VISIBLE, 0, 0, 0, 0, window,
-            reinterpret_cast<HMENU>(ID_STATUS), nullptr, nullptr);
-        data->contentWindow = CreateDialogParamW(app->instance, MAKEINTRESOURCEW(IDD_SETTINGS_PANEL), window,
-            SettingsPanelProc, reinterpret_cast<LPARAM>(data));
-        if (!app->status || !data->contentWindow) {
+        app->status = GetDlgItem(window, ID_STATUS);
+        if (!app->status) {
             return -1;
         }
-        const LONG_PTR style = GetWindowLongPtrW(data->contentWindow, GWL_STYLE);
-        SetWindowLongPtrW(data->contentWindow, GWL_STYLE, style | data->scrollStyle);
-        SetWindowPos(data->contentWindow, nullptr, 0, 0, 0, 0,
-            SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
-        LayoutSettingsContent(window, *data);
-        window = data->contentWindow;
     }
-    CreateWindowExW(0, L"STATIC", L"", WS_CHILD | WS_VISIBLE, 18, top, 196, 22, window,
-        reinterpret_cast<HMENU>(ID_LANGUAGE_LABEL), nullptr, nullptr);
-    HWND languageCombo = CreateWindowExW(0, WC_COMBOBOXW, L"", WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
-        | CBS_DROPDOWNLIST, 171, top - 4, 274, 400, window, reinterpret_cast<HMENU>(ID_LANGUAGE), nullptr, nullptr);
-    if (data->appMode) {
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX, rightSliderX, top,
-            checkboxWidth, 21, window, reinterpret_cast<HMENU>(ID_PREVENT_SCREEN_SAVER), nullptr, nullptr);
-        SetTimer(settingsWindow, ID_SCREEN_SAVER_CHECK_TIMER, SCREEN_SAVER_CHECK_INTERVAL, nullptr);
-    }
-    PopulateLanguageCombo(languageCombo);
-    SendMessageW(languageCombo, CB_SETCURSEL, data->language, 0);
-    const int actionButtonsTop = CreateAnimationControls(window, top, data->contentWidth);
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, data->appMode ? 14 : 24, actionButtonsTop,
-        150, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_ALL_ANIMATIONS), nullptr, nullptr);
-    CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, data->appMode ? 171 : 181, actionButtonsTop,
-        data->appMode ? 160 : 150, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_NO_ANIMATIONS), nullptr,
-        nullptr);
-    if (data->appMode) {
-        constexpr int firstRowGap = 4;
-        const int pauseButtonWidth = 150 + fullControlWidth % 2;
-        const int informationButtonWidth = pauseButtonWidth;
-        const int firstButtonX = contentMargin;
-        const int firstButtonWidth = (fullControlWidth - 3 * informationButtonWidth - 4 * firstRowGap) / 2;
-        const int secondButtonWidth = firstButtonWidth;
-        const int secondButtonX = firstButtonX + firstButtonWidth + firstRowGap;
-        const int pauseButtonX = secondButtonX + secondButtonWidth + firstRowGap;
-        const int helpButtonX = pauseButtonX + pauseButtonWidth + firstRowGap;
-        const int aboutButtonX = helpButtonX + informationButtonWidth + firstRowGap;
-        MoveWindow(GetDlgItem(window, ID_ALL_ANIMATIONS), firstButtonX, actionButtonsTop, firstButtonWidth,
-            PUSH_BUTTON_HEIGHT, FALSE);
-        MoveWindow(GetDlgItem(window, ID_NO_ANIMATIONS), secondButtonX, actionButtonsTop, secondButtonWidth,
-            PUSH_BUTTON_HEIGHT, FALSE);
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, pauseButtonX, actionButtonsTop,
-            pauseButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_PAUSE), nullptr, nullptr);
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, helpButtonX, actionButtonsTop,
-            informationButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_HELP), nullptr, nullptr);
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, aboutButtonX, actionButtonsTop,
-            informationButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_ABOUT), nullptr, nullptr);
-        const int monitorTop = actionButtonsTop + 37;
-        CreateSettingsMonitorList(window, *data, monitorTop, contentMargin, fullControlWidth);
-        constexpr int bottomRowGap = firstRowGap;
-        const int narrowButtonWidth = informationButtonWidth;
-        const int snapshotButtonWidth = narrowButtonWidth + 12;
-        const int recordButtonWidth = 255;
-        const int installButtonWidth = recordButtonWidth;
-        const int recordingSettingsButtonWidth = fullControlWidth - recordButtonWidth - snapshotButtonWidth
-            - installButtonWidth - 3 * bottomRowGap;
-        const int recordButtonX = contentMargin + recordingSettingsButtonWidth + bottomRowGap;
-        const int snapshotButtonX = recordButtonX + recordButtonWidth + bottomRowGap;
-        const int installButtonX = snapshotButtonX + snapshotButtonWidth + bottomRowGap;
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, contentMargin, monitorTop + 136,
-            recordingSettingsButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_RECORDING_SETTINGS),
-            nullptr, nullptr);
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, recordButtonX, monitorTop + 136,
-            recordButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_RECORD_TOGGLE), nullptr, nullptr);
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, snapshotButtonX, monitorTop + 136,
-            snapshotButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_SNAPSHOT), nullptr, nullptr);
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, installButtonX, monitorTop + 136,
-            installButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_INSTALL), nullptr, nullptr);
-    } else {
-        constexpr int firstRowGap = 4;
-        constexpr int firstButtonWidth = 206;
-        constexpr int secondButtonWidth = firstButtonWidth;
-        constexpr int previewButtonWidth = 216;
-        constexpr int informationButtonWidth = 124;
-        const int firstButtonX = contentMargin;
-        const int secondButtonX = firstButtonX + firstButtonWidth + firstRowGap;
-        const int previewButtonX = secondButtonX + secondButtonWidth + firstRowGap;
-        const int helpButtonX = previewButtonX + previewButtonWidth + firstRowGap;
-        const int aboutButtonX = helpButtonX + informationButtonWidth + firstRowGap;
-        MoveWindow(GetDlgItem(window, ID_ALL_ANIMATIONS), firstButtonX, actionButtonsTop, firstButtonWidth,
-            PUSH_BUTTON_HEIGHT, FALSE);
-        MoveWindow(GetDlgItem(window, ID_NO_ANIMATIONS), secondButtonX, actionButtonsTop, secondButtonWidth,
-            PUSH_BUTTON_HEIGHT, FALSE);
-        if (data->screenSaverSettings) {
-            CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, previewButtonX, actionButtonsTop,
-                previewButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_PREVIEW_TOGGLE), nullptr,
-                nullptr);
-        }
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, helpButtonX, actionButtonsTop,
-            informationButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_HELP), nullptr, nullptr);
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, aboutButtonX, actionButtonsTop,
-            informationButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_ABOUT), nullptr, nullptr);
-        constexpr int screenSaverButtonGap = firstRowGap;
-        constexpr int confirmationButtonWidth = 124;
-        const int monitorTop = actionButtonsTop + 37;
-        CreateSettingsMonitorList(window, *data, monitorTop, contentMargin, fullControlWidth);
-        const int screenSaverButtonsTop = monitorTop + 136;
-        int buttonX = contentMargin + fullControlWidth - 2 * confirmationButtonWidth - screenSaverButtonGap;
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON, buttonX,
-            screenSaverButtonsTop, confirmationButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_OK),
-            nullptr, nullptr);
-        buttonX += confirmationButtonWidth + screenSaverButtonGap;
-        CreateWindowExW(0, L"BUTTON", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP, buttonX, screenSaverButtonsTop,
-            confirmationButtonWidth, PUSH_BUTTON_HEIGHT, window, reinterpret_cast<HMENU>(ID_CANCEL), nullptr, nullptr);
-    }
-    if (!AttachMixedSettingsControls(window)) {
+    const int panelId = data.appMode ? IDD_SETTINGS_PANEL : IDD_SCREEN_SAVER_SETTINGS_PANEL;
+    DLGTEMPLATE* definition = LoadSystemDialogTemplate(app->instance, panelId, window);
+    if (definition == nullptr) {
         return -1;
     }
-    ApplyLocalizedCaptions(settingsWindow, *data);
-    ApplySystemDialogFont(settingsWindow, *data);
-    LayoutSettingsContent(settingsWindow, *data);
-    InstallSettingsTabNavigation(window);
-    UpdateSettingsScrollBars(window, *data, true);
-    InitializeMonitorColumnWidths(GetDlgItem(window, ID_MONITOR_LIST), *data);
+    data.contentWindow = CreateDialogIndirectParamW(app->instance, definition, window,
+        SettingsPanelProc, reinterpret_cast<LPARAM>(&data));
+    HeapFree(GetProcessHeap(), 0, definition);
+    if (!data.contentWindow) {
+        return -1;
+    }
+    if (data.appMode) {
+        SendMessageW(app->status, WM_SETFONT, SendMessageW(window, WM_GETFONT, 0, 0), FALSE);
+    } else if (!data.screenSaverSettings) {
+        ShowWindow(GetDlgItem(data.contentWindow, ID_PREVIEW_TOGGLE), SW_HIDE);
+    }
+    RECT content{};
+    GetClientRect(data.contentWindow, &content);
+    data.contentWidth = content.right;
+    data.contentHeight = content.bottom;
+    HWND panel = data.contentWindow;
+    HWND language = GetDlgItem(panel, ID_LANGUAGE);
+    PopulateLanguageCombo(language);
+    SendMessageW(language, CB_SETCURSEL, data.language, 0);
+    for (const AnimationSliderControl& slider : ANIMATION_SLIDERS) {
+        SendDlgItemMessageW(panel, slider.id, TBM_SETRANGE, TRUE, MAKELONG(slider.minimum, slider.maximum));
+        SendDlgItemMessageW(panel, slider.id, TBM_SETTICFREQ, slider.tickFrequency, 0);
+    }
+    InitializeSettingsMonitorList(GetDlgItem(panel, ID_MONITOR_LIST), data);
+    if (!AttachMixedSettingsControls(panel)) {
+        return -1;
+    }
+    if (data.appMode) {
+        SetTimer(window, ID_SCREEN_SAVER_CHECK_TIMER, SCREEN_SAVER_CHECK_INTERVAL, nullptr);
+    }
+    ApplyLocalizedCaptions(window, data);
+    UpdateSettingsControlMetrics(window);
+    LayoutSettingsContent(window, data);
+    InstallSettingsTabNavigation(panel);
+    UpdateSettingsScrollBars(window, data, true);
+    InitializeMonitorColumnWidths(GetDlgItem(panel, ID_MONITOR_LIST), data);
     return 0;
 }
 
@@ -5297,7 +4540,8 @@ static bool HandleAnimationSettingsCommand(HWND window, SettingsWindowData& data
     }
     for (const AnimationControl& control : ANIMATION_CHECKBOXES) {
         if (control.id == id) {
-            const bool enabled = SendDlgItemMessageW(SettingsContentWindow(window), id, BM_GETCHECK, 0, 0) != BST_CHECKED;
+            const bool enabled =
+                SendDlgItemMessageW(SettingsContentWindow(window), id, BM_GETCHECK, 0, 0) != BST_CHECKED;
             SetSelectedMonitorValue(window, data, control.property, enabled);
             return true;
         }
@@ -5305,10 +4549,95 @@ static bool HandleAnimationSettingsCommand(HWND window, SettingsWindowData& data
     return false;
 }
 
+/// Fits the native DLU panel and status bar into the current monitor without stretching the resource
+/// controls.
+static void FitSettingsWindow(HWND window, SettingsWindowData& data) {
+    RECT content{
+        0,
+        0,
+        data.appMode ? APPLICATION_CONTENT_WIDTH_DLU : SCREEN_SAVER_CONTENT_WIDTH_DLU,
+        data.appMode ? APPLICATION_CONTENT_HEIGHT_DLU : SCREEN_SAVER_CONTENT_HEIGHT_DLU
+    };
+    MapDialogRect(data.contentWindow, &content);
+    data.contentWidth = content.right;
+    data.contentHeight = content.bottom;
+    RECT status{};
+    if (data.appMode) {
+        SendMessageW(app->status, WM_SIZE, 0, 0);
+        GetWindowRect(app->status, &status);
+    }
+    RECT client{};
+    RECT outer{};
+    GetClientRect(window, &client);
+    GetWindowRect(window, &outer);
+    const int frameWidth = outer.right - outer.left - client.right;
+    const int frameHeight = outer.bottom - outer.top - client.bottom;
+    const int statusHeight = status.bottom - status.top;
+    MONITORINFO monitor{ sizeof(monitor) };
+    GetMonitorInfoW(MonitorFromWindow(window, MONITOR_DEFAULTTONEAREST), &monitor);
+    const int workWidth = monitor.rcWork.right - monitor.rcWork.left;
+    const int workHeight = monitor.rcWork.bottom - monitor.rcWork.top;
+    const int desiredWidth = data.contentWidth + frameWidth;
+    const int desiredHeight = data.contentHeight + statusHeight + frameHeight;
+    const int verticalWidth = GetSystemMetrics(SM_CXVSCROLL);
+    const int horizontalHeight = GetSystemMetrics(SM_CYHSCROLL);
+    bool horizontal = desiredWidth > workWidth;
+    bool vertical = desiredHeight > workHeight;
+    int width = 0;
+    int height = 0;
+    for (int pass = 0; pass < 2; ++pass) {
+        width = std::min(workWidth, desiredWidth + (vertical ? verticalWidth : 0));
+        height = std::min(workHeight, desiredHeight + (horizontal ? horizontalHeight : 0));
+        horizontal = width - (vertical ? verticalWidth : 0) < desiredWidth;
+        vertical = height - (horizontal ? horizontalHeight : 0) < desiredHeight;
+    }
+    width = std::min(workWidth, desiredWidth + (vertical ? verticalWidth : 0));
+    height = std::min(workHeight, desiredHeight + (horizontal ? horizontalHeight : 0));
+    data.scrollStyle = (horizontal ? WS_HSCROLL : 0) | (vertical ? WS_VSCROLL : 0);
+    const LONG_PTR previousStyle = GetWindowLongPtrW(data.contentWindow, GWL_STYLE);
+    const LONG_PTR style = previousStyle & ~(WS_HSCROLL | WS_VSCROLL) | data.scrollStyle;
+    if (style != previousStyle) {
+        SetWindowLongPtrW(data.contentWindow, GWL_STYLE, style);
+        SetWindowPos(data.contentWindow, nullptr, 0, 0, 0, 0,
+            SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+    }
+    const int x = std::clamp(static_cast<int>(outer.left), static_cast<int>(monitor.rcWork.left),
+        static_cast<int>(monitor.rcWork.right) - width);
+    const int y = std::clamp(static_cast<int>(outer.top), static_cast<int>(monitor.rcWork.top),
+        static_cast<int>(monitor.rcWork.bottom) - height);
+    SetWindowPos(window, nullptr, x, y, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
+    LayoutSettingsContent(window, data);
+    UpdateSettingsScrollBars(window, data, false);
+    UpdateSettingsTextControlLayout(window);
+}
+
+/// Installs the existing settings message handler on a native resource dialog.
+static INT_PTR CALLBACK SettingsDialogProc(HWND window, UINT msg, WPARAM, LPARAM lParam) {
+    if (msg == WM_INITDIALOG) {
+        SettingsWindowData* data = reinterpret_cast<SettingsWindowData*>(lParam);
+        SetWindowLongPtrW(window, GWLP_USERDATA, lParam);
+        SetWindowLongPtrW(window, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SettingsProc));
+        if (CreateSettingsControls(window, *data) != 0) {
+            DestroyWindow(window);
+        } else {
+            app->programIcons.Apply(window);
+        }
+    }
+    return FALSE;
+}
+
+/// Updates the pause caption while retaining its assigned mnemonic and avoiding unchanged text writes.
+static void UpdatePauseButton() {
+    HWND button = GetDlgItem(SettingsContentWindow(app->controlWindow), ID_PAUSE);
+    const TextId text = app->paused.load(std::memory_order_relaxed) ? TXT_RESUME : TXT_PAUSE;
+    SetWindowTextIfChanged(button, PreserveControlMnemonic(button, GetLocalizedText(ActiveLanguage(), text)));
+}
+
 /// Owns settings controls, commands, scrolling, focus and persistence.
 /// Posted focus restoration never overrides a direct child-control click made while the message was pending.
 static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam) {
-    SettingsWindowData* data = reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+    SettingsWindowData* data =
+        reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
     if (msg == WM_NCCREATE) {
         data = static_cast<SettingsWindowData*>(reinterpret_cast<CREATESTRUCTW*>(lParam)->lpCreateParams);
         SetWindowLongPtrW(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(data));
@@ -5317,7 +4646,7 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
     switch (msg) {
         case WM_CREATE:
             if (data) {
-                return CreateSettingsControls(window, data);
+                return CreateSettingsControls(window, *data);
             }
             return -1;
         case WM_SHOWWINDOW:
@@ -5344,6 +4673,7 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             }
             return 0;
         case UPDATE_SETTINGS_ACTION_BUTTONS:
+            UpdatePauseButton();
             UpdateSettingsActionButtons(window);
             RestoreCurrentStatus();
             return 0;
@@ -5354,7 +4684,14 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             return 0;
         case UPDATE_SETTINGS_CONTROL_METRICS:
             if (data) {
+                app->programIcons.Apply(window);
                 UpdateSettingsControlMetrics(window);
+                if (data->contentWindow) {
+                    if (data->appMode) {
+                        SendMessageW(app->status, WM_SETFONT, SendMessageW(window, WM_GETFONT, 0, 0), FALSE);
+                    }
+                    FitSettingsWindow(window, *data);
+                }
             }
             return 0;
         case WM_SETTINGCHANGE:
@@ -5395,7 +4732,8 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     HWND focused = GetFocus();
                     if (!focused || !IsChild(window, focused)) {
                         SetFocus(data->lastFocusedControl);
-                        const WPARAM showKeyboardCues = MAKEWPARAM(UIS_CLEAR, UISF_HIDEFOCUS | UISF_HIDEACCEL);
+                        const WPARAM showKeyboardCues =
+                            MAKEWPARAM(UIS_CLEAR, UISF_HIDEFOCUS | UISF_HIDEACCEL);
                         SendMessageW(window, WM_CHANGEUISTATE, showKeyboardCues, 0);
                         SendMessageW(data->lastFocusedControl, WM_UPDATEUISTATE, showKeyboardCues, 0);
                         RedrawWindow(data->lastFocusedControl, nullptr, nullptr,
@@ -5451,14 +4789,16 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 const bool uninstalling = app->uninstallingScreenSaver;
                 CloseHandle(app->installProcess);
                 app->installProcess = nullptr;
+                app->changingScreenSaver = false;
                 app->uninstallingScreenSaver = false;
                 EnableSettingsControl(GetDlgItem(controls, ID_INSTALL), true);
                 if (data) {
-                    SetDlgItemTextW(controls, ID_INSTALL, IsScreenSaverInstalled()
-                        ? GetLocalizedText(data->language, TXT_UNINSTALL_SCREEN_SAVER)
-                        : GetLocalizedText(data->language, TXT_INSTALL_SCREEN_SAVER));
-                    AssignSettingsMnemonics(window);
-                    UpdateSettingsTextControlLayout(window);
+                    HWND button = GetDlgItem(controls, ID_INSTALL);
+                    const TextId text = IsScreenSaverInstalled()
+                        ? TXT_UNINSTALL_SCREEN_SAVER
+                        : TXT_INSTALL_SCREEN_SAVER;
+                    SetWindowTextIfChanged(button,
+                        PreserveControlMnemonic(button, GetLocalizedText(data->language, text)));
                 }
                 if (uninstalling && exitCode != 0) {
                     const std::wstring failure = UninstallationFailureStatus(ActiveLanguage());
@@ -5483,7 +4823,8 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     const int id = GetDlgCtrlID(slider);
                     for (const AnimationSliderControl& control : ANIMATION_SLIDERS) {
                         if (control.id == id) {
-                            const auto value = static_cast<std::uint32_t>(SendMessageW(slider, TBM_GETPOS, 0, 0));
+                            const std::uint32_t value =
+                                static_cast<std::uint32_t>(SendMessageW(slider, TBM_GETPOS, 0, 0));
                             SetSelectedMonitorValue(window, *data, control.property, value, LOWORD(wParam)
                                 == TB_ENDTRACK);
                             break;
@@ -5542,13 +4883,20 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     }
                     return 0;
                 }
-                if (data->settings && !data->updating && HIWORD(wParam) == BN_CLICKED
+                if (data->settings
+                        && !data->updating
+                        && HIWORD(wParam) == BN_CLICKED
                         && HandleAnimationSettingsCommand(window, *data, LOWORD(wParam))) {
                     return 0;
                 }
                 if (data->appMode && app) {
                     switch (LOWORD(wParam)) {
-                        case ID_PREVENT_SCREEN_SAVER:
+                        case ID_SYSTEM_SCREEN_SAVER:
+                    if (data->appMode && !OpenSystemScreenSaverSettings(window)) {
+                        ShowTransientStatus(GetLocalizedText(data->language, TXT_SYSTEM_SCREEN_SAVER_FAILED));
+                    }
+                    return 0;
+                case ID_PREVENT_SCREEN_SAVER:
                             if (data->settings) {
                                 data->settings->preventScreenSaver = SendDlgItemMessageW(controls,
                                     ID_PREVENT_SCREEN_SAVER, BM_GETCHECK, 0, 0) == BST_CHECKED;
@@ -5564,10 +4912,9 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                             }
                             return 0;
                         case ID_PAUSE:
-                            app->paused.store(!app->paused.load(std::memory_order_relaxed), std::memory_order_relaxed);
-                            SetDlgItemTextW(controls, ID_PAUSE, app->paused.load(std::memory_order_relaxed)
-                                ? GetLocalizedText(data->language, TXT_RESUME)
-                                : GetLocalizedText(data->language, TXT_PAUSE));
+                            app->paused.store(!app->paused.load(std::memory_order_relaxed),
+                                std::memory_order_relaxed);
+                            UpdatePauseButton();
                             RestoreCurrentStatus();
                             return 0;
                         case ID_INSTALL:
@@ -5582,7 +4929,6 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     }
                 }
                 if (LOWORD(wParam) == ID_OK && data->settings) {
-                    SaveControlWindowPosition(window, data);
                     data->settings->Save();
                     data->completed = true;
                     StopSettingsPreview(window, *data);
@@ -5590,7 +4936,6 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     return 0;
                 }
                 if (LOWORD(wParam) == ID_CANCEL && data->settings) {
-                    SaveControlWindowPosition(window, data);
                     RestoreOriginalSettings(*data);
                     data->settings->Save();
                     StopSettingsPreview(window, *data);
@@ -5613,8 +4958,8 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                             && data->settings
                             && !data->updating
                             && MixedControls::IsMixed(notification->hwndFrom)) {
-                        const auto value =
-                            static_cast<std::uint32_t>(SendMessageW(notification->hwndFrom, TBM_GETPOS, 0, 0));
+                        const std::uint32_t value = static_cast<std::uint32_t>(
+                            SendMessageW(notification->hwndFrom, TBM_GETPOS, 0, 0));
                         SetSelectedMonitorValue(window, *data, control.property, value);
                         return 0;
                     }
@@ -5629,7 +4974,8 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 }
                 if (customDraw->nmcd.dwDrawStage == CDDS_POSTPAINT) {
                     HWND list = customDraw->nmcd.hdr.hwndFrom;
-                    if (GetFocus() == list && (SendMessageW(list, WM_QUERYUISTATE, 0, 0) & UISF_HIDEFOCUS) == 0) {
+                    if (GetFocus() == list
+                            && (SendMessageW(list, WM_QUERYUISTATE, 0, 0) & UISF_HIDEFOCUS) == 0) {
                         const int item = ListView_GetNextItem(list, -1, LVNI_FOCUSED);
                         RECT itemRect{};
                         RECT clientRect{};
@@ -5699,9 +5045,6 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                 }
             }
             break;
-        case WM_EXITSIZEMOVE:
-            SaveControlWindowPosition(window, data);
-            return 0;
         case WM_SYSCOMMAND:
             if ((wParam & 0xFFF0) == SC_SCREENSAVE && ShouldInhibitScreenSaver()) {
                 return 0;
@@ -5710,13 +5053,11 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
         case WM_CLOSE:
             if (data) {
                 if (data->appMode) {
-                    SaveControlWindowPosition(window, data);
                     data->settings->Save();
                     CloseApplication();
                     return 0;
                 }
                 if (data->settings) {
-                    SaveControlWindowPosition(window, data);
                     RestoreOriginalSettings(*data);
                     data->settings->Save();
                 }
@@ -5726,6 +5067,9 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             return 0;
         case WM_NCDESTROY:
             CloseInformationWindows();
+            if (app && app->controlWindow == window) {
+                app->controlWindow = nullptr;
+            }
             if (data) {
                 if (data->systemDialogFont) {
                     DeleteObject(data->systemDialogFont);
@@ -5734,16 +5078,20 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             }
             break;
     }
-    return DefWindowProcW(window, msg, wParam, lParam);
+    return DefDlgProcW(window, msg, wParam, lParam);
 }
 
 /// Processes independent dialog keys only when that window owns the keyboard focus.
 static bool HandleInformationDialogMessage(MSG& msg) {
     HWND focusedWindow = GetAncestor(GetFocus(), GA_ROOT);
-    if (helpWindow != nullptr && focusedWindow == helpWindow && IsDialogMessageW(helpWindow, &msg)) {
+    if (helpForm.GetWindow() != nullptr
+            && focusedWindow == helpForm.GetWindow()
+            && IsDialogMessageW(helpForm.GetWindow(), &msg)) {
         return true;
     }
-    if (aboutWindow != nullptr && focusedWindow == aboutWindow && IsDialogMessageW(aboutWindow, &msg)) {
+    if (aboutForm.GetWindow() != nullptr
+            && focusedWindow == aboutForm.GetWindow()
+            && IsDialogMessageW(aboutForm.GetWindow(), &msg)) {
         return true;
     }
     if (recordingSettingsWindow != nullptr
@@ -5763,61 +5111,32 @@ static bool ShowSettings(HINSTANCE instance, HWND owner, AppSettings& settings) 
     data->settings = &settings;
     data->screenSaverSettings = IsScrExecutable();
     data->language = ResolvedLanguage(settings);
-    MONITORINFO monitorInfo{};
-    monitorInfo.cbSize = sizeof(monitorInfo);
-    const POINT origin{ 0, 0 };
-    GetMonitorInfoW(owner
-        ? MonitorFromWindow(owner, MONITOR_DEFAULTTOPRIMARY)
-        : MonitorFromPoint(origin, MONITOR_DEFAULTTOPRIMARY), &monitorInfo);
-    RECT area = monitorInfo.rcWork;
-    if (settings.controlWindowX != std::numeric_limits<int>::min()
-            && settings.controlWindowY != std::numeric_limits<int>::min()) {
-        RECT saved{
-            settings.controlWindowX,
-            settings.controlWindowY,
-            settings.controlWindowX + SETTINGS_WIDTH,
-            settings.controlWindowY + SCREEN_SAVER_SETTINGS_HEIGHT
-        };
-        const HMONITOR savedMonitor = MonitorFromRect(&saved, MONITOR_DEFAULTTONULL);
-        if (savedMonitor) {
-            MONITORINFO savedInfo{};
-            savedInfo.cbSize = sizeof(savedInfo);
-            if (GetMonitorInfoW(savedMonitor, &savedInfo)) {
-                area = savedInfo.rcWork;
-            }
-        }
+    DLGTEMPLATE* definition = LoadSystemDialogTemplate(instance, IDD_SCREEN_SAVER_SETTINGS, owner);
+    if (!definition) {
+        return false;
     }
-    const DWORD extendedStyle = WS_EX_DLGMODALFRAME | WS_EX_CONTROLPARENT;
-    const SettingsWindowLayout layout = GetSettingsWindowLayout(false, extendedStyle, area);
-    data->contentWidth = layout.contentWidth;
-    data->contentHeight = layout.contentHeight;
-    data->scrollStyle = layout.scrollStyle;
     if (owner) {
         EnableWindow(owner, FALSE);
     }
-    HWND window = CreateWindowExW(extendedStyle, SETTINGS_CLASS, GetLocalizedText(data->language, TXT_SETTINGS_TITLE),
-        layout.style,
-        CW_USEDEFAULT, CW_USEDEFAULT, layout.width, layout.height, owner, nullptr, instance, data.get());
-    if (!window) {
+    HWND window = CreateDialogIndirectParamW(instance, definition, owner, SettingsDialogProc,
+        reinterpret_cast<LPARAM>(data.get()));
+    HeapFree(GetProcessHeap(), 0, definition);
+    if (!window || !IsWindow(window)) {
         if (owner) {
             EnableWindow(owner, TRUE);
         }
         return false;
     }
-    RECT bounds{};
-    GetWindowRect(window, &bounds);
-    const int width = bounds.right - bounds.left;
-    const int height = bounds.bottom - bounds.top;
-    int x = area.left + (area.right - area.left - width) / 2;
-    int y = area.top + (area.bottom - area.top - height) / 2;
-    if (settings.controlWindowX != std::numeric_limits<int>::min()
-            && settings.controlWindowY != std::numeric_limits<int>::min()) {
-        x = std::clamp(settings.controlWindowX, static_cast<int>(area.left), std::max(static_cast<int>(area.left),
-            static_cast<int>(area.right) - width));
-        y = std::clamp(settings.controlWindowY, static_cast<int>(area.top), std::max(static_cast<int>(area.top),
-            static_cast<int>(area.bottom) - height));
+    SetWindowTextW(window, GetLocalizedText(data->language, TXT_SETTINGS_TITLE));
+    if (!AttachSettingsWindowState(window, false)) {
+        DestroyWindow(window);
+        if (owner) {
+            EnableWindow(owner, TRUE);
+        }
+        return false;
     }
-    SetWindowPos(window, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_SHOWWINDOW);
+    FitSettingsWindow(window, *data);
+    settingsWindowState.Show();
     MSG msg{};
     while (IsWindow(window) && GetMessageW(&msg, nullptr, 0, 0) > 0) {
         if (HandleInformationDialogMessage(msg)) {
@@ -5834,6 +5153,9 @@ static bool ShowSettings(HINSTANCE instance, HWND owner, AppSettings& settings) 
             TranslateMessage(&msg);
             DispatchMessageW(&msg);
         }
+    }
+    if (IsWindow(window)) {
+        DestroyWindow(window);
     }
     if (owner) {
         EnableWindow(owner, TRUE);
@@ -5853,7 +5175,8 @@ static void ApplyAnimationMonitors() {
     if (monitors.empty()) {
         return;
     }
-    std::vector<std::size_t> requested = SelectedMonitorIndices(monitors, app->settings.animationMonitorDevice);
+    std::vector<std::size_t> requested =
+        SelectedMonitorIndices(monitors, app->settings.animationMonitorDevice);
     const bool noMonitors = NoAnimationMonitorsSelected(app->settings.animationMonitorDevice);
     if (requested.empty() && !noMonitors) {
         requested.push_back(PreferredMonitorIndex(monitors, app->settings.animationMonitorDevice));
@@ -5861,7 +5184,8 @@ static void ApplyAnimationMonitors() {
     RenderSurface* recording = RecordingSurface();
     if (recording) {
         const std::size_t index = MonitorIndexForDevice(monitors, recording->monitorDevice);
-        if (index < monitors.size() && std::find(requested.begin(), requested.end(), index) == requested.end()) {
+        if (index < monitors.size()
+                && std::find(requested.begin(), requested.end(), index) == requested.end()) {
             requested.push_back(index);
         }
     }
@@ -5869,9 +5193,10 @@ static void ApplyAnimationMonitors() {
     for (std::size_t index = 0; index < app->surfaces.size();) {
         RenderSurface& surface = *app->surfaces[index];
         const std::size_t monitor = MonitorIndexForDevice(monitors, surface.monitorDevice);
-        const bool keep = &surface == recording || monitor < monitors.size()
-            && std::find(requested.begin(), requested.end(), monitor) != requested.end()
-            && EqualRect(&surface.bounds, &monitors[monitor].rect);
+        const bool keep = &surface == recording
+            || monitor < monitors.size()
+                && std::find(requested.begin(), requested.end(), monitor) != requested.end()
+                && EqualRect(&surface.bounds, &monitors[monitor].rect);
         if (keep) {
             index++;
             continue;
@@ -5899,7 +5224,8 @@ static void ApplyAnimationMonitors() {
     }
     for (std::size_t index = 0; index < created.size(); index++) {
         for (std::size_t surface = index; surface < app->surfaces.size(); surface++) {
-            if (_wcsicmp(app->surfaces[surface]->monitorDevice.c_str(), monitors[created[index]].device.c_str()) == 0) {
+            if (_wcsicmp(app->surfaces[surface]->monitorDevice.c_str(),
+                    monitors[created[index]].device.c_str()) == 0) {
                 std::swap(app->surfaces[index], app->surfaces[surface]);
                 break;
             }
@@ -5929,66 +5255,44 @@ static void ApplyAnimationMonitors() {
 
 /// Creates the modeless standalone control window and transfers its state ownership.
 static HWND CreateApplicationWindow(Application& application, SettingsWindowData*& data) {
+    DLGTEMPLATE* definition =
+        LoadSystemDialogTemplate(application.instance, IDD_APPLICATION_SETTINGS, nullptr);
+    if (definition == nullptr) {
+        data = nullptr;
+        return nullptr;
+    }
     data = new SettingsWindowData{};
     data->original = application.settings;
     data->settings = &application.settings;
     data->monitors = AvailableMonitors();
     data->appMode = true;
     data->language = ResolvedLanguage(application.settings);
-    MONITORINFO primary{};
-    primary.cbSize = sizeof(primary);
-    const POINT origin{ 0, 0 };
-    GetMonitorInfoW(MonitorFromPoint(origin, MONITOR_DEFAULTTOPRIMARY), &primary);
-    RECT area = primary.rcWork;
-    if (application.settings.controlWindowX != std::numeric_limits<int>::min()
-            && application.settings.controlWindowY != std::numeric_limits<int>::min()) {
-        RECT saved{
-            application.settings.controlWindowX,
-            application.settings.controlWindowY,
-            application.settings.controlWindowX + SETTINGS_WIDTH,
-            application.settings.controlWindowY + APPLICATION_SETTINGS_HEIGHT
-        };
-        const HMONITOR savedMonitor = MonitorFromRect(&saved, MONITOR_DEFAULTTONULL);
-        if (savedMonitor) {
-            MONITORINFO savedInfo{};
-            savedInfo.cbSize = sizeof(savedInfo);
-            if (GetMonitorInfoW(savedMonitor, &savedInfo)) {
-                area = savedInfo.rcWork;
-            }
-        }
-    }
-    const DWORD extendedStyle = WS_EX_CONTROLPARENT;
-    const SettingsWindowLayout layout = GetSettingsWindowLayout(true, extendedStyle, area);
-    data->contentWidth = layout.contentWidth;
-    data->contentHeight = layout.contentHeight;
-    data->scrollStyle = layout.scrollStyle;
-    int x = std::min(static_cast<int>(area.left) + 24, std::max(static_cast<int>(area.left),
-        static_cast<int>(area.right) - layout.width));
-    int y = std::min(static_cast<int>(area.top) + 24, std::max(static_cast<int>(area.top),
-        static_cast<int>(area.bottom) - layout.height));
-    if (application.settings.controlWindowX != std::numeric_limits<int>::min()
-            && application.settings.controlWindowY != std::numeric_limits<int>::min()) {
-        x = std::clamp(application.settings.controlWindowX, static_cast<int>(area.left),
-            std::max(static_cast<int>(area.left), static_cast<int>(area.right) - layout.width));
-        y = std::clamp(application.settings.controlWindowY, static_cast<int>(area.top),
-            std::max(static_cast<int>(area.top), static_cast<int>(area.bottom) - layout.height));
-    }
-    HWND window = CreateWindowExW(extendedStyle, SETTINGS_CLASS, GetLocalizedText(data->language, TXT_CONTROL_TITLE),
-        layout.style | WS_VISIBLE, x, y, layout.width, layout.height, nullptr, nullptr, application.instance, data);
-    if (!window) {
+    HWND window = CreateDialogIndirectParamW(application.instance, definition, nullptr,
+        SettingsDialogProc, reinterpret_cast<LPARAM>(data));
+    HeapFree(GetProcessHeap(), 0, definition);
+    if (!window || !IsWindow(window)) {
         delete data;
         data = nullptr;
+        return nullptr;
     }
+    if (!AttachSettingsWindowState(window, true)) {
+        DestroyWindow(window);
+        delete data;
+        data = nullptr;
+        return nullptr;
+    }
+    FitSettingsWindow(window, *data);
+    settingsWindowState.Show();
     return window;
 }
 
 /// Writes and verifies the embedded screen-saver file in the native system directory.
-static bool WriteScreenSaverFile(const std::wstring& destination, const std::wstring& staging, const void* bytes,
-        DWORD resourceSize) {
+static bool WriteScreenSaverFile(const std::wstring& destination, const std::wstring& staging,
+        const void* bytes, DWORD resourceSize) {
     const Wow64Redirection wow64Redirection;
     DeleteFileW(staging.c_str());
-    const HANDLE file = CreateFileW(staging.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL,
-        nullptr);
+    const HANDLE file = CreateFileW(staging.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL, nullptr);
     if (file == INVALID_HANDLE_VALUE) {
         return false;
     }
@@ -6002,10 +5306,12 @@ static bool WriteScreenSaverFile(const std::wstring& destination, const std::wst
         return false;
     }
     const DWORD destinationAttributes = GetFileAttributesW(destination.c_str());
-    if (destinationAttributes != INVALID_FILE_ATTRIBUTES && (destinationAttributes & FILE_ATTRIBUTE_READONLY) != 0) {
+    if (destinationAttributes != INVALID_FILE_ATTRIBUTES
+            && (destinationAttributes & FILE_ATTRIBUTE_READONLY) != 0) {
         SetFileAttributesW(destination.c_str(), destinationAttributes & ~FILE_ATTRIBUTE_READONLY);
     }
-    if (!MoveFileExW(staging.c_str(), destination.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) {
+    if (!MoveFileExW(staging.c_str(), destination.c_str(),
+            MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) {
         DeleteFileW(staging.c_str());
         return false;
     }
@@ -6050,12 +5356,19 @@ static bool InstallScreenSaverElevated() {
     if (!bytes || resourceSize == 0) {
         return false;
     }
-    if (!WriteScreenSaverFile(destination, staging, bytes, resourceSize)) {
+    BYTE* unpacked = nullptr;
+    DWORD unpackedSize = 0;
+    if (!UnpackLibraryBytes(static_cast<const BYTE*>(bytes), resourceSize, &unpacked, &unpackedSize)) {
+        return false;
+    }
+    const bool written = WriteScreenSaverFile(destination, staging, unpacked, unpackedSize);
+    HeapFree(GetProcessHeap(), 0, unpacked);
+    if (!written) {
         return false;
     }
     HKEY key = nullptr;
-    const LSTATUS createResult =
-        RegCreateKeyExW(HKEY_CURRENT_USER, DESKTOP_REGISTRY_PATH, 0, nullptr, 0, KEY_WRITE, nullptr, &key, nullptr);
+    const LSTATUS createResult = RegCreateKeyExW(HKEY_CURRENT_USER, DESKTOP_REGISTRY_PATH, 0, nullptr, 0,
+        KEY_WRITE, nullptr, &key, nullptr);
     if (createResult != ERROR_SUCCESS) {
         return false;
     }
@@ -6102,7 +5415,7 @@ static bool UninstallScreenSaverElevated() {
     bool selected = false;
     if (queryResult == ERROR_SUCCESS && (type == REG_SZ || type == REG_EXPAND_SZ)) {
         selectedPath[std::min(size / sizeof(wchar_t), static_cast<DWORD>(selectedPath.size() - 1))] = L'\0';
-        selected = IsSpaceFlightScreenSaverPath(selectedPath.data());
+        selected = IsProductScreenSaverPath(selectedPath.data());
     } else if (queryResult != ERROR_FILE_NOT_FOUND) {
         RegCloseKey(key);
         return false;
@@ -6124,15 +5437,15 @@ static bool UninstallScreenSaverElevated() {
     }
     if (selected) {
         SystemParametersInfoW(SPI_SETSCREENSAVEACTIVE, FALSE, nullptr, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
-        SendMessageTimeoutW(HWND_BROADCAST, WM_SETTINGCHANGE, 0, reinterpret_cast<LPARAM>(DESKTOP_REGISTRY_PATH),
-            SMTO_ABORTIFHUNG, 1000, nullptr);
+        SendMessageTimeoutW(HWND_BROADCAST, WM_SETTINGCHANGE, 0,
+            reinterpret_cast<LPARAM>(DESKTOP_REGISTRY_PATH), SMTO_ABORTIFHUNG, 1000, nullptr);
     }
     return true;
 }
 
 /// Starts the elevated install or uninstall helper and polls it asynchronously.
 static void RequestScreenSaverChange(HWND owner) {
-    if (!app || app->installProcess) {
+    if (!app || app->changingScreenSaver) {
         return;
     }
     const bool uninstall = IsScreenSaverInstalled();
@@ -6145,7 +5458,18 @@ static void RequestScreenSaverChange(HWND owner) {
     execute.lpFile = executable.c_str();
     execute.lpParameters = uninstall ? UNINSTALL_ELEVATED_ARGUMENT : INSTALL_ELEVATED_ARGUMENT;
     execute.nShow = SW_SHOWNORMAL;
+    app->changingScreenSaver = true;
+    app->uninstallingScreenSaver = uninstall;
+    KillTimer(owner, ID_STATUS_RESET_TIMER);
+    SetStatus(GetLocalizedText(ActiveLanguage(),
+        uninstall ? TXT_UNINSTALLING_SCREEN_SAVER : TXT_INSTALLING_SCREEN_SAVER));
+    UpdateWindow(app->status);
+    EnableSettingsControl(GetDlgItem(SettingsContentWindow(owner), ID_INSTALL), false,
+        reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(owner, GWLP_USERDATA)));
     if (!ShellExecuteExW(&execute) || !execute.hProcess) {
+        app->changingScreenSaver = false;
+        app->uninstallingScreenSaver = false;
+        EnableSettingsControl(GetDlgItem(SettingsContentWindow(owner), ID_INSTALL), true);
         if (uninstall) {
             ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_UNINSTALLATION_FAILED));
         } else {
@@ -6153,10 +5477,7 @@ static void RequestScreenSaverChange(HWND owner) {
         }
         return;
     }
-    app->uninstallingScreenSaver = uninstall;
     app->installProcess = execute.hProcess;
-    EnableSettingsControl(GetDlgItem(SettingsContentWindow(owner), ID_INSTALL), false,
-        reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(owner, GWLP_USERDATA)));
     SetTimer(owner, ID_INSTALL_POLL_TIMER, 100, nullptr);
 }
 
@@ -6170,7 +5491,8 @@ static bool SaverShouldExitOnMouse() {
     return std::abs(current.x - app->initialMouse.x) > 4 || std::abs(current.y - app->initialMouse.y) > 4;
 }
 
-/// Raises standalone animation surfaces on an explicit click without restoring the control window or forcing TopMost.
+/// Raises standalone animation surfaces on an explicit click without restoring the control window or forcing
+/// TopMost.
 static void ActivateApplicationAnimation(HWND window) {
     if (!app || app->mode != RunMode::Application || !IsWindowVisible(window) || IsIconic(window)) {
         return;
@@ -6185,6 +5507,27 @@ static void ActivateApplicationAnimation(HWND window) {
     }
     SetWindowPos(window, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
     SetForegroundWindow(window);
+}
+
+/// Shows the cursor after movement and schedules hiding while an EXE animation is idle.
+static void UpdateAnimationCursor(HWND window, RenderSurface& surface) {
+    POINT current{};
+    if (!GetCursorPos(&current)) {
+        return;
+    }
+    if (!surface.trackingMouse
+            || current.x != surface.mousePosition.x
+            || current.y != surface.mousePosition.y) {
+        surface.mousePosition = current;
+        surface.mouseMoved = GetTickCount64();
+        surface.cursorHidden = false;
+        SetTimer(window, ID_ANIMATION_CURSOR_TIMER, ANIMATION_CURSOR_HIDE_DELAY, nullptr);
+        if (!surface.trackingMouse) {
+            TRACKMOUSEEVENT tracking{ sizeof(tracking), TME_LEAVE, window, 0 };
+            surface.trackingMouse = TrackMouseEvent(&tracking) != FALSE;
+        }
+    }
+    SetCursor(surface.cursorHidden ? nullptr : LoadCursorW(nullptr, IDC_ARROW));
 }
 
 /// Handles surface resize, explicit standalone activation and mode-specific animation exit controls.
@@ -6223,15 +5566,49 @@ static LRESULT CALLBACK RenderProc(HWND window, UINT msg, WPARAM wParam, LPARAM 
                     } else if (wParam == VK_F10) {
                         StopRecording();
                     } else if (wParam == VK_SPACE) {
-                        app->paused.store(!app->paused.load(std::memory_order_relaxed), std::memory_order_relaxed);
-                        RestoreCurrentStatus();
+                        app->paused.store(!app->paused.load(std::memory_order_relaxed),
+                            std::memory_order_relaxed);
+                        PostMessageW(app->controlWindow, UPDATE_SETTINGS_ACTION_BUTTONS, 0, 0);
                     }
                     return 0;
                 }
             }
             break;
+        case WM_SETCURSOR:
+            if (app && app->mode == RunMode::Application && surface && LOWORD(lParam) == HTCLIENT) {
+                UpdateAnimationCursor(window, *surface);
+                return TRUE;
+            }
+            break;
+        case WM_TIMER:
+            if (app && app->mode == RunMode::Application && surface && wParam == ID_ANIMATION_CURSOR_TIMER) {
+                KillTimer(window, ID_ANIMATION_CURSOR_TIMER);
+                const ULONGLONG elapsed = GetTickCount64() - surface->mouseMoved;
+                if (elapsed < ANIMATION_CURSOR_HIDE_DELAY) {
+                    SetTimer(window, ID_ANIMATION_CURSOR_TIMER,
+                        static_cast<UINT>(ANIMATION_CURSOR_HIDE_DELAY - elapsed), nullptr);
+                } else {
+                    POINT current{};
+                    if (GetCursorPos(&current) && WindowFromPoint(current) == window) {
+                        surface->cursorHidden = true;
+                        SetCursor(nullptr);
+                    }
+                }
+                return 0;
+            }
+            break;
+        case WM_MOUSELEAVE:
+            if (app && app->mode == RunMode::Application && surface) {
+                KillTimer(window, ID_ANIMATION_CURSOR_TIMER);
+                surface->trackingMouse = false;
+                surface->cursorHidden = false;
+                return 0;
+            }
+            break;
         case WM_MOUSEMOVE:
-            if (SaverShouldExitOnMouse()) {
+            if (app && app->mode == RunMode::Application && surface) {
+                UpdateAnimationCursor(window, *surface);
+            } else if (SaverShouldExitOnMouse()) {
                 CloseApplication();
             }
             return 0;
@@ -6248,7 +5625,9 @@ static LRESULT CALLBACK RenderProc(HWND window, UINT msg, WPARAM wParam, LPARAM 
             return 0;
         case WM_ACTIVATEAPP:
             if (app) {
-                if (app->mode == RunMode::ScreenSaver && !wParam && GetTickCount64() - app->saverStarted >= 900) {
+                if (app->mode == RunMode::ScreenSaver
+                        && !wParam
+                        && GetTickCount64() - app->saverStarted >= 900) {
                     CloseApplication();
                 }
             }
@@ -6279,7 +5658,8 @@ static bool RegisterClasses(HINSTANCE instance) {
     render.hIconSm = app->programIcons.Small();
     render.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
     WNDCLASSEXW settings = render;
-    settings.lpfnWndProc = SettingsProc;
+    settings.lpfnWndProc = DefDlgProcW;
+    settings.cbWndExtra = DLGWINDOWEXTRA;
     settings.lpszClassName = SETTINGS_CLASS;
     settings.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_BTNFACE + 1);
     return RegisterClassExW(&render) && RegisterClassExW(&settings);
@@ -6313,8 +5693,8 @@ static HWND CreateRenderWindow(Application& application, RenderSurface& surface,
             extendedStyle |= WS_EX_NOACTIVATE;
         }
     }
-    return CreateWindowExW(extendedStyle, RENDER_CLASS, PRODUCT_NAME, style, x, y, width, height, parent, nullptr,
-        application.instance, &surface);
+    return CreateWindowExW(extendedStyle, RENDER_CLASS, PRODUCT_NAME, style, x, y, width, height, parent,
+        nullptr, application.instance, &surface);
 }
 
 /// Creates, initializes and starts one independent animation surface.
@@ -6365,15 +5745,19 @@ static void StartDefaultApplicationAnimation(Application& application, SettingsW
     RestoreCurrentStatus();
 }
 
-/// Handles standalone Enter with no fixed accept button and explicit Tab order before native dialog processing.
-static bool HandleApplicationKeyMessage(Application& application, SettingsWindowData* appSettingsData, const MSG& msg) {
+/// Handles standalone Enter with no fixed accept button and explicit Tab order before native dialog
+/// processing.
+static bool HandleApplicationKeyMessage(Application& application, SettingsWindowData* appSettingsData,
+        const MSG& msg) {
     if (msg.message == WM_KEYDOWN
             && msg.wParam == VK_RETURN
+            && application.mode == RunMode::Application
             && appSettingsData
             && MessageTargetsWindow(msg, application.controlWindow)
             && GetAncestor(GetFocus(), GA_ROOT) == application.controlWindow) {
         HWND focused = GetFocus();
-        const LRESULT dialogCode = SendMessageW(focused, WM_GETDLGCODE, msg.wParam, reinterpret_cast<LPARAM>(&msg));
+        const LRESULT dialogCode = SendMessageW(focused, WM_GETDLGCODE, msg.wParam,
+            reinterpret_cast<LPARAM>(&msg));
         const bool pushButton = (dialogCode & (DLGC_DEFPUSHBUTTON | DLGC_UNDEFPUSHBUTTON)) != 0;
         if (!pushButton && (dialogCode & DLGC_WANTALLKEYS) == 0) {
             StartDefaultApplicationAnimation(application, *appSettingsData);
@@ -6402,7 +5786,8 @@ static void DispatchApplicationMessage(Application& application, MSG& msg) {
 }
 
 /// Processes at most 32 queued messages and preserves WM_QUIT handling.
-static void ProcessApplicationMessages(Application& application, SettingsWindowData* appSettingsData, MSG& msg) {
+static void ProcessApplicationMessages(Application& application, SettingsWindowData* appSettingsData,
+        MSG& msg) {
     unsigned dispatchedMessages = 0;
     while (dispatchedMessages < 32 && PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE)) {
         if (msg.message == WM_QUIT) {
@@ -6435,8 +5820,8 @@ static bool IsSelfTestSurfaceEmpty(const std::unique_ptr<RenderSurface>& surface
 
 /// Checks a snapshot's PNG signature and closes its file handle.
 static bool HasPngSignature(const wchar_t* path) {
-    const HANDLE file =
-        CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    const HANDLE file = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL, nullptr);
     unsigned char signature[8]{};
     DWORD read = 0;
     const bool saved = file != INVALID_HANDLE_VALUE
@@ -6456,7 +5841,8 @@ static bool HasPngSignature(const wchar_t* path) {
 static bool SaveSelfTestSnapshot(Application& application) {
     wchar_t directory[MAX_PATH]{};
     wchar_t temporary[MAX_PATH]{};
-    bool saved = GetTempPathW(MAX_PATH, directory) != 0 && GetTempFileNameW(directory, L"FSS", 0, temporary) != 0;
+    bool saved = GetTempPathW(MAX_PATH, directory) != 0
+        && GetTempFileNameW(directory, L"FSS", 0, temporary) != 0;
     if (saved) {
         DeleteFileW(temporary);
         const std::wstring snapshot = std::wstring(temporary) + L".png";
@@ -6472,11 +5858,14 @@ static bool SaveSelfTestSnapshot(Application& application) {
 /// Completes frame and optional snapshot checks when every self-test surface is ready.
 static void CompleteSelfTest(Application& application) {
     if (application.mode == RunMode::SelfTest || application.mode == RunMode::SelfTestAllMonitors) {
-        const bool enoughFrames = std::all_of(application.surfaces.begin(), application.surfaces.end(), HasSelfTestFrames);
+        const bool enoughFrames =
+            std::all_of(application.surfaces.begin(), application.surfaces.end(), HasSelfTestFrames);
         if (enoughFrames) {
             application.selfTestFailed =
                 std::any_of(application.surfaces.begin(), application.surfaces.end(), IsSelfTestSurfaceEmpty);
-            if (!application.selfTestFailed && application.selfTestSnapshot && !application.surfaces.empty()) {
+            if (!application.selfTestFailed
+                    && application.selfTestSnapshot
+                    && !application.surfaces.empty()) {
                 application.selfTestFailed = !SaveSelfTestSnapshot(application);
             }
             CloseApplication();
@@ -6487,8 +5876,10 @@ static void CompleteSelfTest(Application& application) {
 /// Waits for queued input, polling only in automatic self-test modes.
 static void WaitForApplicationMessages(Application& application) {
     if (!application.closing.load(std::memory_order_relaxed)) {
-        const DWORD timeout =
-            application.mode == RunMode::SelfTest || application.mode == RunMode::SelfTestAllMonitors ? 10U : INFINITE;
+        const DWORD timeout = application.mode == RunMode::SelfTest
+            || application.mode == RunMode::SelfTestAllMonitors
+            ? 10U
+            : INFINITE;
         MsgWaitForMultipleObjectsEx(0, nullptr, timeout, QS_ALLINPUT, MWMO_INPUTAVAILABLE);
     }
 }
@@ -6507,8 +5898,8 @@ static void RunApplicationMessageLoop(Application& application, SettingsWindowDa
 }
 
 /// Parses the invocation mode, creates requested surfaces and runs the process message loop.
-int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstance, _In_ LPWSTR commandLineRaw,
-        _In_ int showCommand) {
+int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstance,
+        _In_ LPWSTR commandLineRaw, _In_ int showCommand) {
     UNREFERENCED_PARAMETER(previousInstance);
     UNREFERENCED_PARAMETER(showCommand);
     INITCOMMONCONTROLSEX controls{
@@ -6536,7 +5927,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstan
     if (!RegisterClasses(instance)) {
         return 1;
     }
-    if (!lower.empty() && lower[0] == L'/' && lower.size() >= 2 && lower[1] == L'c' || scr && commandLine.empty()) {
+    if (!lower.empty() && lower[0] == L'/' && lower.size() >= 2 && lower[1] == L'c'
+            || scr && commandLine.empty()) {
         ShowSettings(instance, nullptr, application.settings);
         return 0;
     }
@@ -6559,7 +5951,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstan
         application.selfTestFlight = true;
     } else if (lower == L"/test-dense") {
         application.mode = RunMode::SelfTest;
-        for (auto& entry : application.settings.monitorAnimations) {
+        for (std::pair<const std::wstring, MonitorAnimation>& entry
+                : application.settings.monitorAnimations) {
             entry.second.objectSpeedPercent = 1600;
         }
     } else if (lower == L"/test-monitors") {
@@ -6567,7 +5960,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstan
     } else if (scr || !lower.empty() && lower[0] == L'/' && lower.size() >= 2 && lower[1] == L's') {
         application.mode = RunMode::ScreenSaver;
     }
-    std::unique_ptr<void, decltype(&ReleaseApplicationInstance)> instanceMutex(nullptr, ReleaseApplicationInstance);
+    std::unique_ptr<void, decltype(&ReleaseApplicationInstance)> instanceMutex(nullptr,
+        ReleaseApplicationInstance);
     if (application.mode == RunMode::Application) {
         bool primary = false;
         HANDLE mutex = AcquireApplicationInstance(primary);
@@ -6593,14 +5987,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstan
         const std::vector<DisplayMonitor> monitors = AvailableMonitors();
         if (monitors.empty()) {
             if (!NoAnimationMonitorsSelected(application.settings.animationMonitorDevice)) {
-                const RECT animationBounds{ 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) };
+                const RECT animationBounds{
+                    0,
+                    0,
+                    GetSystemMetrics(SM_CXSCREEN),
+                    GetSystemMetrics(SM_CYSCREEN)
+                };
                 surfacesCreated = AddRenderSurface(application, animationBounds, nullptr, 0);
             }
         } else {
             std::vector<std::size_t> selected =
                 SelectedMonitorIndices(monitors, application.settings.animationMonitorDevice);
-            if (selected.empty() && !NoAnimationMonitorsSelected(application.settings.animationMonitorDevice)) {
-                selected.push_back(PreferredMonitorIndex(monitors, application.settings.animationMonitorDevice));
+            if (selected.empty()
+                    && !NoAnimationMonitorsSelected(application.settings.animationMonitorDevice)) {
+                selected.push_back(PreferredMonitorIndex(monitors,
+                    application.settings.animationMonitorDevice));
             }
             application.settings.animationMonitorDevice = selected.empty()
                 ? NO_ANIMATION_MONITORS
@@ -6640,7 +6041,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstan
                 DestroyWindow(surface->window);
             }
         }
-        MessageBoxW(nullptr, GetLocalizedText(ActiveLanguage(), TXT_RENDERER_FAILED), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+        MessageBoxW(nullptr, GetLocalizedText(ActiveLanguage(), TXT_RENDERER_FAILED), PRODUCT_NAME,
+            MB_OK | MB_ICONERROR);
+        CloseInformationWindows();
+        if (application.controlWindow) {
+            DestroyWindow(application.controlWindow);
+        }
         delete appSettingsData;
         return 1;
     }
@@ -6674,6 +6080,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstan
         ShowCursor(TRUE);
     }
     CloseInformationWindows();
+    if (application.controlWindow) {
+        DestroyWindow(application.controlWindow);
+    }
     delete appSettingsData;
     app = nullptr;
     return application.selfTestFailed ? 2 : 0;

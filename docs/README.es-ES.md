@@ -26,31 +26,85 @@ SpaceFlight: Superficie ondulante infinita; Vuelo de larga distancia — superfi
 
 `SpaceFlight.exe` · `SpaceFlight.scr`
 
-## MONITORES
+## GameOfLife
+
+El juego de la vida de Conway en un mundo compartido entre pantallas.
+
+### Reglas
+
+El juego de la vida de Conway usa B3/S23. Una celda muerta nace con exactamente tres vecinas vivas; una viva sobrevive con dos o tres. Las ocho vecinas incluyen las diagonales. Todas evolucionan simultáneamente. Los bordes opuestos se conectan: izquierda con derecha, arriba con abajo.
+
+### Pantallas y mundo compartido
+
+Las casillas de EXE activan pantallas; los ajustes se aplican al mundo compartido. Una sola pantalla activa contiene todo el mundo. Al elegir parte de la disposición se eliminan filas y columnas totalmente vacías: izquierda y derecha se unen al desactivar la central. Los huecos interiores que no puedan eliminarse siguen en la simulación. Todas las pantallas seleccionadas, o SCR, conservan el rectángulo del escritorio y sus huecos invisibles. Cada pantalla muestra su región de la misma simulación.
+
+### Estado inicial y patrones
+
+El inicio predeterminado es ruido aleatorio con un 25 % de celdas vivas. La densidad inicial de 0–100 % se aplica al próximo reinicio. Solo patrones conocidos usa 4.106 patrones incluidos sin ruido y desactiva la densidad. Elija una mezcla o un nombre; las dimensiones se expresan en celdas. Escriba para buscar. Solo se ofrecen patrones que caben completos. Los pequeños verificados se repiten en copias separadas; los grandes o complejos aparecen una vez centrados. Reducir el mundo puede sustituir una selección que ya no cabe por una mezcla. Cambiar modo o patrón crea otra escena. Los reinicios conservan la elección; el catálogo funciona sin conexión.
+
+### Celdas, cuadrícula y colores
+
+Sin cuadrícula, el tamaño es 1–64 px. Mostrar cuadrícula añade un borde de 1 px dentro del espaciado existente: el valor mostrado y el deslizador bajan uno, con 1–63 utilizables. Desactivarla restaura el valor. El deslizador conserva su rango y retrocede desde el extremo no disponible; la casilla permanece habilitada. Se conserva la escena salvo al activarla con 1 px: el espaciado pasa a 2 px y se crea otra escena. Cambiar tamaño o pantallas también reinicia. Un mundo muy grande puede exigir un mínimo mayor. Los colores de celdas, fondo y cuadrícula cambian por separado sin reiniciar. El color aleatorio de las celdas vivas cambia en cada reinicio manual o automático de la escena. El color guardado se conserva y vuelve al desactivar esta opción. El mismo comportamiento puede activarse por separado para el fondo y la cuadrícula; ambas opciones nuevas están desactivadas inicialmente.
+
+### Velocidad, pausa y reinicio automático
+
+La velocidad es 0–240 generaciones/s, independiente del refresco; 0 detiene la evolución. Pausa y Reanudar conservan el mundo. Reiniciar vuelve a empezar en el modo elegido. El reinicio automático opcional detecta fases visibles estáticas o exactamente repetidas, incluidos osciladores. Compara generaciones y no segundos; excluye áreas invisibles. Los resultados asíncronos pueden retrasar ligeramente el reinicio. Valores iniciales: espaciado 8 px, 20 generaciones/s, color aleatorio de células vivas y reinicio automático activados. La cuadrícula está desactivada de forma predeterminada. La velocidad alcanzada depende del rendimiento y del número de celdas. El reinicio automático compara las regiones de las pantallas activadas; los huecos siguen evolucionando, pero no se incluyen en la comparación.
+
+### Restablecer valores
+
+El restablecimiento fija el tamaño mostrado en 8 px con o sin cuadrícula (espaciado de 9 u 8 px), la velocidad en 20 generaciones/s, la densidad en el 25 % y los tres colores predeterminados. Conserva las demás opciones; un patrón que ya no quepa se sustituye por la mezcla. Solo se crea otra escena si cambia el espaciado o la densidad en modo de ruido.
+
+### Aplicación independiente y grabación MP4
+
+EXE guarda ajustes continuamente y graba la primera pantalla activa en MP4. Propone Vídeos o, en su defecto, Documentos. Viewport usa dimensiones y refresco de pantalla hasta 60 fotogramas/s. TV ofrece 1920 × 1080, 1440 × 1080 o 1280 × 720 en 16:9 a 50, 25, 59,94 (60000/1001) o 29,97 (30000/1001) fotogramas/s. Se conserva la proporción; TV usa BT.709 progresivo de rango limitado y 4:2:0. La ventana independiente de ajustes puede minimizarse. Aceptar guarda para la próxima grabación; Cancelar o Esc descarta cambios pendientes. No puede desactivarse la pantalla grabada; las demás salidas sí pueden cambiar. Salir durante una grabación requiere confirmación. Con la animación enfocada, Espacio alterna la pausa, F9: Iniciar grabación; F10: Detener grabación. El cursor se oculta tras 1 segundo inactivo y reaparece al moverlo. Tab/Shift+Tab recorre controles; Alt activa comandos subrayados. Esc cierra Ayuda/Acerca de, o sale desde la ventana principal. Salvapantallas de Windows… abre la configuración del salvapantallas del sistema.
+
+### Captura y gestión del protector en EXE
+
+La captura guarda en PNG la pantalla que se está grabando o, en su defecto, la primera activa, a su resolución y sin reiniciar la escena. Se propone Imágenes, o Documentos como alternativa. Bloquear el protector durante la animación impide que se inicie mientras la animación esté visible y no pausada. Velocidad cero no equivale a pausa. La instalación desde EXE extrae el SCR incluido y lo selecciona como protector de Windows. Instalar y desinstalar puede requerir autorización de administrador; la barra de estado muestra la operación hasta que termine. Si la eliminación está bloqueada, cierre el protector en ejecución, sus ajustes y la vista previa de Windows.
+
+### Protector de pantalla de Windows
+
+GameOfLife.scr usa todas las pantallas y ajustes separados de EXE. Activar vista previa inicia la animación completa con ajustes abiertos. La vista pequeña de Windows reduce todo el mundo. Aceptar guarda; Cancelar o Esc descarta cambios. Mover el ratón o pulsar una tecla cierra el protector completo. La grabación MP4 está disponible en EXE.
+
+### Posición y estado de las ventanas
+
+Al cerrar se guardan por separado las posiciones de la ventana principal y Acerca de; Ayuda conserva además su tamaño y el estado normal o maximizado anterior a la minimización. Esto es independiente de confirmar los ajustes de la aplicación. Salir de la aplicación también cierra Ayuda y Acerca de.
+
+### Renderizado y licencias de patrones
+
+La evolución y comparación visible usan sombreadores Direct3D 11 en GPU; hay renderizado por software si falla la inicialización del hardware. Cada pantalla usa el regulador de fotogramas probado a su propio refresco. MP4 necesita Media Foundation y un codificador H.264. Los patrones proceden de LifeWiki (GFDL 1.2 o posterior) y de las colecciones de dominio público de Alan Hensel. El código usa MIT; los avisos y licencias del catálogo son independientes.
+
+[Fuentes de patrones, licencias y detalles de importación](../GameOfLife/LifePatternsLicense.txt)
+
+`GameOfLife.exe` · `GameOfLife.scr`
+
+## FlyingSolids · FlightCorridor · SpaceFlight
+
+### MONITORES
 
 La selección de filas determina qué pantallas se están configurando; es independiente de las casillas que activan las salidas de animación. Ctrl+A selecciona todas; Ctrl y Mayús modifican la selección. Todas las opciones y los controles deslizantes de animación se aplican a las pantallas seleccionadas. La selección se recuerda por separado para EXE y SCR. Si estaban seleccionadas todas, se incluyen también las nuevas. Los valores distintos entre las pantallas seleccionadas se indican mediante casillas indeterminadas y un punteado en los botones de opción, los tiradores de los controles deslizantes y los botones «Activar todo» y «Desactivar todo». Las etiquetas de los controles deslizantes muestran una raya en lugar de un valor común. Cambiar una opción o hacer clic en un control deslizante aplica ese valor a todas las pantallas seleccionadas.
 
-## CONTROLES
+### CONTROLES
 
 Active o desactive las salidas de animación mediante las casillas de las pantallas o haciendo doble clic en sus filas. Cada monitor usa una escena independiente. Captura guarda un PNG y el botón de grabación inicia o detiene un MP4. Pausar detiene la animación. La aplicación instala o desinstala además el salvapantallas incorporado. Los ajustes se guardan continuamente. La aplicación solo permite una instancia. Al volver a iniciarla, restaura la ventana de control minimizada y la trae al primer plano. Use Tab y Mayús+Tab para desplazarse entre controles; Alt y la letra subrayada activan una opción. Esc cierra la ventana activa de Ayuda o Acerca de; en la ventana de control, sale de la aplicación. La pausa y el bloqueo del salvapantallas se aplican a toda la aplicación, independientemente de las pantallas seleccionadas. Si el bloqueo está activado, solo se impide el salvapantallas de Windows mientras haya animación visible y no pausada en al menos una pantalla.
 
-## CAPTURAS Y GRABACIÓN
+### CAPTURAS Y GRABACIÓN
 
 Las capturas y grabaciones usan el primer monitor de animación activo, no una imagen conjunta de todos los monitores. PNG usa Imágenes y MP4 Vídeos; si no existen esas carpetas, se usa Documentos. El botón Ajustes de grabación permite elegir Viewport o TV. Viewport conserva las dimensiones y la frecuencia de actualización del monitor de animación, hasta 60 fotogramas por segundo. TV ofrece 1920 × 1080, 1440 × 1080 o 1280 × 720 en formato 16:9, a 50, 25, 59.94 (60000/1001) o 29.97 (30000/1001) fotogramas por segundo. Se conserva la relación de aspecto; TV usa vídeo progresivo BT.709 de rango limitado y submuestreo 4:2:0. La resolución y la frecuencia solo están disponibles en modo TV. La ventana Ajustes de grabación se puede minimizar y no bloquea las demás ventanas de la aplicación. Aceptar guarda las opciones para la próxima grabación MP4; Cancelar o Esc descarta los cambios sin confirmar. La salida de animación del monitor grabado no se puede desactivar durante la grabación; cambiar otros monitores no la detiene. Cerrar la aplicación durante una grabación requiere confirmación porque también detiene la grabación.
 
-## VISTA PREVIA Y CONTROLES
+### VISTA PREVIA Y CONTROLES
 
 Activar vista previa inicia una vista previa a pantalla completa en todos los monitores; el cuadro de configuración permanece abierto para realizar ajustes en tiempo real. Aceptar guarda y Cancelar descarta. Esc o mover el ratón cierra el salvapantallas completo. Use Tab y Mayús+Tab para desplazarse entre controles; Alt y la letra subrayada activan una opción. Esc en la configuración equivale a Cancelar; en Ayuda o Acerca de, cierra únicamente esa ventana.
 
-## Requisitos del sistema
+### Requisitos del sistema
 
 Windows 7 a Windows 11 admiten todas las funciones, incluidas las capturas PNG y la grabación MP4. Para ejecutar la aplicación en Windows Vista SP2, es necesario instalar las actualizaciones KB971512 y KB2117917. La grabación MP4 no funciona en Vista en la versión actual. La representación requiere Direct3D 11, no solo un entorno de ejecución antiguo de DirectX. La grabación MP4 requiere componentes de Media Foundation y un codificador H.264 disponibles. La aplicación independiente también puede ejecutarse en Linux mediante Wine; la integración como salvapantallas solo está disponible en Windows.
 
 ## Compilación
 
-Abra `DispSavers.slnx` en Visual Studio con MSVC v145 y un SDK de Windows. Seleccione `Release | x86` y recompile la solución para generar `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\SpaceFlight.exe` y `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. No hay configuración x64.
+Abra `DispSavers.slnx` en Visual Studio con MSVC v145 y un SDK de Windows. Seleccione `Release | x86` y recompile la solución para generar `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` y `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. No hay configuración x64.
 
-Ejecute `PackageRelease.ps1` sin parámetros de firma para empaquetar los archivos compilados. El script utiliza copias temporales, no modifica los archivos de `Release` y solo verifica las firmas válidas existentes. Crea el único archivo `DispSavers-<version>-win32.zip` con `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr` y `SpaceFlight\license.txt`. El ZIP anterior se elimina al comenzar; un error de verificación impide crear un archivo nuevo.
+Ejecute `PackageRelease.ps1` sin parámetros de firma para empaquetar los archivos compilados. El script utiliza copias temporales, no modifica los archivos de `Release` y solo verifica las firmas válidas existentes. Crea el único archivo `DispSavers-<version>-win32.zip` con `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `GameOfLife\GameOfLife.exe`, `GameOfLife\GameOfLife.scr`, `GameOfLife\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr` y `SpaceFlight\license.txt`. El ZIP anterior se elimina al comenzar; un error de verificación impide crear un archivo nuevo.
 
 ## Licencia
 

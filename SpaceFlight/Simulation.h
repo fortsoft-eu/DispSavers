@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.3.0.0
  */
 
 #pragma once
 
-#include "Effects.h"
+#include "main.h"
 #include <array>
 
 /// Neutral defaults reproduce the original flight; each simulation supplies independent random variations.

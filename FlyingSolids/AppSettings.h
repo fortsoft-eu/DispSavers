@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.2.0
+ * Last modified for version 1.3.0.0
  */
 
 #pragma once
 
-#include "Effects.h"
+#include "main.h"
 #include "Mp4Recorder.h"
 #include "PersistWindowState.h"
 #include <cstdint>
@@ -97,8 +97,6 @@ struct AppSettings {
     std::wstring selectedAnimationMonitors;
     bool allAnimationMonitorsSelected = true;
     bool preventScreenSaver = false;
-    int controlWindowX = (std::numeric_limits<int>::min)();
-    int controlWindowY = (std::numeric_limits<int>::min)();
     PersistWindowStateData helpWindowState;
     PersistWindowStateData aboutWindowState;
     int recordingSettingsX = (std::numeric_limits<int>::min)();
@@ -116,7 +114,9 @@ struct AppSettings {
     MonitorSelection SelectionForMonitors(const std::vector<std::wstring>& devices);
 
     /// Changes one property only on the selected display identities.
-    void SetMonitorValue(const std::vector<std::wstring>& devices, AnimationProperty property, std::uint32_t value);
+    void SetMonitorValue(const std::vector<std::wstring>& devices, AnimationProperty property,
+        std::uint32_t value);
+
     /// Enables or disables one solid kind on the selected display identities.
     void SetMonitorSolid(const std::vector<std::wstring>& devices, unsigned index, bool enabled);
 

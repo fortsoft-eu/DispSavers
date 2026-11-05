@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
@@ -34,8 +34,10 @@ Wow64Redirection::Wow64Redirection() {
     if (kernel == nullptr) {
         return;
     }
-    disableFunction = reinterpret_cast<DisableFunction>(GetProcAddress(kernel, "Wow64DisableWow64FsRedirection"));
-    revertFunction = reinterpret_cast<RevertFunction>(GetProcAddress(kernel, "Wow64RevertWow64FsRedirection"));
+    disableFunction = reinterpret_cast<DisableFunction>(GetProcAddress(kernel,
+        "Wow64DisableWow64FsRedirection"));
+    revertFunction = reinterpret_cast<RevertFunction>(GetProcAddress(kernel,
+        "Wow64RevertWow64FsRedirection"));
     disabled = disableFunction != nullptr && revertFunction != nullptr && disableFunction(&previousState);
 }
 

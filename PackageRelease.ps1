@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Last modified for version 1.2.2.1
+Last modified for version 1.3.0.0
 #>
 
 [CmdletBinding()]
@@ -61,7 +61,7 @@ $projects = @(
             (Join-Path $root "Release\FlightCorridor.exe"),
             (Join-Path $root "Release\FlightCorridor.scr")
         )
-        License = Join-Path $root "FlightCorridor\license.txt"
+        License = Join-Path $root "license.txt"
     }
     [PSCustomObject]@{
         Name    = "SpaceFlight"
@@ -69,7 +69,15 @@ $projects = @(
             (Join-Path $root "Release\SpaceFlight.exe"),
             (Join-Path $root "Release\SpaceFlight.scr")
         )
-        License = Join-Path $root "SpaceFlight\license.txt"
+        License = Join-Path $root "license.txt"
+    }
+    [PSCustomObject]@{
+        Name    = "GameOfLife"
+        Files   = @(
+            (Join-Path $root "Release\GameOfLife.exe"),
+            (Join-Path $root "Release\GameOfLife.scr")
+        )
+        License = Join-Path $root "GameOfLife\Release\license.utf8"
     }
 )
 
@@ -109,10 +117,12 @@ function Get-PackageVersion {
     }
 
     return "{0}.{1}.{2}.{3}" -f
-        $versionInfo.FileMajorPart, $versionInfo.FileMinorPart, $versionInfo.FileBuildPart, $versionInfo.FilePrivatePart
+        $versionInfo.FileMajorPart, $versionInfo.FileMinorPart, $versionInfo.FileBuildPart,
+        $versionInfo.FilePrivatePart
 }
 
-# Returns the newest valid current-user code-signing certificate with a private key that matches the supplied name
+# Returns the newest valid current-user code-signing certificate with a private key that matches
+# the supplied name
 # or thumbprint; returns null when no signer was requested or no matching certificate exists.
 function Find-SignerCertificate {
     param (
@@ -137,14 +147,16 @@ function Find-SignerCertificate {
             $_.NotAfter -gt $now -and
             (-not $normalizedThumbprint -or $_.Thumbprint -ieq $normalizedThumbprint) -and
             (-not $Name -or
-                $_.GetNameInfo([Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false) -ieq $Name)
+                $_.GetNameInfo([Security.Cryptography.X509Certificates.X509NameType]::SimpleName,
+                    $false) -ieq $Name)
         } |
         Sort-Object NotAfter -Descending)
 
     return $certificates | Select-Object -First 1
 }
 
-# Resolves the requested signing tool or searches PATH and installed Windows SDK versions; returns null if unavailable.
+# Resolves the requested signing tool or searches PATH and installed Windows SDK versions;
+# returns null if unavailable.
 function Find-SignTool {
     param (
         [string]$RequestedPath
@@ -219,8 +231,9 @@ function Test-BinaryHasSignature {
     return $null -ne $signature.SignerCertificate
 }
 
-# Signs a staged copy with SHA-256, retries without timestamping if that request fails, and verifies the resulting
-# signature. Throws on signing or verification failure so an invalid package cannot be reported as successfully signed.
+# Signs a staged copy with SHA-256, retries without timestamping if that request fails, and verifies
+# the resulting signature. Throws on signing or verification failure so an invalid package cannot be
+# reported as successfully signed.
 function Sign-Binary {
     param (
         [Parameter(Mandatory)][string]$Path,
@@ -272,7 +285,8 @@ function Confirm-BinarySignature {
     Write-Host "Signature verified successfully: $Path"
 }
 
-# Searches PATH and standard installation directories for 7-Zip; returns null to select ZIP creation through .NET.
+# Searches PATH and standard installation directories for 7-Zip; returns null to select ZIP creation
+# through .NET.
 function Find-SevenZip {
     $command = Get-Command 7z.exe -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($command) {
@@ -309,7 +323,8 @@ if ($SignerName -or $CertificateThumbprint) {
         "unsigned binaries will remain unsigned.")
 }
 
-$staging = Join-Path ([IO.Path]::GetTempPath()) ($solutionName + "-package-" + [guid]::NewGuid().ToString("N"))
+$staging = Join-Path ([IO.Path]::GetTempPath()) `
+    ($solutionName + "-package-" + [guid]::NewGuid().ToString("N"))
 $unsignedBinaries = [Collections.Generic.List[string]]::new()
 
 try {
@@ -333,7 +348,8 @@ try {
             $hasExistingSignature = Test-BinaryHasSignature -Path $stagedFile
             $hasValidSignature = Test-BinarySignature -Path $stagedFile -ToolPath $resolvedSignTool
             if ($hasExistingSignature) {
-                Write-Host "Existing signature detected; it will not be replaced: $([IO.Path]::GetFileName($file))"
+                Write-Host `
+                    "Existing signature detected; it will not be replaced: $([IO.Path]::GetFileName($file))"
                 if (-not $hasValidSignature) {
                     throw "The existing Authenticode signature could not be verified " +
                         "and will not be replaced: '$stagedFile'."

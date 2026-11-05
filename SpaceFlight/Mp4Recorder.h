@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.3.0.0
  */
 
 #pragma once
@@ -68,8 +68,10 @@ struct RecordingOptions {
 
 /// Direct3D device interface used to create recording resources.
 struct ID3D11Device;
+
 /// Direct3D context interface used to copy and convert captured frames.
 struct ID3D11DeviceContext;
+
 /// Direct3D texture interface representing a captured render target.
 struct ID3D11Texture2D;
 
@@ -90,7 +92,8 @@ public:
     Mp4Recorder& operator=(const Mp4Recorder&) = delete;
 
     /// Opens an output file and prepares resources for the supplied GPU device.
-    bool Start(ID3D11Device* device, const wchar_t* filePath, UINT width, UINT height, const RecordingFormat& format);
+    bool Start(ID3D11Device* device, const wchar_t* filePath, UINT width, UINT height,
+        const RecordingFormat& format);
 
     /// Tests the complete recording pipeline with one frame in a disposable temporary file.
     static HRESULT CheckSupport(ID3D11Device* device, ID3D11DeviceContext* context, ID3D11Texture2D* source,

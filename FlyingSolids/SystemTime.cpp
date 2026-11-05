@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.0.0.0
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
@@ -39,7 +39,8 @@ constexpr long long WINDOWS_EPOCH = 0x19DB1DED53E8000LL;
 static GetSystemTimeFunction ResolveSystemTimeFunction() {
     const HMODULE kernel = GetModuleHandleW(L"kernel32.dll");
     if (kernel) {
-        return reinterpret_cast<GetSystemTimeFunction>(GetProcAddress(kernel, "GetSystemTimePreciseAsFileTime"));
+        return reinterpret_cast<GetSystemTimeFunction>(GetProcAddress(kernel,
+            "GetSystemTimePreciseAsFileTime"));
     }
     return nullptr;
 }
@@ -79,8 +80,8 @@ extern "C" long long __cdecl _Xtime_get_ticks() noexcept {
     } else {
         GetSystemTimeAsFileTime(&fileTime);
     }
-    return (static_cast<long long>(fileTime.dwHighDateTime) << 32) + static_cast<long long>(fileTime.dwLowDateTime)
-        - WINDOWS_EPOCH;
+    return (static_cast<long long>(fileTime.dwHighDateTime) << 32)
+        + static_cast<long long>(fileTime.dwLowDateTime) - WINDOWS_EPOCH;
 }
 
 /// Returns the current UTC time in the representation expected by the MSVC runtime.
@@ -92,10 +93,11 @@ extern "C" void __cdecl _Timespec64_get_sys(_timespec64* value) noexcept {
 }
 
 /// Converts a difference between two absolute times to rounded-up milliseconds.
-extern "C" long __cdecl _Xtime_diff_to_millis2(const _timespec64* target, const _timespec64* current) noexcept {
+extern "C" long __cdecl _Xtime_diff_to_millis2(const _timespec64* target,
+        const _timespec64* current) noexcept {
     const _timespec64 difference = TimespecDifference(*target, *current);
-    return static_cast<long>(difference.tv_sec * 1000
-        + (static_cast<long long>(difference.tv_nsec) + NANOSECONDS_PER_MILLISECOND - 1) / NANOSECONDS_PER_MILLISECOND);
+    return static_cast<long>(difference.tv_sec * 1000 + (static_cast<long long>(difference.tv_nsec)
+        + NANOSECONDS_PER_MILLISECOND - 1) / NANOSECONDS_PER_MILLISECOND);
 }
 
 /// Converts the interval from the current time to an absolute time into milliseconds.

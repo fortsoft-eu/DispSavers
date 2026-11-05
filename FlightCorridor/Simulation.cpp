@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
@@ -79,7 +79,8 @@ std::uint32_t Simulation::CryptographicIndex(std::uint32_t count) {
 float Simulation::CryptographicRandom(float low, float high) {
     constexpr double inverseRange = 1.0 / 4294967296.0;
     const double unit = static_cast<double>(NextCryptographicRandom()) * inverseRange;
-    return static_cast<float>(static_cast<double>(low) + (static_cast<double>(high) - static_cast<double>(low)) * unit);
+    return static_cast<float>(static_cast<double>(low) + (static_cast<double>(high)
+        - static_cast<double>(low)) * unit);
 }
 
 /// Draws independent bounded variations without replacing the original surfaces or palettes.
@@ -118,7 +119,8 @@ void Simulation::UpdateMotionParameters() {
         transitionTo.pathPhases = transitionFrom.pathPhases;
         transitionDuration = CryptographicRandom(45.0f, 90.0f);
     }
-    const float progress = static_cast<float>(std::clamp((elapsed - transitionStart) / transitionDuration, 0.0, 1.0));
+    const float progress =
+        static_cast<float>(std::clamp((elapsed - transitionStart) / transitionDuration, 0.0, 1.0));
     const float amount = progress * progress * progress * (progress * (progress * 6.0f - 15.0f) + 10.0f);
     BlendMotionValues(state.motion.phases, transitionFrom.phases, transitionTo.phases, amount);
     BlendMotionValues(state.motion.waves, transitionFrom.waves, transitionTo.waves, amount);
@@ -143,8 +145,10 @@ static double MotionEase(double progress) {
 }
 
 /// Integrates a local angular velocity without changing orientation when the rotation axis changes.
-static void RotateCamera(std::array<double, 4>& rotation, const std::array<double, 3>& velocity, double seconds) {
-    const double length = std::sqrt(velocity[0] * velocity[0] + velocity[1] * velocity[1] + velocity[2] * velocity[2]);
+static void RotateCamera(std::array<double, 4>& rotation, const std::array<double, 3>& velocity,
+        double seconds) {
+    const double length =
+        std::sqrt(velocity[0] * velocity[0] + velocity[1] * velocity[1] + velocity[2] * velocity[2]);
     if (length == 0.0) {
         return;
     }
@@ -273,7 +277,8 @@ void Simulation::UpdateCameraRotation(double seconds, bool enabled, bool reversa
         const double factor = TumblingSpeedFactor(reversalTime + step * 0.5);
         std::array<double, 3> velocity{};
         for (std::size_t index = 0; index < velocity.size(); index++) {
-            velocity[index] = (tumblingFrom[index] + (tumblingTo[index] - tumblingFrom[index]) * amount) * factor;
+            velocity[index] =
+                (tumblingFrom[index] + (tumblingTo[index] - tumblingFrom[index]) * amount) * factor;
         }
         RotateCamera(cameraOrientation, velocity, step);
         if (cruising) {
@@ -294,8 +299,8 @@ std::array<double, 3> Simulation::CreateCorridorTurn() {
     constexpr float twoPi = 6.28318530717958647692f;
     const double direction = CryptographicRandom(0.0f, twoPi);
     const double curvature = CryptographicIndex(4) == 0 ? 0.0 : CryptographicRandom(0.002f, 0.008f);
-    return {std::cos(direction) * curvature, std::sin(direction) * curvature,
-        CryptographicRandom(-0.035f, 0.035f)};
+    return { std::cos(direction) * curvature, std::sin(direction) * curvature,
+        CryptographicRandom(-0.035f, 0.035f) };
 }
 
 /// Holds each turn after easing into it; the bounded local arc stays regular throughout the visible corridor.
@@ -312,7 +317,8 @@ void Simulation::UpdateCorridorPath(double seconds) {
             continue;
         }
         const double step = std::min({ remaining, 0.05, end - corridorTime });
-        const double amount = MotionEase((corridorTime + step * 0.5 - corridorStart) / (corridorDuration * 0.35));
+        const double amount = MotionEase((corridorTime + step * 0.5 - corridorStart)
+            / (corridorDuration * 0.35));
         const double rollSpeed = corridorFrom[2] + (corridorTo[2] - corridorFrom[2]) * amount;
         corridorRoll = std::remainder(corridorRoll + rollSpeed * step, twoPi);
         corridorTime += step;

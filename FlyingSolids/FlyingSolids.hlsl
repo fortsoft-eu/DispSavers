@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.3.0.0
  */
 
 /// Camera, projection and lighting values shared by all instances in a frame.
@@ -109,7 +109,8 @@ PixelInput VSMain(VertexInput input, uint copyInstance : SV_InstanceID) {
     const uint kind = drawKind;
     float4 placement = objectPositionAndScale[instance];
     float3 rotation = objectRotationAndKind[instance].xyz;
-    const float3 world = Rotate(input.position * placement.w, rotation) + placement.xyz + float3(0.0, 0.0, drawZOffset);
+    const float3 world = Rotate(input.position * placement.w, rotation) + placement.xyz
+        + float3(0.0, 0.0, drawZOffset);
     const float3 relative = world - cameraPosition.xyz;
     const float3 view = float3(dot(relative, cameraRight.xyz), dot(relative, cameraUp.xyz),
         dot(relative, cameraForward.xyz));
@@ -283,7 +284,8 @@ float AccurateDistanceEquation(AccuratePoint position, float radius) {
     const float2 total = AccurateSum(difference.x, y.x);
     precise float error = x.y + z.y + radial.y - radiusSquared.y + difference.y + y.y + total.y;
     const float2 corrected = AccurateSum(total.x, error);
-    precise float displacement = 2.0 * dot(position.value, position.error) + dot(position.error, position.error);
+    precise float displacement = 2.0 * dot(position.value, position.error)
+        + dot(position.error, position.error);
     const float2 result = AccurateSum(corrected.x, displacement);
     return result.x + corrected.y + result.y;
 }
@@ -294,7 +296,8 @@ float CapsuleRayMinimum(AccuratePoint origin, float3 direction, float directionL
     float segmentY = 0.0;
     if (radialLengthSquared > 0.0) {
         const float radialDistance = -dot(origin.value.xz, direction.xz) / radialLengthSquared;
-        segmentY = clamp(origin.value.y + radialDistance * direction.y, -capsuleHalfLength, capsuleHalfLength);
+        segmentY = clamp(origin.value.y + radialDistance * direction.y, -capsuleHalfLength,
+            capsuleHalfLength);
     }
     return (segmentY * direction.y - dot(origin.value, direction)) / directionLengthSquared;
 }
@@ -345,7 +348,8 @@ bool IntersectCapsule(float3 origin, float3 direction, out float nearest, out fl
         const float outer = inside ? boundOffset : max(-boundOffset, -centerDistance);
         float inner = -centerDistance;
         if (!inside) {
-            inner = max(CapsuleRayMinimum(centeredOrigin, direction, directionLengthSquared), -centerDistance);
+            inner = max(CapsuleRayMinimum(centeredOrigin, direction, directionLengthSquared),
+                -centerDistance);
             const AccuratePoint closest = AccurateRayPoint(centeredOrigin, direction, inner);
             const AccuratePoint closestOffset = CapsuleOffset(closest);
             intersects = AccurateDistanceEquation(closestOffset, capsuleRadius) <= 0.0;
@@ -389,6 +393,7 @@ AnalyticPixelOutput PSCapsuleMain(PixelInput input) {
         dot(worldNormal, cameraForward.xyz));
     AnalyticPixelOutput output;
     output.color = ShadeSolid(viewNormal, viewPosition, input.kind);
-    output.depth = farPlane / (farPlane - nearPlane) - nearPlane * farPlane / ((farPlane - nearPlane) * viewPosition.z);
+    output.depth = farPlane / (farPlane - nearPlane)
+        - nearPlane * farPlane / ((farPlane - nearPlane) * viewPosition.z);
     return output;
 }

@@ -21,16 +21,75 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.2.1
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include "Localization.h"
 #include <windows.h>
+#include <array>
+#include <initializer_list>
 
-constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<LocalizedLanguage>{
+/// Builds one language at compile time and rejects missing, duplicate, empty, or invalid text entries.
+static consteval LocalizedLanguage DefineLanguage(AppLanguage language,
+        std::initializer_list<LocalizedText> entries) {
+    if (entries.size() != TXT_COUNT) {
+        throw "Every language must define every TextId exactly once.";
+    }
+    LocalizedLanguage result = { language, {} };
+    for (const LocalizedText& entry : entries) {
+        int id = static_cast<int>(entry.id);
+        if (id < 0 || id >= TXT_COUNT) {
+            throw "Invalid translation TextId.";
+        }
+        if (entry.text == nullptr || entry.text[0] == L'\0') {
+            throw "A translation cannot be null or empty.";
+        }
+        if (result.texts[id] != nullptr) {
+            throw "Duplicate translation TextId.";
+        }
+        result.texts[id] = entry.text;
+    }
+    return result;
+}
+
+/// Indexes complete languages by AppLanguage at compile time, independently of their source order.
+/// Rejects missing, duplicate, or invalid language identifiers before any executable can be produced.
+static consteval std::array<LocalizedLanguage, LANG_COUNT> DefineLocalization(
+        std::initializer_list<LocalizedLanguage> languages) {
+    if (languages.size() != LANG_COUNT) {
+        throw "Every AppLanguage must have a complete translation table.";
+    }
+    std::array<LocalizedLanguage, LANG_COUNT> result = {};
+    std::array<bool, LANG_COUNT> included = {};
+    for (const LocalizedLanguage& language : languages) {
+        int id = static_cast<int>(language.id);
+        if (id < 0 || id >= LANG_COUNT) {
+            throw "Invalid localization AppLanguage.";
+        }
+        if (included[id]) {
+            throw "Duplicate localization AppLanguage.";
+        }
+        for (const wchar_t* text : language.texts) {
+            if (text == nullptr || text[0] == L'\0') {
+                throw "Every language must contain a nonempty translation for every TextId.";
+            }
+        }
+        result[id] = language;
+        included[id] = true;
+    }
+    return result;
+}
+
+constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
     DefineLanguage(LANG_CS, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Spořič Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Nastavení spořiče obrazovky ve Windows nelze otevřít."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Probíhá instalace spořiče…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Probíhá odinstalace spořiče…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Čeština" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — ovládání" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Nastavení FlightCorridor" },
@@ -70,9 +129,9 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Vypnout náhled" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animace je pozastavena." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Blokovat spořič při animaci" },
-        LocalizedText{ TXT_READY_STATUS, L"Připraven." },
+        LocalizedText{ TXT_READY_STATUS, L"Připraven" },
         LocalizedText{ TXT_HELP, L"Nápověda" },
-        LocalizedText{ TXT_ABOUT, L"O aplikaci" },
+        LocalizedText{ TXT_ABOUT, L"O programu" },
         LocalizedText{ TXT_CLOSE, L"Zavřít" },
         LocalizedText{ TXT_SNAPSHOT, L"Snímek…" },
         LocalizedText{ TXT_SNAPSHOT_SAVED, L"Snímek byl uložen." },
@@ -147,7 +206,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
             L"Nastavení se ukládá průběžně. Aplikace běží pouze v jedné instanci. Další spuštění obnoví "
             L"minimalizované ovládací okno a přenese je do popředí. Mezi ovládacími prvky přecházejte "
             L"klávesami Tab a Shift+Tab; podtržené volby lze vyvolat pomocí Alt a příslušného písmene. Esc "
-            L"zavře aktivní nápovědu či okno O aplikaci; v ovládacím okně ukončí aplikaci. Pozastavení a "
+            L"zavře aktivní nápovědu či okno O programu; v ovládacím okně ukončí aplikaci. Pozastavení a "
             L"blokování spořiče platí pro celou aplikaci bez ohledu na označené monitory. Je-li blokování "
             L"zapnuté, brání spuštění spořiče Windows pouze tehdy, když je alespoň na jednom monitoru "
             L"viditelná nepozastavená animace.\r\n\r\nSNÍMKY A ZÁZNAM\r\nSnímek a záznam zachycují první "
@@ -188,13 +247,17 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
             L"otevřeného nastavení. OK nastavení uloží, Storno je zahodí. Celoobrazovkový spořič ukončíte "
             L"klávesou Esc nebo pohybem myši. Mezi ovládacími prvky přecházejte klávesami Tab a Shift+Tab; "
             L"podtržené volby lze vyvolat pomocí Alt a příslušného písmene. Esc v nastavení odpovídá "
-            L"tlačítku Storno; v nápovědě nebo okně O aplikaci zavře pouze toto okno.\r\n\r\nSYSTÉMOVÉ "
+            L"tlačítku Storno; v nápovědě nebo okně O programu zavře pouze toto okno.\r\n\r\nSYSTÉMOVÉ "
             L"POŽADAVKY\r\nPodporovány jsou systémy Windows 7 až Windows 11. Pro spuštění aplikace ve "
             L"Windows Vista SP2 je nutné nainstalovat aktualizace KB971512 a KB2117917. Vykreslování "
             L"vyžaduje Direct3D 11, nikoli jen starší DirectX runtime."
         },
     }),
     DefineLanguage(LANG_EN_US, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windows screen saver…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Unable to open Windows Screen Saver Settings." },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Installing screen saver…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Uninstalling screen saver…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"English (US)" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Controls" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"FlightCorridor Settings" },
@@ -238,7 +301,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Disable preview" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animation is paused." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Prevent screen saver during animation" },
-        LocalizedText{ TXT_READY_STATUS, L"Ready." },
+        LocalizedText{ TXT_READY_STATUS, L"Ready" },
         LocalizedText{ TXT_HELP, L"Help" },
         LocalizedText{ TXT_ABOUT, L"About" },
         LocalizedText{ TXT_CLOSE, L"Close" },
@@ -366,6 +429,10 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_EN_GB, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windows screen saver…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Unable to open Windows Screen Saver Settings." },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Installing screen saver…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Uninstalling screen saver…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"English (UK)" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Controls" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"FlightCorridor Settings" },
@@ -409,7 +476,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Disable preview" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animation is paused." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Prevent screen saver during animation" },
-        LocalizedText{ TXT_READY_STATUS, L"Ready." },
+        LocalizedText{ TXT_READY_STATUS, L"Ready" },
         LocalizedText{ TXT_HELP, L"Help" },
         LocalizedText{ TXT_ABOUT, L"About" },
         LocalizedText{ TXT_CLOSE, L"Close" },
@@ -537,6 +604,10 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_EN_AU, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windows screen saver…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Unable to open Windows Screen Saver Settings." },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Installing screen saver…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Uninstalling screen saver…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"English (Australia)" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Controls" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"FlightCorridor Settings" },
@@ -580,7 +651,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Disable preview" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animation is paused." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Prevent screen saver during animation" },
-        LocalizedText{ TXT_READY_STATUS, L"Ready." },
+        LocalizedText{ TXT_READY_STATUS, L"Ready" },
         LocalizedText{ TXT_HELP, L"Help" },
         LocalizedText{ TXT_ABOUT, L"About" },
         LocalizedText{ TXT_CLOSE, L"Close" },
@@ -708,6 +779,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_DE, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windows-Bildschirmschoner…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Die Windows-Bildschirmschonereinstellungen konnten nicht geöffnet werden."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Bildschirmschoner wird installiert…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Bildschirmschoner wird deinstalliert…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Deutsch" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Steuerung" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"FlightCorridor-Einstellungen" },
@@ -755,7 +832,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Vorschau ausschalten" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animation ist angehalten." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Bildschirmschoner bei Animation sperren" },
-        LocalizedText{ TXT_READY_STATUS, L"Bereit." },
+        LocalizedText{ TXT_READY_STATUS, L"Bereit" },
         LocalizedText{ TXT_HELP, L"Hilfe" },
         LocalizedText{ TXT_ABOUT, L"Info" },
         LocalizedText{ TXT_CLOSE, L"Schließen" },
@@ -892,6 +969,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_FR, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Écran de veille Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Impossible d’ouvrir les paramètres de l’écran de veille Windows."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Installation de l’économiseur d’écran en cours…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Désinstallation de l’économiseur d’écran en cours…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Français" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Commandes" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Paramètres de FlightCorridor" },
@@ -937,7 +1020,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Désactiver l’aperçu" },
         LocalizedText{ TXT_PAUSED_STATUS, L"L’animation est en pause." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Bloquer l’écran de veille pendant l’animation" },
-        LocalizedText{ TXT_READY_STATUS, L"Prêt." },
+        LocalizedText{ TXT_READY_STATUS, L"Prêt" },
         LocalizedText{ TXT_HELP, L"Aide" },
         LocalizedText{ TXT_ABOUT, L"À propos" },
         LocalizedText{ TXT_CLOSE, L"Fermer" },
@@ -1077,6 +1160,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_ES, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Salvapantallas de Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"No se puede abrir la configuración del salvapantallas de Windows."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Instalando el salvapantallas…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Desinstalando el salvapantallas…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Español" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Control" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Configuración de FlightCorridor" },
@@ -1122,7 +1211,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Desactivar vista previa" },
         LocalizedText{ TXT_PAUSED_STATUS, L"La animación está en pausa." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Bloquear salvapantallas durante la animación" },
-        LocalizedText{ TXT_READY_STATUS, L"Listo." },
+        LocalizedText{ TXT_READY_STATUS, L"Listo" },
         LocalizedText{ TXT_HELP, L"Ayuda" },
         LocalizedText{ TXT_ABOUT, L"Acerca de" },
         LocalizedText{ TXT_CLOSE, L"Cerrar" },
@@ -1258,6 +1347,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_IT, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Salvaschermo di Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Impossibile aprire le impostazioni del salvaschermo di Windows."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Installazione del salvaschermo in corso…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Disinstallazione del salvaschermo in corso…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Italiano" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Controlli" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Impostazioni di FlightCorridor" },
@@ -1301,7 +1396,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Disattiva anteprima" },
         LocalizedText{ TXT_PAUSED_STATUS, L"L’animazione è in pausa." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Blocca salvaschermo durante l’animazione" },
-        LocalizedText{ TXT_READY_STATUS, L"Pronto." },
+        LocalizedText{ TXT_READY_STATUS, L"Pronto" },
         LocalizedText{ TXT_HELP, L"Guida" },
         LocalizedText{ TXT_ABOUT, L"Informazioni" },
         LocalizedText{ TXT_CLOSE, L"Chiudi" },
@@ -1440,6 +1535,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_PT, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Proteção de ecrã do Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Não foi possível abrir as definições da proteção de ecrã do Windows."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"A instalar a proteção de ecrã…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"A desinstalar a proteção de ecrã…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Português" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Controlo" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Definições do FlightCorridor" },
@@ -1483,7 +1584,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Desativar pré-visualização" },
         LocalizedText{ TXT_PAUSED_STATUS, L"A animação está em pausa." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Bloquear proteção de ecrã durante a animação" },
-        LocalizedText{ TXT_READY_STATUS, L"Pronto." },
+        LocalizedText{ TXT_READY_STATUS, L"Pronto" },
         LocalizedText{ TXT_HELP, L"Ajuda" },
         LocalizedText{ TXT_ABOUT, L"Acerca de" },
         LocalizedText{ TXT_CLOSE, L"Fechar" },
@@ -1616,6 +1717,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_PL, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Wygaszacz ekranu Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Nie można otworzyć ustawień wygaszacza ekranu systemu Windows."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Trwa instalacja wygaszacza ekranu…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Trwa odinstalowywanie wygaszacza ekranu…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Polski" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Sterowanie" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Ustawienia FlightCorridor" },
@@ -1655,7 +1762,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Wyłącz podgląd" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animacja jest wstrzymana." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Blokuj wygaszacz podczas animacji" },
-        LocalizedText{ TXT_READY_STATUS, L"Gotowy." },
+        LocalizedText{ TXT_READY_STATUS, L"Gotowy" },
         LocalizedText{ TXT_HELP, L"Pomoc" },
         LocalizedText{ TXT_ABOUT, L"O programie" },
         LocalizedText{ TXT_CLOSE, L"Zamknij" },
@@ -1785,6 +1892,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_SK, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Šetrič Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Nastavenie šetriča obrazovky vo Windowse sa nedá otvoriť."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Prebieha inštalácia šetriča…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Prebieha odinštalácia šetriča…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Slovenčina" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Ovládanie" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Nastavenia FlightCorridor" },
@@ -1826,9 +1939,9 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Vypnúť náhľad" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animácia je pozastavená." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Blokovať šetrič pri animácii" },
-        LocalizedText{ TXT_READY_STATUS, L"Pripravený." },
+        LocalizedText{ TXT_READY_STATUS, L"Pripravený" },
         LocalizedText{ TXT_HELP, L"Pomoc" },
-        LocalizedText{ TXT_ABOUT, L"O aplikácii" },
+        LocalizedText{ TXT_ABOUT, L"O programe" },
         LocalizedText{ TXT_CLOSE, L"Zavrieť" },
         LocalizedText{ TXT_SNAPSHOT, L"Snímka…" },
         LocalizedText{ TXT_SNAPSHOT_SAVED, L"Snímka bola uložená." },
@@ -1904,7 +2017,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
             L"beží iba v jednej inštancii. Ďalšie spustenie obnoví minimalizované ovládacie okno a prenesie "
             L"ho do popredia. Medzi ovládacími prvkami prechádzajte klávesmi Tab a Shift+Tab; podčiarknuté "
             L"voľby vyvoláte pomocou Alt a príslušného písmena. Esc zavrie aktívne okno Pomoc alebo O "
-            L"aplikácii; v ovládacom okne ukončí aplikáciu. Pozastavenie a blokovanie šetriča platia pre "
+            L"programe; v ovládacom okne ukončí aplikáciu. Pozastavenie a blokovanie šetriča platia pre "
             L"celú aplikáciu bez ohľadu na označené monitory. Ak je blokovanie zapnuté, bráni spusteniu "
             L"šetriča Windows iba vtedy, keď je aspoň na jednom monitore viditeľná nepozastavená animácia.\r"
             L"\n\r\nSNÍMKY A ZÁZNAM\r\nSnímky a záznamy zachytávajú prvý aktívny animačný monitor, nie "
@@ -1946,13 +2059,19 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
             L"uloží nastavenia a Zrušiť ich zahodí. Celoobrazovkový šetrič ukončí Esc alebo pohyb myši. "
             L"Medzi ovládacími prvkami prechádzajte klávesmi Tab a Shift+Tab; podčiarknuté voľby vyvoláte "
             L"pomocou Alt a príslušného písmena. Esc v nastaveniach zodpovedá tlačidlu Zrušiť; v okne Pomoc "
-            L"alebo O aplikácii zavrie iba toto okno.\r\n\r\nSYSTÉMOVÉ POŽIADAVKY\r\nPodporované sú systémy "
+            L"alebo O programe zavrie iba toto okno.\r\n\r\nSYSTÉMOVÉ POŽIADAVKY\r\nPodporované sú systémy "
             L"Windows 7 až Windows 11. Na spustenie aplikácie v systéme Windows Vista SP2 je potrebné "
             L"nainštalovať aktualizácie KB971512 a KB2117917. Vykresľovanie vyžaduje Direct3D 11, nie iba "
             L"starší DirectX runtime."
         },
     }),
     DefineLanguage(LANG_DA, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windows-pauseskærm…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Indstillingerne for Windows-pauseskærmen kunne ikke åbnes."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Installerer pauseskærm…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Afinstallerer pauseskærm…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Dansk" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Styring" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Indstillinger for FlightCorridor" },
@@ -1996,7 +2115,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Deaktivér forhåndsvisning" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animationen er sat på pause." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Blokér pauseskærm under animation" },
-        LocalizedText{ TXT_READY_STATUS, L"Klar." },
+        LocalizedText{ TXT_READY_STATUS, L"Klar" },
         LocalizedText{ TXT_HELP, L"Hjælp" },
         LocalizedText{ TXT_ABOUT, L"Om" },
         LocalizedText{ TXT_CLOSE, L"Luk" },
@@ -2124,6 +2243,10 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_FI, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windowsin näytönsäästäjä…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Windowsin näytönsäästäjän asetuksia ei voi avata." },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Näytönsäästäjää asennetaan…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Näytönsäästäjää poistetaan…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Suomi" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Ohjaus" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"FlightCorridor-asetukset" },
@@ -2165,7 +2288,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Poista esikatselu käytöstä" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animaatio on keskeytetty." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Estä näytönsäästäjä animaation aikana" },
-        LocalizedText{ TXT_READY_STATUS, L"Valmis." },
+        LocalizedText{ TXT_READY_STATUS, L"Valmis" },
         LocalizedText{ TXT_HELP, L"Ohje" },
         LocalizedText{ TXT_ABOUT, L"Tietoja" },
         LocalizedText{ TXT_CLOSE, L"Sulje" },
@@ -2297,6 +2420,10 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_IS, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Skjáhvíla Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Ekki tókst að opna stillingar skjáhvílu Windows." },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Verið er að setja upp skjáhvílu…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Verið er að fjarlægja skjáhvílu…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Íslenska" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Stjórnun" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Stillingar FlightCorridor" },
@@ -2340,7 +2467,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Slökkva á forskoðun" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Hlé hefur verið gert á hreyfimyndinni." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Hindra skjáhvílu meðan hreyfimynd er í gangi" },
-        LocalizedText{ TXT_READY_STATUS, L"Tilbúið." },
+        LocalizedText{ TXT_READY_STATUS, L"Tilbúið" },
         LocalizedText{ TXT_HELP, L"Hjálp" },
         LocalizedText{ TXT_ABOUT, L"Um" },
         LocalizedText{ TXT_CLOSE, L"Loka" },
@@ -2462,6 +2589,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_NB, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windows-skjermsparer…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Kan ikke åpne innstillingene for Windows-skjermspareren."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Installerer skjermsparer …" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Avinstallerer skjermsparer …" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Norsk (bokmål)" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Kontroll" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Innstillinger for FlightCorridor" },
@@ -2505,7 +2638,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Slå av forhåndsvisning" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animasjonen er satt på pause." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Hindre skjermsparer under animasjon" },
-        LocalizedText{ TXT_READY_STATUS, L"Klar." },
+        LocalizedText{ TXT_READY_STATUS, L"Klar" },
         LocalizedText{ TXT_HELP, L"Hjelp" },
         LocalizedText{ TXT_ABOUT, L"Om" },
         LocalizedText{ TXT_CLOSE, L"Lukk" },
@@ -2634,6 +2767,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_SV, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windows-skärmsläckare…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Det går inte att öppna inställningarna för Windows-skärmsläckaren."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Installerar skärmsläckare…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Avinstallerar skärmsläckare…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Svenska" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Styrning" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Inställningar för FlightCorridor" },
@@ -2677,7 +2816,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Inaktivera förhandsvisning" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animeringen är pausad." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Blockera skärmsläckare under animering" },
-        LocalizedText{ TXT_READY_STATUS, L"Redo." },
+        LocalizedText{ TXT_READY_STATUS, L"Redo" },
         LocalizedText{ TXT_HELP, L"Hjälp" },
         LocalizedText{ TXT_ABOUT, L"Om" },
         LocalizedText{ TXT_CLOSE, L"Stäng" },
@@ -2806,6 +2945,10 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_TR, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windows ekran koruyucusu…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Windows ekran koruyucusu ayarları açılamadı." },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Ekran koruyucu yükleniyor…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Ekran koruyucu kaldırılıyor…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Türkçe" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — Denetim" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"FlightCorridor Ayarları" },
@@ -2845,7 +2988,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Önizlemeyi kapat" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animasyon duraklatıldı." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Animasyon sırasında ekran koruyucuyu engelle" },
-        LocalizedText{ TXT_READY_STATUS, L"Hazır." },
+        LocalizedText{ TXT_READY_STATUS, L"Hazır" },
         LocalizedText{ TXT_HELP, L"Yardım" },
         LocalizedText{ TXT_ABOUT, L"Hakkında" },
         LocalizedText{ TXT_CLOSE, L"Kapat" },
@@ -2975,6 +3118,10 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_ET, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windowsi ekraanisäästja…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Windowsi ekraanisäästja sätteid ei saa avada." },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Ekraanisäästja paigaldamine…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Ekraanisäästja eemaldamine…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Eesti" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — juhtimine" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"FlightCorridor sätted" },
@@ -3016,7 +3163,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Keela eelvaade" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animatsioon on peatatud." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Tõkesta animatsiooni ajal ekraanisäästja" },
-        LocalizedText{ TXT_READY_STATUS, L"Valmis." },
+        LocalizedText{ TXT_READY_STATUS, L"Valmis" },
         LocalizedText{ TXT_HELP, L"Spikker" },
         LocalizedText{ TXT_ABOUT, L"Teave" },
         LocalizedText{ TXT_CLOSE, L"Sule" },
@@ -3132,6 +3279,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_GA, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Spárálaí scáileáin Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Ní féidir socruithe spárálaí scáileáin Windows a oscailt."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Spárálaí scáileáin á shuiteáil…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Spárálaí scáileáin á dhíshuiteáil…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Gaeilge" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — rialuithe" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Socruithe FlightCorridor" },
@@ -3179,7 +3332,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Díchumasaigh réamhamharc" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Tá an bheochan ar sos." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Cosc ar spárálaí scáileáin le linn beochana" },
-        LocalizedText{ TXT_READY_STATUS, L"Réidh." },
+        LocalizedText{ TXT_READY_STATUS, L"Réidh" },
         LocalizedText{ TXT_HELP, L"Cabhair" },
         LocalizedText{ TXT_ABOUT, L"Maidir leis" },
         LocalizedText{ TXT_CLOSE, L"Dún" },
@@ -3306,6 +3459,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_LT, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"„Windows“ ekrano užsklanda…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Nepavyko atverti „Windows“ ekrano užsklandos parametrų."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Diegiama ekrano užsklanda…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Šalinama ekrano užsklanda…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Lietuvių" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — valdymas" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"FlightCorridor nuostatos" },
@@ -3347,7 +3506,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Išjungti peržiūrą" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animacija pristabdyta." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Animacijos metu neleisti ekrano užsklandos" },
-        LocalizedText{ TXT_READY_STATUS, L"Parengta." },
+        LocalizedText{ TXT_READY_STATUS, L"Parengta" },
         LocalizedText{ TXT_HELP, L"Žinynas" },
         LocalizedText{ TXT_ABOUT, L"Apie" },
         LocalizedText{ TXT_CLOSE, L"Uždaryti" },
@@ -3466,6 +3625,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_LV, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windows ekrānsaudzētājs…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Nevar atvērt Windows ekrānsaudzētāja iestatījumus."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Notiek ekrānsaudzētāja instalēšana…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Notiek ekrānsaudzētāja atinstalēšana…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Latviešu" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — vadība" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"FlightCorridor iestatījumi" },
@@ -3507,7 +3672,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Izslēgt priekšskatījumu" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animācija ir pauzēta." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Animācijas laikā bloķēt ekrānsaudzētāju" },
-        LocalizedText{ TXT_READY_STATUS, L"Gatavs." },
+        LocalizedText{ TXT_READY_STATUS, L"Gatavs" },
         LocalizedText{ TXT_HELP, L"Palīdzība" },
         LocalizedText{ TXT_ABOUT, L"Par programmu" },
         LocalizedText{ TXT_CLOSE, L"Aizvērt" },
@@ -3622,6 +3787,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_HU, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windows-képernyőkímélő…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Nem sikerült megnyitni a Windows képernyőkímélő beállításait."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"A képernyőkímélő telepítése folyamatban…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"A képernyőkímélő eltávolítása folyamatban…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Magyar" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — vezérlés" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"FlightCorridor beállításai" },
@@ -3665,7 +3836,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Előnézet kikapcsolása" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Az animáció szünetel." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Képernyőkímélő tiltása animáció közben" },
-        LocalizedText{ TXT_READY_STATUS, L"Kész." },
+        LocalizedText{ TXT_READY_STATUS, L"Kész" },
         LocalizedText{ TXT_HELP, L"Súgó" },
         LocalizedText{ TXT_ABOUT, L"Névjegy" },
         LocalizedText{ TXT_CLOSE, L"Bezárás" },
@@ -3786,6 +3957,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_MT, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Screensaver tal-Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Ma setgħux jinfetħu s-settings tal-iscreensaver tal-Windows."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"L-iscreen saver qed jiġi installat…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"L-iscreen saver qed jitneħħa…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Malti" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — kontrolli" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Issettjar ta’ FlightCorridor" },
@@ -3829,7 +4006,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Iddiżattiva l-previżjoni" },
         LocalizedText{ TXT_PAUSED_STATUS, L"L-animazzjoni tinsab sospiża." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Imblokka l-iscreen saver waqt l-animazzjoni" },
-        LocalizedText{ TXT_READY_STATUS, L"Lest." },
+        LocalizedText{ TXT_READY_STATUS, L"Lest" },
         LocalizedText{ TXT_HELP, L"Għajnuna" },
         LocalizedText{ TXT_ABOUT, L"Dwar" },
         LocalizedText{ TXT_CLOSE, L"Agħlaq" },
@@ -3952,6 +4129,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_NL, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windows-schermbeveiliging…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"De instellingen voor de Windows-schermbeveiliging kunnen niet worden geopend."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Schermbeveiliging wordt geïnstalleerd…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Schermbeveiliging wordt verwijderd…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Nederlands" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — bediening" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Instellingen van FlightCorridor" },
@@ -3995,7 +4178,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Voorbeeld uitschakelen" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animatie is gepauzeerd." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Schermbeveiliging blokkeren tijdens animatie" },
-        LocalizedText{ TXT_READY_STATUS, L"Gereed." },
+        LocalizedText{ TXT_READY_STATUS, L"Gereed" },
         LocalizedText{ TXT_HELP, L"Help" },
         LocalizedText{ TXT_ABOUT, L"Info" },
         LocalizedText{ TXT_CLOSE, L"Sluiten" },
@@ -4119,6 +4302,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_RO, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Economizor de ecran Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Nu se pot deschide setările economizorului de ecran Windows."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Se instalează economizorul de ecran…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Se dezinstalează economizorul de ecran…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Română" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — comenzi" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Setări FlightCorridor" },
@@ -4160,7 +4349,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Dezactivare previzualizare" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animația este în pauză." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Blocare economizor în timpul animației" },
-        LocalizedText{ TXT_READY_STATUS, L"Pregătit." },
+        LocalizedText{ TXT_READY_STATUS, L"Pregătit" },
         LocalizedText{ TXT_HELP, L"Ajutor" },
         LocalizedText{ TXT_ABOUT, L"Despre" },
         LocalizedText{ TXT_CLOSE, L"Închidere" },
@@ -4279,6 +4468,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_EL, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Προφύλαξη οθόνης Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Δεν είναι δυνατό το άνοιγμα των ρυθμίσεων προφύλαξης οθόνης των Windows."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Εγκατάσταση της προφύλαξης οθόνης σε εξέλιξη…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Κατάργηση της προφύλαξης οθόνης σε εξέλιξη…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Ελληνικά" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — χειρισμός" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Ρυθμίσεις FlightCorridor" },
@@ -4324,7 +4519,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Απενεργοποίηση προεπισκόπησης" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Η κίνηση έχει παύσει." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Αναστολή προφύλαξης οθόνης κατά την κίνηση" },
-        LocalizedText{ TXT_READY_STATUS, L"Έτοιμο." },
+        LocalizedText{ TXT_READY_STATUS, L"Έτοιμο" },
         LocalizedText{ TXT_HELP, L"Βοήθεια" },
         LocalizedText{ TXT_ABOUT, L"Πληροφορίες" },
         LocalizedText{ TXT_CLOSE, L"Κλείσιμο" },
@@ -4447,6 +4642,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_BS, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Čuvar ekrana u Windowsu…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Nije moguće otvoriti postavke čuvara ekrana u Windowsu."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Instalacija čuvara ekrana je u toku…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Deinstalacija čuvara ekrana je u toku…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Bosanski" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — kontrole" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Postavke programa FlightCorridor" },
@@ -4492,7 +4693,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Isključi pregled" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animacija je pauzirana." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Spriječi čuvar ekrana tokom animacije" },
-        LocalizedText{ TXT_READY_STATUS, L"Spreman." },
+        LocalizedText{ TXT_READY_STATUS, L"Spreman" },
         LocalizedText{ TXT_HELP, L"Pomoć" },
         LocalizedText{ TXT_ABOUT, L"O programu" },
         LocalizedText{ TXT_CLOSE, L"Zatvori" },
@@ -4605,6 +4806,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_HR, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Čuvar zaslona u Windowsu…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Nije moguće otvoriti postavke čuvara zaslona u Windowsu."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Instalacija čuvara zaslona je u tijeku…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Deinstalacija čuvara zaslona je u tijeku…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Hrvatski" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — upravljanje" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Postavke programa FlightCorridor" },
@@ -4648,7 +4855,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Isključi pretpregled" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animacija je pauzirana." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Spriječi čuvar zaslona tijekom animacije" },
-        LocalizedText{ TXT_READY_STATUS, L"Spreman." },
+        LocalizedText{ TXT_READY_STATUS, L"Spreman" },
         LocalizedText{ TXT_HELP, L"Pomoć" },
         LocalizedText{ TXT_ABOUT, L"O programu" },
         LocalizedText{ TXT_CLOSE, L"Zatvori" },
@@ -4764,6 +4971,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_SL, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Ohranjevalnik zaslona Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Nastavitev ohranjevalnika zaslona Windows ni mogoče odpreti."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Poteka namestitev ohranjevalnika zaslona …" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Poteka odstranjevanje ohranjevalnika zaslona …" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Slovenščina" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — upravljanje" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Nastavitve FlightCorridor" },
@@ -4805,7 +5018,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Izklopi predogled" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animacija je začasno ustavljena." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Prepreči ohranjevalnik med animacijo" },
-        LocalizedText{ TXT_READY_STATUS, L"Pripravljen." },
+        LocalizedText{ TXT_READY_STATUS, L"Pripravljen" },
         LocalizedText{ TXT_HELP, L"Pomoč" },
         LocalizedText{ TXT_ABOUT, L"O programu" },
         LocalizedText{ TXT_CLOSE, L"Zapri" },
@@ -4920,6 +5133,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_CNR, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Čuvar ekrana u Windowsu…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Nije moguće otvoriti podešavanja čuvara ekrana u Windowsu."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Instalacija čuvara ekrana je u toku…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Deinstalacija čuvara ekrana je u toku…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Crnogorski" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — kontrole" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Podešavanja programa FlightCorridor" },
@@ -4963,7 +5182,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Isključi pregled" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Animacija je pauzirana." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Spriječi čuvar ekrana tokom animacije" },
-        LocalizedText{ TXT_READY_STATUS, L"Spreman." },
+        LocalizedText{ TXT_READY_STATUS, L"Spreman" },
         LocalizedText{ TXT_HELP, L"Pomoć" },
         LocalizedText{ TXT_ABOUT, L"O programu" },
         LocalizedText{ TXT_CLOSE, L"Zatvori" },
@@ -5077,6 +5296,10 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_BE, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Застаўка Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Не ўдалося адкрыць параметры застаўкі Windows." },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Ідзе ўсталяванне застаўкі…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Ідзе выдаленне застаўкі…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Беларуская" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — кіраванне" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Налады FlightCorridor" },
@@ -5116,7 +5339,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Выключыць перадпрагляд" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Анімацыя прыпынена." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Блакаваць застаўку падчас анімацыі" },
-        LocalizedText{ TXT_READY_STATUS, L"Гатовы." },
+        LocalizedText{ TXT_READY_STATUS, L"Гатовы" },
         LocalizedText{ TXT_HELP, L"Даведка" },
         LocalizedText{ TXT_ABOUT, L"Пра праграму" },
         LocalizedText{ TXT_CLOSE, L"Закрыць" },
@@ -5229,6 +5452,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_BG, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Скрийнсейвър на Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Настройките на скрийнсейвъра на Windows не могат да се отворят."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Инсталира се скрийнсейвърът…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Деинсталира се скрийнсейвърът…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Български" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — управление" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Настройки на FlightCorridor" },
@@ -5268,7 +5497,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Изключване на прегледа" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Анимацията е на пауза." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Блокиране на скрийнсейвъра при анимация" },
-        LocalizedText{ TXT_READY_STATUS, L"Готов." },
+        LocalizedText{ TXT_READY_STATUS, L"Готов" },
         LocalizedText{ TXT_HELP, L"Помощ" },
         LocalizedText{ TXT_ABOUT, L"За програмата" },
         LocalizedText{ TXT_CLOSE, L"Затвори" },
@@ -5383,6 +5612,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_MK, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Заштитник на екран Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Не може да се отворат поставките за заштитникот на екран на Windows."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Во тек е инсталација на чуварот на екранот…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Во тек е деинсталација на чуварот на екранот…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Македонски" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — контроли" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Поставки за FlightCorridor" },
@@ -5430,7 +5665,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Исклучи преглед" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Анимацијата е паузирана." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Блокирај го чуварот за време на анимацијата" },
-        LocalizedText{ TXT_READY_STATUS, L"Подготвен." },
+        LocalizedText{ TXT_READY_STATUS, L"Подготвен" },
         LocalizedText{ TXT_HELP, L"Помош" },
         LocalizedText{ TXT_ABOUT, L"За програмата" },
         LocalizedText{ TXT_CLOSE, L"Затвори" },
@@ -5547,6 +5782,12 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_SR, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Чувар екрана у Windows-у…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED,
+            L"Није могуће отворити подешавања чувара екрана у Windows-у."
+        },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Инсталација чувара екрана је у току…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Деинсталација чувара екрана је у току…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Српски" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — контроле" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Подешавања програма FlightCorridor" },
@@ -5590,7 +5831,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Искључи преглед" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Анимација је паузирана." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Спречи чувар екрана током анимације" },
-        LocalizedText{ TXT_READY_STATUS, L"Спреман." },
+        LocalizedText{ TXT_READY_STATUS, L"Спреман" },
         LocalizedText{ TXT_HELP, L"Помоћ" },
         LocalizedText{ TXT_ABOUT, L"О програму" },
         LocalizedText{ TXT_CLOSE, L"Затвори" },
@@ -5702,6 +5943,10 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_UK, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Заставка Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Не вдалося відкрити параметри заставки Windows." },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Триває встановлення заставки…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Триває видалення заставки…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Українська" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — керування" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Налаштування FlightCorridor" },
@@ -5743,7 +5988,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Вимкнути попередній перегляд" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Анімацію призупинено." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Блокувати заставку під час анімації" },
-        LocalizedText{ TXT_READY_STATUS, L"Готовий." },
+        LocalizedText{ TXT_READY_STATUS, L"Готовий" },
         LocalizedText{ TXT_HELP, L"Довідка" },
         LocalizedText{ TXT_ABOUT, L"Про програму" },
         LocalizedText{ TXT_CLOSE, L"Закрити" },
@@ -5857,6 +6102,10 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         },
     }),
     DefineLanguage(LANG_RU, std::initializer_list<LocalizedText>{
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Заставка Windows…" },
+        LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Не удалось открыть параметры заставки Windows." },
+        LocalizedText{ TXT_INSTALLING_SCREEN_SAVER, L"Выполняется установка заставки…" },
+        LocalizedText{ TXT_UNINSTALLING_SCREEN_SAVER, L"Выполняется удаление заставки…" },
         LocalizedText{ TXT_LANGUAGE_NAME, L"Русский" },
         LocalizedText{ TXT_CONTROL_TITLE, L"FlightCorridor — управление" },
         LocalizedText{ TXT_SETTINGS_TITLE, L"Настройки FlightCorridor" },
@@ -5898,7 +6147,7 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
         LocalizedText{ TXT_DISABLE_PREVIEW, L"Выключить предпросмотр" },
         LocalizedText{ TXT_PAUSED_STATUS, L"Анимация приостановлена." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Блокировать заставку во время анимации" },
-        LocalizedText{ TXT_READY_STATUS, L"Готов." },
+        LocalizedText{ TXT_READY_STATUS, L"Готов" },
         LocalizedText{ TXT_HELP, L"Справка" },
         LocalizedText{ TXT_ABOUT, L"О программе" },
         LocalizedText{ TXT_CLOSE, L"Закрыть" },
@@ -6014,7 +6263,10 @@ constexpr auto localizedLanguages = DefineLocalization(std::initializer_list<Loc
             L"SP2 необходимо установить обновления KB971512 и KB2117917. Нужна поддержка Direct3D 11."
         },
     }),
-});
+};
+
+constexpr std::array<LocalizedLanguage, LANG_COUNT> localizedLanguages =
+    DefineLocalization(languageDefinitions);
 
 constexpr std::array<const wchar_t*, 3> RECORDING_RESOLUTION_TEXTS = {
     L"1920 × 1080 (16:9)",

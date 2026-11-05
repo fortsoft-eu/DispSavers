@@ -21,39 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.1
+ * Last modified for version 1.3.0.0
  */
 
 #pragma once
 
-#include <array>
-#include <cstdint>
+#include <windows.h>
+#include <vector>
 
-/// The two flight effects in display order.
-enum class EffectKind : std::uint32_t {
-    Corridor,
-    Funnel,
-    Count
+/// Physical display bounds paired with their rectangle in the shared logical world.
+struct MonitorViewport {
+    RECT physical;
+    RECT logical;
 };
 
-inline constexpr std::size_t EFFECT_COUNT = static_cast<std::size_t>(EffectKind::Count);
-inline constexpr std::uint32_t ALL_EFFECT_MASK = (1U << EFFECT_COUNT) - 1U;
+/// Maps selected monitor rectangles into one world while retaining holes that cannot be collapsed.
+std::vector<MonitorViewport> BuildMonitorLayout(const std::vector<RECT>& bounds, bool compact);
 
-/// Extended wire-grid segment counts retain the original interior sampling density.
-inline constexpr unsigned FLIGHT_WIRE_ROWS = 116;
-inline constexpr std::array<unsigned, EFFECT_COUNT> SEGMENT_COUNTS{
-    4 * (25 * FLIGHT_WIRE_ROWS + 24 * (FLIGHT_WIRE_ROWS + 1)),
-    40 * (2 * FLIGHT_WIRE_ROWS + 1)
-};
-
-/// Filled-grid dimensions; each wall is a separate patch.
-struct SurfaceMesh {
-    unsigned columns;
-    unsigned rows;
-    unsigned patches;
-};
-
-inline constexpr std::array<SurfaceMesh, EFFECT_COUNT> SURFACE_MESHES{
-    SurfaceMesh{ 96, 232, 4 },
-    SurfaceMesh{ 192, 232, 1 }
-};
+/// Returns the bounding rectangle of all logical monitor viewports.
+RECT MonitorLayoutBounds(const std::vector<MonitorViewport>& viewports);

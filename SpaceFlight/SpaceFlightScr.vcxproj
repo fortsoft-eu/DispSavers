@@ -91,6 +91,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AboutForm.cpp" />
+    <ClCompile Include="HelpForm.cpp" />
     <ClCompile Include="AppSettings.cpp" />
     <ClCompile Include="Localization.cpp" />
     <ClCompile Include="main.cpp" />
@@ -98,6 +100,7 @@
     <ClCompile Include="MonitorInfo.cpp" />
     <ClCompile Include="Mp4Recorder.cpp" />
     <ClCompile Include="PersistWindowState.cpp" />
+    <ClCompile Include="PackedResource.cpp" />
     <ClCompile Include="ProgramIcons.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SelectionEdit.cpp" />
@@ -109,13 +112,16 @@
     <ClCompile Include="WindowRedrawScope.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AboutForm.h" />
+    <ClInclude Include="HelpForm.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="AppSettings.h" />
-    <ClInclude Include="Effects.h" />
     <ClInclude Include="Localization.h" />
     <ClInclude Include="MixedControls.h" />
     <ClInclude Include="MonitorInfo.h" />
     <ClInclude Include="Mp4Recorder.h" />
     <ClInclude Include="PersistWindowState.h" />
+    <ClInclude Include="PackedResource.h" />
     <ClInclude Include="ProgramIcons.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Simulation.h" />
@@ -150,7 +156,9 @@ if errorlevel 1 exit /b %errorlevel%</Command>
     <Manifest Include="SpaceFlight.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="license.txt" />
+    <None Include="..\license.txt" />
+    <None Include="prepare.ps1" />
+    <None Include="ResourcePacker.cs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

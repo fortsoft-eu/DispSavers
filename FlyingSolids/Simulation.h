@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.3.0.0
  */
 
 #pragma once
 
-#include "Effects.h"
+#include "main.h"
 #include <array>
 
 /// Minimal three-dimensional vector used by the simulation state.
@@ -79,12 +79,11 @@ public:
 
     /// Advances the scene by a measured interval and applies current settings.
     void Step(double seconds, float objectSpeed, float cameraSpeed, bool cameraFlight,
-        std::uint32_t selectedEnabledSolids, int selectedCopyCount, float selectedObjectScale, int maximumSubsteps = 0);
+        std::uint32_t selectedEnabledSolids, int selectedCopyCount, float selectedObjectScale,
+        int maximumSubsteps = 0);
 
     /// Returns the most recently published render snapshot.
-    const SceneState& State() const {
-        return state;
-    }
+    const SceneState& State() const;
 
 private:
     /// Cryptographic random-number cache

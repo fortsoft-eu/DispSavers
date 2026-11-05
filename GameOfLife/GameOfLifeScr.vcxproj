@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{3CB59030-6C22-4170-8B66-8B8E416A8A47}</ProjectGuid>
+    <RootNamespace>GameOfLifeScr</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <ShaderCompilerOptions>/Od /Zi</ShaderCompilerOptions>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <ShaderCompilerOptions>/O3 /Ges</ShaderCompilerOptions>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup>
+    <OutDir>$(ProjectDir)..\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)$(Configuration)Scr\</IntDir>
+    <TargetName>GameOfLife</TargetName>
+    <TargetExt>.scr</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>Usp10.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;GAME_OF_LIFE_SCR_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;GAME_OF_LIFE_SCR_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;GAME_OF_LIFE_SCR_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>GAME_OF_LIFE_SCR_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AboutForm.cpp" />
+    <ClCompile Include="HelpForm.cpp" />
+    <ClCompile Include="AppSettings.cpp" />
+    <ClCompile Include="Localization.cpp" />
+    <ClCompile Include="LifeBoard.cpp" />
+    <ClCompile Include="MonitorLayout.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MonitorInfo.cpp" />
+    <ClCompile Include="Mp4Recorder.cpp" />
+    <ClCompile Include="PatternCatalog.cpp" />
+    <ClCompile Include="PersistWindowState.cpp" />
+    <ClCompile Include="PackedResource.cpp" />
+    <ClCompile Include="ProgramIcons.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="SelectionEdit.cpp" />
+    <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="SystemDialogTemplate.cpp" />
+    <ClCompile Include="SystemSync.cpp" />
+    <ClCompile Include="SystemTime.cpp" />
+    <ClCompile Include="Wow64Redirection.cpp" />
+    <ClCompile Include="WindowRedrawScope.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AboutForm.h" />
+    <ClInclude Include="HelpForm.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="AppSettings.h" />
+    <ClInclude Include="Localization.h" />
+    <ClInclude Include="LifeBoard.h" />
+    <ClInclude Include="MonitorLayout.h" />
+    <ClInclude Include="MonitorInfo.h" />
+    <ClInclude Include="Mp4Recorder.h" />
+    <ClInclude Include="PatternCatalog.h" />
+    <ClInclude Include="PersistWindowState.h" />
+    <ClInclude Include="PackedResource.h" />
+    <ClInclude Include="ProgramIcons.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Simulation.h" />
+    <ClInclude Include="SelectionEdit.h" />
+    <ClInclude Include="SystemDialogTemplate.h" />
+    <ClInclude Include="Wow64Redirection.h" />
+    <ClInclude Include="WindowRedrawScope.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="LifePatterns.xml">
+      <Command>&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(ProjectDir)prepare.ps1&quot; -Source &quot;%(FullPath)&quot; -Output &quot;$(IntDir)LifePatterns.packed&quot; -Patterns -License &quot;$(ProjectDir)..\license.txt&quot; -Notices &quot;$(ProjectDir)LifePatternsLicense.txt&quot;</Command>
+      <Message>Preparing the Game of Life pattern catalog and license</Message>
+      <Outputs>$(IntDir)LifePatterns.dat;$(IntDir)LifePatterns.packed;$(IntDir)license.utf8</Outputs>
+      <AdditionalInputs>$(ProjectDir)prepare.ps1;$(ProjectDir)ResourcePacker.cs;$(ProjectDir)..\license.txt;$(ProjectDir)LifePatternsLicense.txt;%(AdditionalInputs)</AdditionalInputs>
+      <LinkObjects>false</LinkObjects>
+    </CustomBuild>
+    <CustomBuild Include="GameOfLife.hlsl">
+      <Command>set "PATH=$(ExecutablePath)"
+fxc.exe /nologo /T vs_4_0 /E VSMain /Fh "$(IntDir)GameOfLifeVS.h" /Fo "$(IntDir)GameOfLifeVS.cso" /Vn GameOfLifeVertexShader $(ShaderCompilerOptions) "%(FullPath)"
+if errorlevel 1 exit /b %errorlevel%
+fxc.exe /nologo /T ps_4_0 /E PSMain /Fh "$(IntDir)GameOfLifePS.h" /Fo "$(IntDir)GameOfLifePS.cso" /Vn GameOfLifePixelShader $(ShaderCompilerOptions) "%(FullPath)"
+if errorlevel 1 exit /b %errorlevel%
+fxc.exe /nologo /T ps_4_0 /E StepPS /Fh "$(IntDir)GameOfLifeStepPS.h" /Fo "$(IntDir)GameOfLifeStepPS.cso" /Vn GameOfLifeStepPixelShader $(ShaderCompilerOptions) "%(FullPath)"
+if errorlevel 1 exit /b %errorlevel%
+fxc.exe /nologo /T ps_4_0 /E ComparePS /Fh "$(IntDir)GameOfLifeComparePS.h" /Fo "$(IntDir)GameOfLifeComparePS.cso" /Vn GameOfLifeComparePixelShader $(ShaderCompilerOptions) "%(FullPath)"
+if errorlevel 1 exit /b %errorlevel%</Command>
+      <Message>Compiling shaders from GameOfLife.hlsl</Message>
+      <Outputs>$(IntDir)GameOfLifeVS.h;$(IntDir)GameOfLifeVS.cso;$(IntDir)GameOfLifePS.h;$(IntDir)GameOfLifePS.cso;$(IntDir)GameOfLifeStepPS.h;$(IntDir)GameOfLifeStepPS.cso;$(IntDir)GameOfLifeComparePS.h;$(IntDir)GameOfLifeComparePS.cso</Outputs>
+      <LinkObjects>false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GameOfLife.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="GameOfLife.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="prepare.ps1" />
+    <None Include="ResourcePacker.cs" />
+    <None Include="..\license.txt" />
+    <None Include="LifePatternsLicense.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\BuildSigning.targets" />
+  </ImportGroup>
+</Project>

@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Last modified for version 1.2.2.1
+Last modified for version 1.3.0.0
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Import Project="$(MSBuildProjectDirectory)\$(TargetName).vcxproj.user" Condition="'$(TargetExt)' == '.scr' and Exists('$(MSBuildProjectDirectory)\$(TargetName).vcxproj.user')"/>
@@ -35,6 +35,8 @@ Last modified for version 1.2.2.1
 		<_BuildSigningScript>$(MSBuildThisFileDirectory)BuildSigning.ps1</_BuildSigningScript>
 		<_BuildSigningTargets>$(MSBuildThisFileFullPath)</_BuildSigningTargets>
 		<_BuildSigningSchema>$(MSBuildThisFileDirectory)BuildSigning.xml</_BuildSigningSchema>
+		<_ResourcePackingScript>$(MSBuildProjectDirectory)\prepare.ps1</_ResourcePackingScript>
+		<_ResourcePackerSource>$(MSBuildProjectDirectory)\ResourcePacker.cs</_ResourcePackerSource>
 		<_BuildSigningUserSettings>$(MSBuildProjectDirectory)\$(TargetName).vcxproj.user</_BuildSigningUserSettings>
 		<_BuildSigningEnvironment>BUILD_SIGNER_NAME=$(BuildSignerName);BUILD_CERTIFICATE_THUMBPRINT=$(BuildCertificateThumbprint);BUILD_SIGNTOOL_PATH=$(BuildSignToolPath);BUILD_TIMESTAMP_SERVER=$(BuildTimestampServer)</_BuildSigningEnvironment>
 	</PropertyGroup>
@@ -45,11 +47,17 @@ Last modified for version 1.2.2.1
 	</ItemGroup>
 	<ItemDefinitionGroup Condition="'$(TargetExt)' == '.exe'">
 		<ResourceCompile>
-			<AdditionalIncludeDirectories>$(OutDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>$(IntDir);$(OutDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 		</ResourceCompile>
 	</ItemDefinitionGroup>
 	<Target Name="VerifyEmbeddedScreenSaverSignature" BeforeTargets="ResourceCompile" Condition="'$(DesignTimeBuild)' != 'true' and '$(BuildSigningEnabled)' == 'true' and '$(TargetExt)' == '.exe'">
 		<Exec Command="&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(_BuildSigningScript)&quot; -Path &quot;$(OutDir)$(TargetName).scr&quot; -VerifyOnly" EnvironmentVariables="$(_BuildSigningEnvironment)"/>
+	</Target>
+	<Target Name="PackEmbeddedScreenSaver" BeforeTargets="ResourceCompile" DependsOnTargets="VerifyEmbeddedScreenSaverSignature" Condition="'$(DesignTimeBuild)' != 'true' and '$(TargetExt)' == '.exe'" Inputs="$(OutDir)$(TargetName).scr;$(_ResourcePackerSource);$(_ResourcePackingScript)" Outputs="$(IntDir)$(TargetName).packed">
+		<Exec Command="&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(_ResourcePackingScript)&quot; -Source &quot;$(OutDir)$(TargetName).scr&quot; -Output &quot;$(IntDir)$(TargetName).packed&quot;"/>
+		<ItemGroup>
+			<FileWrites Include="$(IntDir)$(TargetName).packed"/>
+		</ItemGroup>
 	</Target>
 	<Target Name="SignBuiltBinary" BeforeTargets="PostBuildEvent" Condition="'$(DesignTimeBuild)' != 'true'">
 		<Exec Command="&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(_BuildSigningScript)&quot; -Path &quot;$(TargetPath)&quot;" EnvironmentVariables="$(_BuildSigningEnvironment)" Condition="'$(BuildSigningEnabled)' == 'true'"/>

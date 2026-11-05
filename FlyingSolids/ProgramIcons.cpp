@@ -21,15 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.2
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include "ProgramIcons.h"
+#include "SystemDialogTemplate.h"
 #include <shlobj.h>
 #include <shellapi.h>
 #include <string>
+
+using GetSystemMetricsForDpiFunction = int(WINAPI*)(int, UINT);
+
+/// Reads the requested native icon metric at the window DPI, or the system DPI on older Windows.
+static int SystemIconMetric(int metric, UINT dpi) {
+    static const GetSystemMetricsForDpiFunction getSystemMetricsForDpi =
+        reinterpret_cast<GetSystemMetricsForDpiFunction>(
+            GetProcAddress(GetModuleHandleW(L"user32.dll"), "GetSystemMetricsForDpi"));
+    return getSystemMetricsForDpi ? getSystemMetricsForDpi(metric, dpi) : GetSystemMetrics(metric);
+}
 
 /// Resolves the full path to a Windows system icon library.
 static std::wstring SystemIconLibraryPath(const wchar_t* libraryName) {
@@ -45,23 +56,17 @@ static std::wstring SystemIconLibraryPath(const wchar_t* libraryName) {
 }
 
 /// Loads matching large and small icons from a Windows system library.
-static bool ExtractSystemIconPair(const wchar_t* libraryName, int iconIndex, HICON& largeIcon, HICON& smallIcon) {
+static bool ExtractSystemIconPair(const wchar_t* libraryName, int iconIndex, UINT dpi,
+        HICON& largeIcon, HICON& smallIcon) {
     const std::wstring libraryPath = SystemIconLibraryPath(libraryName);
     if (libraryPath.empty()) {
         return false;
     }
     largeIcon = nullptr;
     smallIcon = nullptr;
-    if (ExtractIconExW(libraryPath.c_str(), iconIndex, &largeIcon, &smallIcon, 1) == 0) {
-        return false;
-    }
-    if (largeIcon == nullptr && smallIcon != nullptr) {
-        largeIcon = CopyIcon(smallIcon);
-    }
-    if (smallIcon == nullptr && largeIcon != nullptr) {
-        smallIcon = CopyIcon(largeIcon);
-    }
-    if (largeIcon == nullptr || smallIcon == nullptr) {
+    const UINT size = MAKELONG(SystemIconMetric(SM_CXICON, dpi), SystemIconMetric(SM_CXSMICON, dpi));
+    if (SHDefExtractIconW(libraryPath.c_str(), iconIndex, 0, &largeIcon, &smallIcon, size) != S_OK
+            || largeIcon == nullptr || smallIcon == nullptr) {
         if (largeIcon != nullptr) {
             DestroyIcon(largeIcon);
         }
@@ -84,7 +89,7 @@ ProgramIcons::~ProgramIcons() {
 bool ProgramIcons::Load() {
     HICON largeIcon = nullptr;
     HICON loadedSmallIcon = nullptr;
-    if (!ExtractSystemIconPair(L"shell32.dll", 34, largeIcon, loadedSmallIcon)) {
+    if (!ExtractSystemIconPair(L"shell32.dll", 34, GetSystemDialogDpi(nullptr), largeIcon, loadedSmallIcon)) {
         return false;
     }
     Reset();
@@ -109,6 +114,26 @@ HICON ProgramIcons::LoadSized(UINT size) const {
     return icon;
 }
 
+/// Applies the cached large and small system icons selected for this window DPI.
+void ProgramIcons::Apply(HWND window) const {
+    const UINT dpi = GetSystemDialogDpi(window);
+    for (const IconPair& icons : windowIcons) {
+        if (icons.dpi == dpi) {
+            SendMessageW(window, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(icons.large));
+            SendMessageW(window, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(icons.smallIcon));
+            return;
+        }
+    }
+    HICON largeIcon = nullptr;
+    HICON loadedSmallIcon = nullptr;
+    if (!ExtractSystemIconPair(L"shell32.dll", 34, dpi, largeIcon, loadedSmallIcon)) {
+        return;
+    }
+    windowIcons.push_back(IconPair{ dpi, largeIcon, loadedSmallIcon });
+    SendMessageW(window, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(largeIcon));
+    SendMessageW(window, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(loadedSmallIcon));
+}
+
 /// Returns the large application icon, or null when loading has failed.
 HICON ProgramIcons::Large() const {
     return large;
@@ -121,6 +146,11 @@ HICON ProgramIcons::Small() const {
 
 /// Releases the currently owned icon handles.
 void ProgramIcons::Reset() {
+    for (const IconPair& icons : windowIcons) {
+        DestroyIcon(icons.smallIcon);
+        DestroyIcon(icons.large);
+    }
+    windowIcons.clear();
     if (smallIcon != nullptr && smallIcon != large) {
         DestroyIcon(smallIcon);
     }

@@ -21,9 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.3.0.0
  */
 
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
 #define _USE_MATH_DEFINES
 #include "MeshBuilder.h"
 #include <algorithm>
@@ -81,7 +83,8 @@ static V3 Cross(V3 a, V3 b) {
 bool CutPointOrder::operator()(V3 first, V3 second) const {
     const V3 firstOffset = first - center;
     const V3 secondOffset = second - center;
-    return std::atan2(Dot(firstOffset, tangent), firstOffset.y) < std::atan2(Dot(secondOffset, tangent), secondOffset.y);
+    return std::atan2(Dot(firstOffset, tangent), firstOffset.y) < std::atan2(Dot(secondOffset, tangent),
+        secondOffset.y);
 }
 
 /// Normalizes a vector using a positive length bound to avoid division by zero.
@@ -145,8 +148,8 @@ static void AddUniquePoint(std::vector<V3>& points, V3 point) {
 }
 
 /// Clips a polygon against a half-space and collects its new boundary points.
-static std::vector<V3> ClipPolygonPlaneMax(const std::vector<V3>& polygon, V3 planeNormal, float maximumDistance,
-        std::vector<V3>& intersections) {
+static std::vector<V3> ClipPolygonPlaneMax(const std::vector<V3>& polygon, V3 planeNormal,
+        float maximumDistance, std::vector<V3>& intersections) {
     std::vector<V3> clipped;
     if (polygon.empty()) {
         return clipped;
@@ -194,7 +197,8 @@ static void Box(MeshData& mesh, float lower = -1, float upper = 1) {
 /// Samples a parametric surface with analytically supplied normals.
 template<typename... Parameters>
 static void GridWithNormals(MeshData& mesh, unsigned columns, unsigned rows,
-        V3(*samplePosition)(float, float, Parameters...), V3(*sampleNormal)(float, float, Parameters...),
+        V3(*samplePosition)(float, float, Parameters...),
+        V3(*sampleNormal)(float, float, Parameters...),
         Parameters... parameters) {
     const unsigned stride = columns + 1;
     const unsigned base = static_cast<unsigned>(mesh.vertices.size());
@@ -293,7 +297,11 @@ static void RoundedGeometry(float u, float v, SolidKind kind, V3& position, V3& 
         position = V3{ radius * longitudeCosine, height * latitudeCosine, radius * longitudeSine };
         const float radiusDerivative = width * (latitudeCosine * (1.0f - taper * latitudeCosine)
             + taper * latitudeSine * latitudeSine);
-        normal = V3{ height * latitudeSine * longitudeCosine, radiusDerivative, height * latitudeSine * longitudeSine };
+        normal = V3{
+            height * latitudeSine * longitudeCosine,
+            radiusDerivative,
+            height * latitudeSine * longitudeSine
+        };
     } else {
         const V3 unit{ latitudeSine * longitudeCosine, latitudeCosine, latitudeSine * longitudeSine };
         V3 axes{ 1.0f, 1.0f, 1.0f };
@@ -484,7 +492,14 @@ static void ExactObliquelyCutCone(MeshData& mesh) {
     }
     for (unsigned index = 0; index < sides; index++) {
         const unsigned bottom = first + 2 * index;
-        const std::initializer_list<unsigned> indices{ bottom, bottom + 2, bottom + 3, bottom, bottom + 3, bottom + 1 };
+        const std::initializer_list<unsigned> indices{
+            bottom,
+            bottom + 2,
+            bottom + 3,
+            bottom,
+            bottom + 3,
+            bottom + 1
+        };
         mesh.indices.insert(mesh.indices.end(), indices);
     }
     DiscY(mesh, sides, 1.0f, baseY, false);
@@ -512,7 +527,8 @@ static void ExactObliquelyCutSquarePyramid(MeshData& mesh) {
     std::array<V3, 4> top{};
     for (unsigned index = 0; index < top.size(); index++) {
         const float diagonalPosition = diagonal * (bottom[index].x + bottom[index].z);
-        const float amount = (cutHeight - baseY + tilt * diagonalPosition) / (height + tilt * diagonalPosition);
+        const float amount =
+            (cutHeight - baseY + tilt * diagonalPosition) / (height + tilt * diagonalPosition);
         top[index] = bottom[index] + (apex - bottom[index]) * amount;
     }
     Quad(mesh, bottom[0], bottom[3], bottom[2], bottom[1]);
@@ -568,7 +584,8 @@ static void ExactPerpendicularlyCutCone(MeshData& mesh) {
     constexpr float diagonal = .7071067811865475244f;
     constexpr float angleOffset = float(M_PI) * .25f;
     GridWithNormals(mesh, sides, 16, CutConeTipPosition, CutConeTipNormal, cutX, apexY, height);
-    GridWithNormals(mesh, sides, rows, CutConeSidePosition, CutConeSideNormal, cutX, apexY, height, angleOffset);
+    GridWithNormals(mesh, sides, rows, CutConeSidePosition, CutConeSideNormal, cutX, apexY, height,
+        angleOffset);
     std::vector<V3> base;
     base.reserve(sides + 1);
     const float baseAngle = std::acos(cutX);
@@ -675,7 +692,8 @@ static void ExactHemisphereOrCap(MeshData& mesh, bool cap) {
     const float cut = cap ? .45f : 0.0f;
     const float centerY = -radius * (1.0f + cut) * .5f;
     const float maximumLatitude = std::acos(cut);
-    GridWithNormals(mesh, ROUND_SIDES, 32, HemispherePosition, HemisphereNormal, radius, centerY, maximumLatitude);
+    GridWithNormals(mesh, ROUND_SIDES, 32, HemispherePosition, HemisphereNormal, radius, centerY,
+        maximumLatitude);
     DiscY(mesh, ROUND_SIDES, radius * std::sqrt(1.0f - cut * cut), radius * cut + centerY, false);
 }
 
@@ -683,7 +701,11 @@ static void ExactHemisphereOrCap(MeshData& mesh, bool cap) {
 static V3 SphereBand(float u, float v, float firstLatitude, float latitudeRange) {
     const float longitude = u * 2.0f * float(M_PI);
     const float latitude = firstLatitude + latitudeRange * v;
-    return V3{ std::cos(longitude) * std::sin(latitude), std::cos(latitude), std::sin(longitude) * std::sin(latitude) };
+    return V3{
+        std::cos(longitude) * std::sin(latitude),
+        std::cos(latitude),
+        std::sin(longitude) * std::sin(latitude)
+    };
 }
 
 /// Builds a sphere with both poles removed and both openings closed by planes.
@@ -773,7 +795,8 @@ static void ExactSpheroplatelet(MeshData& mesh) {
     const unsigned ringBase = static_cast<unsigned>(mesh.vertices.size());
     GridWithNormals(mesh, ROUND_SIDES, rows, SpheroplateletPosition, SpheroplateletNormal);
     CloseDiscRing(mesh, ringBase, ROUND_SIDES, SPHEROPLATELET_ROUNDING_RADIUS, true);
-    CloseDiscRing(mesh, ringBase + rows * (ROUND_SIDES + 1), ROUND_SIDES, -SPHEROPLATELET_ROUNDING_RADIUS, false);
+    CloseDiscRing(mesh, ringBase + rows * (ROUND_SIDES + 1), ROUND_SIDES,
+        -SPHEROPLATELET_ROUNDING_RADIUS, false);
 }
 
 /// Builds conservative rasterization bounds for the analytically rendered spherocylinder.
@@ -802,7 +825,8 @@ static void ExactHollowCylinder(MeshData& mesh) {
     for (int surface = 0; surface < 2; surface++) {
         const float radius = surface == 0 ? 1.0f : .6f;
         const float direction = surface == 0 ? 1.0f : -1.0f;
-        GridWithNormals(mesh, ROUND_SIDES, 1, HollowCylinderPosition, HollowCylinderNormal, radius, direction);
+        GridWithNormals(mesh, ROUND_SIDES, 1, HollowCylinderPosition, HollowCylinderNormal,
+            radius, direction);
     }
     AnnulusY(mesh, ROUND_SIDES, 1.0f, .6f, -1.0f, false);
     AnnulusY(mesh, ROUND_SIDES, 1.0f, .6f, 1.0f, true);
@@ -827,7 +851,8 @@ static void RoundedHollowCylinderCapGeometry(float u, float v, float direction, 
     }
     float radialNormal = std::cos(latitude);
     float verticalNormal = std::sin(latitude);
-    float radius = ROUNDED_HOLLOW_CYLINDER_TORUS_RADIUS + ROUNDED_HOLLOW_CYLINDER_ROUNDING_RADIUS * radialNormal;
+    float radius = ROUNDED_HOLLOW_CYLINDER_TORUS_RADIUS
+        + ROUNDED_HOLLOW_CYLINDER_ROUNDING_RADIUS * radialNormal;
     if (v <= 0.0f || v >= 1.0f) {
         radialNormal = 1.0f;
         radius = ROUNDED_HOLLOW_CYLINDER_OUTER_RADIUS;
@@ -838,7 +863,8 @@ static void RoundedHollowCylinderCapGeometry(float u, float v, float direction, 
         verticalNormal = 0.0f;
     }
     const float height =
-        direction * (ROUNDED_HOLLOW_CYLINDER_HALF_LENGTH + ROUNDED_HOLLOW_CYLINDER_ROUNDING_RADIUS * verticalNormal);
+        direction * (ROUNDED_HOLLOW_CYLINDER_HALF_LENGTH
+            + ROUNDED_HOLLOW_CYLINDER_ROUNDING_RADIUS * verticalNormal);
     const float longitude = RoundedSurfaceLongitude(u);
     position = Radial(longitude, radius, height);
     normal = Radial(longitude, radialNormal, direction * verticalNormal);
@@ -862,12 +888,14 @@ static V3 RoundedHollowCylinderCapNormal(float u, float v, float direction) {
 
 /// Builds two coaxial cylindrical walls joined tangentially by exact semicircular torus sections.
 static void ExactRoundedHollowCylinder(MeshData& mesh) {
-    GridWithNormals(mesh, ROUND_SIDES, 1, RoundedHollowCylinderWallPosition, RoundedHollowCylinderWallNormal,
-        ROUNDED_HOLLOW_CYLINDER_OUTER_RADIUS, 1.0f);
-    GridWithNormals(mesh, ROUND_SIDES, 1, RoundedHollowCylinderWallPosition, RoundedHollowCylinderWallNormal,
-        ROUNDED_HOLLOW_CYLINDER_INNER_RADIUS, -1.0f);
-    GridWithNormals(mesh, ROUND_SIDES, 64, RoundedHollowCylinderCapPosition, RoundedHollowCylinderCapNormal, 1.0f);
-    GridWithNormals(mesh, ROUND_SIDES, 64, RoundedHollowCylinderCapPosition, RoundedHollowCylinderCapNormal, -1.0f);
+    GridWithNormals(mesh, ROUND_SIDES, 1, RoundedHollowCylinderWallPosition,
+        RoundedHollowCylinderWallNormal, ROUNDED_HOLLOW_CYLINDER_OUTER_RADIUS, 1.0f);
+    GridWithNormals(mesh, ROUND_SIDES, 1, RoundedHollowCylinderWallPosition,
+        RoundedHollowCylinderWallNormal, ROUNDED_HOLLOW_CYLINDER_INNER_RADIUS, -1.0f);
+    GridWithNormals(mesh, ROUND_SIDES, 64, RoundedHollowCylinderCapPosition,
+        RoundedHollowCylinderCapNormal, 1.0f);
+    GridWithNormals(mesh, ROUND_SIDES, 64, RoundedHollowCylinderCapPosition,
+        RoundedHollowCylinderCapNormal, -1.0f);
 }
 
 /// Builds a solid mesh or conservative rasterization bounds for an analytic surface.

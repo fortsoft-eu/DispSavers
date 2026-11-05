@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.1.0
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
@@ -41,20 +41,6 @@ constexpr wchar_t MONITOR_SETTINGS_KEY[] = L"Monitors";
 constexpr wchar_t ANIMATION_MONITOR_VALUE_NAME[] = L"AnimationMonitor";
 constexpr wchar_t SELECTED_MONITORS_VALUE_NAME[] = L"SelectedAnimationMonitors";
 constexpr wchar_t ALL_MONITORS_SELECTED_VALUE_NAME[] = L"AllAnimationMonitorsSelected";
-constexpr wchar_t CONTROL_WINDOW_X_VALUE_NAME[] = L"ControlWindowX";
-constexpr wchar_t CONTROL_WINDOW_Y_VALUE_NAME[] = L"ControlWindowY";
-constexpr wchar_t HELP_X_VALUE_NAME[] = L"HelpX";
-constexpr wchar_t HELP_Y_VALUE_NAME[] = L"HelpY";
-constexpr wchar_t HELP_WIDTH_VALUE_NAME[] = L"HelpWidth";
-constexpr wchar_t HELP_HEIGHT_VALUE_NAME[] = L"HelpHeight";
-constexpr wchar_t HELP_MAXIMIZED_VALUE_NAME[] = L"HelpMaximized";
-constexpr wchar_t ABOUT_X_VALUE_NAME[] = L"AboutX";
-constexpr wchar_t ABOUT_Y_VALUE_NAME[] = L"AboutY";
-constexpr wchar_t ABOUT_WIDTH_VALUE_NAME[] = L"AboutWidth";
-constexpr wchar_t ABOUT_HEIGHT_VALUE_NAME[] = L"AboutHeight";
-constexpr wchar_t ABOUT_MAXIMIZED_VALUE_NAME[] = L"AboutMaximized";
-constexpr wchar_t RECORDING_SETTINGS_X_VALUE_NAME[] = L"RecordingSettingsX";
-constexpr wchar_t RECORDING_SETTINGS_Y_VALUE_NAME[] = L"RecordingSettingsY";
 constexpr wchar_t LANGUAGE_VALUE_NAME[] = L"Language";
 constexpr wchar_t RECORDING_TV_VALUE_NAME[] = L"RecordingTV";
 constexpr wchar_t RECORDING_RESOLUTION_VALUE_NAME[] = L"RecordingResolution";
@@ -64,8 +50,8 @@ constexpr wchar_t PREVENT_SCREEN_SAVER_VALUE_NAME[] = L"PreventScreenSaver";
 /// Versioned DWORD sequence with one reserved trailing field, independent of compiler padding.
 constexpr DWORD MONITOR_SETTINGS_VERSION = 1;
 constexpr std::size_t MONITOR_SETTINGS_RESERVED_FIELDS = 1;
-using MonitorSettingsRecord =
-    std::array<DWORD, 1 + static_cast<std::size_t>(AnimationProperty::Count) + MONITOR_SETTINGS_RESERVED_FIELDS>;
+using MonitorSettingsRecord = std::array<DWORD, 1 + static_cast<std::size_t>(AnimationProperty::Count)
+    + MONITOR_SETTINGS_RESERVED_FIELDS>;
 
 /// Numeric monitor preferences represented by the animation sliders.
 constexpr AnimationProperty NUMERIC_ANIMATION_PROPERTIES[]{
@@ -80,14 +66,16 @@ static const wchar_t* RegistryPath(SettingsProfile profile) {
     return profile == SettingsProfile::ScreenSaver ? SCREEN_SAVER_REGISTRY_PATH : STANDALONE_REGISTRY_PATH;
 }
 
-/// Reads a DWORD value and preserves the supplied default on type or access failure.
-static int ReadValue(HKEY key, const wchar_t* name, int defaultValue) {
+/// Reads a DWORD using the requested value type and preserves the default on type or access failure.
+template<typename Value>
+static Value ReadValue(HKEY key, const wchar_t* name, Value defaultValue) {
     DWORD value = 0;
     DWORD type = 0;
     DWORD size = sizeof(value);
-    const LSTATUS queryResult = RegQueryValueExW(key, name, nullptr, &type, reinterpret_cast<BYTE*>(&value), &size);
+    const LSTATUS queryResult =
+        RegQueryValueExW(key, name, nullptr, &type, reinterpret_cast<BYTE*>(&value), &size);
     if (queryResult == ERROR_SUCCESS && type == REG_DWORD && size == sizeof(value)) {
-        return static_cast<int>(value);
+        return static_cast<Value>(value);
     }
     return defaultValue;
 }
@@ -98,14 +86,21 @@ static std::wstring ReadString(HKEY key, const wchar_t* name) {
     DWORD size = 0;
     const LSTATUS queryResult = RegQueryValueExW(key, name, nullptr, &type, nullptr, &size);
     constexpr DWORD MAX_SETTINGS_STRING_BYTES = 65536;
-    if (queryResult != ERROR_SUCCESS || type != REG_SZ || size < sizeof(wchar_t) || size > MAX_SETTINGS_STRING_BYTES
+    if (queryResult != ERROR_SUCCESS
+            || type != REG_SZ
+            || size < sizeof(wchar_t)
+            || size > MAX_SETTINGS_STRING_BYTES
             || size % sizeof(wchar_t) != 0) {
         return std::wstring{};
     }
     std::wstring value(size / sizeof(wchar_t), L'\0');
     const DWORD capacity = static_cast<DWORD>(value.size() * sizeof(wchar_t));
-    const LSTATUS readResult = RegQueryValueExW(key, name, nullptr, &type, reinterpret_cast<BYTE*>(value.data()), &size);
-    if (readResult != ERROR_SUCCESS || type != REG_SZ || size > capacity || size < sizeof(wchar_t)
+    const LSTATUS readResult =
+        RegQueryValueExW(key, name, nullptr, &type, reinterpret_cast<BYTE*>(value.data()), &size);
+    if (readResult != ERROR_SUCCESS
+            || type != REG_SZ
+            || size > capacity
+            || size < sizeof(wchar_t)
             || size % sizeof(wchar_t) != 0) {
         return std::wstring{};
     }
@@ -203,7 +198,7 @@ static std::uint32_t MostFrequentMonitorValue(AppSettings& settings, const std::
     }
     std::uint32_t value = 0;
     std::size_t count = 0;
-    for (const auto& entry : frequencies) {
+    for (const std::pair<const std::uint32_t, std::size_t>& entry : frequencies) {
         if (entry.second > count) {
             value = entry.first;
             count = entry.second;
@@ -308,8 +303,8 @@ static void ReadMonitorAnimations(HKEY profile, AppSettings& settings) {
         return;
     }
     DWORD maximumNameLength = 0;
-    const LSTATUS infoResult = RegQueryInfoKeyW(key, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
-        &maximumNameLength, nullptr, nullptr, nullptr);
+    const LSTATUS infoResult = RegQueryInfoKeyW(key, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
+        nullptr, &maximumNameLength, nullptr, nullptr, nullptr);
     if (infoResult == ERROR_SUCCESS && maximumNameLength < 32768U) {
         std::vector<wchar_t> name(static_cast<std::size_t>(maximumNameLength) + 1);
         for (DWORD index = 0; ; index++) {
@@ -327,7 +322,9 @@ static void ReadMonitorAnimations(HKEY profile, AppSettings& settings) {
                     continue;
                 }
                 MonitorAnimation animation;
-                for (std::size_t property = 0; property < static_cast<std::size_t>(AnimationProperty::Count); property++) {
+                for (std::size_t property = 0;
+                        property < static_cast<std::size_t>(AnimationProperty::Count);
+                        property++) {
                     animation.SetValue(static_cast<AnimationProperty>(property), value[property + 1]);
                 }
                 settings.monitorAnimations.emplace(std::wstring(name.data(), length), animation);
@@ -342,21 +339,56 @@ static void ReadMonitorAnimations(HKEY profile, AppSettings& settings) {
 /// Preserves preferences for temporarily disconnected displays when writing complete animation records.
 static void WriteMonitorAnimations(HKEY profile, const AppSettings& settings) {
     HKEY key = nullptr;
-    const LSTATUS createResult = RegCreateKeyExW(profile, MONITOR_SETTINGS_KEY, 0, nullptr, 0, KEY_WRITE, nullptr,
-        &key, nullptr);
+    const LSTATUS createResult =
+        RegCreateKeyExW(profile, MONITOR_SETTINGS_KEY, 0, nullptr, 0, KEY_WRITE, nullptr, &key, nullptr);
     if (createResult != ERROR_SUCCESS) {
         return;
     }
-    for (const auto& entry : settings.monitorAnimations) {
+    for (const std::pair<const std::wstring, MonitorAnimation>& entry : settings.monitorAnimations) {
         MonitorSettingsRecord value{};
         value[0] = MONITOR_SETTINGS_VERSION;
-        for (std::size_t property = 0; property < static_cast<std::size_t>(AnimationProperty::Count); property++) {
+        for (std::size_t property = 0;
+                property < static_cast<std::size_t>(AnimationProperty::Count);
+                property++) {
             value[property + 1] = entry.second.Value(static_cast<AnimationProperty>(property));
         }
-        RegSetValueExW(key, entry.first.c_str(), 0, REG_BINARY, reinterpret_cast<const BYTE*>(value.data()),
-            sizeof(value));
+        RegSetValueExW(key, entry.first.c_str(), 0, REG_BINARY,
+            reinterpret_cast<const BYTE*>(value.data()), sizeof(value));
     }
     RegCloseKey(key);
+}
+
+/// Writes one preference as a registry DWORD.
+static void WriteValue(HKEY key, const wchar_t* name, DWORD value) {
+    RegSetValueExW(key, name, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&value), sizeof(value));
+}
+
+/// Reads prefixed position, size and maximized values into the supplied window state.
+static void ReadWindowState(HKEY key, const wchar_t* prefix, PersistWindowStateData& state) {
+    const std::wstring name = prefix;
+    state.x = ReadValue<int>(key, (name + L"X").c_str(), state.x);
+    state.y = ReadValue<int>(key, (name + L"Y").c_str(), state.y);
+    state.width = ReadValue<int>(key, (name + L"Width").c_str(), state.width);
+    state.height = ReadValue<int>(key, (name + L"Height").c_str(), state.height);
+    state.maximized = ReadValue<int>(key, (name + L"Maximized").c_str(), state.maximized ? 1 : 0) != 0;
+}
+
+/// Loads auxiliary-window placement independently of animation preferences.
+static void ReadWindowPositions(HKEY key, AppSettings& settings) {
+    settings.recordingSettingsX = ReadValue<int>(key, L"RecordingSettingsX", settings.recordingSettingsX);
+    settings.recordingSettingsY = ReadValue<int>(key, L"RecordingSettingsY", settings.recordingSettingsY);
+    ReadWindowState(key, L"Help", settings.helpWindowState);
+    ReadWindowState(key, L"About", settings.aboutWindowState);
+}
+
+/// Writes the prefixed position, size and maximized fields of one stored window state.
+static void WriteWindowState(HKEY key, const wchar_t* prefix, const PersistWindowStateData& state) {
+    const std::wstring name = prefix;
+    WriteValue(key, (name + L"X").c_str(), static_cast<DWORD>(state.x));
+    WriteValue(key, (name + L"Y").c_str(), static_cast<DWORD>(state.y));
+    WriteValue(key, (name + L"Width").c_str(), static_cast<DWORD>(state.width));
+    WriteValue(key, (name + L"Height").c_str(), static_cast<DWORD>(state.height));
+    WriteValue(key, (name + L"Maximized").c_str(), state.maximized ? 1U : 0U);
 }
 
 /// Loads and validates settings from the selected registry profile.
@@ -367,89 +399,51 @@ void AppSettings::Load(SettingsProfile selectedProfile) {
     if (RegOpenKeyExW(HKEY_CURRENT_USER, RegistryPath(profile), 0, KEY_READ, &key) == ERROR_SUCCESS) {
         animationMonitorDevice = ReadString(key, ANIMATION_MONITOR_VALUE_NAME);
         selectedAnimationMonitors = ReadString(key, SELECTED_MONITORS_VALUE_NAME);
-        const int allSelected = ReadValue(key, ALL_MONITORS_SELECTED_VALUE_NAME, 1);
+        const int allSelected = ReadValue<int>(key, ALL_MONITORS_SELECTED_VALUE_NAME, 1);
         allAnimationMonitorsSelected = allSelected != 0;
-        controlWindowX = ReadValue(key, CONTROL_WINDOW_X_VALUE_NAME, controlWindowX);
-        controlWindowY = ReadValue(key, CONTROL_WINDOW_Y_VALUE_NAME, controlWindowY);
-        helpWindowState.x = ReadValue(key, HELP_X_VALUE_NAME, helpWindowState.x);
-        helpWindowState.y = ReadValue(key, HELP_Y_VALUE_NAME, helpWindowState.y);
-        helpWindowState.width = ReadValue(key, HELP_WIDTH_VALUE_NAME, helpWindowState.width);
-        helpWindowState.height = ReadValue(key, HELP_HEIGHT_VALUE_NAME, helpWindowState.height);
-        helpWindowState.maximized = ReadValue(key, HELP_MAXIMIZED_VALUE_NAME, helpWindowState.maximized ? 1 : 0) != 0;
-        aboutWindowState.x = ReadValue(key, ABOUT_X_VALUE_NAME, aboutWindowState.x);
-        aboutWindowState.y = ReadValue(key, ABOUT_Y_VALUE_NAME, aboutWindowState.y);
-        aboutWindowState.width = ReadValue(key, ABOUT_WIDTH_VALUE_NAME, aboutWindowState.width);
-        aboutWindowState.height = ReadValue(key, ABOUT_HEIGHT_VALUE_NAME, aboutWindowState.height);
-        aboutWindowState.maximized = ReadValue(key, ABOUT_MAXIMIZED_VALUE_NAME, aboutWindowState.maximized ? 1 : 0) != 0;
-        recordingSettingsX = ReadValue(key, RECORDING_SETTINGS_X_VALUE_NAME, recordingSettingsX);
-        recordingSettingsY = ReadValue(key, RECORDING_SETTINGS_Y_VALUE_NAME, recordingSettingsY);
-        language = ReadValue(key, LANGUAGE_VALUE_NAME, language);
+        ReadWindowPositions(key, *this);
+        language = ReadValue<int>(key, LANGUAGE_VALUE_NAME, language);
         if (profile == SettingsProfile::Standalone) {
-            preventScreenSaver = ReadValue(key, PREVENT_SCREEN_SAVER_VALUE_NAME, preventScreenSaver ? 1 : 0) == 1;
-            recording.television = ReadValue(key, RECORDING_TV_VALUE_NAME, recording.television ? 1 : 0) != 0;
-            recording.resolution = std::clamp(ReadValue(key, RECORDING_RESOLUTION_VALUE_NAME, recording.resolution), 0, 2);
-            recording.rate = std::clamp(ReadValue(key, RECORDING_RATE_VALUE_NAME, recording.rate), 0, 3);
+            preventScreenSaver =
+                ReadValue<int>(key, PREVENT_SCREEN_SAVER_VALUE_NAME, preventScreenSaver ? 1 : 0) == 1;
+            recording.television =
+                ReadValue<int>(key, RECORDING_TV_VALUE_NAME, recording.television ? 1 : 0) != 0;
+            recording.resolution = std::clamp(ReadValue<int>(key, RECORDING_RESOLUTION_VALUE_NAME,
+                recording.resolution), 0, 2);
+            recording.rate = std::clamp(ReadValue<int>(key, RECORDING_RATE_VALUE_NAME, recording.rate), 0, 3);
         }
         ReadMonitorAnimations(key, *this);
         RegCloseKey(key);
     }
 }
 
-/// Writes remembered window positions and selected monitor rows to an already opened settings key.
-static void WriteWindowPositions(HKEY key, const AppSettings& settings) {
+/// Writes the monitor rows selected for editing without changing animation preferences.
+static void WriteMonitorSelection(HKEY key, const AppSettings& settings) {
     const DWORD allSelected = settings.allAnimationMonitorsSelected ? 1U : 0U;
     RegSetValueExW(key, SELECTED_MONITORS_VALUE_NAME, 0, REG_SZ,
         reinterpret_cast<const BYTE*>(settings.selectedAnimationMonitors.c_str()),
         static_cast<DWORD>((settings.selectedAnimationMonitors.size() + 1) * sizeof(wchar_t)));
     RegSetValueExW(key, ALL_MONITORS_SELECTED_VALUE_NAME, 0, REG_DWORD,
         reinterpret_cast<const BYTE*>(&allSelected), sizeof(allSelected));
-    const DWORD windowX = static_cast<DWORD>(settings.controlWindowX);
-    const DWORD windowY = static_cast<DWORD>(settings.controlWindowY);
-    const DWORD helpX = static_cast<DWORD>(settings.helpWindowState.x);
-    const DWORD helpY = static_cast<DWORD>(settings.helpWindowState.y);
-    const DWORD helpWidth = static_cast<DWORD>(settings.helpWindowState.width);
-    const DWORD helpHeight = static_cast<DWORD>(settings.helpWindowState.height);
-    const DWORD helpMaximized = settings.helpWindowState.maximized ? 1U : 0U;
-    const DWORD aboutX = static_cast<DWORD>(settings.aboutWindowState.x);
-    const DWORD aboutY = static_cast<DWORD>(settings.aboutWindowState.y);
-    const DWORD aboutWidth = static_cast<DWORD>(settings.aboutWindowState.width);
-    const DWORD aboutHeight = static_cast<DWORD>(settings.aboutWindowState.height);
-    const DWORD aboutMaximized = settings.aboutWindowState.maximized ? 1U : 0U;
-    const DWORD recordingSettingsX = static_cast<DWORD>(settings.recordingSettingsX);
-    const DWORD recordingSettingsY = static_cast<DWORD>(settings.recordingSettingsY);
-    RegSetValueExW(key, CONTROL_WINDOW_X_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&windowX), sizeof(windowX));
-    RegSetValueExW(key, CONTROL_WINDOW_Y_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&windowY), sizeof(windowY));
-    RegSetValueExW(key, HELP_X_VALUE_NAME, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&helpX), sizeof(helpX));
-    RegSetValueExW(key, HELP_Y_VALUE_NAME, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&helpY), sizeof(helpY));
-    RegSetValueExW(key, HELP_WIDTH_VALUE_NAME, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&helpWidth), sizeof(helpWidth));
-    RegSetValueExW(key, HELP_HEIGHT_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&helpHeight), sizeof(helpHeight));
-    RegSetValueExW(key, HELP_MAXIMIZED_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&helpMaximized), sizeof(helpMaximized));
-    RegSetValueExW(key, ABOUT_X_VALUE_NAME, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&aboutX), sizeof(aboutX));
-    RegSetValueExW(key, ABOUT_Y_VALUE_NAME, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&aboutY), sizeof(aboutY));
-    RegSetValueExW(key, ABOUT_WIDTH_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&aboutWidth), sizeof(aboutWidth));
-    RegSetValueExW(key, ABOUT_HEIGHT_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&aboutHeight), sizeof(aboutHeight));
-    RegSetValueExW(key, ABOUT_MAXIMIZED_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&aboutMaximized), sizeof(aboutMaximized));
-    RegSetValueExW(key, RECORDING_SETTINGS_X_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&recordingSettingsX), sizeof(recordingSettingsX));
-    RegSetValueExW(key, RECORDING_SETTINGS_Y_VALUE_NAME, 0, REG_DWORD,
-        reinterpret_cast<const BYTE*>(&recordingSettingsY), sizeof(recordingSettingsY));
+}
+
+/// Writes recording, Help and About placement values without writing scene preferences.
+static void WriteWindowPositions(HKEY key, const AppSettings& settings) {
+    WriteValue(key, L"RecordingSettingsX", static_cast<DWORD>(settings.recordingSettingsX));
+    WriteValue(key, L"RecordingSettingsY", static_cast<DWORD>(settings.recordingSettingsY));
+    WriteWindowState(key, L"Help", settings.helpWindowState);
+    WriteWindowState(key, L"About", settings.aboutWindowState);
 }
 
 /// Saves window positions and selected monitor rows without applying pending animation changes.
 void AppSettings::SaveWindowPositions() const {
     HKEY key = nullptr;
-    const LSTATUS createResult =
-        RegCreateKeyExW(HKEY_CURRENT_USER, RegistryPath(profile), 0, nullptr, 0, KEY_WRITE, nullptr, &key, nullptr);
+    const LSTATUS createResult = RegCreateKeyExW(HKEY_CURRENT_USER, RegistryPath(profile), 0, nullptr, 0,
+        KEY_WRITE, nullptr, &key, nullptr);
     if (createResult != ERROR_SUCCESS) {
         return;
     }
+    WriteMonitorSelection(key, *this);
     WriteWindowPositions(key, *this);
     RegCloseKey(key);
 }
@@ -457,14 +451,15 @@ void AppSettings::SaveWindowPositions() const {
 /// Persists the complete settings record in the active profile branch.
 void AppSettings::Save() const {
     HKEY key = nullptr;
-    const LSTATUS createResult =
-        RegCreateKeyExW(HKEY_CURRENT_USER, RegistryPath(profile), 0, nullptr, 0, KEY_WRITE, nullptr, &key, nullptr);
+    const LSTATUS createResult = RegCreateKeyExW(HKEY_CURRENT_USER, RegistryPath(profile), 0, nullptr, 0,
+        KEY_WRITE, nullptr, &key, nullptr);
     if (createResult != ERROR_SUCCESS) {
         return;
     }
     RegSetValueExW(key, ANIMATION_MONITOR_VALUE_NAME, 0, REG_SZ,
         reinterpret_cast<const BYTE*>(animationMonitorDevice.c_str()),
         static_cast<DWORD>((animationMonitorDevice.size() + 1) * sizeof(wchar_t)));
+    WriteMonitorSelection(key, *this);
     WriteWindowPositions(key, *this);
     WriteMonitorAnimations(key, *this);
     const DWORD languageValue = static_cast<DWORD>(language);

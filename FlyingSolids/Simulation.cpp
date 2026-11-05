@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.2
+ * Last modified for version 1.3.0.0
  */
 
 #define NOMINMAX
@@ -149,7 +149,8 @@ std::uint32_t Simulation::NextCryptographicRandom() {
 float Simulation::CryptographicRandom(float low, float high) {
     constexpr double inverseRange = 1.0 / 4294967296.0;
     const double unit = static_cast<double>(NextCryptographicRandom()) * inverseRange;
-    return static_cast<float>(static_cast<double>(low) + (static_cast<double>(high) - static_cast<double>(low)) * unit);
+    return static_cast<float>(static_cast<double>(low) + (static_cast<double>(high)
+        - static_cast<double>(low)) * unit);
 }
 
 /// Reinitializes every body and camera state from system entropy and an optional seed.
@@ -201,11 +202,12 @@ void Simulation::Reset(unsigned initialSeed) {
     PublishState();
 }
 
-/// Applies settings, advances the requested interval and publishes a render snapshot. Full-size surfaces use one exact
-/// step per presented frame; only the accelerated miniature system preview may cap its physics work with multiple
-/// substeps while advancing the full simulated interval.
+/// Applies settings, advances the requested interval and publishes a render snapshot. Full-size surfaces use
+/// one exact step per presented frame; only the accelerated miniature system preview may cap its physics work
+/// with multiple substeps while advancing the full simulated interval.
 void Simulation::Step(double seconds, float objectSpeed, float cameraSpeed, bool cameraFlight,
-        std::uint32_t selectedEnabledSolids, int selectedCopyCount, float selectedObjectScale, int maximumSubsteps) {
+        std::uint32_t selectedEnabledSolids, int selectedCopyCount, float selectedObjectScale,
+        int maximumSubsteps) {
     seconds = std::clamp(seconds, 0.0, 3.0);
     objectSpeed = std::clamp(objectSpeed, 0.0f, 16.0f);
     cameraSpeed = std::clamp(cameraSpeed, 0.0f, 16.0f);
@@ -241,9 +243,14 @@ void Simulation::Step(double seconds, float objectSpeed, float cameraSpeed, bool
     PublishState();
 }
 
-/// Integrates one physics interval and resolves all active constraints. The fixed rail camera retains a clear cylindrical
-/// path, after which collision-modified velocities return smoothly to their intrinsic speed so reducing object size
-/// cannot leave formerly crowded bodies permanently slow.
+/// Returns the most recently published render snapshot.
+const SceneState& Simulation::State() const {
+    return state;
+}
+
+/// Integrates one physics interval and resolves all active constraints. The fixed rail camera retains a clear
+/// cylindrical path, after which collision-modified velocities return smoothly to their intrinsic speed so
+/// reducing object size cannot leave formerly crowded bodies permanently slow.
 void Simulation::Substep(float seconds, float objectSpeed, float cameraSpeed, bool cameraFlight) {
     elapsed += seconds;
     for (std::size_t index = 0; index < activeBodyCount; index++) {
@@ -267,9 +274,9 @@ void Simulation::Substep(float seconds, float objectSpeed, float cameraSpeed, bo
     RestoreBodySpeeds(seconds);
 }
 
-/// Smoothly returns collision-modified velocities to each body's intrinsic speed with refresh-independent exponential
-/// convergence and a 1.5-second time constant. Degenerate opposing corrections recover deterministically without
-/// calling the cryptographic generator from the render loop.
+/// Smoothly returns collision-modified velocities to each body's intrinsic speed with refresh-independent
+/// exponential convergence and a 1.5-second time constant. Degenerate opposing corrections recover
+/// deterministically without calling the cryptographic generator from the render loop.
 void Simulation::RestoreBodySpeeds(float seconds) {
     constexpr float goldenAngle = 2.39996323f;
     const float recovery = 1.0f - std::exp(-seconds / 1.5f);
@@ -282,7 +289,8 @@ void Simulation::RestoreBodySpeeds(float seconds) {
             body.velocity *= correctedSpeed / speed;
             continue;
         }
-        const float angle = goldenAngle * static_cast<float>(index + 1U) + static_cast<float>(seed & 0xffffU) * 0.001f;
+        const float angle = goldenAngle * static_cast<float>(index + 1U)
+            + static_cast<float>(seed & 0xffffU) * 0.001f;
         body.velocity = Vec3{ std::cos(angle), std::sin(angle * 0.73f) * 0.5f, std::sin(angle) };
         body.velocity = Normalized(body.velocity) * (body.targetSpeed * recovery);
     }
@@ -401,8 +409,8 @@ void Simulation::ResolveSolidCollisions(std::uint32_t selectedEnabledSolids) {
     }
 }
 
-/// Steers approaching bodies continuously away from the straight camera corridor.
-/// Exponential steering reaches clearance before contact without teleporting and also works at zero object speed.
+/// Steers approaching bodies continuously away from the straight camera corridor. Exponential steering
+/// reaches clearance before contact without teleporting and also works at zero object speed.
 void Simulation::ResolveCameraPathCollisions(float seconds, float objectSpeed, float cameraSpeed) {
     constexpr float cameraRadius = 1.15f;
     constexpr float clearance = 0.55f;
@@ -416,7 +424,9 @@ void Simulation::ResolveCameraPathCollisions(float seconds, float objectSpeed, f
         const float minimumRadius = body.radius + cameraRadius;
         const float depthAhead = body.position.z - cameraPosition.z;
         const float closingSpeed = cameraVelocity.z - body.velocity.z * objectSpeed;
-        if (depthAhead < -body.radius || depthAhead > lookAhead || closingSpeed <= 0.0f && depthAhead > minimumRadius) {
+        if (depthAhead < -body.radius
+                || depthAhead > lookAhead
+                || closingSpeed <= 0.0f && depthAhead > minimumRadius) {
             continue;
         }
         float radialSquared = body.position.x * body.position.x + body.position.y * body.position.y;
@@ -435,7 +445,8 @@ void Simulation::ResolveCameraPathCollisions(float seconds, float objectSpeed, f
         const float radialDistance = std::sqrt(std::max(radialSquared, 0.0f));
         const float remaining = desiredRadius - radialDistance;
         const float safeClosingSpeed = std::max(closingSpeed, 0.25f + cameraSpeed * 0.05f);
-        const float timeToContact = std::max((depthAhead - minimumRadius * 0.35f) / safeClosingSpeed, seconds);
+        const float timeToContact = std::max((depthAhead - minimumRadius * 0.35f) / safeClosingSpeed,
+            seconds);
         const float fraction = std::clamp(seconds * 2.4f / timeToContact, 0.0f, 1.0f);
         const float displacement = std::min(remaining * fraction, 8.0f * seconds);
         body.position.x += normal.x * displacement;
@@ -454,7 +465,8 @@ void Simulation::InitializeFlightBodies(std::size_t firstBody) {
     const float seedOffset = static_cast<float>(seed & 0xffffU) / 65536.0f;
     for (std::size_t index = firstBody; index < activeBodyCount; index++) {
         Body& body = bodies[index];
-        const float depthFraction = std::fmod(seedOffset + static_cast<float>(index + 1) * goldenRatioFraction, 1.0f);
+        const float depthFraction =
+            std::fmod(seedOffset + static_cast<float>(index + 1) * goldenRatioFraction, 1.0f);
         const bool closePass = index % 4U == 0U;
         const float depthRange = closePass ? 82.0f : 169.0f;
         const float depth = 2.5f + std::pow(depthFraction, 1.35f) * depthRange;
@@ -467,8 +479,8 @@ void Simulation::InitializeFlightBodies(std::size_t firstBody) {
     }
 }
 
-/// Advances the forward-flight camera along one constant central rail without targeting, turning, pitching, rolling
-/// or lateral avoidance.
+/// Advances the forward-flight camera along one constant central rail without targeting, turning, pitching,
+/// rolling or lateral avoidance.
 void Simulation::UpdateCamera(float seconds, float cameraSpeed) {
     cameraVelocity = Vec3{ 0.0f, 0.0f, 2.4f * cameraSpeed };
     cameraPosition += cameraVelocity * seconds;
