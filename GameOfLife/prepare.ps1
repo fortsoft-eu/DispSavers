@@ -77,7 +77,7 @@ try {
 [ResourcePacker]::Pack($Source, $Output, $Patterns.IsPresent)
 
 if ($License) {
-    $licenseText = [IO.File]::ReadAllText($License, $encoding).TrimEnd() + "`r`n`r`n"
-    $licenseText += [IO.File]::ReadAllText($Notices, $encoding)
+    $licenseText = [IO.File]::ReadAllText($License, $encoding).Trim() + "`r`n`r`n`r`n"
+    $licenseText += [IO.File]::ReadAllText($Notices, $encoding).Trim()
     [IO.File]::WriteAllText((Join-Path $directory 'license.utf8'), $licenseText, $encoding)
 }

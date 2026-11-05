@@ -1,15 +1,12 @@
 Third-party licenses
 ====================
-
 Conway pattern catalog
 ----------------------
-
 The pattern catalog is separate from the MIT-licensed DispSavers program code.
 It contains imported numerical Conway B3/S23 patterns and source annotations.
 
 LifeWiki collection
 -------------------
-
 Copyright belongs to the original pattern authors and LifeWiki contributors.
 The LifeWiki portion is provided under the GNU Free Documentation License,
 version 1.2 or a later version, with no invariant sections and no cover-text
@@ -36,8 +33,7 @@ Please retain these notices, the complete license below, and the source
 attribution information when redistributing the catalog.
 
 Alan Hensel collections
-----------------------
-
+-----------------------
 The lifep.zip and lifebc.zip collections were downloaded directly from:
 https://www.ibiblio.org/lifepatterns/
 
@@ -52,15 +48,13 @@ The importer and its XML record are preserved separately with the sources.
 These data notices do not change the program's MIT license.
 
 
+GNU Free Documentation License
+Version 1.3, 3 November 2008
 
-                GNU Free Documentation License
-                 Version 1.3, 3 November 2008
-
-
- Copyright (C) 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc.
-     <https://fsf.org/>
- Everyone is permitted to copy and distribute verbatim copies
- of this license document, but changing it is not allowed.
+Copyright (C) 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc.
+<https://fsf.org/>
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
 
 0. PREAMBLE
 
@@ -84,7 +78,6 @@ software does.  But this License is not limited to software manuals;
 it can be used for any textual work, regardless of subject matter or
 whether it is published as a printed book.  We recommend this License
 principally for works whose purpose is instruction or reference.
-
 
 1. APPLICABILITY AND DEFINITIONS
 
@@ -190,7 +183,6 @@ number of copies you must also follow the conditions in section 3.
 You may also lend copies, under the same conditions stated above, and
 you may publicly display copies.
 
-
 3. COPYING IN QUANTITY
 
 If you publish printed copies (or copies in media that commonly have
@@ -229,7 +221,6 @@ Document well before redistributing any large number of copies, to
 give them a chance to provide you with an updated version of the
 Document.
 
-
 4. MODIFICATIONS
 
 You may copy and distribute a Modified Version of the Document under
@@ -238,7 +229,6 @@ the Modified Version under precisely this License, with the Modified
 Version filling the role of the Document, thus licensing distribution
 and modification of the Modified Version to whoever possesses a copy
 of it.  In addition, you must do these things in the Modified Version:
-
 A. Use in the Title Page (and on the covers, if any) a title distinct
    from that of the Document, and from those of previous versions
    (which should, if there were any, be listed in the History section
@@ -314,7 +304,6 @@ The author(s) and publisher(s) of the Document do not by this License
 give permission to use their names for publicity for or to assert or
 imply endorsement of any Modified Version.
 
-
 5. COMBINING DOCUMENTS
 
 You may combine the Document with other documents released under this
@@ -339,7 +328,6 @@ in the various original documents, forming one section Entitled
 and any sections Entitled "Dedications".  You must delete all sections
 Entitled "Endorsements".
 
-
 6. COLLECTIONS OF DOCUMENTS
 
 You may make a collection consisting of the Document and other
@@ -354,7 +342,6 @@ distribute it individually under this License, provided you insert a
 copy of this License into the extracted document, and follow this
 License in all other respects regarding verbatim copying of that
 document.
-
 
 7. AGGREGATION WITH INDEPENDENT WORKS
 
@@ -375,7 +362,6 @@ electronic equivalent of covers if the Document is in electronic form.
 Otherwise they must appear on printed covers that bracket the whole
 aggregate.
 
-
 8. TRANSLATION
 
 Translation is considered a kind of modification, so you may
@@ -395,7 +381,6 @@ If a section in the Document is Entitled "Acknowledgements",
 "Dedications", or "History", the requirement (section 4) to Preserve
 its Title (section 1) will typically require changing the actual
 title.
-
 
 9. TERMINATION
 
@@ -423,7 +408,6 @@ licenses of parties who have received copies or rights from you under
 this License.  If your rights have been terminated and not permanently
 reinstated, receipt of a copy of some or all of the same material does
 not give you any rights to use it.
-
 
 10. FUTURE REVISIONS OF THIS LICENSE
 
@@ -474,26 +458,23 @@ The operator of an MMC Site may republish an MMC contained in the site
 under CC-BY-SA on the same site at any time before August 1, 2009,
 provided the MMC is eligible for relicensing.
 
-
 ADDENDUM: How to use this License for your documents
 
 To use this License in a document you have written, include a copy of
 the License in the document and put the following copyright and
 license notices just after the title page:
-
-    Copyright (c)  YEAR  YOUR NAME.
-    Permission is granted to copy, distribute and/or modify this document
-    under the terms of the GNU Free Documentation License, Version 1.3
-    or any later version published by the Free Software Foundation;
-    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
-    A copy of the license is included in the section entitled "GNU
-    Free Documentation License".
+Copyright (c)  YEAR  YOUR NAME.
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled "GNU
+Free Documentation License".
 
 If you have Invariant Sections, Front-Cover Texts and Back-Cover Texts,
 replace the "with...Texts." line with this:
-
-    with the Invariant Sections being LIST THEIR TITLES, with the
-    Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST.
+with the Invariant Sections being LIST THEIR TITLES, with the
+Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST.
 
 If you have Invariant Sections without Cover Texts, or some other
 combination of the three, merge those two alternatives to suit the
