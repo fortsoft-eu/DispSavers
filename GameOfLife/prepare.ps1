@@ -31,7 +31,8 @@ param(
     [string]$Output,
     [switch]$Patterns,
     [string]$License,
-    [string]$Notices
+    [string]$Notices,
+    [string]$Resource
 )
 
 $ErrorActionPreference = 'Stop'
@@ -80,4 +81,15 @@ if ($License) {
     $licenseText = [IO.File]::ReadAllText($License, $encoding).Trim() + "`r`n`r`n`r`n"
     $licenseText += [IO.File]::ReadAllText($Notices, $encoding).Trim()
     [IO.File]::WriteAllText((Join-Path $directory 'license.utf8'), $licenseText, $encoding)
+}
+
+if ($Resource) {
+    $resourceText = [IO.File]::ReadAllText($Resource, $encoding)
+    [regex]$licenseResource = '(?m)^([ \t]*IDR_LICENSE[ \t]+RCDATA[ \t]+)"[^"\r\n]*"'
+    if ($licenseResource.Matches($resourceText).Count -ne 1) {
+        throw 'Expected exactly one IDR_LICENSE resource in the resource script.'
+    }
+    $resourceText = $licenseResource.Replace($resourceText, '$1"license.utf8"')
+    [IO.File]::WriteAllText((Join-Path $directory ([IO.Path]::GetFileName($Resource))),
+        $resourceText, $encoding)
 }

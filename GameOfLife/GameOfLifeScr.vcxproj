@@ -48,7 +48,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>Usp10.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -140,10 +140,10 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="LifePatterns.xml">
-      <Command>&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(ProjectDir)prepare.ps1&quot; -Source &quot;%(FullPath)&quot; -Output &quot;$(IntDir)LifePatterns.packed&quot; -Patterns -License &quot;$(ProjectDir)..\license.txt&quot; -Notices &quot;$(ProjectDir)LifePatternsLicense.txt&quot;</Command>
+      <Command>&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(ProjectDir)prepare.ps1&quot; -Source &quot;%(FullPath)&quot; -Output &quot;$(IntDir)LifePatterns.packed&quot; -Patterns -License &quot;$(ProjectDir)..\license.txt&quot; -Notices &quot;$(ProjectDir)LifePatternsLicense.txt&quot; -Resource &quot;$(ProjectDir)GameOfLife.rc&quot;</Command>
       <Message>Preparing the Game of Life pattern catalog and license</Message>
-      <Outputs>$(IntDir)LifePatterns.dat;$(IntDir)LifePatterns.packed;$(IntDir)license.utf8</Outputs>
-      <AdditionalInputs>$(ProjectDir)prepare.ps1;$(ProjectDir)ResourcePacker.cs;$(ProjectDir)..\license.txt;$(ProjectDir)LifePatternsLicense.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs>$(IntDir)LifePatterns.dat;$(IntDir)LifePatterns.packed;$(IntDir)license.utf8;$(IntDir)GameOfLife.rc</Outputs>
+      <AdditionalInputs>$(ProjectDir)prepare.ps1;$(ProjectDir)ResourcePacker.cs;$(ProjectDir)..\license.txt;$(ProjectDir)LifePatternsLicense.txt;$(ProjectDir)GameOfLife.rc;%(AdditionalInputs)</AdditionalInputs>
       <LinkObjects>false</LinkObjects>
     </CustomBuild>
     <CustomBuild Include="GameOfLife.hlsl">
@@ -177,4 +177,10 @@ if errorlevel 1 exit /b %errorlevel%</Command>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\BuildSigning.targets" />
   </ImportGroup>
+  <Target Name="UsePreparedResourceScript" BeforeTargets="ResourceCompile">
+    <ItemGroup>
+      <ResourceCompile Remove="GameOfLife.rc" />
+      <ResourceCompile Include="$(IntDir)GameOfLife.rc" />
+    </ItemGroup>
+  </Target>
 </Project>

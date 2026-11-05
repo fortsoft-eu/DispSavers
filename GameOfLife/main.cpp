@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.0.1
  */
 
 #define NOMINMAX
@@ -217,7 +217,7 @@ struct Application {
     bool startupFailed = false;
     bool saverCursorHidden = false;
     RenderSurface* recordingSource = nullptr;
-    std::jthread patternCatalogThread;
+    std::thread patternCatalogThread;
 };
 
 /// One display and its cached localized monitor-list texts.
@@ -3130,7 +3130,6 @@ static void CloseApplication() {
     if (app->closing.exchange(true, std::memory_order_relaxed)) {
         return;
     }
-    app->patternCatalogThread.request_stop();
     ReleaseScreenSaverInhibition(*app);
     StopRecording();
     PostQuitMessage(0);
@@ -5648,14 +5647,14 @@ static bool CreateSettingsWindow(SettingsWindowData& data) {
 }
 
 /// Unpacks, validates, sorts and prepares the catalog without touching controls or the renderer lock.
-static void LoadPatternCatalog(std::stop_token stop, HWND window, DWORD threadId) {
+static void LoadPatternCatalog(const Application* application, HWND window, DWORD threadId) {
     bool succeeded = true;
     try {
         PatternCatalog::All();
     } catch (const std::exception&) {
         succeeded = false;
     }
-    if (stop.stop_requested()) {
+    if (application->closing.load(std::memory_order_relaxed)) {
         return;
     }
     if (window) {
@@ -5927,14 +5926,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstan
     MSG message{};
     PeekMessageW(&message, nullptr, 0, 0, PM_NOREMOVE);
     try {
-        application.patternCatalogThread =
-            std::jthread(LoadPatternCatalog, application.controlWindow, GetCurrentThreadId());
+        application.patternCatalogThread = std::thread(LoadPatternCatalog, &application,
+            application.controlWindow, GetCurrentThreadId());
     } catch (const std::exception&) {
         CompletePatternCatalogLoad(false, data.settings ? &data : nullptr);
     }
     RunApplicationMessageLoop(application, data.settings ? &data : nullptr);
     application.closing.store(true, std::memory_order_relaxed);
-    application.patternCatalogThread.request_stop();
     StopRenderSurfaces();
     CloseInformationWindows();
     if (application.controlWindow) {
@@ -5946,6 +5944,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstan
     }
     if (application.installProcess) {
         CloseHandle(application.installProcess);
+    }
+    if (application.patternCatalogThread.joinable()) {
+        application.patternCatalogThread.join();
     }
     app = nullptr;
     return application.startupFailed ? 1 : 0;
