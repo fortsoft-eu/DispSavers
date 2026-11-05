@@ -3448,7 +3448,9 @@ static bool StartRenderSurfaces() {
         return false;
     }
     SynchronizeRuntimeSettings();
-    UpdateControlWindowTopmost(app->controlWindow);
+    if (app->mode == RunMode::Application) {
+        UpdateControlWindowTopmost(app->controlWindow);
+    }
     if (app->settings.patternsOnly && !app->patternCatalogReady) {
         return true;
     }
@@ -3464,6 +3466,38 @@ static bool StartRenderSurfaces() {
         surface->stopRequested.store(false, std::memory_order_relaxed);
         surface->renderThread = std::thread(RenderSurfaceLoop, surface.get());
     }
+    return true;
+}
+
+/// Ends settings preview and restores the settings window's normal Z order.
+static void StopSettingsPreview(HWND settingsWindow) {
+    if (!app || !app->previewActive) {
+        return;
+    }
+    StopRenderSurfaces();
+    app->previewActive = false;
+    SetWindowPos(settingsWindow, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+    UpdateInformationWindowsTopmost(settingsWindow);
+}
+
+/// Starts the shared preview scene and activates settings using the common saver completion sequence.
+static bool StartSettingsPreview(HWND settingsWindow, SettingsWindowData& data) {
+    if (!app || app->previewActive) {
+        return app && app->previewActive;
+    }
+    StopRenderSurfaces();
+    SynchronizeRuntimeSettings();
+    const bool created = StartRenderSurfaces();
+    if (!created || app->surfaces.empty()) {
+        StopRenderSurfaces();
+        MessageBoxW(settingsWindow, GetLocalizedText(data.language, TXT_RENDERER_FAILED), PRODUCT_NAME,
+            MB_OK | MB_ICONERROR);
+        return false;
+    }
+    app->previewActive = true;
+    SetWindowPos(settingsWindow, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+    UpdateInformationWindowsTopmost(settingsWindow);
+    SetForegroundWindow(settingsWindow);
     return true;
 }
 
@@ -5509,15 +5543,10 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     return 0;
                 case ID_PREVIEW_TOGGLE:
                     if (app->previewActive) {
-                        StopRenderSurfaces();
-                        app->previewActive = false;
+                        StopSettingsPreview(window);
                     } else {
-                        app->previewActive = StartRenderSurfaces();
-                        if (!app->previewActive) {
-                            PostMessageW(window, RENDERER_FAILED, 0, 0);
-                        }
+                        StartSettingsPreview(window, *data);
                     }
-                    UpdateControlWindowTopmost(app->controlWindow);
                     UpdateSettingsOutputControls(window, *data);
                     return 0;
                 case ID_HELP:
