@@ -40,7 +40,7 @@ Vinkjes in EXE schakelen schermen in; instellingen gelden voor de gedeelde werel
 
 ### Beginstand en patronen
 
-Standaard start willekeurige ruis met 25 % levende cellen. Begindichtheid van 0–100 % geldt bij de volgende herstart. Alleen bekende patronen gebruikt 4.106 meegeleverde patronen zonder ruis en schakelt dichtheid uit. Kies een mengsel of een patroon op naam; afmetingen zijn in cellen. Typ een naam om te zoeken. Alleen volledig passende patronen staan in de lijst. Kleine gecontroleerde patronen verschijnen in losse kopieën, grote of complexe één keer in het midden. Verkleinen kan een te grote keuze vervangen door een mengsel. Een andere modus of patroon maakt een nieuwe scène. Herstarts behouden de keuze; de catalogus werkt offline.
+Standaard start willekeurige ruis met 25 % levende cellen. Begindichtheid van 0–100 % geldt bij de volgende herstart. Alleen bekende patronen gebruikt 4.106 meegeleverde patronen zonder ruis en schakelt dichtheid uit. Kies een mengsel of een patroon op naam; afmetingen zijn in cellen. Typ een naam om te zoeken. Alle patronen in de catalogus zijn altijd beschikbaar. Kleine gecontroleerde patronen verschijnen in losse kopieën, grote of complexe één keer in het midden. Een te groot patroon wordt gecentreerd en bijgesneden; een andere wereld- of celgrootte behoudt de keuze. Een andere modus of patroon maakt een nieuwe scène. Herstarts behouden de keuze; de catalogus werkt offline.
 
 ### Celgrootte, raster en kleuren
 
@@ -52,7 +52,7 @@ De snelheid is 0–240 generaties/s, los van de verversingssnelheid; 0 stopt de 
 
 ### Waarden herstellen
 
-Herstellen zet de getoonde celgrootte op 8 px met of zonder raster (afstand 9 of 8 px), de snelheid op 20 generaties/s, de dichtheid op 25 % en herstelt de drie standaardkleuren. Andere keuzes blijven behouden; een patroon dat niet meer past, wordt vervangen door het mengsel. Een nieuwe scène ontstaat alleen bij gewijzigde afstand of gewijzigde dichtheid in ruismodus.
+Herstellen zet de getoonde celgrootte op 8 px met of zonder raster (afstand 9 of 8 px), de snelheid op 20 generaties/s, de dichtheid op 25 % en herstelt de drie standaardkleuren. Andere keuzes, inclusief het gekozen patroon, blijven behouden. Een nieuwe scène ontstaat alleen bij gewijzigde afstand of gewijzigde dichtheid in ruismodus.
 
 ### Zelfstandige toepassing en MP4-opname
 

@@ -40,7 +40,7 @@ Kryssrutorna i EXE aktiverar skärmar; inställningarna gäller den gemensamma v
 
 ### Startläge och mönster
 
-Standardstarten är slumpbrus med 25 % levande celler. Starttäthet 0–100 % används vid nästa omstart. Endast kända mönster använder 4 106 medföljande mönster utan brus och inaktiverar täthet. Välj en blandning eller ett namn; mått anges i celler. Skriv ett namn för att söka. Bara mönster som ryms helt visas. Små kontrollerade mönster upprepas i separata kopior, stora eller komplicerade en gång i mitten. En mindre värld kan ersätta ett för stort val med en blandning. Ändrat läge eller mönster skapar en ny scen. Omstart behåller valet; katalogen fungerar utan nät.
+Standardstarten är slumpbrus med 25 % levande celler. Starttäthet 0–100 % används vid nästa omstart. Endast kända mönster använder 4 106 medföljande mönster utan brus och inaktiverar täthet. Välj en blandning eller ett namn; mått anges i celler. Skriv ett namn för att söka. Alla mönster i katalogen är alltid tillgängliga. Små kontrollerade mönster upprepas i separata kopior, stora eller komplicerade en gång i mitten. Ett för stort mönster centreras och beskärs; ändrad världs- eller cellstorlek bevarar valet. Ändrat läge eller mönster skapar en ny scen. Omstart behåller valet; katalogen fungerar utan nät.
 
 ### Celler, rutnät och färger
 
@@ -52,7 +52,7 @@ Hastigheten är 0–240 generationer/s oberoende av skärmens uppdatering; 0 sto
 
 ### Återställ värden
 
-Återställning sätter visad cellstorlek till 8 px med eller utan rutnät (avstånd 9 eller 8 px), hastighet till 20 generationer/s, täthet till 25 % och de tre standardfärgerna. Andra val bevaras; ett mönster som inte längre ryms ersätts av blandningen. En ny scen skapas bara om avståndet ändras eller tätheten ändras i brusläge.
+Återställning sätter visad cellstorlek till 8 px med eller utan rutnät (avstånd 9 eller 8 px), hastighet till 20 generationer/s, täthet till 25 % och de tre standardfärgerna. Andra val, inklusive det valda mönstret, bevaras. En ny scen skapas bara om avståndet ändras eller tätheten ändras i brusläge.
 
 ### Fristående program och MP4-inspelning
 

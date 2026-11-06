@@ -40,7 +40,7 @@ Il-kaxxi fl-EXE jattivaw l-iskrins; is-settings japplikaw għad-dinja komuni. Sk
 
 ### Stat inizjali u forom
 
-Il-bidu standard huwa storbju każwali b'25 % ċelloli ħajjin. Id-densità inizjali 0–100 % tintuża fil-bidu mill-ġdid li jmiss. Forom magħrufa biss tuża 4 106 forom inklużi mingħajr storbju u tiddiżattiva d-densità. Agħżel taħlita jew isem; id-dimensjonijiet huma f'ċelloli. Ittajpja isem biex tfittex. Jidhru biss forom li jidħlu sħaħ. Forom żgħar ivverifikati jirrepetu f'kopji separati, kbar jew kumplessi darba fiċ-ċentru. Dinja iżgħar tista' tissostitwixxi għażla kbira wisq b'taħlita. Bidla tal-mod jew forma toħloq xena ġdida. Bidu mill-ġdid iżomm l-għażla; il-katalgu jaħdem mingħajr internet.
+Il-bidu standard huwa storbju każwali b'25 % ċelloli ħajjin. Id-densità inizjali 0–100 % tintuża fil-bidu mill-ġdid li jmiss. Forom magħrufa biss tuża 4 106 forom inklużi mingħajr storbju u tiddiżattiva d-densità. Agħżel taħlita jew isem; id-dimensjonijiet huma f'ċelloli. Ittajpja isem biex tfittex. Il-forom kollha tal-katalgu huma dejjem disponibbli. Forom żgħar ivverifikati jirrepetu f'kopji separati, kbar jew kumplessi darba fiċ-ċentru. Forma kbira wisq titqiegħed fiċ-ċentru u tinqata’ fit-truf; bidla fid-daqs tad-dinja jew taċ-ċelloli żżomm l-għażla. Bidla tal-mod jew forma toħloq xena ġdida. Bidu mill-ġdid iżomm l-għażla; il-katalgu jaħdem mingħajr internet.
 
 ### Ċelloli, gradilja u kuluri
 
@@ -52,7 +52,7 @@ Il-veloċità hija 0–240 ġenerazzjonijiet/s, indipendenti mir-rata tal-iskrin
 
 ### Irrisettja l-valuri
 
-Ir-reset jistabbilixxi d-daqs muri taċ-ċellola għal 8 px bil-gradilja jew mingħajrha (spazjar ta’ 9 jew 8 px), il-veloċità għal 20 ġenerazzjonijiet/s, id-densità għal 25 % u t-tliet kuluri standard. L-għażliet l-oħra jinżammu; forma li ma tibqax toqgħod tiġi sostitwita bit-taħlita. Tinħoloq xena ġdida biss jekk jinbidel l-ispazjar jew id-densità fil-mod tal-istorbju.
+Ir-reset jistabbilixxi d-daqs muri taċ-ċellola għal 8 px bil-gradilja jew mingħajrha (spazjar ta’ 9 jew 8 px), il-veloċità għal 20 ġenerazzjonijiet/s, id-densità għal 25 % u t-tliet kuluri standard. L-għażliet l-oħra, inkluża l-forma magħżula, jinżammu. Tinħoloq xena ġdida biss jekk jinbidel l-ispazjar jew id-densità fil-mod tal-istorbju.
 
 ### Applikazzjoni indipendenti u reġistrazzjoni MP4
 

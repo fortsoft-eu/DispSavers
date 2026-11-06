@@ -40,7 +40,7 @@ EXE'deki kutular ekranları etkinleştirir; ayarlar paylaşılan dünyaya uygula
 
 ### Başlangiç durumu ve desenler
 
-Varsayılan başlangıç, %25 canlı hücreli rastgele gürültüdür. %0–100 başlangıç yoğunluğu sonraki yeniden başlatmada kullanılır. Yalnızca bilinen desenler, gürültüsüz 4.106 yerleşik desen kullanır ve yoğunluğu kapatır. Karışım veya bir ad seçin; boyutlar hücre cinsindendir. Aramak için ad yazın. Yalnızca tamamen sığan desenler listelenir. Doğrulanmış küçük desenler ayrı kopyalarda tekrarlanır; büyük veya karmaşık desenler ortada bir kez başlar. Dünyayı küçültmek, sığmayan seçimi karışımla değiştirebilir. Modu veya deseni değiştirmek yeni sahne başlatır. Yeniden başlatmalar seçimi korur; katalog çevrimdışı çalışır.
+Varsayılan başlangıç, %25 canlı hücreli rastgele gürültüdür. %0–100 başlangıç yoğunluğu sonraki yeniden başlatmada kullanılır. Yalnızca bilinen desenler, gürültüsüz 4.106 yerleşik desen kullanır ve yoğunluğu kapatır. Karışım veya bir ad seçin; boyutlar hücre cinsindendir. Aramak için ad yazın. Katalogdaki tüm desenler her zaman kullanılabilir. Doğrulanmış küçük desenler ayrı kopyalarda tekrarlanır; büyük veya karmaşık desenler ortada bir kez başlar. Fazla büyük desen ortalanıp kırpılır; dünya veya hücre boyutunu değiştirmek seçimi korur. Modu veya deseni değiştirmek yeni sahne başlatır. Yeniden başlatmalar seçimi korur; katalog çevrimdışı çalışır.
 
 ### Hücre boyutu, izgara ve renkler
 
@@ -52,7 +52,7 @@ Hız, ekran yenilemesinden bağımsız 0–240 nesil/sn'dir; 0 gelişimi durduru
 
 ### Değerleri sıfırla
 
-Sıfırlama, ızgara açık veya kapalıyken gösterilen hücre boyutunu 8 px yapar (aralık 9 veya 8 px); hızı 20 nesil/sn, yoğunluğu %25 ve üç rengi varsayılan değerlerine döndürür. Diğer seçimler korunur; artık sığmayan desenin yerini karışım alır. Yalnızca aralık değişirse veya gürültü modunda yoğunluk değişirse yeni sahne oluşturulur.
+Sıfırlama, ızgara açık veya kapalıyken gösterilen hücre boyutunu 8 px yapar (aralık 9 veya 8 px); hızı 20 nesil/sn, yoğunluğu %25 ve üç rengi varsayılan değerlerine döndürür. Seçili desen dahil diğer seçimler korunur. Yalnızca aralık değişirse veya gürültü modunda yoğunluk değişirse yeni sahne oluşturulur.
 
 ### Bağimsiz uygulama ve MP4 kaydi
 

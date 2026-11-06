@@ -40,7 +40,7 @@ Az EXE jelölőnégyzetei engedélyezik a kijelzőket; a beállítások a közö
 
 ### Kezdőállapot és minták
 
-Az alapállapot véletlen zaj 25 % élő cellával. A 0–100 % kezdeti sűrűség a következő újraindításkor érvényesül. A Csak ismert minták 4 106 beépített mintát használ zaj nélkül, és letiltja a sűrűséget. Válasszon keveréket vagy nevet; a méret cellákban értendő. Gépeléssel kereshet. Csak a teljesen elférő minták szerepelnek. A kis ellenőrzött minták külön másolatokban ismétlődnek, a nagyok vagy összetettek egyszer középen jelennek meg. Kisebb világban a már nem férő választást keverék válthatja fel. Mód- vagy mintaváltás új jelenetet indít. Az újraindítás megőrzi a választást; a katalógus internet nélkül működik.
+Az alapállapot véletlen zaj 25 % élő cellával. A 0–100 % kezdeti sűrűség a következő újraindításkor érvényesül. A Csak ismert minták 4 106 beépített mintát használ zaj nélkül, és letiltja a sűrűséget. Válasszon keveréket vagy nevet; a méret cellákban értendő. Gépeléssel kereshet. A katalógus összes mintája mindig elérhető. A kis ellenőrzött minták külön másolatokban ismétlődnek, a nagyok vagy összetettek egyszer középen jelennek meg. A túl nagy minta középre kerül, és a szélein levágódik; a világ vagy a cellák méretének módosítása megőrzi a választást. Mód- vagy mintaváltás új jelenetet indít. Az újraindítás megőrzi a választást; a katalógus internet nélkül működik.
 
 ### Cellaméret, rács és színek
 
@@ -52,7 +52,7 @@ A sebesség 0–240 generáció/s, a képfrissítéstől függetlenül; 0 megál
 
 ### Értékek visszaállítása
 
-A visszaállítás a kijelzett cellaméretet ráccsal és anélkül is 8 px-re állítja (térköz 9 vagy 8 px), a sebességet 20 generáció/s-ra, a sűrűséget 25 %-ra, és visszaállítja a három alapértelmezett színt. A többi választás megmarad; a már nem elférő mintát keverék váltja fel. Új jelenet csak a térköz változásakor vagy zajmódban a sűrűség változásakor indul.
+A visszaállítás a kijelzett cellaméretet ráccsal és anélkül is 8 px-re állítja (térköz 9 vagy 8 px), a sebességet 20 generáció/s-ra, a sűrűséget 25 %-ra, és visszaállítja a három alapértelmezett színt. A többi választás, a kijelölt mintával együtt, megmarad. Új jelenet csak a térköz változásakor vagy zajmódban a sűrűség változásakor indul.
 
 ### Önálló alkalmazás és MP4-felvétel
 

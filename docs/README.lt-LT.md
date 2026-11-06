@@ -40,7 +40,7 @@ EXE žymimieji langeliai įjungia ekranus; nuostatos taikomos bendram pasauliui.
 
 ### Pradinė būsena ir konfigūracijos
 
-Numatytoji pradžia – atsitiktinis triukšmas su 25 % gyvų langelių. Pradinis tankis 0–100 % taikomas kitą kartą pradedant iš naujo. Tik žinomos konfigūracijos naudoja 4 106 įtrauktas konfigūracijas be triukšmo ir išjungia tankį. Pasirinkite mišinį arba pavadinimą; matmenys pateikti langeliais. Ieškokite įvesdami pavadinimą. Siūlomos tik visiškai telpančios konfigūracijos. Mažos patikrintos kartojamos atskiromis kopijomis, didelės ar sudėtingos rodomos vieną kartą centre. Sumažinus pasaulį nebetelpantis pasirinkimas gali būti pakeistas mišiniu. Pakeitus režimą ar konfigūraciją sukuriama nauja scena. Paleidimas iš naujo išlaiko pasirinkimą; katalogas veikia be interneto.
+Numatytoji pradžia – atsitiktinis triukšmas su 25 % gyvų langelių. Pradinis tankis 0–100 % taikomas kitą kartą pradedant iš naujo. Tik žinomos konfigūracijos naudoja 4 106 įtrauktas konfigūracijas be triukšmo ir išjungia tankį. Pasirinkite mišinį arba pavadinimą; matmenys pateikti langeliais. Ieškokite įvesdami pavadinimą. Visos katalogo konfigūracijos visada prieinamos. Mažos patikrintos kartojamos atskiromis kopijomis, didelės ar sudėtingos rodomos vieną kartą centre. Per didelė konfigūracija centruojama ir apkerpama; pakeitus pasaulio ar langelių dydį pasirinkimas išsaugomas. Pakeitus režimą ar konfigūraciją sukuriama nauja scena. Paleidimas iš naujo išlaiko pasirinkimą; katalogas veikia be interneto.
 
 ### Langeliai, tinklelis ir spalvos
 
@@ -52,7 +52,7 @@ Greitis yra 0–240 kartų/s ir nepriklauso nuo ekrano atnaujinimo; 0 sustabdo r
 
 ### Atkurti reikšmes
 
-Atkūrimas nustato rodomą langelio dydį į 8 px su tinkleliu arba be jo (žingsnis 9 arba 8 px), greitį į 20 kartų/s, tankį į 25 % ir tris numatytąsias spalvas. Kitos parinktys išsaugomos; nebetelpanti konfigūracija pakeičiama mišiniu. Nauja scena sukuriama tik pasikeitus žingsniui arba tankiui triukšmo režimu.
+Atkūrimas nustato rodomą langelio dydį į 8 px su tinkleliu arba be jo (žingsnis 9 arba 8 px), greitį į 20 kartų/s, tankį į 25 % ir tris numatytąsias spalvas. Kitos parinktys, įskaitant pasirinktą konfigūraciją, išsaugomos. Nauja scena sukuriama tik pasikeitus žingsniui arba tankiui triukšmo režimu.
 
 ### Atskira programa ir MP4 įrašymas
 

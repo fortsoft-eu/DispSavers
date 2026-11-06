@@ -40,7 +40,7 @@ Potvrdni okviri u EXE uključuju monitore; postavke vrijede za zajednički svije
 
 ### Početno stanje i uzorci
 
-Zadani početak je nasumični šum s 25 % živih ćelija. Početna gustoća 0–100 % primjenjuje se pri sljedećem ponovnom pokretanju. Samo poznati uzorci koristi 4.106 priloženih uzoraka bez šuma i isključuje gustoću. Odaberite mješavinu ili naziv; dimenzije su u ćelijama. Tipkajte naziv za pretraživanje. Nude se samo uzorci koji stanu cijeli. Mali provjereni uzorci ponavljaju se u odvojenim kopijama, veliki ili složeni jednom u sredini. Smanjenje svijeta može prevelik odabir zamijeniti mješavinom. Promjena načina ili uzorka stvara novu scenu. Ponovna pokretanja čuvaju odabir; katalog radi izvan mreže.
+Zadani početak je nasumični šum s 25 % živih ćelija. Početna gustoća 0–100 % primjenjuje se pri sljedećem ponovnom pokretanju. Samo poznati uzorci koristi 4.106 priloženih uzoraka bez šuma i isključuje gustoću. Odaberite mješavinu ili naziv; dimenzije su u ćelijama. Tipkajte naziv za pretraživanje. Svi uzorci iz kataloga uvijek su dostupni. Mali provjereni uzorci ponavljaju se u odvojenim kopijama, veliki ili složeni jednom u sredini. Prevelik uzorak centrira se i odrezuje na rubovima; promjena veličine svijeta ili ćelija čuva odabir. Promjena načina ili uzorka stvara novu scenu. Ponovna pokretanja čuvaju odabir; katalog radi izvan mreže.
 
 ### Ćelije, mreža i boje
 
@@ -52,7 +52,7 @@ Brzina je 0–240 generacija/s neovisno o osvježavanju; 0 zaustavlja razvoj. St
 
 ### Vrati vrijednosti
 
-Vraćanje postavlja prikazanu veličinu ćelije na 8 px s mrežom ili bez nje (razmak 9 ili 8 px), brzinu na 20 generacija/s, gustoću na 25 % i tri zadane boje. Ostali izbori ostaju; uzorak koji više ne stane zamjenjuje se mješavinom. Nova scena nastaje samo pri promjeni razmaka ili gustoće u načinu sa šumom.
+Vraćanje postavlja prikazanu veličinu ćelije na 8 px s mrežom ili bez nje (razmak 9 ili 8 px), brzinu na 20 generacija/s, gustoću na 25 % i tri zadane boje. Ostali izbori, uključujući odabrani uzorak, ostaju. Nova scena nastaje samo pri promjeni razmaka ili gustoće u načinu sa šumom.
 
 ### Samostalna aplikacija i MP4 snimanje
 

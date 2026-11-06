@@ -40,7 +40,7 @@ EXE izvēles rūtiņas ieslēdz ekrānus; iestatījumi attiecas uz kopīgo pasau
 
 ### Sākumstāvoklis un raksti
 
-Noklusējuma sākums ir nejaušs troksnis ar 25 % dzīvu šūnu. Sākuma blīvums 0–100 % tiek lietots nākamajā atsākšanā. Tikai zināmi raksti izmanto 4 106 iekļautus rakstus bez trokšņa un atspējo blīvumu. Izvēlieties sajaukumu vai nosaukumu; izmēri norādīti šūnās. Meklēšanai rakstiet nosaukumu. Tiek piedāvāti tikai pilnībā ietilpstoši raksti. Mazi pārbaudīti raksti atkārtojas atsevišķās kopijās, lieli vai sarežģīti sākas vienreiz centrā. Samazinot pasauli, pārāk lielu izvēli var aizstāt ar sajaukumu. Režīma vai raksta maiņa izveido jaunu ainu. Atsākšana saglabā izvēli; katalogs darbojas bezsaistē.
+Noklusējuma sākums ir nejaušs troksnis ar 25 % dzīvu šūnu. Sākuma blīvums 0–100 % tiek lietots nākamajā atsākšanā. Tikai zināmi raksti izmanto 4 106 iekļautus rakstus bez trokšņa un atspējo blīvumu. Izvēlieties sajaukumu vai nosaukumu; izmēri norādīti šūnās. Meklēšanai rakstiet nosaukumu. Visi kataloga raksti vienmēr ir pieejami. Mazi pārbaudīti raksti atkārtojas atsevišķās kopijās, lieli vai sarežģīti sākas vienreiz centrā. Pārāk liels raksts tiek centrēts un apgriezts; pasaules vai šūnu izmēra maiņa saglabā izvēli. Režīma vai raksta maiņa izveido jaunu ainu. Atsākšana saglabā izvēli; katalogs darbojas bezsaistē.
 
 ### Šūnas, režģis un krāsas
 
@@ -52,7 +52,7 @@ Bez režģa šūnas izmērs ir 1–64 px. Režģis esošajā solī pievieno 1 px
 
 ### Atiestatīt vērtības
 
-Atiestatīšana nosaka parādīto šūnas izmēru 8 px ar režģi vai bez tā (solis 9 vai 8 px), ātrumu 20 paaudzes/s, blīvumu 25 % un atjauno trīs noklusējuma krāsas. Pārējās izvēles saglabājas; rakstu, kas vairs neietilpst, aizstāj sajaukums. Jauna aina tiek izveidota tikai tad, ja mainās solis vai blīvums trokšņa režīmā.
+Atiestatīšana nosaka parādīto šūnas izmēru 8 px ar režģi vai bez tā (solis 9 vai 8 px), ātrumu 20 paaudzes/s, blīvumu 25 % un atjauno trīs noklusējuma krāsas. Pārējās izvēles, tostarp atlasītais raksts, saglabājas. Jauna aina tiek izveidota tikai tad, ja mainās solis vai blīvums trokšņa režīmā.
 
 ### Atsevišķa lietotne un MP4 ieraksts
 

@@ -40,7 +40,7 @@ As caixas no EXE ativam ecrãs; as definições aplicam-se ao mundo partilhado. 
 
 ### Estado inicial e padrões
 
-O início predefinido é ruído aleatório com 25 % de células vivas. A densidade inicial 0–100 % aplica-se no próximo reinício. Apenas padrões conhecidos usa 4 106 padrões incluídos sem ruído e desativa a densidade. Escolha uma mistura ou um nome; as dimensões são em células. Escreva para procurar. Só são apresentados padrões que cabem inteiros. Os pequenos verificados repetem-se em cópias separadas; os grandes ou complexos surgem uma vez ao centro. Reduzir o mundo pode substituir uma escolha demasiado grande por uma mistura. Alterar modo ou padrão cria outra cena. Os reinícios mantêm a escolha; o catálogo funciona sem ligação.
+O início predefinido é ruído aleatório com 25 % de células vivas. A densidade inicial 0–100 % aplica-se no próximo reinício. Apenas padrões conhecidos usa 4 106 padrões incluídos sem ruído e desativa a densidade. Escolha uma mistura ou um nome; as dimensões são em células. Escreva para procurar. Todos os padrões do catálogo estão sempre disponíveis. Os pequenos verificados repetem-se em cópias separadas; os grandes ou complexos surgem uma vez ao centro. Um padrão demasiado grande é centrado e recortado; alterar o tamanho do mundo ou das células mantém a escolha. Alterar modo ou padrão cria outra cena. Os reinícios mantêm a escolha; o catálogo funciona sem ligação.
 
 ### Células, grelha e cores
 
@@ -52,7 +52,7 @@ A velocidade é 0–240 gerações/s, independente do refrescamento; 0 para a ev
 
 ### Repor valores
 
-A reposição define o tamanho apresentado como 8 px com ou sem grelha (espaçamento de 9 ou 8 px), a velocidade como 20 gerações/s, a densidade como 25 % e as três cores predefinidas. As outras escolhas são mantidas; um padrão que deixe de caber é substituído pela mistura. Só é criada uma nova cena se mudar o espaçamento ou a densidade no modo de ruído.
+A reposição define o tamanho apresentado como 8 px com ou sem grelha (espaçamento de 9 ou 8 px), a velocidade como 20 gerações/s, a densidade como 25 % e as três cores predefinidas. As outras escolhas, incluindo o padrão selecionado, são mantidas. Só é criada uma nova cena se mudar o espaçamento ou a densidade no modo de ruído.
 
 ### Aplicação autónoma e gravação MP4
 

@@ -40,7 +40,7 @@ Les cases de EXE activent les écrans ; les réglages concernent le monde commun
 
 ### État initial et motifs
 
-Le départ par défaut est un bruit aléatoire à 25 % de cellules vivantes. La densité initiale, de 0–100 %, agit au prochain redémarrage. Motifs connus uniquement utilise 4 106 motifs intégrés sans bruit et désactive la densité. Choisissez un mélange ou un motif nommé ; les dimensions sont en cellules. Saisissez un nom pour chercher. Seuls les motifs tenant entièrement sont proposés. Les petits motifs vérifiés sont répartis en copies séparées, les grands ou complexes une fois au centre. Réduire le monde peut remplacer une sélection devenue trop grande par un mélange. Changer de mode ou de motif recrée la scène. Les redémarrages conservent le choix ; le catalogue fonctionne hors ligne.
+Le départ par défaut est un bruit aléatoire à 25 % de cellules vivantes. La densité initiale, de 0–100 %, agit au prochain redémarrage. Motifs connus uniquement utilise 4 106 motifs intégrés sans bruit et désactive la densité. Choisissez un mélange ou un motif nommé ; les dimensions sont en cellules. Saisissez un nom pour chercher. Tous les motifs du catalogue sont toujours disponibles. Les petits motifs vérifiés sont répartis en copies séparées, les grands ou complexes une fois au centre. Un motif trop grand est centré et tronqué ; changer la taille du monde ou des cellules conserve le choix. Changer de mode ou de motif recrée la scène. Les redémarrages conservent le choix ; le catalogue fonctionne hors ligne.
 
 ### Cellules, grille et couleurs
 
@@ -52,7 +52,7 @@ La vitesse est de 0–240 générations/s indépendamment du rafraîchissement ;
 
 ### Réinitialiser les valeurs
 
-La réinitialisation rétablit une taille affichée de 8 px avec ou sans grille (espacement de 9 ou 8 px), 20 générations/s, une densité de 25 % et les trois couleurs par défaut. Les autres choix sont conservés ; un motif devenu trop grand est remplacé par le mélange. Une nouvelle scène apparaît seulement si l’espacement change ou si la densité change en mode bruit.
+La réinitialisation rétablit une taille affichée de 8 px avec ou sans grille (espacement de 9 ou 8 px), 20 générations/s, une densité de 25 % et les trois couleurs par défaut. Les autres choix, y compris le motif sélectionné, sont conservés. Une nouvelle scène apparaît seulement si l’espacement change ou si la densité change en mode bruit.
 
 ### Application autonome et enregistrement MP4
 

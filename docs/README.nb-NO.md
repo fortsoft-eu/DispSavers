@@ -40,7 +40,7 @@ Avkrysningsboksene i EXE aktiverer skjermer; innstillingene gjelder den felles v
 
 ### Starttilstand og mønstre
 
-Standardstarten er tilfeldig støy med 25 % levende celler. Starttetthet på 0–100 % brukes ved neste omstart. Bare kjente mønstre bruker 4 106 medfølgende mønstre uten støy og deaktiverer tetthet. Velg en blanding eller et navn; mål oppgis i celler. Skriv et navn for å søke. Bare mønstre som får plass i sin helhet vises. Små kontrollerte mønstre gjentas i separate kopier, store eller komplekse én gang i midten. En mindre verden kan erstatte et for stort valg med en blanding. Endret modus eller mønster lager en ny scene. Omstart beholder valget; katalogen virker uten nett.
+Standardstarten er tilfeldig støy med 25 % levende celler. Starttetthet på 0–100 % brukes ved neste omstart. Bare kjente mønstre bruker 4 106 medfølgende mønstre uten støy og deaktiverer tetthet. Velg en blanding eller et navn; mål oppgis i celler. Skriv et navn for å søke. Alle mønstrene i katalogen er alltid tilgjengelige. Små kontrollerte mønstre gjentas i separate kopier, store eller komplekse én gang i midten. Et for stort mønster sentreres og beskjæres; endret verdens- eller cellestørrelse beholder valget. Endret modus eller mønster lager en ny scene. Omstart beholder valget; katalogen virker uten nett.
 
 ### Celler, rutenett og farger
 
@@ -52,7 +52,7 @@ Hastigheten er 0–240 generasjoner/s uavhengig av oppdateringsfrekvens; 0 stopp
 
 ### Tilbakestill verdier
 
-Tilbakestilling setter vist cellestørrelse til 8 px med eller uten rutenett (avstand 9 eller 8 px), hastighet til 20 generasjoner/s, tetthet til 25 % og de tre standardfargene. Andre valg beholdes; et mønster som ikke lenger passer, erstattes med blandingen. En ny scene opprettes bare hvis avstanden endres, eller hvis tettheten endres i støymodus.
+Tilbakestilling setter vist cellestørrelse til 8 px med eller uten rutenett (avstand 9 eller 8 px), hastighet til 20 generasjoner/s, tetthet til 25 % og de tre standardfargene. Andre valg, inkludert det valgte mønsteret, beholdes. En ny scene opprettes bare hvis avstanden endres, eller hvis tettheten endres i støymodus.
 
 ### Selvstendig program og MP4-opptak
 

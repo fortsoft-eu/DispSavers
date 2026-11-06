@@ -40,7 +40,7 @@ Las casillas de EXE activan pantallas; los ajustes se aplican al mundo compartid
 
 ### Estado inicial y patrones
 
-El inicio predeterminado es ruido aleatorio con un 25 % de celdas vivas. La densidad inicial de 0–100 % se aplica al próximo reinicio. Solo patrones conocidos usa 4.106 patrones incluidos sin ruido y desactiva la densidad. Elija una mezcla o un nombre; las dimensiones se expresan en celdas. Escriba para buscar. Solo se ofrecen patrones que caben completos. Los pequeños verificados se repiten en copias separadas; los grandes o complejos aparecen una vez centrados. Reducir el mundo puede sustituir una selección que ya no cabe por una mezcla. Cambiar modo o patrón crea otra escena. Los reinicios conservan la elección; el catálogo funciona sin conexión.
+El inicio predeterminado es ruido aleatorio con un 25 % de celdas vivas. La densidad inicial de 0–100 % se aplica al próximo reinicio. Solo patrones conocidos usa 4.106 patrones incluidos sin ruido y desactiva la densidad. Elija una mezcla o un nombre; las dimensiones se expresan en celdas. Escriba para buscar. Todos los patrones del catálogo están siempre disponibles. Los pequeños verificados se repiten en copias separadas; los grandes o complejos aparecen una vez centrados. Un patrón demasiado grande se centra y se recorta; cambiar el tamaño del mundo o de las celdas conserva la elección. Cambiar modo o patrón crea otra escena. Los reinicios conservan la elección; el catálogo funciona sin conexión.
 
 ### Celdas, cuadrícula y colores
 
@@ -52,7 +52,7 @@ La velocidad es 0–240 generaciones/s, independiente del refresco; 0 detiene la
 
 ### Restablecer valores
 
-El restablecimiento fija el tamaño mostrado en 8 px con o sin cuadrícula (espaciado de 9 u 8 px), la velocidad en 20 generaciones/s, la densidad en el 25 % y los tres colores predeterminados. Conserva las demás opciones; un patrón que ya no quepa se sustituye por la mezcla. Solo se crea otra escena si cambia el espaciado o la densidad en modo de ruido.
+El restablecimiento fija el tamaño mostrado en 8 px con o sin cuadrícula (espaciado de 9 u 8 px), la velocidad en 20 generaciones/s, la densidad en el 25 % y los tres colores predeterminados. Se conservan las demás opciones, incluido el patrón seleccionado. Solo se crea otra escena si cambia el espaciado o la densidad en modo de ruido.
 
 ### Aplicación independiente y grabación MP4
 

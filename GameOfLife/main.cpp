@@ -273,13 +273,10 @@ struct SettingsWindowData {
     LONG_PTR scrollStyle = 0;
     int contentWidth = 0;
     int contentHeight = 0;
-    unsigned patternColumns = std::numeric_limits<unsigned>::max();
-    unsigned patternRows = std::numeric_limits<unsigned>::max();
     AppLanguage patternLanguage = LANG_COUNT;
     std::size_t patternCount = 0;
     std::size_t patternItemsAdded = 0;
     std::vector<unsigned> patternItems;
-    std::wstring patternIdleId;
 };
 
 /// Scroll-bar identifier, virtual extent and visible page size.
@@ -2515,26 +2512,6 @@ static std::vector<DisplayMonitor> SelectedMonitors() {
     return monitors;
 }
 
-/// Replaces an unavailable or oversized named pattern with the mixture selection.
-static bool ValidatePatternSelection(AppSettings& settings, unsigned columns, unsigned rows) {
-    if (!app->patternCatalogReady || settings.patternId.empty() || columns == 0 || rows == 0) {
-        return false;
-    }
-    const unsigned selection = PatternCatalog::Find(settings.patternId);
-    if (selection) {
-        const LifePattern& pattern = PatternCatalog::All()[selection - 1];
-        if (pattern.width <= columns && pattern.height <= rows) {
-            return false;
-        }
-    }
-    settings.patternId.clear();
-    ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_PATTERN_FALLBACK));
-    if (app->mode == RunMode::Application) {
-        settings.Save();
-    }
-    return true;
-}
-
 /// Publishes scene options to the render workers and applies shared-board display settings.
 static void SynchronizeRuntimeSettings() {
     const std::lock_guard<std::mutex> lock(app->rendererMutex);
@@ -3432,8 +3409,6 @@ static bool StartRenderSurfaces() {
         (height + maximum - 1) / maximum
     });
     app->settings.cellSize = std::max(app->settings.cellSize, app->minimumCellSize);
-    ValidatePatternSelection(app->settings, (width + app->settings.cellSize - 1) / app->settings.cellSize,
-        (height + app->settings.cellSize - 1) / app->settings.cellSize);
     std::vector<RECT> visibleRegions;
     if (systemPreview) {
         visibleRegions.push_back(app->worldBounds);
@@ -3833,27 +3808,6 @@ static void RememberCheckedMonitors(HWND window, SettingsWindowData& data) {
     data.settings->Save();
 }
 
-/// Calculates the shared board dimensions used to filter patterns for the selected displays.
-static SIZE PatternGridDimensions(const SettingsWindowData& data) {
-    std::vector<RECT> rectangles;
-    for (const DisplayMonitor& monitor : data.monitors) {
-        if (!data.appMode
-                || data.settings->animationMonitorDevice.empty()
-                || MonitorDeviceSelected(data.settings->animationMonitorDevice, monitor.device)) {
-            rectangles.push_back(monitor.rect);
-        }
-    }
-    const bool compact = data.appMode && rectangles.size() != data.monitors.size();
-    const RECT bounds = MonitorLayoutBounds(BuildMonitorLayout(rectangles, compact));
-    const unsigned width = static_cast<unsigned>(bounds.right - bounds.left);
-    const unsigned height = static_cast<unsigned>(bounds.bottom - bounds.top);
-    const unsigned size = data.settings->cellSize;
-    return SIZE{
-        static_cast<LONG>((width + size - 1) / size),
-        static_cast<LONG>((height + size - 1) / size)
-    };
-}
-
 /// Selects the saved pattern and enables the combo only after its current items have been populated.
 static void UpdatePatternComboSelection(HWND combo, SettingsWindowData& data) {
     const unsigned selected = PatternCatalog::Find(data.settings->patternId);
@@ -3865,8 +3819,7 @@ static void UpdatePatternComboSelection(HWND combo, SettingsWindowData& data) {
         SendMessageW(combo, CB_SETCURSEL, static_cast<WPARAM>(selection), 0);
     }
     const bool complete = data.patternItemsAdded == data.patternItems.size();
-    const bool idle = data.patternColumns == 0 || data.patternRows == 0;
-    EnableSettingsControl(combo, complete && data.settings->patternsOnly && !idle, &data);
+    EnableSettingsControl(combo, complete && data.settings->patternsOnly, &data);
 }
 
 /// Adds a bounded batch of native combo items, allowing input and painting between timer messages.
@@ -3901,7 +3854,7 @@ static void PopulatePatternComboBatch(HWND window, SettingsWindowData& data) {
     }
 }
 
-/// Filters the loaded catalog and schedules native list population in separate UI message batches.
+/// Offers the entire loaded catalog and populates the native list in separate UI message batches.
 static void UpdatePatternCombo(HWND window, SettingsWindowData& data) {
     HWND owner = GetAncestor(window, GA_ROOT);
     window = SettingsContentWindow(window);
@@ -3919,16 +3872,7 @@ static void UpdatePatternCombo(HWND window, SettingsWindowData& data) {
         return;
     }
     const std::span<const LifePattern> patterns = PatternCatalog::All();
-    const SIZE grid = PatternGridDimensions(data);
-    const unsigned columns = static_cast<unsigned>(grid.cx);
-    const unsigned rows = static_cast<unsigned>(grid.cy);
-    const bool idle = columns == 0 || rows == 0;
-    ValidatePatternSelection(*data.settings, columns, rows);
-    const unsigned selected = PatternCatalog::Find(data.settings->patternId);
-    if (data.patternColumns != columns
-            || data.patternRows != rows
-            || data.patternCount != patterns.size()
-            || idle && data.patternIdleId != data.settings->patternId) {
+    if (data.patternCount != patterns.size()) {
         KillTimer(owner, ID_PATTERN_ITEMS_TIMER);
         WindowRedrawScope redraw(combo);
         data.patternItems.clear();
@@ -3938,13 +3882,8 @@ static void UpdatePatternCombo(HWND window, SettingsWindowData& data) {
         for (std::size_t index = 0; index < patterns.size(); ++index) {
             const LifePattern& pattern = patterns[index];
             const unsigned selection = static_cast<unsigned>(index + 1);
-            const bool include = idle
-                ? selection == selected
-                : pattern.width <= columns && pattern.height <= rows;
-            if (include) {
-                data.patternItems.push_back(selection);
-                bytes += (pattern.caption.size() + 1) * sizeof(wchar_t);
-            }
+            data.patternItems.push_back(selection);
+            bytes += (pattern.caption.size() + 1) * sizeof(wchar_t);
         }
         const wchar_t* mixture = GetLocalizedText(data.language, TXT_PATTERN_MIX);
         bytes += (wcslen(mixture) + 1) * sizeof(wchar_t);
@@ -3954,11 +3893,8 @@ static void UpdatePatternCombo(HWND window, SettingsWindowData& data) {
         SendMessageW(combo, CB_SETITEMDATA, 0, 0);
         SendMessageW(combo, CB_SETCURSEL, 0, 0);
         data.patternItemsAdded = 1;
-        data.patternColumns = columns;
-        data.patternRows = rows;
         data.patternLanguage = data.language;
         data.patternCount = patterns.size();
-        data.patternIdleId = idle ? data.settings->patternId : std::wstring();
         if (data.patternItemsAdded < data.patternItems.size()) {
             if (!SetTimer(owner, ID_PATTERN_ITEMS_TIMER, USER_TIMER_MINIMUM, nullptr)) {
                 CompletePatternCatalogLoad(false, &data);
@@ -4769,7 +4705,6 @@ static void UpdateSettingsPatterns(HWND window, SettingsWindowData& data) {
 
 static void UpdateSettingsOutputControls(HWND window, SettingsWindowData& data) {
     UpdateSettingsSlider(window, data, ID_CELL_SIZE);
-    UpdateSettingsPatterns(window, data);
     UpdateSettingsActionButtons(window);
     HWND preview = GetDlgItem(SettingsContentWindow(window), ID_PREVIEW_TOGGLE);
     SetWindowTextIfChanged(preview, PreserveControlMnemonic(preview, GetLocalizedText(data.language,
@@ -4875,10 +4810,8 @@ static bool ChooseSettingsColor(HWND window, COLORREF& color) {
     return true;
 }
 
-/// Validates the pattern, publishes scene options and saves EXE choices.
+/// Publishes scene options and saves EXE choices without changing the selected pattern.
 static void ApplySettingsChanges(SettingsWindowData& data, bool reset) {
-    const SIZE grid = PatternGridDimensions(data);
-    ValidatePatternSelection(*data.settings, static_cast<unsigned>(grid.cx), static_cast<unsigned>(grid.cy));
     SynchronizeRuntimeSettings();
     if (reset) {
         app->resetRequested.store(true, std::memory_order_relaxed);
@@ -4904,9 +4837,6 @@ static void ResetSettings(HWND window, SettingsWindowData& data) {
     ApplySettingsChanges(data, reset);
     for (const AnimationSliderControl& control : ANIMATION_SLIDERS) {
         UpdateSettingsSlider(window, data, control.id);
-    }
-    if (previousSize != data.settings->cellSize) {
-        UpdateSettingsPatterns(window, data);
     }
     window = SettingsContentWindow(window);
     SetButtonColor(GetDlgItem(window, ID_ALIVE_COLOR), data.settings->aliveColor);
@@ -5349,9 +5279,6 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     ID_INITIAL_DENSITY, TBM_GETPOS, 0, 0));
                 ApplySettingsChanges(*data, previousSize != data->settings->cellSize);
                 UpdateSettingsSlider(window, *data, GetDlgCtrlID(reinterpret_cast<HWND>(lParam)));
-                if (previousSize != data->settings->cellSize) {
-                    UpdateSettingsPatterns(window, *data);
-                }
             }
             return 0;
         case WM_VSCROLL:
@@ -5437,7 +5364,6 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                                 ? patterns[selection - 1].id
                                 : std::wstring();
                             ApplySettingsChanges(*data, true);
-                            UpdateSettingsPatterns(window, *data);
                         }
                     }
                     return 0;
@@ -5467,9 +5393,6 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     data->settings->cellSize = std::max(previousSize, data->settings->showGrid ? 2U : 1U);
                     ApplySettingsChanges(*data, previousSize != data->settings->cellSize);
                     UpdateSettingsSlider(window, *data, ID_CELL_SIZE);
-                    if (previousSize != data->settings->cellSize) {
-                        UpdateSettingsPatterns(window, *data);
-                    }
                     return 0;
                 }
                 case ID_PREVENT_SCREEN_SAVER:
@@ -5688,6 +5611,7 @@ static void CompletePatternCatalogLoad(bool succeeded, SettingsWindowData* data)
         }
     }
     if (app->controlWindow && data) {
+        UpdateSettingsPatterns(app->controlWindow, *data);
         UpdateSettingsOutputControls(app->controlWindow, *data);
     }
 }

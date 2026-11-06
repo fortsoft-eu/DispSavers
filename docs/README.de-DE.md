@@ -40,7 +40,7 @@ Die Kontrollkästchen in EXE aktivieren Bildschirme; Einstellungen gelten für d
 
 ### Anfangszustand und muster
 
-Standard ist Zufallsrauschen mit 25 % lebenden Zellen. Die Anfangsdichte von 0–100 % gilt beim nächsten Neustart. Nur bekannte Muster verwendet 4.106 mitgelieferte Muster ohne Rauschen und deaktiviert die Dichte. Wählen Sie eine Mischung oder einen Namen; Maße sind in Zellen angegeben. Tippen sucht im Verzeichnis. Nur vollständig passende Muster erscheinen. Kleine geprüfte Muster werden in getrennten Kopien verteilt, große oder komplexe einmal mittig. Nach Verkleinern kann eine unpassende Auswahl durch eine Mischung ersetzt werden. Modus- oder Musterwechsel erzeugen eine neue Szene. Neustarts behalten die Auswahl; der Katalog funktioniert offline.
+Standard ist Zufallsrauschen mit 25 % lebenden Zellen. Die Anfangsdichte von 0–100 % gilt beim nächsten Neustart. Nur bekannte Muster verwendet 4.106 mitgelieferte Muster ohne Rauschen und deaktiviert die Dichte. Wählen Sie eine Mischung oder einen Namen; Maße sind in Zellen angegeben. Tippen sucht im Verzeichnis. Alle Muster des Katalogs sind immer verfügbar. Kleine geprüfte Muster werden in getrennten Kopien verteilt, große oder komplexe einmal mittig. Ein zu großes Muster wird zentriert und beschnitten; Änderungen der Welt- oder Zellgröße behalten die Auswahl bei. Modus- oder Musterwechsel erzeugen eine neue Szene. Neustarts behalten die Auswahl; der Katalog funktioniert offline.
 
 ### Zellgrösse, raster und farben
 
@@ -52,7 +52,7 @@ Das Tempo beträgt 0–240 Generationen/s unabhängig von der Bildwiederholrate;
 
 ### Werte zurücksetzen
 
-Zurücksetzen stellt die angezeigte Zellgröße mit und ohne Raster auf 8 px (Abstand 9 bzw. 8 px), das Tempo auf 20 Generationen/s, die Dichte auf 25 % und die drei Standardfarben wieder her. Andere Einstellungen bleiben erhalten; ein nicht mehr passendes Muster wird durch die Mischung ersetzt. Nur ein geänderter Abstand oder eine geänderte Dichte im Rauschmodus erzeugt eine neue Szene.
+Zurücksetzen stellt die angezeigte Zellgröße mit und ohne Raster auf 8 px (Abstand 9 bzw. 8 px), das Tempo auf 20 Generationen/s, die Dichte auf 25 % und die drei Standardfarben wieder her. Andere Einstellungen einschließlich des gewählten Musters bleiben erhalten. Nur ein geänderter Abstand oder eine geänderte Dichte im Rauschmodus erzeugt eine neue Szene.
 
 ### Eigenständige anwendung und MP4-aufnahme
 

@@ -40,7 +40,7 @@ Polja u EXE uključuju monitore; podešavanja važe za zajednički svijet. Jedan
 
 ### Početno stanje i obrasci
 
-Podrazumijevani početak je nasumični šum s 25 % živih ćelija. Početna gustina 0–100 % primjenjuje se pri sljedećem ponovnom pokretanju. Samo poznati obrasci koristi 4.106 priloženih obrazaca bez šuma i isključuje gustinu. Izaberite mješavinu ili naziv; dimenzije su u ćelijama. Kucajte naziv za pretragu. Nude se samo obrasci koji staju cijeli. Mali provjereni obrasci ponavljaju se u odvojenim kopijama, veliki ili složeni jednom u sredini. Smanjenje svijeta može prevelik izbor zamijeniti mješavinom. Promjena režima ili obrasca stvara novu scenu. Ponovna pokretanja čuvaju izbor; katalog radi bez interneta.
+Podrazumijevani početak je nasumični šum s 25 % živih ćelija. Početna gustina 0–100 % primjenjuje se pri sljedećem ponovnom pokretanju. Samo poznati obrasci koristi 4.106 priloženih obrazaca bez šuma i isključuje gustinu. Izaberite mješavinu ili naziv; dimenzije su u ćelijama. Kucajte naziv za pretragu. Svi obrasci iz kataloga uvijek su dostupni. Mali provjereni obrasci ponavljaju se u odvojenim kopijama, veliki ili složeni jednom u sredini. Prevelik obrazac se centrira i odsijeca na rubovima; promjena veličine svijeta ili ćelija čuva izbor. Promjena režima ili obrasca stvara novu scenu. Ponovna pokretanja čuvaju izbor; katalog radi bez interneta.
 
 ### Ćelije, mreža i boje
 
@@ -52,7 +52,7 @@ Brzina je 0–240 generacija/s nezavisno od osvježavanja; 0 zaustavlja razvoj. 
 
 ### Vrati vrijednosti
 
-Vraćanje postavlja prikazanu veličinu ćelije na 8 px s mrežom ili bez nje (razmak 9 ili 8 px), brzinu na 20 generacija/s, gustinu na 25 % i tri podrazumijevane boje. Ostali izbori ostaju; obrazac koji više ne staje zamjenjuje se mješavinom. Nova scena nastaje samo pri promjeni razmaka ili gustine u režimu šuma.
+Vraćanje postavlja prikazanu veličinu ćelije na 8 px s mrežom ili bez nje (razmak 9 ili 8 px), brzinu na 20 generacija/s, gustinu na 25 % i tri podrazumijevane boje. Ostali izbori, uključujući izabrani obrazac, ostaju. Nova scena nastaje samo pri promjeni razmaka ili gustine u režimu šuma.
 
 ### Samostalna aplikacija i MP4 snimanje
 

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.1.0
  */
 
 #define NOMINMAX
@@ -42,8 +42,8 @@ constexpr unsigned PATTERN_TILE_SIZE = 44;
 constexpr unsigned PATTERN_SPACING = 12;
 constexpr unsigned MIXED_PATTERN_MAXIMUM_SIZE = 32;
 
-/// Decodes one RLE pattern into the board with the requested quarter-turn rotation.
-static void PlacePattern(Simulation& simulation, const LifePattern& pattern, unsigned left, unsigned top,
+/// Decodes a rotated RLE pattern at signed coordinates, clipping cells outside the board.
+static void PlacePattern(Simulation& simulation, const LifePattern& pattern, std::int64_t left, std::int64_t top,
         unsigned turns) {
     unsigned x = 0;
     unsigned y = 0;
@@ -81,7 +81,11 @@ static void PlacePattern(Simulation& simulation, const LifePattern& pattern, uns
                     placedX = y;
                     placedY = pattern.width - sourceX - 1;
                 }
-                simulation.SetCell(left + placedX, top + placedY, true);
+                const std::int64_t targetX = left + placedX;
+                const std::int64_t targetY = top + placedY;
+                if (targetX >= 0 && targetX < simulation.Width() && targetY >= 0 && targetY < simulation.Height()) {
+                    simulation.SetCell(static_cast<unsigned>(targetX), static_cast<unsigned>(targetY), true);
+                }
             }
         }
         x += amount;
@@ -149,12 +153,9 @@ bool Simulation::SeedPatterns(unsigned selection) {
     }
     if (selection != 0) {
         const LifePattern& pattern = patterns[selection - 1];
-        if (pattern.width > width || pattern.height > height) {
-            return false;
-        }
         unsigned columns = 1;
         unsigned rows = 1;
-        if (pattern.repeatable) {
+        if (pattern.repeatable && pattern.width <= width && pattern.height <= height) {
             columns = std::max(1U,
                 static_cast<unsigned>(width / (std::uint64_t{ pattern.width } + PATTERN_SPACING)));
             rows = std::max(1U,
@@ -167,8 +168,9 @@ bool Simulation::SeedPatterns(unsigned selection) {
             for (unsigned column = 0; column < columns; ++column) {
                 const unsigned left = static_cast<unsigned>(std::uint64_t{ column } * width / columns);
                 const unsigned right = static_cast<unsigned>(std::uint64_t{ column + 1 } * width / columns);
-                PlacePattern(*this, pattern, left + (right - left - pattern.width) / 2,
-                    top + (bottom - top - pattern.height) / 2, 0);
+                const std::int64_t patternLeft = left + (std::int64_t{ right - left } - pattern.width) / 2;
+                const std::int64_t patternTop = top + (std::int64_t{ bottom - top } - pattern.height) / 2;
+                PlacePattern(*this, pattern, patternLeft, patternTop, 0);
             }
         }
         return true;

@@ -40,7 +40,7 @@ Cumasaíonn ticbhoscaí EXE na scáileáin; baineann na socruithe leis an domhan
 
 ### Staid tosaigh agus patrúin
 
-Is torann randamach le 25 % de chealla beo an tús réamhshocraithe. Bíonn dlús tosaigh 0–100 % i bhfeidhm ag an gcéad atosú eile. Úsáideann Patrúin aitheanta amháin 4,106 patrún cuachta gan torann agus díchumasaíonn sé dlús. Roghnaigh meascán nó ainm; tugtar toisí i gcealla. Clóscríobh ainm chun cuardach. Ní thairgtear ach patrúin a luíonn ina n-iomláine. Déantar cóipeanna ar leith de phatrúin bheaga fhíoraithe; tosaíonn cinn mhóra nó chasta uair amháin sa lár. D'fhéadfadh domhan níos lú meascán a chur in ionad rogha nach luíonn. Cruthaíonn athrú mód nó patrúin radharc nua. Coinníonn atosú an rogha; oibríonn an chatalóg as líne.
+Is torann randamach le 25 % de chealla beo an tús réamhshocraithe. Bíonn dlús tosaigh 0–100 % i bhfeidhm ag an gcéad atosú eile. Úsáideann Patrúin aitheanta amháin 4,106 patrún cuachta gan torann agus díchumasaíonn sé dlús. Roghnaigh meascán nó ainm; tugtar toisí i gcealla. Clóscríobh ainm chun cuardach. Bíonn gach patrún sa chatalóg ar fáil i gcónaí. Déantar cóipeanna ar leith de phatrúin bheaga fhíoraithe; tosaíonn cinn mhóra nó chasta uair amháin sa lár. Cuirtear patrún rómhór sa lár agus gearrtar ag na himill é; coinnítear an rogha nuair a athraítear méid an domhain nó na gceall. Cruthaíonn athrú mód nó patrúin radharc nua. Coinníonn atosú an rogha; oibríonn an chatalóg as líne.
 
 ### Méid cille, eangach agus dathanna
 
@@ -52,7 +52,7 @@ Is é an luas 0–240 glúin/s, neamhspleách ar athnuachan an scáileáin; stop
 
 ### Athshocraigh luachanna
 
-Socraíonn athshocrú an méid cille ar taispeáint go 8 px leis an eangach nó gan í (spásáil 9 nó 8 px), an luas go 20 glúin/s, an dlús go 25 % agus na trí dhath réamhshocraithe. Coinnítear na roghanna eile; cuirtear an meascán in áit patrúin nach n-oireann a thuilleadh. Ní chruthaítear radharc nua ach má athraíonn an spásáil nó má athraíonn an dlús sa mhód torainn.
+Socraíonn athshocrú an méid cille ar taispeáint go 8 px leis an eangach nó gan í (spásáil 9 nó 8 px), an luas go 20 glúin/s, an dlús go 25 % agus na trí dhath réamhshocraithe. Coinnítear na roghanna eile, an patrún roghnaithe san áireamh. Ní chruthaítear radharc nua ach má athraíonn an spásáil nó má athraíonn an dlús sa mhód torainn.
 
 ### Feidhmchlár neamhspleách agus taifeadadh MP4
 

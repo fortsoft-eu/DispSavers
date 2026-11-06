@@ -40,7 +40,7 @@ Afkrydsningsfelter i EXE aktiverer skærme; indstillinger gælder den fælles ve
 
 ### Starttilstand og mønstre
 
-Standardstarten er tilfældig støj med 25 % levende celler. Starttæthed på 0–100 % bruges ved næste genstart. Kun kendte mønstre bruger 4.106 medfølgende mønstre uden støj og deaktiverer tæthed. Vælg en blanding eller et navn; mål er i celler. Skriv et navn for at søge. Kun mønstre, der kan være der i deres helhed, vises. Små kontrollerede mønstre gentages i adskilte kopier, store eller komplekse én gang i midten. En mindre verden kan erstatte et for stort valg med en blanding. Ændret tilstand eller mønster opretter en ny scene. Genstart bevarer valget; kataloget virker offline.
+Standardstarten er tilfældig støj med 25 % levende celler. Starttæthed på 0–100 % bruges ved næste genstart. Kun kendte mønstre bruger 4.106 medfølgende mønstre uden støj og deaktiverer tæthed. Vælg en blanding eller et navn; mål er i celler. Skriv et navn for at søge. Alle katalogets mønstre er altid tilgængelige. Små kontrollerede mønstre gentages i adskilte kopier, store eller komplekse én gang i midten. Et for stort mønster centreres og beskæres; ændret verdens- eller cellestørrelse bevarer valget. Ændret tilstand eller mønster opretter en ny scene. Genstart bevarer valget; kataloget virker offline.
 
 ### Celler, gitter og farver
 
@@ -52,7 +52,7 @@ Hastigheden er 0–240 generationer/s uafhængigt af skærmens opdatering; 0 sta
 
 ### Nulstil værdier
 
-Nulstilling gendanner den viste cellestørrelse til 8 px med eller uden gitter (afstand 9 eller 8 px), hastighed 20 generationer/s, tæthed 25 % og de tre standardfarver. Andre valg bevares; et mønster, der ikke længere passer, erstattes af blandingen. En ny scene oprettes kun ved ændret afstand eller ændret tæthed i støjtilstand.
+Nulstilling gendanner den viste cellestørrelse til 8 px med eller uden gitter (afstand 9 eller 8 px), hastighed 20 generationer/s, tæthed 25 % og de tre standardfarver. Andre valg, herunder det valgte mønster, bevares. En ny scene oprettes kun ved ændret afstand eller ændret tæthed i støjtilstand.
 
 ### Selvstændigt program og MP4-optagelse
 

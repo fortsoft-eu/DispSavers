@@ -40,7 +40,7 @@ Začiarkavacie políčka v EXE zapínajú monitory; nastavenia platia pre spolo�
 
 ### Počiatočný stav a obrazce
 
-Predvolený začiatok je náhodný šum s 25 % živých buniek. Počiatočná hustota 0–100 % sa použije pri ďalšom reštarte. Iba známe obrazce používa 4 106 priložených obrazcov bez šumu a vypne hustotu. Vyberte zmes alebo pomenovaný obrazec; rozmery sú v bunkách. Písaním názvu hľadajte v zozname. Ponúkajú sa len obrazce, ktoré sa celé zmestia. Malé overené obrazce sa opakujú v oddelených kópiách, veľké a zložité začínajú raz uprostred. Zmenšenie plochy môže nevhodný výber nahradiť zmesou. Zmena režimu alebo obrazca vytvorí novú scénu. Reštarty výber zachovajú; katalóg funguje bez internetu.
+Predvolený začiatok je náhodný šum s 25 % živých buniek. Počiatočná hustota 0–100 % sa použije pri ďalšom reštarte. Iba známe obrazce používa 4 106 priložených obrazcov bez šumu a vypne hustotu. Vyberte zmes alebo pomenovaný obrazec; rozmery sú v bunkách. Písaním názvu hľadajte v zozname. Vždy sú dostupné všetky obrazce katalógu. Malé overené obrazce sa opakujú v oddelených kópiách, veľké a zložité začínajú raz uprostred. Príliš veľký obrazec sa vycentruje a oreže; zmena veľkosti plochy alebo buniek výber nezmení. Zmena režimu alebo obrazca vytvorí novú scénu. Reštarty výber zachovajú; katalóg funguje bez internetu.
 
 ### Veľkosť buniek, mriežka a farby
 
@@ -52,7 +52,7 @@ Rýchlosť je 0–240 generácií/s nezávisle od obnovovania monitora; 0 zastav
 
 ### Obnoviť hodnoty
 
-Obnovenie nastaví zobrazenú veľkosť bunky na 8 px s mriežkou aj bez nej (rozstup 9 alebo 8 px), rýchlosť na 20 generácií/s, hustotu na 25 % a tri predvolené farby. Ostatné voľby zachová; obrazec, ktorý sa nezmestí, nahradí zmesou. Nová scéna vznikne len pri zmene rozstupu alebo hustoty v režime šumu.
+Obnovenie nastaví zobrazenú veľkosť bunky na 8 px s mriežkou aj bez nej (rozstup 9 alebo 8 px), rýchlosť na 20 generácií/s, hustotu na 25 % a tri predvolené farby. Ostatné voľby vrátane vybraného obrazca zachová. Nová scéna vznikne len pri zmene rozstupu alebo hustoty v režime šumu.
 
 ### Samostatná aplikácia a záznam MP4
 

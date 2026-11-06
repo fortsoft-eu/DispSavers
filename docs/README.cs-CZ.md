@@ -40,7 +40,7 @@ Zatržítka v EXE zapínají monitory; nastavení platí pro společnou hru. Jed
 
 ### Počáteční stav a obrazce
 
-Výchozí začátek je náhodný šum s 25 % živých buněk. Počáteční hustota 0–100 % se použije při příštím restartu. Pouze známé obrazce používá 4 106 přiložených obrazců bez šumu a vypne hustotu. Zvolte směs nebo pojmenovaný obrazec; rozměry jsou v buňkách. Psaním názvu hledejte v seznamu. Nabízejí se jen obrazce, které se celé vejdou. Malé ověřené obrazce se opakují v oddělených kopiích, velké a složité začínají jednou uprostřed. Zmenšení plochy může nevyhovující výběr nahradit směsí. Změna režimu nebo obrazce vytvoří novou scénu. Restarty výběr zachovají; katalog funguje bez internetu.
+Výchozí začátek je náhodný šum s 25 % živých buněk. Počáteční hustota 0–100 % se použije při příštím restartu. Pouze známé obrazce používá 4 106 přiložených obrazců bez šumu a vypne hustotu. Zvolte směs nebo pojmenovaný obrazec; rozměry jsou v buňkách. Psaním názvu hledejte v seznamu. Vždy jsou dostupné všechny obrazce katalogu. Malé ověřené obrazce se opakují v oddělených kopiích, velké a složité začínají jednou uprostřed. Příliš velký obrazec se vystředí a ořízne; změna velikosti plochy nebo buněk výběr nezmění. Změna režimu nebo obrazce vytvoří novou scénu. Restarty výběr zachovají; katalog funguje bez internetu.
 
 ### Velikost buněk, mřížka a barvy
 
@@ -52,7 +52,7 @@ Rychlost je 0–240 generací/s nezávisle na obnovování monitoru; 0 zastaví 
 
 ### Reset hodnot
 
-Reset obnoví velikost buňky 8 px s mřížkou i bez ní (rozteč 9 nebo 8 px), rychlost 20 generací/s, hustotu 25 % a tři výchozí barvy. Ostatní volby zachová; obrazec, který se nevejde, nahradí směsí. Nová scéna vznikne jen při změně rozteče nebo hustoty v režimu šumu.
+Reset obnoví velikost buňky 8 px s mřížkou i bez ní (rozteč 9 nebo 8 px), rychlost 20 generací/s, hustotu 25 % a tři výchozí barvy. Ostatní volby včetně vybraného obrazce zachová. Nová scéna vznikne jen při změně rozteče nebo hustoty v režimu šumu.
 
 ### Samostatná aplikace a záznam MP4
 

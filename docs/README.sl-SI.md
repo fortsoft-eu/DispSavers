@@ -40,7 +40,7 @@ Potrditvena polja v EXE vključijo zaslone; nastavitve veljajo za skupni svet. E
 
 ### Začetno stanje in vzorci
 
-Privzeti začetek je naključni šum s 25 % živih celic. Začetna gostota 0–100 % velja ob naslednjem ponovnem začetku. Samo znani vzorci uporabi 4.106 priloženih vzorcev brez šuma in onemogoči gostoto. Izberite mešanico ali ime; mere so v celicah. Za iskanje tipkajte ime. Prikazani so samo vzorci, ki se v celoti prilegajo. Majhni preverjeni vzorci se ponovijo v ločenih kopijah, veliki ali zapleteni enkrat na sredini. Manjši svet lahko preveliko izbiro nadomesti z mešanico. Sprememba načina ali vzorca ustvari nov prizor. Ponovni začetki ohranijo izbiro; katalog deluje brez interneta.
+Privzeti začetek je naključni šum s 25 % živih celic. Začetna gostota 0–100 % velja ob naslednjem ponovnem začetku. Samo znani vzorci uporabi 4.106 priloženih vzorcev brez šuma in onemogoči gostoto. Izberite mešanico ali ime; mere so v celicah. Za iskanje tipkajte ime. Vsi vzorci iz kataloga so vedno na voljo. Majhni preverjeni vzorci se ponovijo v ločenih kopijah, veliki ali zapleteni enkrat na sredini. Prevelik vzorec se postavi na sredino in obreže; sprememba velikosti sveta ali celic ohrani izbiro. Sprememba načina ali vzorca ustvari nov prizor. Ponovni začetki ohranijo izbiro; katalog deluje brez interneta.
 
 ### Celice, mreža in barve
 
@@ -52,7 +52,7 @@ Hitrost je 0–240 generacij/s neodvisno od osveževanja; 0 ustavi razvoj. Premo
 
 ### Ponastavi vrednosti
 
-Ponastavitev nastavi prikazano velikost celice na 8 px z mrežo ali brez nje (razmik 9 ali 8 px), hitrost na 20 generacij/s, gostoto na 25 % in tri privzete barve. Druge izbire ostanejo; vzorec, ki se ne prilega več, nadomesti mešanica. Nov prizor nastane le ob spremembi razmika ali gostote v načinu šuma.
+Ponastavitev nastavi prikazano velikost celice na 8 px z mrežo ali brez nje (razmik 9 ali 8 px), hitrost na 20 generacij/s, gostoto na 25 % in tri privzete barve. Druge izbire, vključno z izbranim vzorcem, ostanejo. Nov prizor nastane le ob spremembi razmika ali gostote v načinu šuma.
 
 ### Samostojni program in snemanje MP4
 

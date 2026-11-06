@@ -40,7 +40,7 @@ Le caselle in EXE attivano gli schermi; le impostazioni valgono per il mondo con
 
 ### Stato iniziale e configurazioni
 
-L'avvio predefinito è rumore casuale con il 25 % di celle vive. La densità iniziale 0–100 % si applica al prossimo riavvio. Solo configurazioni note usa 4.106 configurazioni incluse senza rumore e disattiva la densità. Scegliere una miscela o un nome; le dimensioni sono in celle. Digitare per cercare. Sono elencate solo configurazioni che entrano interamente. Quelle piccole verificate si ripetono in copie separate, quelle grandi o complesse una volta al centro. Ridurre il mondo può sostituire una scelta troppo grande con una miscela. Cambiare modalità o configurazione crea una nuova scena. I riavvii conservano la scelta; il catalogo funziona offline.
+L'avvio predefinito è rumore casuale con il 25 % di celle vive. La densità iniziale 0–100 % si applica al prossimo riavvio. Solo configurazioni note usa 4.106 configurazioni incluse senza rumore e disattiva la densità. Scegliere una miscela o un nome; le dimensioni sono in celle. Digitare per cercare. Tutte le configurazioni del catalogo sono sempre disponibili. Quelle piccole verificate si ripetono in copie separate, quelle grandi o complesse una volta al centro. Una configurazione troppo grande viene centrata e ritagliata; cambiare le dimensioni del mondo o delle celle conserva la scelta. Cambiare modalità o configurazione crea una nuova scena. I riavvii conservano la scelta; il catalogo funziona offline.
 
 ### Celle, griglia e colori
 
@@ -52,7 +52,7 @@ La velocità è 0–240 generazioni/s, indipendente dal refresh; 0 arresta l'evo
 
 ### Ripristina valori
 
-Il ripristino imposta la dimensione visualizzata a 8 px con o senza griglia (spaziatura di 9 o 8 px), la velocità a 20 generazioni/s, la densità al 25 % e i tre colori predefiniti. Le altre scelte sono conservate; una configurazione che non entra più viene sostituita dalla miscela. Una nuova scena viene creata solo se cambia la spaziatura o se cambia la densità in modalità rumore.
+Il ripristino imposta la dimensione visualizzata a 8 px con o senza griglia (spaziatura di 9 o 8 px), la velocità a 20 generazioni/s, la densità al 25 % e i tre colori predefiniti. Le altre scelte, inclusa la configurazione selezionata, sono conservate. Una nuova scena viene creata solo se cambia la spaziatura o se cambia la densità in modalità rumore.
 
 ### Applicazione autonoma e registrazione MP4
 

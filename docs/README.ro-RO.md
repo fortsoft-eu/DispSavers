@@ -40,7 +40,7 @@ Bifele din EXE activează ecranele; setările se aplică lumii comune. Un singur
 
 ### Stare inițială și modele
 
-Pornirea implicită este zgomot aleatoriu cu 25 % celule vii. Densitatea inițială 0–100 % se aplică la următoarea repornire. Doar modele cunoscute folosește 4 106 modele incluse fără zgomot și dezactivează densitatea. Alegeți un amestec sau un nume; dimensiunile sunt în celule. Tastați pentru căutare. Sunt oferite numai modelele care încap complet. Cele mici verificate se repetă în copii separate; cele mari sau complexe apar o dată în centru. Micșorarea lumii poate înlocui alegerea prea mare cu un amestec. Schimbarea modului sau modelului creează altă scenă. Repornirile păstrează alegerea; catalogul funcționează offline.
+Pornirea implicită este zgomot aleatoriu cu 25 % celule vii. Densitatea inițială 0–100 % se aplică la următoarea repornire. Doar modele cunoscute folosește 4 106 modele incluse fără zgomot și dezactivează densitatea. Alegeți un amestec sau un nume; dimensiunile sunt în celule. Tastați pentru căutare. Toate modelele din catalog sunt întotdeauna disponibile. Cele mici verificate se repetă în copii separate; cele mari sau complexe apar o dată în centru. Un model prea mare este centrat și decupat; schimbarea dimensiunii lumii sau a celulelor păstrează alegerea. Schimbarea modului sau modelului creează altă scenă. Repornirile păstrează alegerea; catalogul funcționează offline.
 
 ### Celule, grilă și culori
 
@@ -52,7 +52,7 @@ Viteza este 0–240 generații/s, independent de reîmprospătare; 0 oprește ev
 
 ### Resetează valorile
 
-Resetarea stabilește dimensiunea afișată a celulei la 8 px cu sau fără grilă (spațiere de 9 sau 8 px), viteza la 20 generații/s, densitatea la 25 % și cele trei culori implicite. Celelalte alegeri se păstrează; un model care nu mai încape este înlocuit cu amestecul. O scenă nouă apare numai dacă se schimbă spațierea sau densitatea în modul zgomot.
+Resetarea stabilește dimensiunea afișată a celulei la 8 px cu sau fără grilă (spațiere de 9 sau 8 px), viteza la 20 generații/s, densitatea la 25 % și cele trei culori implicite. Celelalte alegeri, inclusiv modelul selectat, se păstrează. O scenă nouă apare numai dacă se schimbă spațierea sau densitatea în modul zgomot.
 
 ### Aplicație independentă și înregistrare MP4
 

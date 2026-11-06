@@ -40,7 +40,7 @@ Pola w EXE włączają monitory; ustawienia dotyczą wspólnego świata. Jeden w
 
 ### Stan początkowy i wzorce
 
-Domyślny początek to losowy szum z 25 % żywych komórek. Gęstość początkowa 0–100 % działa przy następnym restarcie. Tylko znane wzorce używa 4 106 dołączonych wzorców bez szumu i wyłącza gęstość. Wybierz mieszankę lub nazwany wzorzec; wymiary podano w komórkach. Wpisuj nazwę, aby szukać. Lista zawiera tylko wzorce mieszczące się w całości. Małe sprawdzone wzorce powtarzają się w oddzielnych kopiach, duże lub złożone pojawiają się raz na środku. Zmniejszenie świata może zastąpić zbyt duży wybór mieszanką. Zmiana trybu lub wzorca tworzy nową scenę. Restarty zachowują wybór; katalog działa bez internetu.
+Domyślny początek to losowy szum z 25 % żywych komórek. Gęstość początkowa 0–100 % działa przy następnym restarcie. Tylko znane wzorce używa 4 106 dołączonych wzorców bez szumu i wyłącza gęstość. Wybierz mieszankę lub nazwany wzorzec; wymiary podano w komórkach. Wpisuj nazwę, aby szukać. Wszystkie wzorce z katalogu są zawsze dostępne. Małe sprawdzone wzorce powtarzają się w oddzielnych kopiach, duże lub złożone pojawiają się raz na środku. Zbyt duży wzorzec jest wyśrodkowany i przycięty; zmiana rozmiaru świata lub komórek zachowuje wybór. Zmiana trybu lub wzorca tworzy nową scenę. Restarty zachowują wybór; katalog działa bez internetu.
 
 ### Komórki, siatka i kolory
 
@@ -52,7 +52,7 @@ Prędkość wynosi 0–240 pokoleń/s, niezależnie od odświeżania; 0 zatrzymu
 
 ### Przywróć wartości
 
-Przywracanie ustawia wyświetlany rozmiar komórki na 8 px z siatką lub bez niej (odstęp 9 lub 8 px), prędkość na 20 pokoleń/s, gęstość na 25 % i trzy domyślne kolory. Pozostałe opcje są zachowane; wzorzec, który się nie mieści, zastępuje mieszanka. Nowa scena powstaje tylko po zmianie odstępu lub gęstości w trybie szumu.
+Przywracanie ustawia wyświetlany rozmiar komórki na 8 px z siatką lub bez niej (odstęp 9 lub 8 px), prędkość na 20 pokoleń/s, gęstość na 25 % i trzy domyślne kolory. Pozostałe opcje, w tym wybrany wzorzec, są zachowane. Nowa scena powstaje tylko po zmianie odstępu lub gęstości w trybie szumu.
 
 ### Samodzielna aplikacja i nagrywanie MP4
 

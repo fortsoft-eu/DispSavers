@@ -40,7 +40,7 @@ EXE:n valintaruudut kytkevät näytöt käyttöön; asetukset koskevat yhteistä
 
 ### Alkutila ja kuviot
 
-Oletusalku on satunnainen kohina, jossa on 25 % eläviä soluja. Alkutiheys 0–100 % vaikuttaa seuraavaan uudelleenaloitukseen. Vain tunnetut kuviot käyttää 4 106 mukana tulevaa kuviota ilman kohinaa ja poistaa tiheyden käytöstä. Valitse sekoitus tai nimetty kuvio; mitat ovat soluina. Kirjoita nimi hakeaksesi. Vain kokonaan mahtuvat kuviot näytetään. Pienet tarkistetut kuviot toistuvat erillisinä kopioina, suuret tai monimutkaiset kerran keskellä. Pienentäminen voi korvata liian suuren valinnan sekoituksella. Tilan tai kuvion vaihtaminen luo uuden tilanteen. Uudelleenaloitus säilyttää valinnan; luettelo toimii ilman verkkoa.
+Oletusalku on satunnainen kohina, jossa on 25 % eläviä soluja. Alkutiheys 0–100 % vaikuttaa seuraavaan uudelleenaloitukseen. Vain tunnetut kuviot käyttää 4 106 mukana tulevaa kuviota ilman kohinaa ja poistaa tiheyden käytöstä. Valitse sekoitus tai nimetty kuvio; mitat ovat soluina. Kirjoita nimi hakeaksesi. Kaikki luettelon kuviot ovat aina käytettävissä. Pienet tarkistetut kuviot toistuvat erillisinä kopioina, suuret tai monimutkaiset kerran keskellä. Liian suuri kuvio keskitetään ja rajataan; maailman tai solujen koon muuttaminen säilyttää valinnan. Tilan tai kuvion vaihtaminen luo uuden tilanteen. Uudelleenaloitus säilyttää valinnan; luettelo toimii ilman verkkoa.
 
 ### Solukoko, ruudukko ja värit
 
@@ -52,7 +52,7 @@ Nopeus on 0–240 sukupolvea/s näytön virkistyksestä riippumatta; 0 pysäytt�
 
 ### Palauta arvot
 
-Palautus asettaa näytetyksi solukooksi 8 px ruudukolla tai ilman (jako 9 tai 8 px), nopeudeksi 20 sukupolvea/s, tiheydeksi 25 % ja kolme oletusväriä. Muut valinnat säilyvät; kuvio, joka ei enää mahdu, korvataan sekoituksella. Uusi tilanne luodaan vain, jos jako muuttuu tai tiheys muuttuu kohinatilassa.
+Palautus asettaa näytetyksi solukooksi 8 px ruudukolla tai ilman (jako 9 tai 8 px), nopeudeksi 20 sukupolvea/s, tiheydeksi 25 % ja kolme oletusväriä. Muut valinnat, myös valittu kuvio, säilyvät. Uusi tilanne luodaan vain, jos jako muuttuu tai tiheys muuttuu kohinatilassa.
 
 ### Erillissovellus ja MP4-tallennus
 

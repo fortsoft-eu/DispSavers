@@ -40,7 +40,7 @@ EXE checkboxes enable displays; settings apply to the shared world. One enabled 
 
 ### Starting state and patterns
 
-The default is random noise with 25% live cells. Initial density ranges from 0–100% and applies at the next restart. Known patterns only uses 4,106 bundled patterns without noise and disables density. Choose a mixture or a named pattern; dimensions are in cells. Type a name to search. Only patterns fitting the world are listed. Small verified patterns repeat in separate copies; large or complex ones start once in the centre. Shrinking the world can replace an unavailable selection with a mixture. Changing the mode or pattern starts a new scene. Restarts retain the choice; the catalogue works offline.
+The default is random noise with 25% live cells. Initial density ranges from 0–100% and applies at the next restart. Known patterns only uses 4,106 bundled patterns without noise and disables density. Choose a mixture or a named pattern; dimensions are in cells. Type a name to search. All catalogue patterns are always available. Small verified patterns repeat in separate copies; large or complex ones start once in the centre. An oversized pattern is centred and clipped; changing the world or cell size preserves the selection. Changing the mode or pattern starts a new scene. Restarts retain the choice; the catalogue works offline.
 
 ### Cell size, grid, and colours
 
@@ -52,7 +52,7 @@ Speed is 0–240 generations/s, independent of display refresh; 0 stops evolutio
 
 ### Reset values
 
-Reset restores a displayed cell size of 8 px with or without the grid (spacing 9 or 8 px), speed 20 generations/s, density 25%, and the three default colours. Other choices are preserved; a pattern that no longer fits is replaced by the mixture. A new scene is created only if spacing changes, or density changes in noise mode.
+Reset restores a displayed cell size of 8 px with or without the grid (spacing 9 or 8 px), speed 20 generations/s, density 25%, and the three default colours. Other choices, including the selected pattern, are preserved. A new scene is created only if spacing changes, or density changes in noise mode.
 
 ### Standalone application and MP4 recording
 

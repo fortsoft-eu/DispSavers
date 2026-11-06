@@ -40,7 +40,7 @@ Gátreitir í EXE virkja skjái; stillingar gilda fyrir sameiginlega heiminn. Ei
 
 ### Upphafsstaða og mynstur
 
-Sjálfgefin byrjun er slembisuð með 25 % lifandi reitum. Upphafsþéttleiki 0–100 % gildir við næstu endurræsingu. Aðeins þekkt mynstur notar 4.106 innbyggð mynstur án suðs og slekkur á þéttleika. Veldu blöndu eða heiti; mál eru í reitum. Sláðu inn nafn til að leita. Aðeins mynstur sem rúmast heil birtast. Lítil staðfest mynstur endurtaka sig í aðskildum eintökum, stór eða flókin birtast einu sinni í miðju. Minni heimur getur skipt of stóru vali út fyrir blöndu. Breyttur hamur eða mynstur býr til nýja senu. Endurræsing varðveitir valið; skráin virkar án nets.
+Sjálfgefin byrjun er slembisuð með 25 % lifandi reitum. Upphafsþéttleiki 0–100 % gildir við næstu endurræsingu. Aðeins þekkt mynstur notar 4.106 innbyggð mynstur án suðs og slekkur á þéttleika. Veldu blöndu eða heiti; mál eru í reitum. Sláðu inn nafn til að leita. Öll mynstur skrárinnar eru alltaf tiltæk. Lítil staðfest mynstur endurtaka sig í aðskildum eintökum, stór eða flókin birtast einu sinni í miðju. Of stórt mynstur er miðjað og skorið við jaðrana; breyting á stærð heims eða reita varðveitir valið. Breyttur hamur eða mynstur býr til nýja senu. Endurræsing varðveitir valið; skráin virkar án nets.
 
 ### Reitastærð, hnitanet og litir
 
@@ -52,7 +52,7 @@ Hraði er 0–240 kynslóðir/s, óháður endurnýjun skjás; 0 stöðvar þró
 
 ### Endurstilla gildi
 
-Endurstilling setur sýnda reitastærð í 8 px með eða án hnitanets (bil 9 eða 8 px), hraða í 20 kynslóðir/s, þéttleika í 25 % og litina þrjá í sjálfgefin gildi. Aðrir valkostir haldast; mynstur sem rúmast ekki lengur er skipt út fyrir blönduna. Ný sena verður aðeins til ef bilið breytist eða þéttleikinn breytist í suðham.
+Endurstilling setur sýnda reitastærð í 8 px með eða án hnitanets (bil 9 eða 8 px), hraða í 20 kynslóðir/s, þéttleika í 25 % og litina þrjá í sjálfgefin gildi. Aðrir valkostir, þar á meðal valið mynstur, haldast. Ný sena verður aðeins til ef bilið breytist eða þéttleikinn breytist í suðham.
 
 ### Sjálfstætt forrit og MP4-upptaka
 

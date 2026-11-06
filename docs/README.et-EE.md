@@ -40,7 +40,7 @@ EXE märkeruudud lülitavad kuvarid sisse; sätted kehtivad ühisele maailmale. 
 
 ### Algolek ja mustrid
 
-Vaikimisi algus on juhumüra 25 % elusate lahtritega. Algtihedus 0–100 % rakendub järgmisel taasalustusel. Ainult tuntud mustrid kasutab 4 106 kaasasolevat mustrit ilma mürata ja keelab tiheduse. Valige segu või nimi; mõõtmed on lahtrites. Otsimiseks tippige nimi. Näidatakse ainult täielikult mahtuvaid mustreid. Väikesed kontrollitud mustrid korduvad eraldi koopiatena, suured või keerukad ilmuvad üks kord keskele. Väiksem maailm võib liiga suure valiku asendada seguga. Režiimi või mustri muutmine loob uue stseeni. Taasalustused säilitavad valiku; kataloog töötab võrguta.
+Vaikimisi algus on juhumüra 25 % elusate lahtritega. Algtihedus 0–100 % rakendub järgmisel taasalustusel. Ainult tuntud mustrid kasutab 4 106 kaasasolevat mustrit ilma mürata ja keelab tiheduse. Valige segu või nimi; mõõtmed on lahtrites. Otsimiseks tippige nimi. Kõik kataloogi mustrid on alati saadaval. Väikesed kontrollitud mustrid korduvad eraldi koopiatena, suured või keerukad ilmuvad üks kord keskele. Liiga suur muster keskendatakse ja kärbitakse; maailma või lahtri suuruse muutmine säilitab valiku. Režiimi või mustri muutmine loob uue stseeni. Taasalustused säilitavad valiku; kataloog töötab võrguta.
 
 ### Lahtri suurus, ruudustik ja värvid
 
@@ -52,7 +52,7 @@ Kiirus on 0–240 põlvkonda/s kuvari värskendusest sõltumatult; 0 peatab aren
 
 ### Lähtesta väärtused
 
-Lähtestamine seab kuvatava lahtri suuruseks 8 px ruudustikuga või ilma (samm 9 või 8 px), kiiruseks 20 põlvkonda/s, tiheduseks 25 % ja taastab kolm vaikevärvi. Muud valikud säilivad; muster, mis enam ei mahu, asendatakse seguga. Uus stseen tekib ainult sammu muutumisel või tiheduse muutumisel mürarežiimis.
+Lähtestamine seab kuvatava lahtri suuruseks 8 px ruudustikuga või ilma (samm 9 või 8 px), kiiruseks 20 põlvkonda/s, tiheduseks 25 % ja taastab kolm vaikevärvi. Muud valikud, sealhulgas valitud muster, säilivad. Uus stseen tekib ainult sammu muutumisel või tiheduse muutumisel mürarežiimis.
 
 ### Eraldi rakendus ja MP4-salvestus
 
