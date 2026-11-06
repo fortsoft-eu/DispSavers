@@ -60,7 +60,7 @@ EXE pastāvīgi saglabā iestatījumus un ieraksta pirmo aktīvo ekrānu MP4. Ie
 
 ### Momentuzņēmums un ekrānsaudzētāja pārvaldība EXE
 
-Momentuzņēmums saglabā PNG no ierakstāmā ekrāna vai citādi no pirmā aktīvā ekrāna tā izšķirtspējā, neatsākot ainu. Tiek piedāvāta mape Attēli, citādi Dokumenti. Ekrānsaudzētāja bloķēšana animācijas laikā neļauj tam ieslēgties, kamēr animācija ir redzama un nav pauzē. Nulles ātrums nav pauze. Instalēšana no EXE izpako pievienoto SCR un izvēlas to kā Windows ekrānsaudzētāju. Instalēšanai un atinstalēšanai var būt vajadzīga administratora atļauja; statusa josla rāda darbību līdz tās beigām. Ja noņemšana ir bloķēta, aizveriet darbojošos ekrānsaudzētāju, tā iestatījumus un Windows priekšskatījumu.
+Momentuzņēmums saglabā BMP/GIF/JPEG/PNG/TIFF/WebP no ierakstāmā ekrāna vai citādi no pirmā aktīvā ekrāna tā izšķirtspējā, neatsākot ainu. Tiek piedāvāta mape Attēli, citādi Dokumenti. Ekrānsaudzētāja bloķēšana animācijas laikā neļauj tam ieslēgties, kamēr animācija ir redzama un nav pauzē. Nulles ātrums nav pauze. Instalēšana no EXE izpako pievienoto SCR un izvēlas to kā Windows ekrānsaudzētāju. Instalēšanai un atinstalēšanai var būt vajadzīga administratora atļauja; statusa josla rāda darbību līdz tās beigām. Ja noņemšana ir bloķēta, aizveriet darbojošos ekrānsaudzētāju, tā iestatījumus un Windows priekšskatījumu.
 
 ### Windows ekrānsaudzētājs
 
@@ -86,7 +86,7 @@ Monitoru sarakstā atlasiet vienu vai vairākas rindas. Ctrl+A atlasa visas, bet
 
 ### LIETOŠANA
 
-Palaidiet FlightCorridor.exe. Iestatījumi tiek saglabāti nepārtraukti, un darbojas tikai viena lietotnes instance. Monitora rūtiņa vai dubultklikšķis uz rindas ieslēdz vai izslēdz tā animācijas izvadi. Animāciju var pauzēt un turpināt. PNG un MP4 uzņem pirmo aktīvo animācijas monitoru, nevis visu monitoru kopējo attēlu. Ierakstīšanas laikā nevar izslēgt ierakstāmā monitora animācijas izvadi; aizverot lietotni ieraksta laikā, nepieciešams apstiprinājums. Pauze un ekrānsaudzētāja bloķēšana attiecas uz visu lietotni neatkarīgi no monitoru atlases. Ja bloķēšana ir ieslēgta, Windows ekrānsaudzētājs tiek bloķēts tikai tik ilgi, kamēr vismaz vienā monitorā ir redzama nepauzēta animācija. Lietotne var instalēt vai atinstalēt tajā iebūvēto ekrānsaudzētāju.
+Palaidiet FlightCorridor.exe. Iestatījumi tiek saglabāti nepārtraukti, un darbojas tikai viena lietotnes instance. Monitora rūtiņa vai dubultklikšķis uz rindas ieslēdz vai izslēdz tā animācijas izvadi. Animāciju var pauzēt un turpināt. BMP/GIF/JPEG/PNG/TIFF/WebP un MP4 uzņem pirmo aktīvo animācijas monitoru, nevis visu monitoru kopējo attēlu. Ierakstīšanas laikā nevar izslēgt ierakstāmā monitora animācijas izvadi; aizverot lietotni ieraksta laikā, nepieciešams apstiprinājums. Pauze un ekrānsaudzētāja bloķēšana attiecas uz visu lietotni neatkarīgi no monitoru atlases. Ja bloķēšana ir ieslēgta, Windows ekrānsaudzētājs tiek bloķēts tikai tik ilgi, kamēr vismaz vienā monitorā ir redzama nepauzēta animācija. Lietotne var instalēt vai atinstalēt tajā iebūvēto ekrānsaudzētāju.
 
 ### EKRĀNUZŅĒMUMI UN IERAKSTĪŠANA
 

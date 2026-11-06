@@ -18,6 +18,10 @@
     <Project Path="GameOfLife/GameOfLife.vcxproj" Id="62003245-b93c-4d8e-9baf-8ae243f9ed3b" />
     <Project Path="GameOfLife/GameOfLifeScr.vcxproj" Id="3cb59030-6c22-4170-8b66-8b8e416a8a47" />
   </Folder>
+  <Folder Name="/Common/">
+    <File Path="Common/libwebp.dll" />
+    <File Path="Common/license.txt" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path="BuildSigning.ps1" />
     <File Path="BuildSigning.targets" />

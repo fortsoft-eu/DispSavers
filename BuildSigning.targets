@@ -71,4 +71,20 @@ Last modified for version 1.3.0.0
 		<WriteLinesToFile File="$(TlogLocation)BuildSigning.read.1.tlog" Lines="^$(MSBuildProjectFullPath);@(_BuildSigningInputs)" Overwrite="true" Encoding="Unicode"/>
 		<WriteLinesToFile File="$(TlogLocation)BuildSigning.write.1.tlog" Lines="^$(MSBuildProjectFullPath);$(IntDir)BuildSigning.stamp" Overwrite="true" Encoding="Unicode"/>
 	</Target>
+	<PropertyGroup>
+		<_SnapshotCommonDirectory>$(MSBuildThisFileDirectory)Common\</_SnapshotCommonDirectory>
+		<_SnapshotWebpLicense Condition="'$(TargetExt)' == '.exe'">$(_SnapshotCommonDirectory)license.txt</_SnapshotWebpLicense>
+	</PropertyGroup>
+	<Target Name="PrepareSnapshotResources" Inputs="$(_SnapshotCommonDirectory)libwebp.dll;$(_SnapshotCommonDirectory)license.txt;$(MSBuildProjectDirectory)\..\license.txt;$(SnapshotLicenseNotices);$(ProjectDir)$(TargetName).rc;$(_ResourcePackingScript);$(_ResourcePackerSource);$(_BuildSigningTargets)" Outputs="$(IntDir)libwebp.packed;$(IntDir)license.utf8;$(IntDir)$(TargetName).rc">
+		<Exec Command="&quot;$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(_ResourcePackingScript)&quot; -Source &quot;$(_SnapshotCommonDirectory)libwebp.dll&quot; -Output &quot;$(IntDir)libwebp.packed&quot; -License &quot;$(MSBuildProjectDirectory)\..\license.txt&quot; -Notices &quot;$(SnapshotLicenseNotices)&quot; -WebpLicense &quot;$(_SnapshotWebpLicense)&quot; -Resource &quot;$(ProjectDir)$(TargetName).rc&quot;"/>
+		<ItemGroup>
+			<FileWrites Include="$(IntDir)libwebp.packed;$(IntDir)license.utf8;$(IntDir)$(TargetName).rc"/>
+		</ItemGroup>
+	</Target>
+	<Target Name="UsePreparedResourceScript" BeforeTargets="ResourceCompile" DependsOnTargets="PrepareSnapshotResources">
+		<ItemGroup>
+			<ResourceCompile Remove="$(TargetName).rc"/>
+			<ResourceCompile Include="$(IntDir)$(TargetName).rc"/>
+		</ItemGroup>
+	</Target>
 </Project>

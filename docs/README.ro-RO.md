@@ -60,7 +60,7 @@ EXE salvează setările continuu și înregistrează primul ecran activ în MP4.
 
 ### Captură și administrarea economizorului în EXE
 
-Captura salvează un PNG al ecranului înregistrat sau, în lipsa înregistrării, al primului ecran activ, la rezoluția sa și fără repornirea scenei. Se propune folderul Imagini, alternativ Documente. Blocarea economizorului în timpul animației împiedică pornirea sa cât timp animația este vizibilă și nu este în pauză. Viteza zero nu înseamnă pauză. Instalarea din EXE extrage SCR-ul inclus și îl selectează drept economizor Windows. Instalarea și dezinstalarea pot necesita aprobarea administratorului; bara de stare indică operația până la încheiere. Dacă eliminarea este blocată, închideți economizorul activ, setările sale și previzualizarea Windows.
+Captura salvează un BMP/GIF/JPEG/PNG/TIFF/WebP al ecranului înregistrat sau, în lipsa înregistrării, al primului ecran activ, la rezoluția sa și fără repornirea scenei. Se propune folderul Imagini, alternativ Documente. Blocarea economizorului în timpul animației împiedică pornirea sa cât timp animația este vizibilă și nu este în pauză. Viteza zero nu înseamnă pauză. Instalarea din EXE extrage SCR-ul inclus și îl selectează drept economizor Windows. Instalarea și dezinstalarea pot necesita aprobarea administratorului; bara de stare indică operația până la încheiere. Dacă eliminarea este blocată, închideți economizorul activ, setările sale și previzualizarea Windows.
 
 ### Economizor de ecran Windows
 
@@ -86,7 +86,7 @@ Selectați unul sau mai multe rânduri din lista monitoarelor. Ctrl+A le selecte
 
 ### COMENZI
 
-Rulați FlightCorridor.exe. Setările se salvează continuu și rulează o singură instanță. Caseta monitorului sau un dublu clic pe rând activează ori dezactivează ieșirea animației. Animația poate fi pusă în pauză și reluată. PNG și MP4 capturează primul monitor de animație activ, nu imaginea combinată a tuturor monitoarelor. Ieșirea animației pe monitorul înregistrat nu poate fi dezactivată în timpul înregistrării; închiderea aplicației în timpul înregistrării necesită confirmare. Pauza și blocarea economizorului se aplică întregii aplicații, indiferent de selecția monitoarelor. Când blocarea este activată, economizorul Windows este împiedicat numai cât timp pe cel puțin un monitor este vizibilă o animație care nu este în pauză. Aplicația poate instala sau dezinstala economizorul încorporat.
+Rulați FlightCorridor.exe. Setările se salvează continuu și rulează o singură instanță. Caseta monitorului sau un dublu clic pe rând activează ori dezactivează ieșirea animației. Animația poate fi pusă în pauză și reluată. BMP/GIF/JPEG/PNG/TIFF/WebP și MP4 capturează primul monitor de animație activ, nu imaginea combinată a tuturor monitoarelor. Ieșirea animației pe monitorul înregistrat nu poate fi dezactivată în timpul înregistrării; închiderea aplicației în timpul înregistrării necesită confirmare. Pauza și blocarea economizorului se aplică întregii aplicații, indiferent de selecția monitoarelor. Când blocarea este activată, economizorul Windows este împiedicat numai cât timp pe cel puțin un monitor este vizibilă o animație care nu este în pauză. Aplicația poate instala sau dezinstala economizorul încorporat.
 
 ### CAPTURI ȘI ÎNREGISTRARE
 

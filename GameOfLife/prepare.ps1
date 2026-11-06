@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Last modified for version 1.3.0.0
+Last modified for version 1.3.1.0
 #>
 
 param(
@@ -32,6 +32,7 @@ param(
     [switch]$Patterns,
     [string]$License,
     [string]$Notices,
+    [string]$WebpLicense,
     [string]$Resource
 )
 
@@ -78,8 +79,12 @@ try {
 [ResourcePacker]::Pack($Source, $Output, $Patterns.IsPresent)
 
 if ($License) {
-    $licenseText = [IO.File]::ReadAllText($License, $encoding).Trim() + "`r`n`r`n`r`n"
-    $licenseText += [IO.File]::ReadAllText($Notices, $encoding).Trim()
+    $licenseText = [IO.File]::ReadAllText($License, $encoding).Trim()
+    foreach ($notice in @($Notices, $WebpLicense)) {
+        if ($notice) {
+            $licenseText += "`r`n`r`n`r`n" + [IO.File]::ReadAllText($notice, $encoding).Trim()
+        }
+    }
     [IO.File]::WriteAllText((Join-Path $directory 'license.utf8'), $licenseText, $encoding)
 }
 

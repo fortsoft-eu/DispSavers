@@ -60,7 +60,7 @@ EXE stalno čuva postavke i snima prvi aktivni monitor u MP4. Predlaže Videozap
 
 ### Snimak slike i upravljanje čuvarom u EXE
 
-Snimak slike čuva PNG monitora koji se snima, inače prvog aktivnog, u njegovoj rezoluciji bez ponovnog pokretanja scene. Predlaže mapu Slike, inače Dokumenti. Blokiranje čuvara tokom animacije sprečava njegovo pokretanje dok je animacija vidljiva i nije pauzirana. Nulta brzina nije pauza. Instalacija iz EXE raspakuje priloženi SCR i bira ga kao Windows čuvar ekrana. Instalacija i deinstalacija mogu tražiti odobrenje administratora; statusna traka prikazuje radnju do završetka. Ako je uklanjanje blokirano, zatvorite pokrenuti čuvar, njegove postavke i Windows pregled.
+Snimak slike čuva BMP/GIF/JPEG/PNG/TIFF/WebP monitora koji se snima, inače prvog aktivnog, u njegovoj rezoluciji bez ponovnog pokretanja scene. Predlaže mapu Slike, inače Dokumenti. Blokiranje čuvara tokom animacije sprečava njegovo pokretanje dok je animacija vidljiva i nije pauzirana. Nulta brzina nije pauza. Instalacija iz EXE raspakuje priloženi SCR i bira ga kao Windows čuvar ekrana. Instalacija i deinstalacija mogu tražiti odobrenje administratora; statusna traka prikazuje radnju do završetka. Ako je uklanjanje blokirano, zatvorite pokrenuti čuvar, njegove postavke i Windows pregled.
 
 ### Windows čuvar ekrana
 
@@ -86,7 +86,7 @@ Odaberite jedan ili više redova u listi monitora. Ctrl+A odabire sve; Ctrl i Sh
 
 ### UPRAVLJANJE
 
-Pokrenite FlightCorridor.exe. Postavke se stalno čuvaju i radi samo jedna instanca aplikacije. Kućica monitora ili dvostruki klik na red uključuje ili isključuje animacijski izlaz. Animaciju možete pauzirati i nastaviti. PNG i MP4 bilježe prvi aktivni monitor animacije, ne zajedničku sliku svih monitora. Animacijski izlaz snimanog monitora ne možete isključiti tokom snimanja; zatvaranje aplikacije tokom snimanja zahtijeva potvrdu. Pauza i blokada čuvara ekrana vrijede za cijelu aplikaciju, bez obzira na odabir monitora. Kada je blokada uključena, čuvar ekrana Windowsa se sprječava samo dok je na barem jednom monitoru vidljiva animacija koja nije pauzirana. Aplikacija može instalirati i deinstalirati ugrađeni čuvar ekrana.
+Pokrenite FlightCorridor.exe. Postavke se stalno čuvaju i radi samo jedna instanca aplikacije. Kućica monitora ili dvostruki klik na red uključuje ili isključuje animacijski izlaz. Animaciju možete pauzirati i nastaviti. BMP/GIF/JPEG/PNG/TIFF/WebP i MP4 bilježe prvi aktivni monitor animacije, ne zajedničku sliku svih monitora. Animacijski izlaz snimanog monitora ne možete isključiti tokom snimanja; zatvaranje aplikacije tokom snimanja zahtijeva potvrdu. Pauza i blokada čuvara ekrana vrijede za cijelu aplikaciju, bez obzira na odabir monitora. Kada je blokada uključena, čuvar ekrana Windowsa se sprječava samo dok je na barem jednom monitoru vidljiva animacija koja nije pauzirana. Aplikacija može instalirati i deinstalirati ugrađeni čuvar ekrana.
 
 ### SNIMCI EKRANA I SNIMANJE
 

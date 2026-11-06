@@ -60,7 +60,7 @@ EXE isalva s-settings kontinwament u jirreġistra l-ewwel skrin attiv f'MP4. Jis
 
 ### Stampa u ġestjoni tal-iscreensaver fl-EXE
 
-L-istampa ssalva PNG tal-iskrin li qed jiġi rreġistrat, inkella tal-ewwel skrin attiv, bir-riżoluzzjoni tiegħu mingħajr ma terġa’ tibda x-xena. Jiġi ssuġġerit il-folder Stampi, inkella Dokumenti. L-imblukkar tal-iscreensaver waqt l-animazzjoni ma jħallihx jibda sakemm l-animazzjoni tkun viżibbli u mhux f’pawża. Veloċità żero mhijiex pawża. L-installazzjoni mill-EXE testratta l-SCR inkluż u tagħżlu bħala screensaver tal-Windows. L-installazzjoni u t-tneħħija jistgħu jeħtieġu approvazzjoni tal-amministratur; l-istrixxa tal-istatus turi l-operazzjoni sa tmiemha. Jekk it-tneħħija tkun imblukkata, agħlaq l-iscreensaver li qed jaħdem, is-settings tiegħu u l-previżjoni tal-Windows.
+L-istampa ssalva BMP/GIF/JPEG/PNG/TIFF/WebP tal-iskrin li qed jiġi rreġistrat, inkella tal-ewwel skrin attiv, bir-riżoluzzjoni tiegħu mingħajr ma terġa’ tibda x-xena. Jiġi ssuġġerit il-folder Stampi, inkella Dokumenti. L-imblukkar tal-iscreensaver waqt l-animazzjoni ma jħallihx jibda sakemm l-animazzjoni tkun viżibbli u mhux f’pawża. Veloċità żero mhijiex pawża. L-installazzjoni mill-EXE testratta l-SCR inkluż u tagħżlu bħala screensaver tal-Windows. L-installazzjoni u t-tneħħija jistgħu jeħtieġu approvazzjoni tal-amministratur; l-istrixxa tal-istatus turi l-operazzjoni sa tmiemha. Jekk it-tneħħija tkun imblukkata, agħlaq l-iscreensaver li qed jaħdem, is-settings tiegħu u l-previżjoni tal-Windows.
 
 ### Screensaver tal-Windows
 
@@ -86,7 +86,7 @@ Agħżel ringiela waħda jew aktar fil-lista tal-moniters. Ctrl+A jagħżilhom k
 
 ### KONTROLLI
 
-Ħaddem FlightCorridor.exe. L-issettjar jiġi ssejvjat kontinwament u taħdem istanza waħda biss. Il-kaxxa tal-moniter jew klikk doppja fuq ir-ringiela tattiva jew tiddiżattiva l-output tal-animazzjoni. Tista’ tissospendi u tkompli l-animazzjoni. PNG u MP4 jaqbdu l-ewwel moniter tal-animazzjoni attiv, mhux immaġni magħquda tal-moniters kollha. L-output tal-animazzjoni tal-moniter li qed jiġi rreġistrat ma jistax jiġi diżattivat waqt ir-reġistrazzjoni; l-għeluq tal-applikazzjoni waqt reġistrazzjoni jeħtieġ konferma. Is-sospensjoni u l-imblukkar tal-iscreen saver japplikaw għall-applikazzjoni kollha, irrispettivament mill-moniters magħżula. Meta l-imblukkar ikun attiv, l-iscreen saver ta’ Windows jiġi mblukkat biss waqt li jkun hemm animazzjoni viżibbli mhux sospiża fuq mill-inqas moniter wieħed. L-applikazzjoni tinstalla jew tneħħi l-iscreen saver inkorporat.
+Ħaddem FlightCorridor.exe. L-issettjar jiġi ssejvjat kontinwament u taħdem istanza waħda biss. Il-kaxxa tal-moniter jew klikk doppja fuq ir-ringiela tattiva jew tiddiżattiva l-output tal-animazzjoni. Tista’ tissospendi u tkompli l-animazzjoni. BMP/GIF/JPEG/PNG/TIFF/WebP u MP4 jaqbdu l-ewwel moniter tal-animazzjoni attiv, mhux immaġni magħquda tal-moniters kollha. L-output tal-animazzjoni tal-moniter li qed jiġi rreġistrat ma jistax jiġi diżattivat waqt ir-reġistrazzjoni; l-għeluq tal-applikazzjoni waqt reġistrazzjoni jeħtieġ konferma. Is-sospensjoni u l-imblukkar tal-iscreen saver japplikaw għall-applikazzjoni kollha, irrispettivament mill-moniters magħżula. Meta l-imblukkar ikun attiv, l-iscreen saver ta’ Windows jiġi mblukkat biss waqt li jkun hemm animazzjoni viżibbli mhux sospiża fuq mill-inqas moniter wieħed. L-applikazzjoni tinstalla jew tneħħi l-iscreen saver inkorporat.
 
 ### RITRATTI TAL-ISKRIN U REĠISTRAZZJONI
 

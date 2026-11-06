@@ -60,7 +60,7 @@ EXE sproti shranjuje nastavitve in snema prvi aktivni zaslon v MP4. Predlaga Vid
 
 ### Posnetek slike in upravljanje ohranjevalnika v EXE
 
-Posnetek slike shrani PNG snemanega zaslona, sicer prvega aktivnega, v njegovi ločljivosti brez ponovnega začetka prizora. Predlaga mapo Slike, sicer Dokumenti. Blokiranje ohranjevalnika med animacijo prepreči njegov zagon, dokler je animacija vidna in ni začasno ustavljena. Ničelna hitrost ni premor. Namestitev iz EXE razpakira priloženi SCR in ga izbere kot ohranjevalnik zaslona Windows. Namestitev in odstranitev lahko zahtevata skrbniško dovoljenje; vrstica stanja prikazuje postopek do konca. Če je odstranitev blokirana, zaprite delujoči ohranjevalnik, njegove nastavitve in predogled Windows.
+Posnetek slike shrani BMP/GIF/JPEG/PNG/TIFF/WebP snemanega zaslona, sicer prvega aktivnega, v njegovi ločljivosti brez ponovnega začetka prizora. Predlaga mapo Slike, sicer Dokumenti. Blokiranje ohranjevalnika med animacijo prepreči njegov zagon, dokler je animacija vidna in ni začasno ustavljena. Ničelna hitrost ni premor. Namestitev iz EXE razpakira priloženi SCR in ga izbere kot ohranjevalnik zaslona Windows. Namestitev in odstranitev lahko zahtevata skrbniško dovoljenje; vrstica stanja prikazuje postopek do konca. Če je odstranitev blokirana, zaprite delujoči ohranjevalnik, njegove nastavitve in predogled Windows.
 
 ### Ohranjevalnik zaslona Windows
 
@@ -86,7 +86,7 @@ Na seznamu zaslonov izberite eno ali več vrstic. Ctrl+A izbere vse, Ctrl in Shi
 
 ### UPRAVLJANJE
 
-Zaženite FlightCorridor.exe. Nastavitve se shranjujejo sproti in deluje le en primerek programa. Polje zaslona ali dvojni klik na vrstico vklopi ali izklopi izhod animacije. Animacijo lahko začasno ustavite in nadaljujete. PNG in MP4 zajameta prvi aktivni zaslon animacije, ne skupne slike vseh zaslonov. Izhoda animacije snemanega zaslona med snemanjem ni mogoče izklopiti; zapiranje programa med snemanjem zahteva potrditev. Premor in preprečevanje ohranjevalnika veljata za celoten program, ne glede na izbor zaslonov. Ko je preprečevanje vključeno, se ohranjevalnik Windows prepreči le, dokler je na vsaj enem zaslonu vidna animacija, ki ni ustavljena. Program lahko namesti ali odstrani vgrajeni ohranjevalnik.
+Zaženite FlightCorridor.exe. Nastavitve se shranjujejo sproti in deluje le en primerek programa. Polje zaslona ali dvojni klik na vrstico vklopi ali izklopi izhod animacije. Animacijo lahko začasno ustavite in nadaljujete. BMP/GIF/JPEG/PNG/TIFF/WebP in MP4 zajameta prvi aktivni zaslon animacije, ne skupne slike vseh zaslonov. Izhoda animacije snemanega zaslona med snemanjem ni mogoče izklopiti; zapiranje programa med snemanjem zahteva potrditev. Premor in preprečevanje ohranjevalnika veljata za celoten program, ne glede na izbor zaslonov. Ko je preprečevanje vključeno, se ohranjevalnik Windows prepreči le, dokler je na vsaj enem zaslonu vidna animacija, ki ni ustavljena. Program lahko namesti ali odstrani vgrajeni ohranjevalnik.
 
 ### POSNETKI ZASLONA IN SNEMANJE
 

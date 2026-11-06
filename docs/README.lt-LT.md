@@ -60,7 +60,7 @@ EXE nuolat išsaugo nuostatas ir įrašo pirmą aktyvų ekraną į MP4. Siūloma
 
 ### Momentinė kopija ir užsklandos valdymas EXE
 
-Momentinė kopija išsaugo įrašomo arba, jei neįrašoma, pirmojo aktyvaus ekrano PNG jo raiška nepaleidžiant scenos iš naujo. Siūlomas aplankas Paveikslėliai, kitu atveju Dokumentai. Užsklandos blokavimas animacijos metu neleidžia jai įsijungti, kol animacija matoma ir nepristabdyta. Nulinis greitis nėra pauzė. Diegimas iš EXE išpakuoja pridėtą SCR ir parenka jį kaip Windows užsklandą. Diegiant ir šalinant gali reikėti administratoriaus leidimo; būsenos juosta rodo veiksmą iki jo pabaigos. Jei šalinimas blokuojamas, uždarykite veikiančią užsklandą, jos nuostatas ir Windows peržiūrą.
+Momentinė kopija išsaugo įrašomo arba, jei neįrašoma, pirmojo aktyvaus ekrano BMP/GIF/JPEG/PNG/TIFF/WebP jo raiška nepaleidžiant scenos iš naujo. Siūlomas aplankas Paveikslėliai, kitu atveju Dokumentai. Užsklandos blokavimas animacijos metu neleidžia jai įsijungti, kol animacija matoma ir nepristabdyta. Nulinis greitis nėra pauzė. Diegimas iš EXE išpakuoja pridėtą SCR ir parenka jį kaip Windows užsklandą. Diegiant ir šalinant gali reikėti administratoriaus leidimo; būsenos juosta rodo veiksmą iki jo pabaigos. Jei šalinimas blokuojamas, uždarykite veikiančią užsklandą, jos nuostatas ir Windows peržiūrą.
 
 ### Windows ekrano užsklanda
 
@@ -86,7 +86,7 @@ Monitorių sąraše pasirinkite vieną ar kelias eilutes. Ctrl+A pasirenka visas
 
 ### VALDYMAS
 
-Paleiskite FlightCorridor.exe. Nuostatos išsaugomos nuolat, veikia tik vienas programos egzempliorius. Monitoriaus langelis arba dvigubas eilutės spustelėjimas įjungia ar išjungia animacijos išvestį. Animaciją galima pristabdyti ir tęsti. PNG ir MP4 fiksuoja pirmą aktyvų animacijos monitorių, o ne bendrą visų monitorių vaizdą. Įrašymo metu negalima išjungti įrašomo monitoriaus animacijos išvesties; uždarant programą vykstant įrašymui reikia patvirtinimo. Pristabdymas ir užsklandos blokavimas taikomi visai programai, nepriklausomai nuo monitorių pasirinkimo. Įjungus blokavimą, Windows užsklanda neleidžiama tik kol bent viename monitoriuje matoma nepristabdyta animacija. Programa gali įdiegti ir pašalinti į ją įtrauktą užsklandą.
+Paleiskite FlightCorridor.exe. Nuostatos išsaugomos nuolat, veikia tik vienas programos egzempliorius. Monitoriaus langelis arba dvigubas eilutės spustelėjimas įjungia ar išjungia animacijos išvestį. Animaciją galima pristabdyti ir tęsti. BMP/GIF/JPEG/PNG/TIFF/WebP ir MP4 fiksuoja pirmą aktyvų animacijos monitorių, o ne bendrą visų monitorių vaizdą. Įrašymo metu negalima išjungti įrašomo monitoriaus animacijos išvesties; uždarant programą vykstant įrašymui reikia patvirtinimo. Pristabdymas ir užsklandos blokavimas taikomi visai programai, nepriklausomai nuo monitorių pasirinkimo. Įjungus blokavimą, Windows užsklanda neleidžiama tik kol bent viename monitoriuje matoma nepristabdyta animacija. Programa gali įdiegti ir pašalinti į ją įtrauktą užsklandą.
 
 ### EKRANO KOPIJOS IR ĮRAŠYMAS
 

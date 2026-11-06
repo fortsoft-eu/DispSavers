@@ -60,7 +60,7 @@ EXE salvestab sätted jooksvalt ja esimese aktiivse kuvari MP4-ks. Pakutakse kau
 
 ### Hetktõmmis ja ekraanisäästja haldus EXE-s
 
-Hetktõmmis salvestab PNG salvestatavast kuvarist või muul juhul esimesest aktiivsest kuvarist selle eraldusvõimega, stseeni taasalustamata. Pakutakse kausta Pildid, selle puudumisel Dokumendid. Ekraanisäästja blokeerimine animatsiooni ajal takistab selle käivitumist, kui animatsioon on nähtav ega ole pausil. Nullkiirus ei ole paus. EXE-st paigaldamine pakib kaasasoleva SCR-i lahti ja valib selle Windowsi ekraanisäästjaks. Paigaldamine ja eemaldamine võivad vajada administraatori kinnitust; olekuriba näitab toimingut selle lõpuni. Kui eemaldamine on blokeeritud, sulgege töötav säästja, selle sätted ja Windowsi eelvaade.
+Hetktõmmis salvestab BMP/GIF/JPEG/PNG/TIFF/WebP salvestatavast kuvarist või muul juhul esimesest aktiivsest kuvarist selle eraldusvõimega, stseeni taasalustamata. Pakutakse kausta Pildid, selle puudumisel Dokumendid. Ekraanisäästja blokeerimine animatsiooni ajal takistab selle käivitumist, kui animatsioon on nähtav ega ole pausil. Nullkiirus ei ole paus. EXE-st paigaldamine pakib kaasasoleva SCR-i lahti ja valib selle Windowsi ekraanisäästjaks. Paigaldamine ja eemaldamine võivad vajada administraatori kinnitust; olekuriba näitab toimingut selle lõpuni. Kui eemaldamine on blokeeritud, sulgege töötav säästja, selle sätted ja Windowsi eelvaade.
 
 ### Windowsi ekraanisäästja
 
@@ -86,7 +86,7 @@ Valige loendis üks või mitu kuvaririda. Ctrl+A valib kõik read; Ctrl ja Shift
 
 ### KASUTAMINE
 
-Käivitage FlightCorridor.exe. Sätteid salvestatakse jooksvalt ning rakendus töötab ühe eksemplarina. Kuvari märkeruut või topeltklõps real lülitab selle animatsiooniväljundi sisse või välja. Animatsiooni saab peatada ja jätkata. PNG-pilt ja MP4-video jäädvustavad esimese aktiivse animatsioonikuvari, mitte kõiki kuvareid koos. Salvestatava kuvari animatsiooniväljundit ei saa salvestamise ajal välja lülitada; rakenduse sulgemine nõuab siis kinnitust. Peatamine ja ekraanisäästja tõkestamine kehtivad kogu rakendusele, sõltumata kuvarite valikust. Kui tõkestamine on sisse lülitatud, takistatakse Windowsi ekraanisäästjat ainult seni, kuni vähemalt ühel kuvaril on nähtav peatamata animatsioon. Rakendus saab paigaldada ja eemaldada sisseehitatud ekraanisäästja.
+Käivitage FlightCorridor.exe. Sätteid salvestatakse jooksvalt ning rakendus töötab ühe eksemplarina. Kuvari märkeruut või topeltklõps real lülitab selle animatsiooniväljundi sisse või välja. Animatsiooni saab peatada ja jätkata. BMP/GIF/JPEG/PNG/TIFF/WebP-pilt ja MP4-video jäädvustavad esimese aktiivse animatsioonikuvari, mitte kõiki kuvareid koos. Salvestatava kuvari animatsiooniväljundit ei saa salvestamise ajal välja lülitada; rakenduse sulgemine nõuab siis kinnitust. Peatamine ja ekraanisäästja tõkestamine kehtivad kogu rakendusele, sõltumata kuvarite valikust. Kui tõkestamine on sisse lülitatud, takistatakse Windowsi ekraanisäästjat ainult seni, kuni vähemalt ühel kuvaril on nähtav peatamata animatsioon. Rakendus saab paigaldada ja eemaldada sisseehitatud ekraanisäästja.
 
 ### KUVATÕMMISED JA SALVESTAMINE
 

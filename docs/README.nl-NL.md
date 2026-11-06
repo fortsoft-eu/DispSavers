@@ -60,7 +60,7 @@ EXE bewaart instellingen doorlopend en neemt het eerste actieve scherm op als MP
 
 ### Momentopname en schermbeveiligingsbeheer in EXE
 
-Momentopname bewaart een PNG van het opgenomen scherm, anders het eerste actieve, op zijn resolutie zonder de scène te herstarten. Afbeeldingen wordt voorgesteld, anders Documenten. Schermbeveiliging blokkeren tijdens animatie voorkomt de start ervan zolang de animatie zichtbaar en niet gepauzeerd is. Snelheid nul is geen pauze. Installatie vanuit EXE pakt de meegeleverde SCR uit en selecteert deze als Windows-schermbeveiliging. Installeren en verwijderen kunnen beheerderstoestemming vereisen; de statusbalk toont de bewerking tot deze klaar is. Sluit bij geblokkeerde verwijdering de actieve schermbeveiliging, de instellingen en het Windows-voorbeeld.
+Momentopname bewaart een BMP/GIF/JPEG/PNG/TIFF/WebP van het opgenomen scherm, anders het eerste actieve, op zijn resolutie zonder de scène te herstarten. Afbeeldingen wordt voorgesteld, anders Documenten. Schermbeveiliging blokkeren tijdens animatie voorkomt de start ervan zolang de animatie zichtbaar en niet gepauzeerd is. Snelheid nul is geen pauze. Installatie vanuit EXE pakt de meegeleverde SCR uit en selecteert deze als Windows-schermbeveiliging. Installeren en verwijderen kunnen beheerderstoestemming vereisen; de statusbalk toont de bewerking tot deze klaar is. Sluit bij geblokkeerde verwijdering de actieve schermbeveiliging, de instellingen en het Windows-voorbeeld.
 
 ### Windows-schermbeveiliging
 
@@ -86,7 +86,7 @@ Selecteer één of meer beeldschermrijen in de lijst. Ctrl+A selecteert alles; m
 
 ### BEDIENING
 
-Start FlightCorridor.exe. Instellingen worden doorlopend opgeslagen en er draait slechts één exemplaar van de toepassing. Het selectievakje of een dubbelklik op de beeldschermrij schakelt de animatie-uitvoer in of uit. U kunt de animatie pauzeren en hervatten. PNG en MP4 leggen het eerste actieve animatiebeeldscherm vast, niet een gecombineerd beeld van alle schermen. De animatie-uitvoer van het opgenomen beeldscherm kan tijdens de opname niet worden uitgeschakeld; afsluiten tijdens een opname vereist bevestiging. Pauzeren en het blokkeren van de schermbeveiliging gelden voor de hele toepassing, ongeacht de beeldschermselectie. Als blokkering is ingeschakeld, wordt de Windows-schermbeveiliging alleen tegengehouden zolang op minstens één beeldscherm een zichtbare, niet-gepauzeerde animatie draait. De toepassing kan de ingebouwde schermbeveiliging installeren of verwijderen.
+Start FlightCorridor.exe. Instellingen worden doorlopend opgeslagen en er draait slechts één exemplaar van de toepassing. Het selectievakje of een dubbelklik op de beeldschermrij schakelt de animatie-uitvoer in of uit. U kunt de animatie pauzeren en hervatten. BMP/GIF/JPEG/PNG/TIFF/WebP en MP4 leggen het eerste actieve animatiebeeldscherm vast, niet een gecombineerd beeld van alle schermen. De animatie-uitvoer van het opgenomen beeldscherm kan tijdens de opname niet worden uitgeschakeld; afsluiten tijdens een opname vereist bevestiging. Pauzeren en het blokkeren van de schermbeveiliging gelden voor de hele toepassing, ongeacht de beeldschermselectie. Als blokkering is ingeschakeld, wordt de Windows-schermbeveiliging alleen tegengehouden zolang op minstens één beeldscherm een zichtbare, niet-gepauzeerde animatie draait. De toepassing kan de ingebouwde schermbeveiliging installeren of verwijderen.
 
 ### SCHERMAFBEELDINGEN EN OPNAMEN
 

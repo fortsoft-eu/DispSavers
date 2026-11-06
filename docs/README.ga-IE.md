@@ -60,7 +60,7 @@ Sábhálann EXE socruithe go leanúnach agus taifeadann sé an chéad scáileán
 
 ### Gabháil íomhá agus bainistiú an spárálaí in EXE
 
-Sábhálann gabháil íomhá PNG den scáileán atá á thaifeadadh, nó den chéad scáileán gníomhach murach sin, ag a thaifeach féin gan an radharc a atosú. Moltar Pictiúir, nó Doiciméid mar rogha eile. Cuireann bac ar an spárálaí le linn beochana cosc ar a thosú fad atá an bheochan infheicthe agus gan sos. Ní hionann luas nialasach agus sos. Díphacálann suiteáil ó EXE an SCR cuachta agus roghnaíonn sí é mar spárálaí Windows. D’fhéadfadh cead riarthóra a bheith de dhíth ar shuiteáil agus díshuiteáil; taispeánann an barra stádais an oibríocht go dtí go gcríochnaíonn sí. Má chuirtear bac ar bhaint, dún an spárálaí reatha, a shocruithe agus réamhamharc Windows.
+Sábhálann gabháil íomhá BMP/GIF/JPEG/PNG/TIFF/WebP den scáileán atá á thaifeadadh, nó den chéad scáileán gníomhach murach sin, ag a thaifeach féin gan an radharc a atosú. Moltar Pictiúir, nó Doiciméid mar rogha eile. Cuireann bac ar an spárálaí le linn beochana cosc ar a thosú fad atá an bheochan infheicthe agus gan sos. Ní hionann luas nialasach agus sos. Díphacálann suiteáil ó EXE an SCR cuachta agus roghnaíonn sí é mar spárálaí Windows. D’fhéadfadh cead riarthóra a bheith de dhíth ar shuiteáil agus díshuiteáil; taispeánann an barra stádais an oibríocht go dtí go gcríochnaíonn sí. Má chuirtear bac ar bhaint, dún an spárálaí reatha, a shocruithe agus réamhamharc Windows.
 
 ### Spárálaí scáileáin Windows
 
@@ -86,7 +86,7 @@ Roghnaigh ró amháin nó níos mó sa liosta monatóirí. Roghnaíonn Ctrl+A ga
 
 ### RIALÚ
 
-Rith FlightCorridor.exe. Sábháiltear socruithe go leanúnach agus ní ritheann ach cóip amháin den fheidhmchlár. Cumasaíonn nó díchumasaíonn bosca seiceála an mhonatóra nó déchliceáil ar a ró an t-aschur beochana. Is féidir an bheochan a chur ar sos agus a atosú. Gabhann PNG agus MP4 an chéad mhonatóir beochana gníomhach, ní na monatóirí uile le chéile. Ní féidir aschur beochana an mhonatóra atá á thaifeadadh a dhíchumasú le linn taifeadta; teastaíonn deimhniú chun an feidhmchlár a dhúnadh agus taifeadadh ar siúl. Baineann sos agus cosc an spárálaí scáileáin leis an bhfeidhmchlár iomlán, beag beann ar na monatóirí roghnaithe. Nuair atá an cosc cumasaithe, ní choisctear spárálaí scáileáin Windows ach fad a bhíonn beochan infheicthe nach bhfuil ar sos ar mhonatóir amháin ar a laghad. Is féidir an spárálaí leabaithe a shuiteáil nó a dhíshuiteáil ón bhfeidhmchlár.
+Rith FlightCorridor.exe. Sábháiltear socruithe go leanúnach agus ní ritheann ach cóip amháin den fheidhmchlár. Cumasaíonn nó díchumasaíonn bosca seiceála an mhonatóra nó déchliceáil ar a ró an t-aschur beochana. Is féidir an bheochan a chur ar sos agus a atosú. Gabhann BMP/GIF/JPEG/PNG/TIFF/WebP agus MP4 an chéad mhonatóir beochana gníomhach, ní na monatóirí uile le chéile. Ní féidir aschur beochana an mhonatóra atá á thaifeadadh a dhíchumasú le linn taifeadta; teastaíonn deimhniú chun an feidhmchlár a dhúnadh agus taifeadadh ar siúl. Baineann sos agus cosc an spárálaí scáileáin leis an bhfeidhmchlár iomlán, beag beann ar na monatóirí roghnaithe. Nuair atá an cosc cumasaithe, ní choisctear spárálaí scáileáin Windows ach fad a bhíonn beochan infheicthe nach bhfuil ar sos ar mhonatóir amháin ar a laghad. Is féidir an spárálaí leabaithe a shuiteáil nó a dhíshuiteáil ón bhfeidhmchlár.
 
 ### GABHÁLACHA SCÁILEÁIN AGUS TAIFEADADH
 

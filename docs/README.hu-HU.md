@@ -60,7 +60,7 @@ Az EXE folyamatosan menti a beállításokat, és az első aktív kijelzőt rög
 
 ### Pillanatkép és a képernyőkímélő kezelése az EXE-ben
 
-A pillanatkép a rögzített kijelzőt, egyébként az első aktív kijelzőt menti PNG-be annak felbontásával, a jelenet újraindítása nélkül. A javasolt mappa Képek, ennek hiányában Dokumentumok. A képernyőkímélő tiltása animáció közben megakadályozza az indulását, amíg az animáció látható és nincs szüneteltetve. A nulla sebesség nem szünet. Az EXE-ből történő telepítés kibontja a mellékelt SCR-t és Windows képernyőkímélőként választja ki. A telepítés és eltávolítás rendszergazdai jóváhagyást igényelhet; az állapotsor a befejezésig jelzi a műveletet. Ha az eltávolítás blokkolva van, zárja be a futó képernyőkímélőt, a beállításait és a Windows előnézetét.
+A pillanatkép a rögzített kijelzőt, egyébként az első aktív kijelzőt menti BMP/GIF/JPEG/PNG/TIFF/WebP-be annak felbontásával, a jelenet újraindítása nélkül. A javasolt mappa Képek, ennek hiányában Dokumentumok. A képernyőkímélő tiltása animáció közben megakadályozza az indulását, amíg az animáció látható és nincs szüneteltetve. A nulla sebesség nem szünet. Az EXE-ből történő telepítés kibontja a mellékelt SCR-t és Windows képernyőkímélőként választja ki. A telepítés és eltávolítás rendszergazdai jóváhagyást igényelhet; az állapotsor a befejezésig jelzi a műveletet. Ha az eltávolítás blokkolva van, zárja be a futó képernyőkímélőt, a beállításait és a Windows előnézetét.
 
 ### Windows-képernyőkímélő
 
@@ -86,7 +86,7 @@ Jelöljön ki egy vagy több sort a monitorok listájában. A Ctrl+A mindet kije
 
 ### KEZELÉS
 
-Indítsa el a FlightCorridor.exe fájlt. A beállítások folyamatosan mentődnek, és csak egy alkalmazáspéldány fut. A monitor jelölőnégyzete vagy a sorra történő dupla kattintás kapcsolja az animációs kimenetet. Az animáció szüneteltethető és folytatható. A PNG és az MP4 az első aktív animációs monitort rögzíti, nem az összes monitor egyesített képét. A rögzített monitor animációs kimenete felvétel közben nem kapcsolható ki; az alkalmazás bezárásához ekkor megerősítés szükséges. A szüneteltetés és a képernyőkímélő tiltása a teljes alkalmazásra vonatkozik, a monitorok kijelölésétől függetlenül. Bekapcsolt tiltás esetén a Windows képernyőkímélője csak addig nem indul el, amíg legalább egy monitoron látható, nem szünetelő animáció fut. Az alkalmazás telepítheti és eltávolíthatja a beágyazott képernyőkímélőt.
+Indítsa el a FlightCorridor.exe fájlt. A beállítások folyamatosan mentődnek, és csak egy alkalmazáspéldány fut. A monitor jelölőnégyzete vagy a sorra történő dupla kattintás kapcsolja az animációs kimenetet. Az animáció szüneteltethető és folytatható. A BMP/GIF/JPEG/PNG/TIFF/WebP és az MP4 az első aktív animációs monitort rögzíti, nem az összes monitor egyesített képét. A rögzített monitor animációs kimenete felvétel közben nem kapcsolható ki; az alkalmazás bezárásához ekkor megerősítés szükséges. A szüneteltetés és a képernyőkímélő tiltása a teljes alkalmazásra vonatkozik, a monitorok kijelölésétől függetlenül. Bekapcsolt tiltás esetén a Windows képernyőkímélője csak addig nem indul el, amíg legalább egy monitoron látható, nem szünetelő animáció fut. Az alkalmazás telepítheti és eltávolíthatja a beágyazott képernyőkímélőt.
 
 ### KÉPERNYŐKÉPEK ÉS FELVÉTEL
 

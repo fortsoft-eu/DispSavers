@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.0.1
  */
 
 #define NOMINMAX
@@ -643,8 +643,8 @@ struct Renderer::Impl {
         context->Unmap(staging.Get(), 0);
     }
 
-    /// Encodes the last scene as a PNG without presentation, using memory when no output path is supplied.
-    bool SaveSnapshot(const wchar_t* path) {
+    /// Encodes the last scene without presentation, using memory when no output path is supplied.
+    bool SaveSnapshot(const wchar_t* path, SnapshotFormat format = SnapshotFormat::Png) {
         if (path && !*path
                 || !device
                 || !context
@@ -670,82 +670,10 @@ struct Renderer::Impl {
         if (FAILED(context->Map(staging.Get(), 0, D3D11_MAP_READ, 0, &mapped))) {
             return false;
         }
-        const HRESULT comResult = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
-        if (FAILED(comResult) && comResult != RPC_E_CHANGED_MODE) {
-            context->Unmap(staging.Get(), 0);
-            return false;
-        }
-        ComPtr<IWICImagingFactory> factory;
-        ComPtr<IWICStream> stream;
-        ComPtr<IWICBitmapEncoder> encoder;
-        ComPtr<IWICBitmapFrameEncode> frame;
-        ComPtr<IPropertyBag2> properties;
-        ComPtr<IStream> memory;
-        HRESULT result = CoCreateInstance(CLSID_WICImagingFactory2, nullptr, CLSCTX_INPROC_SERVER,
-            IID_PPV_ARGS(&factory));
-        if (result == REGDB_E_CLASSNOTREG) {
-            result = CoCreateInstance(CLSID_WICImagingFactory1, nullptr, CLSCTX_INPROC_SERVER,
-                IID_PPV_ARGS(&factory));
-        }
-        if (SUCCEEDED(result)) {
-            result = factory->CreateStream(&stream);
-        }
-        if (SUCCEEDED(result)) {
-            if (path) {
-                result = stream->InitializeFromFilename(path, GENERIC_WRITE);
-            } else {
-                result = CreateStreamOnHGlobal(nullptr, TRUE, &memory);
-                if (SUCCEEDED(result)) {
-                    result = stream->InitializeFromIStream(memory.Get());
-                }
-            }
-        }
-        if (SUCCEEDED(result)) {
-            result = factory->CreateEncoder(GUID_ContainerFormatPng, nullptr, &encoder);
-        }
-        if (SUCCEEDED(result)) {
-            result = encoder->Initialize(stream.Get(), WICBitmapEncoderNoCache);
-        }
-        if (SUCCEEDED(result)) {
-            result = encoder->CreateNewFrame(&frame, &properties);
-        }
-        if (SUCCEEDED(result)) {
-            result = frame->Initialize(properties.Get());
-        }
-        if (SUCCEEDED(result)) {
-            result = frame->SetSize(width, height);
-        }
-        WICPixelFormatGUID format = GUID_WICPixelFormat32bppBGRA;
-        if (SUCCEEDED(result)) {
-            result = frame->SetPixelFormat(&format);
-        }
-        if (SUCCEEDED(result) && format != GUID_WICPixelFormat32bppBGRA) {
-            result = WINCODEC_ERR_UNSUPPORTEDPIXELFORMAT;
-        }
-        if (SUCCEEDED(result)) {
-            result = frame->WritePixels(height, mapped.RowPitch, mapped.RowPitch * height,
-                static_cast<BYTE*>(mapped.pData));
-        }
-        if (SUCCEEDED(result)) {
-            result = frame->Commit();
-        }
-        if (SUCCEEDED(result)) {
-            result = encoder->Commit();
-        }
+        const bool saved = ImageExport::Save(path, format, width, height, mapped.RowPitch,
+            static_cast<const BYTE*>(mapped.pData));
         context->Unmap(staging.Get(), 0);
-        properties.Reset();
-        frame.Reset();
-        encoder.Reset();
-        stream.Reset();
-        memory.Reset();
-        factory.Reset();
-        if (SUCCEEDED(comResult)) {
-            CoUninitialize();
-        }
-        if (FAILED(result) && path) {
-            DeleteFileW(path);
-        }
-        return SUCCEEDED(result);
+        return saved;
     }
 
     /// Device and presentation resources
@@ -900,15 +828,15 @@ HRESULT Renderer::RecordingError() const {
     return impl->recorder.LastError();
 }
 
-/// Saves the current back buffer as a PNG image.
-bool Renderer::SaveSnapshot(const wchar_t* path) const {
+/// Saves the current back buffer in the selected image format.
+bool Renderer::SaveSnapshot(const wchar_t* path, SnapshotFormat format) const {
     if (!path || !*path) {
         return false;
     }
-    return impl->SaveSnapshot(path);
+    return impl->SaveSnapshot(path, format);
 }
 
-/// Tests the complete PNG capture pipeline with the current scene and an in-memory stream.
+/// Tests the complete image capture pipeline with the current scene and an in-memory stream.
 bool Renderer::CheckSnapshotSupport() const {
     return impl->SaveSnapshot(nullptr);
 }

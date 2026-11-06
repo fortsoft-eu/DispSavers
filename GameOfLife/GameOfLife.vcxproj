@@ -44,10 +44,14 @@
   <PropertyGroup>
     <OutDir>$(ProjectDir)..\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
+    <SnapshotLicenseNotices>$(ProjectDir)LifePatternsLicense.txt</SnapshotLicenseNotices>
     <TargetName>GameOfLife</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(ProjectDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
@@ -92,6 +96,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ImageExport.cpp" />
     <ClCompile Include="AboutForm.cpp" />
     <ClCompile Include="HelpForm.cpp" />
     <ClCompile Include="AppSettings.cpp" />
@@ -115,6 +120,7 @@
     <ClCompile Include="WindowRedrawScope.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ImageExport.h" />
     <ClInclude Include="AboutForm.h" />
     <ClInclude Include="HelpForm.h" />
     <ClInclude Include="main.h" />
@@ -138,10 +144,10 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="LifePatterns.xml">
-      <Command>"$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe" -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "$(ProjectDir)prepare.ps1" -Source "%(FullPath)" -Output "$(IntDir)LifePatterns.packed" -Patterns -License "$(ProjectDir)..\license.txt" -Notices "$(ProjectDir)LifePatternsLicense.txt" -Resource "$(ProjectDir)GameOfLife.rc"</Command>
-      <Message>Preparing the Game of Life pattern catalog and license</Message>
-      <Outputs>$(IntDir)LifePatterns.dat;$(IntDir)LifePatterns.packed;$(IntDir)license.utf8;$(IntDir)GameOfLife.rc</Outputs>
-      <AdditionalInputs>$(ProjectDir)prepare.ps1;$(ProjectDir)ResourcePacker.cs;$(ProjectDir)..\license.txt;$(ProjectDir)LifePatternsLicense.txt;$(ProjectDir)GameOfLife.rc;%(AdditionalInputs)</AdditionalInputs>
+      <Command>"$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe" -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "$(ProjectDir)prepare.ps1" -Source "%(FullPath)" -Output "$(IntDir)LifePatterns.packed" -Patterns</Command>
+      <Message>Preparing the Game of Life pattern catalog</Message>
+      <Outputs>$(IntDir)LifePatterns.dat;$(IntDir)LifePatterns.packed</Outputs>
+      <AdditionalInputs>$(ProjectDir)prepare.ps1;$(ProjectDir)ResourcePacker.cs;%(AdditionalInputs)</AdditionalInputs>
       <LinkObjects>false</LinkObjects>
     </CustomBuild>
     <CustomBuild Include="GameOfLife.hlsl">
@@ -181,10 +187,4 @@ if errorlevel 1 exit /b %errorlevel%</Command>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\BuildSigning.targets" />
   </ImportGroup>
-  <Target Name="UsePreparedResourceScript" BeforeTargets="ResourceCompile">
-    <ItemGroup>
-      <ResourceCompile Remove="GameOfLife.rc" />
-      <ResourceCompile Include="$(IntDir)GameOfLife.rc" />
-    </ItemGroup>
-  </Target>
 </Project>

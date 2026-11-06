@@ -48,6 +48,9 @@
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <Link>
       <AdditionalDependencies>Usp10.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -60,7 +63,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -81,7 +84,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -89,6 +92,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ImageExport.cpp" />
     <ClCompile Include="AboutForm.cpp" />
     <ClCompile Include="HelpForm.cpp" />
     <ClCompile Include="AppSettings.cpp" />
@@ -110,6 +114,7 @@
     <ClCompile Include="WindowRedrawScope.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ImageExport.h" />
     <ClInclude Include="AboutForm.h" />
     <ClInclude Include="HelpForm.h" />
     <ClInclude Include="main.h" />

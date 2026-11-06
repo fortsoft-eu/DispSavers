@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.2.0.0
+ * Last modified for version 1.3.1.0
  */
 
 #pragma once
 
 #include "Simulation.h"
 #include "Mp4Recorder.h"
+#include "ImageExport.h"
 #include <windows.h>
 
 /// Owns the Direct3D rendering pipeline and optional frame capture services.
@@ -87,10 +88,10 @@ public:
     /// Returns the most recent recording error.
     HRESULT RecordingError() const;
 
-    /// Saves the current render target as a PNG image.
-    bool SaveSnapshot(const wchar_t* path) const;
+    /// Saves the current render target in the selected image format.
+    bool SaveSnapshot(const wchar_t* path, SnapshotFormat format = SnapshotFormat::Png) const;
 
-    /// Tests PNG capture and encoding in memory before a file is selected.
+    /// Tests image capture and encoding in memory before a file is selected.
     bool CheckSnapshotSupport() const;
 
     /// Current render-target dimensions

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.1.0
  */
 
 #define NOMINMAX
@@ -201,7 +201,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"vypnout“. Popisek jezdce místo společné hodnoty zobrazuje pomlčku. Změna volby nebo kliknutí "
             L"na jezdec sjednotí příslušnou hodnotu na označených monitorech.\r\n\r\nOVLÁDÁNÍ\r\nAnimační "
             L"výstupy zapnete nebo vypnete zatržítky u monitorů nebo dvojklikem na jejich řádky. Každý "
-            L"monitor používá nezávislou scénu. Snímek ukládá PNG, tlačítko záznamu spouští a ukončuje MP4. "
+            L"monitor používá nezávislou scénu. Snímek ukládá BMP/GIF/JPEG/PNG/TIFF/WebP, tlačítko záznamu "
+            L"spouští a ukončuje MP4. "
             L"Pozastavení zastaví animaci. Aplikace také instaluje nebo odinstaluje zabalený spořič. "
             L"Nastavení se ukládá průběžně. Aplikace běží pouze v jedné instanci. Další spuštění obnoví "
             L"minimalizované ovládací okno a přenese je do popředí. Mezi ovládacími prvky přecházejte "
@@ -210,7 +211,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"blokování spořiče platí pro celou aplikaci bez ohledu na označené monitory. Je-li blokování "
             L"zapnuté, brání spuštění spořiče Windows pouze tehdy, když je alespoň na jednom monitoru "
             L"viditelná nepozastavená animace.\r\n\r\nSNÍMKY A ZÁZNAM\r\nSnímek a záznam zachycují první "
-            L"aktivní animační monitor, nikoli společnou plochu všech monitorů. PNG používá složku Obrázky, "
+            L"aktivní animační monitor, nikoli společnou plochu všech monitorů. BMP/GIF/JPEG/PNG/TIFF/WebP "
+            L"používá složku Obrázky, "
             L"MP4 složku Videa; při jejich neexistenci se použijí Dokumenty. Tlačítko Nastavení záznamu "
             L"vybírá Viewport nebo TV. Viewport zachovává rozměry animačního monitoru a jeho obnovovací "
             L"frekvenci, nejvýše 60 snímků za sekundu. TV nabízí rozlišení 1920 × 1080, 1440 × 1080 nebo "
@@ -221,7 +223,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"příští záznam MP4; Storno nebo Esc nepotvrzené změny zahodí. Animační výstup nahrávaného "
             L"monitoru nelze během záznamu vypnout; změny ostatních monitorů záznam nezastaví. Ukončení "
             L"aplikace při probíhajícím záznamu vyžaduje potvrzení, protože současně ukončí záznam.\r\n\r\n"
-            L"SYSTÉMOVÉ POŽADAVKY\r\nWindows 7 až Windows 11 podporují všechny funkce včetně snímků PNG a "
+            L"SYSTÉMOVÉ POŽADAVKY\r\nWindows 7 až Windows 11 podporují všechny funkce včetně snímků "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP a "
             L"záznamu MP4. Pro spuštění aplikace ve Windows Vista SP2 je nutné nainstalovat aktualizace "
             L"KB971512 a KB2117917. Záznam MP4 na Vistě v současné verzi nefunguje. Vykreslování vyžaduje "
             L"Direct3D 11, nikoli jen starší DirectX runtime. Záznam MP4 vyžaduje dostupné součásti Media "
@@ -374,7 +377,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Slider labels show a dash instead of a shared value. Changing an option or clicking a slider "
             L"applies that value to all selected displays.\r\n\r\nCONTROLS\r\nEnable or disable animation "
             L"outputs using the display checkboxes or by double-clicking their rows. Every display uses an "
-            L"independent scene. Snapshot saves a PNG and the recording button starts or stops an MP4. Pause "
+            L"independent scene. Snapshot saves a BMP/GIF/JPEG/PNG/TIFF/WebP and the recording button starts "
+            L"or stops an MP4. Pause "
             L"stops the animation. The application also installs or uninstalls its embedded screen saver. "
             L"Settings are saved continuously. Only one instance of the application runs at a time. "
             L"Launching it again restores its minimized control window and brings it to the foreground. Use "
@@ -384,7 +388,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"display selection. When blocking is enabled, the Windows screen saver is prevented only while "
             L"unpaused animation is visible on at least one display.\r\n\r\nSNAPSHOTS AND RECORDING\r\n"
             L"Snapshots and recordings capture the first active animation display, not a combined image of "
-            L"all displays. PNG uses Pictures and MP4 uses Videos, with Documents as the fallback if those "
+            L"all displays. BMP/GIF/JPEG/PNG/TIFF/WebP uses Pictures and MP4 uses Videos, with Documents as "
+            L"the fallback if those "
             L"folders do not exist. The Recording settings button selects Viewport or TV. Viewport preserves "
             L"the animation display’s dimensions and refresh rate, up to 60 frames per second. TV offers "
             L"1920 × 1080, 1440 × 1080 or 1280 × 720 output in 16:9, with 50, 25, 59.94 (60000/1001) or "
@@ -395,7 +400,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"recorded display’s animation output cannot be disabled during recording; changes to other "
             L"displays do not stop the recording. Closing the application while recording requires "
             L"confirmation because it also stops the recording.\r\n\r\nSYSTEM REQUIREMENTS\r\nWindows 7 "
-            L"through Windows 11 support all features, including PNG snapshots and MP4 recording. To run the "
+            L"through Windows 11 support all features, including BMP/GIF/JPEG/PNG/TIFF/WebP snapshots and "
+            L"MP4 recording. To run the "
             L"application on Windows Vista SP2, you must install updates KB971512 and KB2117917. MP4 "
             L"recording does not work on Vista in the current version. Rendering requires Direct3D 11, not "
             L"just an older DirectX runtime. MP4 recording requires available Media Foundation components "
@@ -549,7 +555,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"labels show a dash instead of a shared value. Changing an option or clicking a slider applies "
             L"that value to all selected displays.\r\n\r\nCONTROLS\r\nEnable or disable animation outputs "
             L"using the display checkboxes or by double-clicking their rows. Each display uses an "
-            L"independent scene. Snapshot saves PNG and the recording button starts or stops MP4. Pause "
+            L"independent scene. Snapshot saves BMP/GIF/JPEG/PNG/TIFF/WebP and the recording button starts "
+            L"or stops MP4. Pause "
             L"stops the animation. The application also installs or uninstalls its embedded screen saver. "
             L"Settings are saved continuously. Only one instance of the application runs at a time. "
             L"Launching it again restores its minimised control window and brings it to the foreground. Use "
@@ -559,7 +566,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"display selection. When blocking is enabled, the Windows screen saver is prevented only while "
             L"unpaused animation is visible on at least one display.\r\n\r\nSNAPSHOTS AND RECORDING\r\n"
             L"Snapshots and recordings capture the first active animation display, not a combined image of "
-            L"all displays. PNG uses Pictures and MP4 uses Videos, with Documents as the fallback if those "
+            L"all displays. BMP/GIF/JPEG/PNG/TIFF/WebP uses Pictures and MP4 uses Videos, with Documents as "
+            L"the fallback if those "
             L"folders do not exist. The Recording settings button selects Viewport or TV. Viewport preserves "
             L"the animation display’s dimensions and refresh rate, up to 60 frames per second. TV offers "
             L"1920 × 1080, 1440 × 1080 or 1280 × 720 output in 16:9, with 50, 25, 59.94 (60000/1001) or "
@@ -570,7 +578,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"recorded display’s animation output cannot be disabled during recording; changes to other "
             L"displays do not stop the recording. Closing the application while recording requires "
             L"confirmation because it also stops the recording.\r\n\r\nSYSTEM REQUIREMENTS\r\nWindows 7 "
-            L"through Windows 11 support all features, including PNG snapshots and MP4 recording. To run the "
+            L"through Windows 11 support all features, including BMP/GIF/JPEG/PNG/TIFF/WebP snapshots and "
+            L"MP4 recording. To run the "
             L"application on Windows Vista SP2, you must install updates KB971512 and KB2117917. MP4 "
             L"recording does not work on Vista in the current version. Rendering requires Direct3D 11, not "
             L"just an older DirectX runtime. MP4 recording requires available Media Foundation components "
@@ -724,7 +733,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"labels show a dash instead of a shared value. Changing an option or clicking a slider applies "
             L"that value to all selected displays.\r\n\r\nCONTROLS\r\nEnable or disable animation outputs "
             L"using the display checkboxes or by double-clicking their rows. Each display uses an "
-            L"independent scene. Snapshot saves PNG and the recording button starts or stops MP4. Pause "
+            L"independent scene. Snapshot saves BMP/GIF/JPEG/PNG/TIFF/WebP and the recording button starts "
+            L"or stops MP4. Pause "
             L"stops the animation. The application also installs or uninstalls its embedded screen saver. "
             L"Settings are saved continuously. Only one instance of the application runs at a time. "
             L"Launching it again restores its minimised control window and brings it to the foreground. Use "
@@ -734,7 +744,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"display selection. When blocking is enabled, the Windows screen saver is prevented only while "
             L"unpaused animation is visible on at least one display.\r\n\r\nSNAPSHOTS AND RECORDING\r\n"
             L"Snapshots and recordings capture the first active animation display, not a combined image of "
-            L"all displays. PNG uses Pictures and MP4 uses Videos, with Documents as the fallback if those "
+            L"all displays. BMP/GIF/JPEG/PNG/TIFF/WebP uses Pictures and MP4 uses Videos, with Documents as "
+            L"the fallback if those "
             L"folders do not exist. The Recording settings button selects Viewport or TV. Viewport preserves "
             L"the animation display’s dimensions and refresh rate, up to 60 frames per second. TV offers "
             L"1920 × 1080, 1440 × 1080 or 1280 × 720 output in 16:9, with 50, 25, 59.94 (60000/1001) or "
@@ -745,7 +756,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"recorded display’s animation output cannot be disabled during recording; changes to other "
             L"displays do not stop the recording. Closing the application while recording requires "
             L"confirmation because it also stops the recording.\r\n\r\nSYSTEM REQUIREMENTS\r\nWindows 7 "
-            L"through Windows 11 support all features, including PNG snapshots and MP4 recording. To run the "
+            L"through Windows 11 support all features, including BMP/GIF/JPEG/PNG/TIFF/WebP snapshots and "
+            L"MP4 recording. To run the "
             L"application on Windows Vista SP2, you must install updates KB971512 and KB2117917. MP4 "
             L"recording does not work on Vista in the current version. Rendering requires Direct3D 11, not "
             L"just an older DirectX runtime. MP4 recording requires available Media Foundation components "
@@ -908,7 +920,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"eines Reglers übernimmt diesen Wert für alle ausgewählten Monitore.\r\n\r\nBEDIENUNG\r\nDie "
             L"Animationsausgabe schalten Sie mit den Kontrollkästchen der Monitore oder per Doppelklick auf "
             L"deren Zeilen ein oder aus. Jeder Monitor besitzt eine unabhängige Szene. Schnappschuss "
-            L"speichert PNG, die Aufnahmetaste startet oder beendet MP4. Pause hält die Animation an. Die "
+            L"speichert BMP/GIF/JPEG/PNG/TIFF/WebP, die Aufnahmetaste startet oder beendet MP4. Pause hält "
+            L"die Animation an. Die "
             L"Anwendung installiert oder deinstalliert außerdem den eingebetteten Bildschirmschoner. "
             L"Einstellungen werden laufend gespeichert. Die Anwendung läuft nur in einer Instanz. Ein "
             L"erneuter Start stellt das minimierte Steuerfenster wieder her und bringt es in den "
@@ -919,7 +932,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Sperre wird der Windows-Bildschirmschoner nur verhindert, solange auf mindestens einem Monitor "
             L"eine sichtbare, nicht angehaltene Animation läuft.\r\n\r\nBILDSCHIRMFOTOS UND AUFNAHME\r\n"
             L"Schnappschüsse und Aufnahmen erfassen den ersten aktiven Animationsmonitor, nicht die "
-            L"gemeinsame Fläche aller Monitore. PNG verwendet Bilder, MP4 Videos; fehlen diese Ordner, wird "
+            L"gemeinsame Fläche aller Monitore. BMP/GIF/JPEG/PNG/TIFF/WebP verwendet Bilder, MP4 Videos; "
+            L"fehlen diese Ordner, wird "
             L"Dokumente verwendet. Die Schaltfläche Aufnahmeeinstellungen wählt Viewport oder TV. Viewport "
             L"erhält die Abmessungen und Bildwiederholfrequenz des Animationsmonitors bis höchstens 60 "
             L"Bilder pro Sekunde. TV bietet 1920 × 1080, 1440 × 1080 oder 1280 × 720 im Format 16:9 mit 50, "
@@ -932,7 +946,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Aufnahme nicht ausgeschaltet werden; Änderungen an anderen Monitoren beenden die Aufnahme "
             L"nicht. Das Beenden der Anwendung während einer Aufnahme muss bestätigt werden, da es auch die "
             L"Aufnahme beendet.\r\n\r\nSYSTEMANFORDERUNGEN\r\nWindows 7 bis Windows 11 unterstützen alle "
-            L"Funktionen einschließlich PNG-Schnappschüssen und MP4-Aufnahmen. Zum Ausführen der Anwendung "
+            L"Funktionen einschließlich BMP/GIF/JPEG/PNG/TIFF/WebP-Schnappschüssen und MP4-Aufnahmen. Zum "
+            L"Ausführen der Anwendung "
             L"unter Windows Vista SP2 müssen die Updates KB971512 und KB2117917 installiert werden. "
             L"MP4-Aufnahmen funktionieren unter Vista in der aktuellen Version nicht. Die Darstellung "
             L"erfordert Direct3D 11, nicht nur eine ältere DirectX-Laufzeitumgebung. MP4-Aufnahmen benötigen "
@@ -1098,7 +1113,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"option ou cliquer sur un curseur applique cette valeur à tous les écrans sélectionnés.\r\n\r\n"
             L"COMMANDES\r\nActivez ou désactivez les sorties d’animation avec les cases des écrans ou en "
             L"double-cliquant sur leurs lignes. Chaque moniteur utilise une scène indépendante. Capture "
-            L"enregistre un PNG et le bouton d’enregistrement démarre ou arrête un MP4. Pause arrête "
+            L"enregistre un BMP/GIF/JPEG/PNG/TIFF/WebP et le bouton d’enregistrement démarre ou arrête un "
+            L"MP4. Pause arrête "
             L"l’animation. L’application installe ou désinstalle aussi son économiseur intégré. Les réglages "
             L"sont enregistrés en continu. Une seule instance de l’application peut fonctionner à la fois. "
             L"Un nouveau lancement restaure la fenêtre de contrôle réduite et la place au premier plan. "
@@ -1109,7 +1125,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"est activé, l’écran de veille Windows est empêché uniquement tant qu’une animation visible et "
             L"non suspendue s’affiche sur au moins un écran.\r\n\r\nCAPTURES ET ENREGISTREMENT\r\nLes "
             L"captures et les enregistrements utilisent le premier moniteur d’animation actif, et non une "
-            L"image combinant tous les moniteurs. PNG utilise Images, MP4 Vidéos ; Documents sert de repli "
+            L"image combinant tous les moniteurs. BMP/GIF/JPEG/PNG/TIFF/WebP utilise Images, MP4 Vidéos ; "
+            L"Documents sert de repli "
             L"si ces dossiers n’existent pas. Le bouton Réglages vidéo permet de choisir Viewport ou TV. "
             L"Viewport conserve les dimensions et la fréquence de rafraîchissement du moniteur d’animation, "
             L"jusqu’à 60 images par seconde. TV propose 1920 × 1080, 1440 × 1080 ou 1280 × 720 au format "
@@ -1122,7 +1139,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"peut pas être désactivée pendant l’enregistrement ; les changements concernant les autres "
             L"moniteurs ne l’arrêtent pas. Fermer l’application pendant un enregistrement nécessite une "
             L"confirmation, car cela arrête aussi l’enregistrement.\r\n\r\nCONFIGURATION REQUISE\r\nWindows "
-            L"7 à Windows 11 prennent en charge toutes les fonctions, y compris les captures PNG et "
+            L"7 à Windows 11 prennent en charge toutes les fonctions, y compris les captures "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP et "
             L"l’enregistrement MP4. Pour exécuter l’application sous Windows Vista SP2, il est nécessaire "
             L"d’installer les mises à jour KB971512 et KB2117917. L’enregistrement MP4 ne fonctionne pas "
             L"sous Vista dans la version actuelle. L’affichage nécessite Direct3D 11, et pas seulement un "
@@ -1287,7 +1305,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"común. Cambiar una opción o hacer clic en un control deslizante aplica ese valor a todas las "
             L"pantallas seleccionadas.\r\n\r\nCONTROLES\r\nActive o desactive las salidas de animación "
             L"mediante las casillas de las pantallas o haciendo doble clic en sus filas. Cada monitor usa "
-            L"una escena independiente. Captura guarda un PNG y el botón de grabación inicia o detiene un "
+            L"una escena independiente. Captura guarda un BMP/GIF/JPEG/PNG/TIFF/WebP y el botón de grabación "
+            L"inicia o detiene un "
             L"MP4. Pausar detiene la animación. La aplicación instala o desinstala además el salvapantallas "
             L"incorporado. Los ajustes se guardan continuamente. La aplicación solo permite una instancia. "
             L"Al volver a iniciarla, restaura la ventana de control minimizada y la trae al primer plano. "
@@ -1297,7 +1316,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"independientemente de las pantallas seleccionadas. Si el bloqueo está activado, solo se impide "
             L"el salvapantallas de Windows mientras haya animación visible y no pausada en al menos una "
             L"pantalla.\r\n\r\nCAPTURAS Y GRABACIÓN\r\nLas capturas y grabaciones usan el primer monitor de "
-            L"animación activo, no una imagen conjunta de todos los monitores. PNG usa Imágenes y MP4 "
+            L"animación activo, no una imagen conjunta de todos los monitores. BMP/GIF/JPEG/PNG/TIFF/WebP "
+            L"usa Imágenes y MP4 "
             L"Vídeos; si no existen esas carpetas, se usa Documentos. El botón Ajustes de grabación permite "
             L"elegir Viewport o TV. Viewport conserva las dimensiones y la frecuencia de actualización del "
             L"monitor de animación, hasta 60 fotogramas por segundo. TV ofrece 1920 × 1080, 1440 × 1080 o "
@@ -1309,7 +1329,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"los cambios sin confirmar. La salida de animación del monitor grabado no se puede desactivar "
             L"durante la grabación; cambiar otros monitores no la detiene. Cerrar la aplicación durante una "
             L"grabación requiere confirmación porque también detiene la grabación.\r\n\r\nREQUISITOS DEL "
-            L"SISTEMA\r\nWindows 7 a Windows 11 admiten todas las funciones, incluidas las capturas PNG y la "
+            L"SISTEMA\r\nWindows 7 a Windows 11 admiten todas las funciones, incluidas las capturas "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP y la "
             L"grabación MP4. Para ejecutar la aplicación en Windows Vista SP2, es necesario instalar las "
             L"actualizaciones KB971512 y KB2117917. La grabación MP4 no funciona en Vista en la versión "
             L"actual. La representación requiere Direct3D 11, no solo un entorno de ejecución antiguo de "
@@ -1474,7 +1495,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"valore comune. Modificare un’opzione o fare clic su un cursore applica quel valore a tutti gli "
             L"schermi selezionati.\r\n\r\nCOMANDI\r\nAttivare o disattivare le uscite di animazione con le "
             L"caselle degli schermi o facendo doppio clic sulle rispettive righe. Ogni monitor usa una scena "
-            L"indipendente. Istantanea salva un PNG e il pulsante di registrazione avvia o arresta un MP4. "
+            L"indipendente. Istantanea salva un BMP/GIF/JPEG/PNG/TIFF/WebP e il pulsante di registrazione "
+            L"avvia o arresta un MP4. "
             L"Pausa ferma l’animazione. L’applicazione installa o disinstalla anche il salvaschermo "
             L"incorporato. Le impostazioni vengono salvate continuamente. L’applicazione può essere eseguita "
             L"in una sola istanza. Un nuovo avvio ripristina la finestra di controllo ridotta a icona e la "
@@ -1485,7 +1507,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"blocco è attivo, il salvaschermo di Windows viene impedito solo finché almeno uno schermo "
             L"mostra un’animazione visibile e non in pausa.\r\n\r\nISTANTANEE E REGISTRAZIONE\r\nIstantanee "
             L"e registrazioni usano il primo monitor di animazione attivo, non un’immagine combinata di "
-            L"tutti i monitor. PNG usa Immagini, MP4 Video; se tali cartelle non esistono, viene usata "
+            L"tutti i monitor. BMP/GIF/JPEG/PNG/TIFF/WebP usa Immagini, MP4 Video; se tali cartelle non "
+            L"esistono, viene usata "
             L"Documenti. Il pulsante Impostazioni video permette di scegliere Viewport o TV. Viewport "
             L"mantiene le dimensioni e la frequenza di aggiornamento del monitor di animazione, fino a 60 "
             L"fotogrammi al secondo. TV offre 1920 × 1080, 1440 × 1080 o 1280 × 720 in formato 16:9, a 50, "
@@ -1498,7 +1521,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"registrazione; le modifiche agli altri monitor non la interrompono. Chiudere l’applicazione "
             L"durante una registrazione richiede conferma, perché interrompe anche la registrazione.\r\n\r\n"
             L"REQUISITI DI SISTEMA\r\nI sistemi da Windows 7 a Windows 11 supportano tutte le funzioni, "
-            L"comprese le istantanee PNG e la registrazione MP4. Per eseguire l’applicazione su Windows "
+            L"comprese le istantanee BMP/GIF/JPEG/PNG/TIFF/WebP e la registrazione MP4. Per eseguire "
+            L"l’applicazione su Windows "
             L"Vista SP2, è necessario installare gli aggiornamenti KB971512 e KB2117917. La registrazione "
             L"MP4 non funziona in Vista nella versione attuale. La visualizzazione richiede Direct3D 11, non "
             L"soltanto un vecchio runtime DirectX. La registrazione MP4 richiede componenti Media Foundation "
@@ -1659,7 +1683,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"um valor comum. Alterar uma opção ou clicar num controlo deslizante aplica esse valor a todos "
             L"os ecrãs selecionados.\r\n\r\nCONTROLOS\r\nAtive ou desative as saídas de animação através das "
             L"caixas dos ecrãs ou com um duplo clique nas respetivas linhas. Cada monitor usa uma cena "
-            L"independente. Captura guarda PNG e o botão de gravação inicia ou termina MP4. Pausa para a "
+            L"independente. Captura guarda BMP/GIF/JPEG/PNG/TIFF/WebP e o botão de gravação inicia ou "
+            L"termina MP4. Pausa para a "
             L"animação. A aplicação também instala ou desinstala a proteção de ecrã incorporada. As "
             L"definições são guardadas continuamente. A aplicação só pode ter uma instância em execução. Um "
             L"novo arranque restaura a janela de controlo minimizada e coloca-a em primeiro plano. Use Tab e "
@@ -1669,7 +1694,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"selecionados. Com o bloqueio ativo, a proteção de ecrã do Windows só é impedida enquanto "
             L"existir animação visível e não pausada em pelo menos um ecrã.\r\n\r\nCAPTURAS E GRAVAÇÃO\r\nAs "
             L"capturas e gravações usam o primeiro monitor de animação ativo, não uma imagem conjunta de "
-            L"todos os monitores. PNG usa Imagens, MP4 Vídeos; se essas pastas não existirem, usa-se "
+            L"todos os monitores. BMP/GIF/JPEG/PNG/TIFF/WebP usa Imagens, MP4 Vídeos; se essas pastas não "
+            L"existirem, usa-se "
             L"Documentos. O botão Definições de gravação permite escolher Viewport ou TV. Viewport conserva "
             L"as dimensões e a frequência de atualização do monitor de animação, até 60 fotogramas por "
             L"segundo. TV oferece 1920 × 1080, 1440 × 1080 ou 1280 × 720 no formato 16:9, a 50, 25, 59.94 "
@@ -1681,7 +1707,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"monitor gravado não pode ser desativada durante a gravação; as alterações aos outros monitores "
             L"não a interrompem. Fechar a aplicação durante uma gravação exige confirmação, pois também "
             L"termina a gravação.\r\n\r\nREQUISITOS DO SISTEMA\r\nOs sistemas Windows 7 a Windows 11 "
-            L"suportam todas as funcionalidades, incluindo capturas PNG e gravação MP4. Para executar a "
+            L"suportam todas as funcionalidades, incluindo capturas BMP/GIF/JPEG/PNG/TIFF/WebP e gravação "
+            L"MP4. Para executar a "
             L"aplicação no Windows Vista SP2, é necessário instalar as atualizações KB971512 e KB2117917. A "
             L"gravação MP4 não funciona no Vista na versão atual. A apresentação requer Direct3D 11, não "
             L"apenas um runtime DirectX mais antigo. A gravação MP4 requer componentes Media Foundation e um "
@@ -1836,7 +1863,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"zamiast wspólnej wartości. Zmiana opcji lub kliknięcie suwaka ustawia tę wartość na wszystkich "
             L"zaznaczonych monitorach.\r\n\r\nOBSŁUGA\r\nWyjścia animacji można włączać i wyłączać polami "
             L"wyboru przy monitorach lub podwójnym kliknięciem ich wierszy. Każdy monitor ma niezależną "
-            L"scenę. Zrzut zapisuje PNG, a przycisk nagrywania rozpoczyna lub kończy MP4. Wstrzymaj "
+            L"scenę. Zrzut zapisuje BMP/GIF/JPEG/PNG/TIFF/WebP, a przycisk nagrywania rozpoczyna lub kończy "
+            L"MP4. Wstrzymaj "
             L"zatrzymuje animację. Aplikacja instaluje i odinstalowuje również wbudowany wygaszacz. "
             L"Ustawienia są zapisywane na bieżąco. Aplikacja działa tylko w jednej instancji. Kolejne "
             L"uruchomienie przywraca zminimalizowane okno sterowania i przenosi je na pierwszy plan. "
@@ -1846,7 +1874,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"zaznaczenia monitorów. Gdy blokowanie jest włączone, wygaszacz Windows jest powstrzymywany "
             L"tylko wtedy, gdy na co najmniej jednym monitorze jest widoczna niewstrzymana animacja.\r\n\r\n"
             L"ZRZUTY EKRANU I NAGRYWANIE\r\nZrzuty i nagrania obejmują pierwszy aktywny monitor animacji, a "
-            L"nie wspólny obraz wszystkich monitorów. PNG używa folderu Obrazy, MP4 folderu Wideo; jeśli ich "
+            L"nie wspólny obraz wszystkich monitorów. BMP/GIF/JPEG/PNG/TIFF/WebP używa folderu Obrazy, MP4 "
+            L"folderu Wideo; jeśli ich "
             L"nie ma, używane są Dokumenty. Przycisk Ustawienia nagrywania pozwala wybrać Viewport lub TV. "
             L"Viewport zachowuje rozmiar i częstotliwość odświeżania monitora animacji, do 60 klatek na "
             L"sekundę. TV oferuje 1920 × 1080, 1440 × 1080 lub 1280 × 720 w formacie 16:9, z 50, 25, 59.94 "
@@ -1858,7 +1887,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"animacji nagrywanego monitora; zmiany pozostałych monitorów nie przerywają nagrania. "
             L"Zamknięcie aplikacji podczas nagrywania wymaga potwierdzenia, ponieważ kończy również "
             L"nagranie.\r\n\r\nWYMAGANIA SYSTEMOWE\r\nSystemy od Windows 7 do Windows 11 obsługują wszystkie "
-            L"funkcje, w tym zrzuty PNG i nagrywanie MP4. Do uruchomienia aplikacji w systemie Windows Vista "
+            L"funkcje, w tym zrzuty BMP/GIF/JPEG/PNG/TIFF/WebP i nagrywanie MP4. Do uruchomienia aplikacji w "
+            L"systemie Windows Vista "
             L"SP2 konieczne jest zainstalowanie aktualizacji KB971512 i KB2117917. Nagrywanie MP4 nie działa "
             L"w Vista w obecnej wersji. Wyświetlanie wymaga Direct3D 11, a nie tylko starszego środowiska "
             L"DirectX. Nagrywanie MP4 wymaga dostępnych składników Media Foundation i kodera H.264."
@@ -2012,7 +2042,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"hodnoty zobrazuje pomlčku. Zmena voľby alebo kliknutie na posuvník zjednotí príslušnú hodnotu "
             L"na označených monitoroch.\r\n\r\nOVLÁDANIE\r\nAnimačné výstupy zapnete alebo vypnete políčkami "
             L"pri monitoroch alebo dvojklikom na ich riadky. Každý monitor používa nezávislú scénu. Snímka "
-            L"uloží PNG a tlačidlo záznamu spustí alebo ukončí MP4. Pozastavenie zastaví animáciu. Aplikácia "
+            L"uloží BMP/GIF/JPEG/PNG/TIFF/WebP a tlačidlo záznamu spustí alebo ukončí MP4. Pozastavenie "
+            L"zastaví animáciu. Aplikácia "
             L"tiež nainštaluje alebo odinštaluje vložený šetrič. Nastavenia sa ukladajú priebežne. Aplikácia "
             L"beží iba v jednej inštancii. Ďalšie spustenie obnoví minimalizované ovládacie okno a prenesie "
             L"ho do popredia. Medzi ovládacími prvkami prechádzajte klávesmi Tab a Shift+Tab; podčiarknuté "
@@ -2021,7 +2052,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"celú aplikáciu bez ohľadu na označené monitory. Ak je blokovanie zapnuté, bráni spusteniu "
             L"šetriča Windows iba vtedy, keď je aspoň na jednom monitore viditeľná nepozastavená animácia.\r"
             L"\n\r\nSNÍMKY A ZÁZNAM\r\nSnímky a záznamy zachytávajú prvý aktívny animačný monitor, nie "
-            L"spoločnú plochu všetkých monitorov. PNG používa Obrázky, MP4 Videá; ak tieto priečinky "
+            L"spoločnú plochu všetkých monitorov. BMP/GIF/JPEG/PNG/TIFF/WebP používa Obrázky, MP4 Videá; ak "
+            L"tieto priečinky "
             L"neexistujú, použijú sa Dokumenty. Tlačidlo Nastavenie záznamu vyberá Viewport alebo TV. "
             L"Viewport zachováva rozmery animačného monitora a jeho obnovovaciu frekvenciu, najviac 60 "
             L"snímok za sekundu. TV ponúka rozlíšenie 1920 × 1080, 1440 × 1080 alebo 1280 × 720 v pomere "
@@ -2032,7 +2064,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"MP4; Zrušiť alebo Esc zahodí nepotvrdené zmeny. Animačný výstup nahrávaného monitora nemožno "
             L"počas záznamu vypnúť; zmeny ostatných monitorov záznam nezastavia. Ukončenie aplikácie počas "
             L"záznamu vyžaduje potvrdenie, pretože ukončí aj záznam.\r\n\r\nSYSTÉMOVÉ POŽIADAVKY\r\nWindows "
-            L"7 až Windows 11 podporujú všetky funkcie vrátane snímok PNG a záznamu MP4. Na spustenie "
+            L"7 až Windows 11 podporujú všetky funkcie vrátane snímok BMP/GIF/JPEG/PNG/TIFF/WebP a záznamu "
+            L"MP4. Na spustenie "
             L"aplikácie v systéme Windows Vista SP2 je potrebné nainštalovať aktualizácie KB971512 a "
             L"KB2117917. Záznam MP4 na Viste v súčasnej verzii nefunguje. Vykresľovanie vyžaduje Direct3D "
             L"11, nie iba starší DirectX runtime. Záznam MP4 vyžaduje dostupné súčasti Media Foundation a "
@@ -2188,7 +2221,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Skydernes etiketter viser en tankestreg i stedet for en fælles værdi. Ændring af et valg eller "
             L"klik på en skyder anvender denne værdi på alle markerede skærme.\r\n\r\nBETJENING\r\nSlå "
             L"animationsoutput til eller fra med skærmenes afkrydsningsfelter eller ved at dobbeltklikke på "
-            L"deres rækker. Hver skærm bruger en uafhængig scene. Skærmbillede gemmer PNG, og optageknappen "
+            L"deres rækker. Hver skærm bruger en uafhængig scene. Skærmbillede gemmer "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP, og optageknappen "
             L"starter eller stopper MP4. Pause standser animationen. Programmet installerer eller "
             L"afinstallerer også den indbyggede pauseskærm. Indstillinger gemmes løbende. Programmet kan kun "
             L"køre i én instans ad gangen. En ny start gendanner det minimerede kontrolvindue og bringer det "
@@ -2198,7 +2232,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"skærmmarkeringen. Når blokering er slået til, forhindres Windows-pauseskærmen kun, mens der "
             L"vises en synlig animation, som ikke er sat på pause, på mindst én skærm.\r\n\r\nSKÆRMBILLEDER "
             L"OG OPTAGELSE\r\nSkærmbilleder og optagelser bruger den første aktive animationsskærm, ikke et "
-            L"samlet billede af alle skærme. PNG bruger Billeder, MP4 Videoer; hvis disse mapper ikke "
+            L"samlet billede af alle skærme. BMP/GIF/JPEG/PNG/TIFF/WebP bruger Billeder, MP4 Videoer; hvis "
+            L"disse mapper ikke "
             L"findes, bruges Dokumenter. Knappen Optagelsesindstillinger vælger Viewport eller TV. Viewport "
             L"bevarer animationsskærmens størrelse og opdateringsfrekvens, højst 60 billeder i sekundet. TV "
             L"tilbyder 1920 × 1080, 1440 × 1080 eller 1280 × 720 i formatet 16:9 med 50, 25, 59.94 "
@@ -2210,7 +2245,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"ikke slås fra under optagelsen; ændringer af andre skærme stopper ikke optagelsen. Hvis "
             L"programmet lukkes under en optagelse, kræves en bekræftelse, fordi optagelsen også afsluttes.\r"
             L"\n\r\nSYSTEMKRAV\r\nWindows 7 til Windows 11 understøtter alle funktioner, herunder "
-            L"PNG-skærmbilleder og MP4-optagelse. For at køre programmet på Windows Vista SP2 skal "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP-skærmbilleder og MP4-optagelse. For at køre programmet på Windows "
+            L"Vista SP2 skal "
             L"opdateringerne KB971512 og KB2117917 installeres. MP4-optagelse fungerer ikke på Vista i den "
             L"aktuelle version. Visningen kræver Direct3D 11, ikke kun et ældre DirectX-kørselsmiljø. "
             L"MP4-optagelse kræver tilgængelige Media Foundation-komponenter og en H.264-koder."
@@ -2362,7 +2398,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"muuttaminen tai liukusäätimen napsauttaminen asettaa kyseisen arvon kaikille valituille "
             L"näytöille.\r\n\r\nKÄYTTÖ\r\nAnimaatioulostulot voi ottaa käyttöön tai poistaa käytöstä "
             L"näyttöjen valintaruuduilla tai kaksoisnapsauttamalla niiden rivejä. Jokaisella näytöllä on "
-            L"itsenäinen näkymä. Tilannekuva tallentaa PNG:n ja tallennuspainike käynnistää tai lopettaa "
+            L"itsenäinen näkymä. Tilannekuva tallentaa BMP/GIF/JPEG/PNG/TIFF/WebP:n ja tallennuspainike "
+            L"käynnistää tai lopettaa "
             L"MP4:n. Keskeytä pysäyttää animaation. Sovellus asentaa tai poistaa myös sisäisen "
             L"näytönsäästäjän. Asetukset tallennetaan jatkuvasti. Sovelluksesta voi olla käynnissä vain yksi "
             L"instanssi. Uusi käynnistys palauttaa pienennetyn ohjausikkunan ja tuo sen etualalle. Siirry "
@@ -2372,7 +2409,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"riippumatta. Kun esto on käytössä, Windowsin näytönsäästäjä estetään vain, kun vähintään "
             L"yhdessä näytössä näkyy animaatio, jota ei ole keskeytetty.\r\n\r\nKUVAKAAPPAUKSET JA "
             L"TALLENNUS\r\nTilannekuvat ja tallenteet käyttävät ensimmäistä aktiivista animaationäyttöä, "
-            L"eivät kaikkien näyttöjen yhdistettyä kuvaa. PNG käyttää Kuvat-kansiota ja MP4 Videot-kansiota; "
+            L"eivät kaikkien näyttöjen yhdistettyä kuvaa. BMP/GIF/JPEG/PNG/TIFF/WebP käyttää Kuvat-kansiota "
+            L"ja MP4 Videot-kansiota; "
             L"jos niitä ei ole, käytetään Tiedostot-kansiota. Tallennusasetukset-painikkeella valitaan "
             L"Viewport tai TV. Viewport säilyttää animaationäytön koon ja virkistystaajuuden, enintään 60 "
             L"kuvaa sekunnissa. TV tarjoaa tarkkuudet 1920 × 1080, 1440 × 1080 ja 1280 × 720 kuvasuhteella "
@@ -2385,7 +2423,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"aikana; muiden näyttöjen muutokset eivät pysäytä tallennusta. Sovelluksen sulkeminen "
             L"tallennuksen aikana vaatii vahvistuksen, sillä myös tallennus päättyy.\r\n\r\n"
             L"JÄRJESTELMÄVAATIMUKSET\r\nWindows 7–Windows 11 tukevat kaikkia toimintoja, myös "
-            L"PNG-tilannekuvia ja MP4-tallennusta. Sovelluksen suorittaminen Windows Vista SP2:ssa "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP-tilannekuvia ja MP4-tallennusta. Sovelluksen suorittaminen Windows "
+            L"Vista SP2:ssa "
             L"edellyttää päivitysten KB971512 ja KB2117917 asentamista. MP4-tallennus ei toimi Vistassa "
             L"nykyisessä versiossa. Näyttäminen vaatii Direct3D 11:n, ei pelkästään vanhempaa "
             L"DirectX-ajoympäristöä. MP4-tallennus vaatii käytettävissä olevat Media Foundation -komponentit "
@@ -2537,7 +2576,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"„Óvirkja allt“. Merking sleða sýnir strik í stað sameiginlegs gildis. Að breyta valkosti eða "
             L"smella á sleða setur það gildi á alla valda skjái.\r\n\r\nNOTKUN\r\nKveiktu eða slökktu á "
             L"hreyfimyndaúttaki með gátreitum skjáanna eða með því að tvísmella á línur þeirra. Hver skjár "
-            L"notar sjálfstæða senu. Skjámynd vistar PNG og upptökuhnappurinn ræsir eða stöðvar MP4. "
+            L"notar sjálfstæða senu. Skjámynd vistar BMP/GIF/JPEG/PNG/TIFF/WebP og upptökuhnappurinn ræsir "
+            L"eða stöðvar MP4. "
             L"Hnappurinn Gera hlé stöðvar hreyfimyndina. Forritið setur einnig upp eða fjarlægir innbyggðu "
             L"skjáhvíluna. Stillingar vistast jafnóðum. Aðeins eitt eintak af forritinu getur verið í gangi "
             L"í einu. Ný ræsing endurheimtir lágmarkaða stjórngluggann og færir hann fremst. Notaðu Tab og "
@@ -2546,7 +2586,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"skjáhvílu gilda fyrir allt forritið, óháð völdum skjám. Þegar hindrun er virk er skjáhvíla "
             L"Windows aðeins hindruð meðan sýnileg hreyfimynd sem er ekki í pásu er á að minnsta kosti einum "
             L"skjá.\r\n\r\nSKJÁMYNDIR OG UPPTAKA\r\nSkjámyndir og upptökur nota fyrsta virka "
-            L"hreyfimyndaskjáinn, ekki sameinaða mynd af öllum skjám. PNG notar Myndir, MP4 Myndbönd; ef þær "
+            L"hreyfimyndaskjáinn, ekki sameinaða mynd af öllum skjám. BMP/GIF/JPEG/PNG/TIFF/WebP notar "
+            L"Myndir, MP4 Myndbönd; ef þær "
             L"möppur eru ekki til er Skjöl notuð. Hnappurinn Upptökustillingar velur Viewport eða TV. "
             L"Viewport varðveitir stærð og endurnýjunartíðni hreyfimyndaskjásins, þó mest 60 ramma á "
             L"sekúndu. TV býður upp á 1920 × 1080, 1440 × 1080 eða 1280 × 720 í hlutfallinu 16:9 með 50, 25, "
@@ -2558,7 +2599,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"slökkva á hreyfimyndaúttaki skjásins sem er tekinn upp meðan upptaka stendur yfir; breytingar "
             L"á öðrum skjám stöðva ekki upptökuna. Staðfesta þarf lokun forritsins meðan upptaka stendur "
             L"yfir, því hún stöðvar líka upptökuna.\r\n\r\nKERFISKRÖFUR\r\nWindows 7 til Windows 11 styðja "
-            L"alla eiginleika, þar á meðal PNG-skjámyndir og MP4-upptöku. Til að keyra forritið á Windows "
+            L"alla eiginleika, þar á meðal BMP/GIF/JPEG/PNG/TIFF/WebP-skjámyndir og MP4-upptöku. Til að "
+            L"keyra forritið á Windows "
             L"Vista SP2 þarf að setja upp uppfærslurnar KB971512 og KB2117917. MP4-upptaka virkar ekki í "
             L"Vista í núverandi útgáfu. Birting krefst Direct3D 11, ekki aðeins eldri "
             L"DirectX-keyrsluumhverfis. MP4-upptaka krefst tiltækra Media Foundation-íhluta og H.264-kóðara."
@@ -2711,7 +2753,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Glidebryteretiketter viser en tankestrek i stedet for en felles verdi. Endring av et valg "
             L"eller klikk på en glidebryter bruker denne verdien på alle markerte skjermer.\r\n\r\n"
             L"BETJENING\r\nSlå animasjonsutgangene av eller på med skjermenes avkrysningsbokser eller ved å "
-            L"dobbeltklikke på radene deres. Hver skjerm bruker en uavhengig scene. Skjermbilde lagrer PNG, "
+            L"dobbeltklikke på radene deres. Hver skjerm bruker en uavhengig scene. Skjermbilde lagrer "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP, "
             L"og opptaksknappen starter eller stopper MP4. Pause stanser animasjonen. Programmet installerer "
             L"eller avinstallerer også den innebygde skjermspareren. Innstillingene lagres fortløpende. Bare "
             L"én instans av programmet kan kjøre om gangen. En ny start gjenoppretter det minimerte "
@@ -2721,7 +2764,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"gjelder hele programmet uavhengig av skjermmarkeringen. Når blokkering er slått på, hindres "
             L"Windows-skjermspareren bare mens en synlig animasjon som ikke er satt på pause, vises på minst "
             L"én skjerm.\r\n\r\nSKJERMBILDER OG OPPTAK\r\nSkjermbilder og opptak bruker den første aktive "
-            L"animasjonsskjermen, ikke et samlet bilde av alle skjermene. PNG bruker Bilder, MP4 Videoer; "
+            L"animasjonsskjermen, ikke et samlet bilde av alle skjermene. BMP/GIF/JPEG/PNG/TIFF/WebP bruker "
+            L"Bilder, MP4 Videoer; "
             L"hvis disse mappene ikke finnes, brukes Dokumenter. Knappen Opptaksinnstillinger velger "
             L"Viewport eller TV. Viewport beholder animasjonsskjermens størrelse og oppdateringsfrekvens, "
             L"opptil 60 bilder per sekund. TV tilbyr 1920 × 1080, 1440 × 1080 eller 1280 × 720 i formatet "
@@ -2733,7 +2777,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Animasjonsutgangen på skjermen som tas opp, kan ikke slås av under opptaket; endringer på "
             L"andre skjermer stopper ikke opptaket. Å avslutte programmet under et opptak krever "
             L"bekreftelse, fordi det også avslutter opptaket.\r\n\r\nSYSTEMKRAV\r\nWindows 7 til Windows 11 "
-            L"støtter alle funksjoner, inkludert PNG-skjermbilder og MP4-opptak. For å kjøre programmet på "
+            L"støtter alle funksjoner, inkludert BMP/GIF/JPEG/PNG/TIFF/WebP-skjermbilder og MP4-opptak. For "
+            L"å kjøre programmet på "
             L"Windows Vista SP2 må oppdateringene KB971512 og KB2117917 installeres. MP4-opptak fungerer "
             L"ikke på Vista i den gjeldende versjonen. Visningen krever Direct3D 11, ikke bare en eldre "
             L"DirectX-kjøretid. MP4-opptak krever tilgjengelige Media Foundation-komponenter og en "
@@ -2889,7 +2934,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"ett streck i stället för ett gemensamt värde. När du ändrar ett alternativ eller klickar på "
             L"ett reglage används värdet på alla markerade skärmar.\r\n\r\nANVÄNDNING\r\nSlå på eller av "
             L"animationsutgångarna med skärmarnas kryssrutor eller genom att dubbelklicka på deras rader. "
-            L"Varje bildskärm använder en oberoende scen. Skärmbild sparar PNG och inspelningsknappen "
+            L"Varje bildskärm använder en oberoende scen. Skärmbild sparar BMP/GIF/JPEG/PNG/TIFF/WebP och "
+            L"inspelningsknappen "
             L"startar eller stoppar MP4. Paus stannar animeringen. Programmet installerar eller "
             L"avinstallerar även den inbyggda skärmsläckaren. Inställningarna sparas fortlöpande. Programmet "
             L"kan bara köras i en instans åt gången. En ny start återställer det minimerade kontrollfönstret "
@@ -2899,7 +2945,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"gäller hela programmet oavsett markerade skärmar. När blockeringen är på hindras "
             L"Windows-skärmsläckaren bara medan en synlig animering som inte är pausad visas på minst en "
             L"skärm.\r\n\r\nSKÄRMBILDER OCH INSPELNING\r\nSkärmbilder och inspelningar använder den första "
-            L"aktiva animeringsskärmen, inte en sammanslagen bild av alla skärmar. PNG använder Bilder, MP4 "
+            L"aktiva animeringsskärmen, inte en sammanslagen bild av alla skärmar. "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP använder Bilder, MP4 "
             L"Videor; om dessa mappar saknas används Dokument. Knappen Inspelningsinställningar väljer "
             L"Viewport eller TV. Viewport behåller animeringsskärmens storlek och uppdateringsfrekvens, upp "
             L"till 60 bilder per sekund. TV erbjuder 1920 × 1080, 1440 × 1080 eller 1280 × 720 i formatet "
@@ -2911,7 +2958,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Animeringsutgången på den inspelade skärmen kan inte stängas av under inspelningen; ändringar "
             L"av andra skärmar stoppar inte inspelningen. Att avsluta programmet under en inspelning kräver "
             L"bekräftelse eftersom det också avslutar inspelningen.\r\n\r\nSYSTEMKRAV\r\nWindows 7 till "
-            L"Windows 11 stöder alla funktioner, inklusive PNG-skärmbilder och MP4-inspelning. För att köra "
+            L"Windows 11 stöder alla funktioner, inklusive BMP/GIF/JPEG/PNG/TIFF/WebP-skärmbilder och "
+            L"MP4-inspelning. För att köra "
             L"programmet på Windows Vista SP2 måste uppdateringarna KB971512 och KB2117917 installeras. "
             L"MP4-inspelning fungerar inte på Vista i den aktuella versionen. Visningen kräver Direct3D 11, "
             L"inte bara en äldre DirectX-körningsmiljö. MP4-inspelning kräver tillgängliga Media "
@@ -3061,7 +3109,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"desenle gösterilir. Kaydırıcı etiketleri ortak bir değer yerine çizgi gösterir. Bir seçeneği "
             L"değiştirmek veya kaydırıcıya tıklamak bu değeri tüm seçili ekranlara uygular.\r\n\r\nKULLANIM\r"
             L"\nAnimasyon çıkışlarını ekran onay kutularıyla veya satırlarına çift tıklayarak açıp "
-            L"kapatabilirsiniz. Her monitör bağımsız sahne kullanır. Anlık görüntü PNG kaydeder; kayıt "
+            L"kapatabilirsiniz. Her monitör bağımsız sahne kullanır. Anlık görüntü "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP kaydeder; kayıt "
             L"düğmesi MP4 kaydını başlatır veya bitirir. Duraklat animasyonu durdurur. Uygulama gömülü ekran "
             L"koruyucuyu da kurar veya kaldırır. Ayarlar sürekli kaydedilir. Uygulamanın aynı anda yalnızca "
             L"bir örneği çalışabilir. Yeniden başlatılması, simge durumuna küçültülmüş denetim penceresini "
@@ -3071,7 +3120,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"ekran seçiminden bağımsız olarak uygulamanın tamamına uygulanır. Engelleme açıkken Windows "
             L"ekran koruyucusu yalnızca en az bir ekranda görünür ve duraklatılmamış animasyon varken "
             L"engellenir.\r\n\r\nEKRAN GÖRÜNTÜLERİ VE KAYIT\r\nAnlık görüntüler ve kayıtlar, tüm "
-            L"monitörlerin birleşik görüntüsünü değil, ilk etkin animasyon monitörünü kullanır. PNG "
+            L"monitörlerin birleşik görüntüsünü değil, ilk etkin animasyon monitörünü kullanır. "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP "
             L"Resimler, MP4 Videolar klasörünü kullanır; bu klasörler yoksa Belgeler kullanılır. Kayıt "
             L"ayarları düğmesi Viewport veya TV seçimini açar. Viewport, animasyon monitörünün boyutlarını "
             L"ve yenileme hızını saniyede en fazla 60 kareyle korur. TV, 16:9 oranında 1920 × 1080, 1440 × "
@@ -3083,7 +3133,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Esc onaylanmamış değişiklikleri iptal eder. Kayıt sırasında kaydedilen ekranın animasyon "
             L"çıkışı kapatılamaz; diğer ekranlardaki değişiklikler kaydı durdurmaz. Kayıt sırasında "
             L"uygulamayı kapatmak kaydı da durduracağı için onay gerektirir.\r\n\r\nSİSTEM GEREKSİNİMLERİ\r\n"
-            L"Windows 7 ile Windows 11 arasındaki sürümler, PNG anlık görüntüler ve MP4 kaydı dâhil tüm "
+            L"Windows 7 ile Windows 11 arasındaki sürümler, BMP/GIF/JPEG/PNG/TIFF/WebP anlık görüntüler ve "
+            L"MP4 kaydı dâhil tüm "
             L"özellikleri destekler. Uygulamayı Windows Vista SP2'de çalıştırmak için KB971512 ve KB2117917 "
             L"güncellemelerini yüklemeniz gerekir. Geçerli sürümde MP4 kaydı Vista'da çalışmaz. Görüntüleme, "
             L"yalnızca eski bir DirectX çalışma zamanı değil, Direct3D 11 gerektirir. MP4 kaydı, "
@@ -3167,9 +3218,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Spikker" },
         LocalizedText{ TXT_ABOUT, L"Teave" },
         LocalizedText{ TXT_CLOSE, L"Sule" },
-        LocalizedText{ TXT_SNAPSHOT, L"Salvesta PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG-pilt on salvestatud." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"PNG-pilti ei saanud salvestada." },
+        LocalizedText{ TXT_SNAPSHOT, L"Hetktõmmis…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP-pilt on salvestatud." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"BMP/GIF/JPEG/PNG/TIFF/WebP-pilti ei saanud salvestada." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Eemalda ekraanisäästja" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Ekraanisäästja on eemaldatud." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -3233,7 +3284,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"kriips. Valiku muutmine või liuguril klõpsamine määrab selle väärtuse kõigile valitud "
             L"kuvaritele.\r\n\r\nKASUTAMINE\r\nKäivitage FlightCorridor.exe. Sätteid salvestatakse jooksvalt "
             L"ning rakendus töötab ühe eksemplarina. Kuvari märkeruut või topeltklõps real lülitab selle "
-            L"animatsiooniväljundi sisse või välja. Animatsiooni saab peatada ja jätkata. PNG-pilt ja "
+            L"animatsiooniväljundi sisse või välja. Animatsiooni saab peatada ja jätkata. "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP-pilt ja "
             L"MP4-video jäädvustavad esimese aktiivse animatsioonikuvari, mitte kõiki kuvareid koos. "
             L"Salvestatava kuvari animatsiooniväljundit ei saa salvestamise ajal välja lülitada; rakenduse "
             L"sulgemine nõuab siis kinnitust. Peatamine ja ekraanisäästja tõkestamine kehtivad kogu "
@@ -3336,9 +3388,11 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Cabhair" },
         LocalizedText{ TXT_ABOUT, L"Maidir leis" },
         LocalizedText{ TXT_CLOSE, L"Dún" },
-        LocalizedText{ TXT_SNAPSHOT, L"Sábháil PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Sábháladh an íomhá PNG." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Níorbh fhéidir an íomhá PNG a shábháil." },
+        LocalizedText{ TXT_SNAPSHOT, L"Seat scáileáin…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Sábháladh an íomhá BMP/GIF/JPEG/PNG/TIFF/WebP." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED,
+            L"Níorbh fhéidir an íomhá BMP/GIF/JPEG/PNG/TIFF/WebP a shábháil."
+        },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Díshuiteáil spárálaí scáileáin" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Díshuiteáladh an spárálaí scáileáin." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -3409,7 +3463,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"sleamhnán, cuirtear an luach sin i bhfeidhm ar gach monatóir roghnaithe.\r\n\r\nRIALÚ\r\nRith "
             L"FlightCorridor.exe. Sábháiltear socruithe go leanúnach agus ní ritheann ach cóip amháin den "
             L"fheidhmchlár. Cumasaíonn nó díchumasaíonn bosca seiceála an mhonatóra nó déchliceáil ar a ró "
-            L"an t-aschur beochana. Is féidir an bheochan a chur ar sos agus a atosú. Gabhann PNG agus MP4 "
+            L"an t-aschur beochana. Is féidir an bheochan a chur ar sos agus a atosú. Gabhann "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP agus MP4 "
             L"an chéad mhonatóir beochana gníomhach, ní na monatóirí uile le chéile. Ní féidir aschur "
             L"beochana an mhonatóra atá á thaifeadadh a dhíchumasú le linn taifeadta; teastaíonn deimhniú "
             L"chun an feidhmchlár a dhúnadh agus taifeadadh ar siúl. Baineann sos agus cosc an spárálaí "
@@ -3510,9 +3565,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Žinynas" },
         LocalizedText{ TXT_ABOUT, L"Apie" },
         LocalizedText{ TXT_CLOSE, L"Uždaryti" },
-        LocalizedText{ TXT_SNAPSHOT, L"Išsaugoti PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG vaizdas išsaugotas." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nepavyko išsaugoti PNG vaizdo." },
+        LocalizedText{ TXT_SNAPSHOT, L"Momentinė kopija…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP vaizdas išsaugotas." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nepavyko išsaugoti BMP/GIF/JPEG/PNG/TIFF/WebP vaizdo." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Pašalinti ekrano užsklandą" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Ekrano užsklanda pašalinta." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -3579,7 +3634,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"pritaikoma visiems pasirinktiems monitoriams.\r\n\r\nVALDYMAS\r\nPaleiskite "
             L"FlightCorridor.exe. Nuostatos išsaugomos nuolat, veikia tik vienas programos egzempliorius. "
             L"Monitoriaus langelis arba dvigubas eilutės spustelėjimas įjungia ar išjungia animacijos "
-            L"išvestį. Animaciją galima pristabdyti ir tęsti. PNG ir MP4 fiksuoja pirmą aktyvų animacijos "
+            L"išvestį. Animaciją galima pristabdyti ir tęsti. BMP/GIF/JPEG/PNG/TIFF/WebP ir MP4 fiksuoja "
+            L"pirmą aktyvų animacijos "
             L"monitorių, o ne bendrą visų monitorių vaizdą. Įrašymo metu negalima išjungti įrašomo "
             L"monitoriaus animacijos išvesties; uždarant programą vykstant įrašymui reikia patvirtinimo. "
             L"Pristabdymas ir užsklandos blokavimas taikomi visai programai, nepriklausomai nuo monitorių "
@@ -3676,9 +3732,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Palīdzība" },
         LocalizedText{ TXT_ABOUT, L"Par programmu" },
         LocalizedText{ TXT_CLOSE, L"Aizvērt" },
-        LocalizedText{ TXT_SNAPSHOT, L"Saglabāt PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG attēls ir saglabāts." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Neizdevās saglabāt PNG attēlu." },
+        LocalizedText{ TXT_SNAPSHOT, L"Momentuzņēmums…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP attēls ir saglabāts." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Neizdevās saglabāt BMP/GIF/JPEG/PNG/TIFF/WebP attēlu." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Atinstalēt ekrānsaudzētāju" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Ekrānsaudzētājs ir atinstalēts." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -3742,7 +3798,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"atlasītajiem monitoriem.\r\n\r\nLIETOŠANA\r\nPalaidiet FlightCorridor.exe. Iestatījumi tiek "
             L"saglabāti nepārtraukti, un darbojas tikai viena lietotnes instance. Monitora rūtiņa vai "
             L"dubultklikšķis uz rindas ieslēdz vai izslēdz tā animācijas izvadi. Animāciju var pauzēt un "
-            L"turpināt. PNG un MP4 uzņem pirmo aktīvo animācijas monitoru, nevis visu monitoru kopējo "
+            L"turpināt. BMP/GIF/JPEG/PNG/TIFF/WebP un MP4 uzņem pirmo aktīvo animācijas monitoru, nevis visu "
+            L"monitoru kopējo "
             L"attēlu. Ierakstīšanas laikā nevar izslēgt ierakstāmā monitora animācijas izvadi; aizverot "
             L"lietotni ieraksta laikā, nepieciešams apstiprinājums. Pauze un ekrānsaudzētāja bloķēšana "
             L"attiecas uz visu lietotni neatkarīgi no monitoru atlases. Ja bloķēšana ir ieslēgta, Windows "
@@ -3840,9 +3897,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Súgó" },
         LocalizedText{ TXT_ABOUT, L"Névjegy" },
         LocalizedText{ TXT_CLOSE, L"Bezárás" },
-        LocalizedText{ TXT_SNAPSHOT, L"PNG mentése…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"A PNG-kép mentve." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"A PNG-kép mentése sikertelen." },
+        LocalizedText{ TXT_SNAPSHOT, L"Pillanatkép…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"A BMP/GIF/JPEG/PNG/TIFF/WebP-kép mentve." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"A BMP/GIF/JPEG/PNG/TIFF/WebP-kép mentése sikertelen." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Képernyőkímélő eltávolítása" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"A képernyőkímélő eltávolítva." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -3908,7 +3965,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"adott értéket minden kijelölt monitorra alkalmazza.\r\n\r\nKEZELÉS\r\nIndítsa el a "
             L"FlightCorridor.exe fájlt. A beállítások folyamatosan mentődnek, és csak egy alkalmazáspéldány "
             L"fut. A monitor jelölőnégyzete vagy a sorra történő dupla kattintás kapcsolja az animációs "
-            L"kimenetet. Az animáció szüneteltethető és folytatható. A PNG és az MP4 az első aktív animációs "
+            L"kimenetet. Az animáció szüneteltethető és folytatható. A BMP/GIF/JPEG/PNG/TIFF/WebP és az MP4 "
+            L"az első aktív animációs "
             L"monitort rögzíti, nem az összes monitor egyesített képét. A rögzített monitor animációs "
             L"kimenete felvétel közben nem kapcsolható ki; az alkalmazás bezárásához ekkor megerősítés "
             L"szükséges. A szüneteltetés és a képernyőkímélő tiltása a teljes alkalmazásra vonatkozik, a "
@@ -4010,9 +4068,11 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Għajnuna" },
         LocalizedText{ TXT_ABOUT, L"Dwar" },
         LocalizedText{ TXT_CLOSE, L"Agħlaq" },
-        LocalizedText{ TXT_SNAPSHOT, L"Issejvja PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"L-immaġni PNG ġiet issejvjata." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Ma setgħetx tiġi ssejvjata l-immaġni PNG." },
+        LocalizedText{ TXT_SNAPSHOT, L"Stampa…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"L-immaġni BMP/GIF/JPEG/PNG/TIFF/WebP ġiet issejvjata." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED,
+            L"Ma setgħetx tiġi ssejvjata l-immaġni BMP/GIF/JPEG/PNG/TIFF/WebP."
+        },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Neħħi l-iscreen saver" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"L-iscreen saver tneħħa." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -4079,7 +4139,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"tibdel għażla jew tikklikkja slider, dak il-valur jiġi applikat għall-moniters magħżula "
             L"kollha.\r\n\r\nKONTROLLI\r\nĦaddem FlightCorridor.exe. L-issettjar jiġi ssejvjat kontinwament "
             L"u taħdem istanza waħda biss. Il-kaxxa tal-moniter jew klikk doppja fuq ir-ringiela tattiva jew "
-            L"tiddiżattiva l-output tal-animazzjoni. Tista’ tissospendi u tkompli l-animazzjoni. PNG u MP4 "
+            L"tiddiżattiva l-output tal-animazzjoni. Tista’ tissospendi u tkompli l-animazzjoni. "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP u MP4 "
             L"jaqbdu l-ewwel moniter tal-animazzjoni attiv, mhux immaġni magħquda tal-moniters kollha. "
             L"L-output tal-animazzjoni tal-moniter li qed jiġi rreġistrat ma jistax jiġi diżattivat waqt "
             L"ir-reġistrazzjoni; l-għeluq tal-applikazzjoni waqt reġistrazzjoni jeħtieġ konferma. "
@@ -4182,9 +4243,11 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Help" },
         LocalizedText{ TXT_ABOUT, L"Info" },
         LocalizedText{ TXT_CLOSE, L"Sluiten" },
-        LocalizedText{ TXT_SNAPSHOT, L"PNG opslaan…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"De PNG-afbeelding is opgeslagen." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"De PNG-afbeelding kon niet worden opgeslagen." },
+        LocalizedText{ TXT_SNAPSHOT, L"Momentopname…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"De BMP/GIF/JPEG/PNG/TIFF/WebP-afbeelding is opgeslagen." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED,
+            L"De BMP/GIF/JPEG/PNG/TIFF/WebP-afbeelding kon niet worden opgeslagen."
+        },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Schermbeveiliging verwijderen" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"De schermbeveiliging is verwijderd." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -4252,7 +4315,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"past die waarde toe op alle geselecteerde beeldschermen.\r\n\r\nBEDIENING\r\nStart "
             L"FlightCorridor.exe. Instellingen worden doorlopend opgeslagen en er draait slechts één "
             L"exemplaar van de toepassing. Het selectievakje of een dubbelklik op de beeldschermrij schakelt "
-            L"de animatie-uitvoer in of uit. U kunt de animatie pauzeren en hervatten. PNG en MP4 leggen het "
+            L"de animatie-uitvoer in of uit. U kunt de animatie pauzeren en hervatten. "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP en MP4 leggen het "
             L"eerste actieve animatiebeeldscherm vast, niet een gecombineerd beeld van alle schermen. De "
             L"animatie-uitvoer van het opgenomen beeldscherm kan tijdens de opname niet worden "
             L"uitgeschakeld; afsluiten tijdens een opname vereist bevestiging. Pauzeren en het blokkeren van "
@@ -4353,9 +4417,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Ajutor" },
         LocalizedText{ TXT_ABOUT, L"Despre" },
         LocalizedText{ TXT_CLOSE, L"Închidere" },
-        LocalizedText{ TXT_SNAPSHOT, L"Salvare PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Imaginea PNG a fost salvată." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Imaginea PNG nu a putut fi salvată." },
+        LocalizedText{ TXT_SNAPSHOT, L"Instantaneu…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Imaginea BMP/GIF/JPEG/PNG/TIFF/WebP a fost salvată." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Imaginea BMP/GIF/JPEG/PNG/TIFF/WebP nu a putut fi salvată." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Dezinstalare economizor de ecran" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Economizorul de ecran a fost dezinstalat." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -4421,7 +4485,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"glisor aplică acea valoare tuturor monitoarelor selectate.\r\n\r\nCOMENZI\r\nRulați "
             L"FlightCorridor.exe. Setările se salvează continuu și rulează o singură instanță. Caseta "
             L"monitorului sau un dublu clic pe rând activează ori dezactivează ieșirea animației. Animația "
-            L"poate fi pusă în pauză și reluată. PNG și MP4 capturează primul monitor de animație activ, nu "
+            L"poate fi pusă în pauză și reluată. BMP/GIF/JPEG/PNG/TIFF/WebP și MP4 capturează primul monitor "
+            L"de animație activ, nu "
             L"imaginea combinată a tuturor monitoarelor. Ieșirea animației pe monitorul înregistrat nu poate "
             L"fi dezactivată în timpul înregistrării; închiderea aplicației în timpul înregistrării necesită "
             L"confirmare. Pauza și blocarea economizorului se aplică întregii aplicații, indiferent de "
@@ -4523,9 +4588,11 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Βοήθεια" },
         LocalizedText{ TXT_ABOUT, L"Πληροφορίες" },
         LocalizedText{ TXT_CLOSE, L"Κλείσιμο" },
-        LocalizedText{ TXT_SNAPSHOT, L"Αποθήκευση PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Η εικόνα PNG αποθηκεύτηκε." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Δεν ήταν δυνατή η αποθήκευση της εικόνας PNG." },
+        LocalizedText{ TXT_SNAPSHOT, L"Στιγμιότυπο…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Η εικόνα BMP/GIF/JPEG/PNG/TIFF/WebP αποθηκεύτηκε." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED,
+            L"Δεν ήταν δυνατή η αποθήκευση της εικόνας BMP/GIF/JPEG/PNG/TIFF/WebP."
+        },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Κατάργηση προφύλαξης οθόνης" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Η προφύλαξη οθόνης καταργήθηκε." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -4594,7 +4661,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"επιλεγμένες οθόνες.\r\n\r\nΧΕΙΡΙΣΜΟΣ\r\nΕκτελέστε το FlightCorridor.exe. Οι ρυθμίσεις "
             L"αποθηκεύονται συνεχώς και εκτελείται μόνο ένα αντίγραφο της εφαρμογής. Το πλαίσιο της οθόνης ή "
             L"το διπλό κλικ στη γραμμή ενεργοποιεί ή απενεργοποιεί την έξοδο κίνησης. Η κίνηση μπορεί να "
-            L"παύσει και να συνεχιστεί. Τα PNG και MP4 καταγράφουν την πρώτη ενεργή οθόνη κίνησης, όχι "
+            L"παύσει και να συνεχιστεί. Τα BMP/GIF/JPEG/PNG/TIFF/WebP και MP4 καταγράφουν την πρώτη ενεργή "
+            L"οθόνη κίνησης, όχι "
             L"συνδυασμένη εικόνα όλων των οθονών. Η έξοδος κίνησης της καταγραφόμενης οθόνης δεν μπορεί να "
             L"απενεργοποιηθεί κατά την εγγραφή· το κλείσιμο της εφαρμογής κατά την εγγραφή απαιτεί "
             L"επιβεβαίωση. Η παύση και η αναστολή προφύλαξης οθόνης ισχύουν για όλη την εφαρμογή, ανεξάρτητα "
@@ -4697,9 +4765,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Pomoć" },
         LocalizedText{ TXT_ABOUT, L"O programu" },
         LocalizedText{ TXT_CLOSE, L"Zatvori" },
-        LocalizedText{ TXT_SNAPSHOT, L"Sačuvaj PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG slika je sačuvana." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nije moguće sačuvati PNG sliku." },
+        LocalizedText{ TXT_SNAPSHOT, L"Snimak…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP slika je sačuvana." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nije moguće sačuvati BMP/GIF/JPEG/PNG/TIFF/WebP sliku." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Deinstaliraj čuvar ekrana" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Čuvar ekrana je deinstaliran." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -4762,7 +4830,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"umjesto zajedničke vrijednosti. Promjena opcije ili klik na klizač primjenjuje tu vrijednost "
             L"na sve odabrane monitore.\r\n\r\nUPRAVLJANJE\r\nPokrenite FlightCorridor.exe. Postavke se "
             L"stalno čuvaju i radi samo jedna instanca aplikacije. Kućica monitora ili dvostruki klik na red "
-            L"uključuje ili isključuje animacijski izlaz. Animaciju možete pauzirati i nastaviti. PNG i MP4 "
+            L"uključuje ili isključuje animacijski izlaz. Animaciju možete pauzirati i nastaviti. "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP i MP4 "
             L"bilježe prvi aktivni monitor animacije, ne zajedničku sliku svih monitora. Animacijski izlaz "
             L"snimanog monitora ne možete isključiti tokom snimanja; zatvaranje aplikacije tokom snimanja "
             L"zahtijeva potvrdu. Pauza i blokada čuvara ekrana vrijede za cijelu aplikaciju, bez obzira na "
@@ -4859,9 +4928,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Pomoć" },
         LocalizedText{ TXT_ABOUT, L"O programu" },
         LocalizedText{ TXT_CLOSE, L"Zatvori" },
-        LocalizedText{ TXT_SNAPSHOT, L"Spremi PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG slika je spremljena." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nije moguće spremiti PNG sliku." },
+        LocalizedText{ TXT_SNAPSHOT, L"Snimka…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP slika je spremljena." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nije moguće spremiti BMP/GIF/JPEG/PNG/TIFF/WebP sliku." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Deinstaliraj čuvar zaslona" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Čuvar zaslona je deinstaliran." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -4926,7 +4995,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"primjenjuje tu vrijednost na sve odabrane zaslone.\r\n\r\nUPRAVLJANJE\r\nPokrenite "
             L"FlightCorridor.exe. Postavke se neprekidno spremaju i radi samo jedna instanca aplikacije. "
             L"Potvrdni okvir zaslona ili dvostruki klik na redak uključuje ili isključuje animacijski izlaz. "
-            L"Animaciju možete pauzirati i nastaviti. PNG i MP4 bilježe prvi aktivni zaslon animacije, ne "
+            L"Animaciju možete pauzirati i nastaviti. BMP/GIF/JPEG/PNG/TIFF/WebP i MP4 bilježe prvi aktivni "
+            L"zaslon animacije, ne "
             L"zajedničku sliku svih zaslona. Animacijski izlaz snimanog zaslona ne možete isključiti tijekom "
             L"snimanja; zatvaranje aplikacije tijekom snimanja zahtijeva potvrdu. Pauza i blokada čuvara "
             L"zaslona vrijede za cijelu aplikaciju, bez obzira na odabir zaslona. Kada je blokada uključena, "
@@ -5022,9 +5092,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Pomoč" },
         LocalizedText{ TXT_ABOUT, L"O programu" },
         LocalizedText{ TXT_CLOSE, L"Zapri" },
-        LocalizedText{ TXT_SNAPSHOT, L"Shrani PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Slika PNG je shranjena." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Slike PNG ni bilo mogoče shraniti." },
+        LocalizedText{ TXT_SNAPSHOT, L"Posnetek…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Slika BMP/GIF/JPEG/PNG/TIFF/WebP je shranjena." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Slike BMP/GIF/JPEG/PNG/TIFF/WebP ni bilo mogoče shraniti." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Odstrani ohranjevalnik zaslona" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Ohranjevalnik zaslona je odstranjen." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -5089,7 +5159,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"vrednost na vseh izbranih zaslonih.\r\n\r\nUPRAVLJANJE\r\nZaženite FlightCorridor.exe. "
             L"Nastavitve se shranjujejo sproti in deluje le en primerek programa. Polje zaslona ali dvojni "
             L"klik na vrstico vklopi ali izklopi izhod animacije. Animacijo lahko začasno ustavite in "
-            L"nadaljujete. PNG in MP4 zajameta prvi aktivni zaslon animacije, ne skupne slike vseh zaslonov. "
+            L"nadaljujete. BMP/GIF/JPEG/PNG/TIFF/WebP in MP4 zajameta prvi aktivni zaslon animacije, ne "
+            L"skupne slike vseh zaslonov. "
             L"Izhoda animacije snemanega zaslona med snemanjem ni mogoče izklopiti; zapiranje programa med "
             L"snemanjem zahteva potrditev. Premor in preprečevanje ohranjevalnika veljata za celoten "
             L"program, ne glede na izbor zaslonov. Ko je preprečevanje vključeno, se ohranjevalnik Windows "
@@ -5186,9 +5257,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Pomoć" },
         LocalizedText{ TXT_ABOUT, L"O programu" },
         LocalizedText{ TXT_CLOSE, L"Zatvori" },
-        LocalizedText{ TXT_SNAPSHOT, L"Sačuvaj PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG slika je sačuvana." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nije moguće sačuvati PNG sliku." },
+        LocalizedText{ TXT_SNAPSHOT, L"Snimak…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP slika je sačuvana." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nije moguće sačuvati BMP/GIF/JPEG/PNG/TIFF/WebP sliku." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Deinstaliraj čuvar ekrana" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Čuvar ekrana je deinstaliran." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -5252,7 +5323,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"vrijednost na sve izabrane monitore.\r\n\r\nUPRAVLJANJE\r\nPokrenite FlightCorridor.exe. "
             L"Podešavanja se stalno čuvaju i radi samo jedna instanca aplikacije. Kućica monitora ili "
             L"dvostruki klik na red uključuje ili isključuje animacijski izlaz. Animaciju možete pauzirati i "
-            L"nastaviti. PNG i MP4 bilježe prvi aktivni monitor animacije, ne zajedničku sliku svih "
+            L"nastaviti. BMP/GIF/JPEG/PNG/TIFF/WebP i MP4 bilježe prvi aktivni monitor animacije, ne "
+            L"zajedničku sliku svih "
             L"monitora. Animacijski izlaz snimanog monitora ne možete isključiti tokom snimanja; zatvaranje "
             L"aplikacije tokom snimanja zahtijeva potvrdu. Pauza i blokada čuvara ekrana važe za cijelu "
             L"aplikaciju, bez obzira na izbor monitora. Kada je blokada uključena, čuvar ekrana Windowsa se "
@@ -5343,9 +5415,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Даведка" },
         LocalizedText{ TXT_ABOUT, L"Пра праграму" },
         LocalizedText{ TXT_CLOSE, L"Закрыць" },
-        LocalizedText{ TXT_SNAPSHOT, L"Захаваць PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Відарыс PNG захаваны." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Не ўдалося захаваць відарыс PNG." },
+        LocalizedText{ TXT_SNAPSHOT, L"Здымак…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Відарыс BMP/GIF/JPEG/PNG/TIFF/WebP захаваны." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Не ўдалося захаваць відарыс BMP/GIF/JPEG/PNG/TIFF/WebP." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Выдаліць застаўку" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Застаўка выдалена." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -5408,7 +5480,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Змена параметра або націск на паўзунок ужывае гэта значэнне да ўсіх выбраных манітораў.\r\n\r\n"
             L"КІРАВАННЕ\r\nЗапусціце FlightCorridor.exe. Налады захоўваюцца пастаянна, працуе толькі адзін "
             L"асобнік праграмы. Сцяжок манітора або падвойнае націсканне на радок уключае ці выключае вывад "
-            L"анімацыі. Анімацыю можна прыпыніць і працягнуць. PNG і MP4 захопліваюць першы актыўны манітор "
+            L"анімацыі. Анімацыю можна прыпыніць і працягнуць. BMP/GIF/JPEG/PNG/TIFF/WebP і MP4 захопліваюць "
+            L"першы актыўны манітор "
             L"анімацыі, а не агульны відарыс усіх манітораў. Падчас запісу нельга выключыць вывад анімацыі "
             L"манітора, які запісваецца; закрыццё праграмы падчас запісу патрабуе пацвярджэння. Прыпыненне і "
             L"блакаванне застаўкі дзейнічаюць на ўсю праграму незалежна ад выбару манітораў. Калі блакаванне "
@@ -5501,9 +5574,11 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Помощ" },
         LocalizedText{ TXT_ABOUT, L"За програмата" },
         LocalizedText{ TXT_CLOSE, L"Затвори" },
-        LocalizedText{ TXT_SNAPSHOT, L"Запис на PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG изображението е запазено." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"PNG изображението не може да се запази." },
+        LocalizedText{ TXT_SNAPSHOT, L"Снимка…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP изображението е запазено." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED,
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP изображението не може да се запази."
+        },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Деинсталиране на скрийнсейвъра" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Скрийнсейвърът е деинсталиран." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -5566,7 +5641,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"щракване върху плъзгач прилага стойността към всички избрани монитори.\r\n\r\nУПРАВЛЕНИЕ\r\n"
             L"Стартирайте FlightCorridor.exe. Настройките се запазват непрекъснато и работи само един "
             L"екземпляр на приложението. Отметката на монитора или двойно щракване върху реда включва или "
-            L"изключва анимационния изход. Анимацията може да се поставя на пауза и да продължава. PNG и MP4 "
+            L"изключва анимационния изход. Анимацията може да се поставя на пауза и да продължава. "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP и MP4 "
             L"заснемат първия активен монитор за анимация, не общ образ от всички монитори. По време на "
             L"запис не може да се изключи анимационният изход на записвания монитор; затварянето на "
             L"приложението при запис изисква потвърждение. Паузата и блокирането на скрийнсейвъра важат за "
@@ -5669,9 +5745,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Помош" },
         LocalizedText{ TXT_ABOUT, L"За програмата" },
         LocalizedText{ TXT_CLOSE, L"Затвори" },
-        LocalizedText{ TXT_SNAPSHOT, L"Зачувај PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG сликата е зачувана." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"PNG сликата не може да се зачува." },
+        LocalizedText{ TXT_SNAPSHOT, L"Снимка…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP сликата е зачувана." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"BMP/GIF/JPEG/PNG/TIFF/WebP сликата не може да се зачува." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Деинсталирај чувар на екранот" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Чуварот на екранот е деинсталиран." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -5736,7 +5812,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"кликнувањето на лизгач ја применува вредноста на сите избрани монитори.\r\n\r\nУПРАВУВАЊЕ\r\n"
             L"Стартувајте FlightCorridor.exe. Поставките се зачувуваат постојано и работи само еден примерок "
             L"на апликацијата. Полето на мониторот или двоен клик на редот го вклучува или исклучува "
-            L"анимацискиот излез. Анимацијата може да се паузира и продолжи. PNG и MP4 го снимаат првиот "
+            L"анимацискиот излез. Анимацијата може да се паузира и продолжи. BMP/GIF/JPEG/PNG/TIFF/WebP и "
+            L"MP4 го снимаат првиот "
             L"активен монитор за анимација, не заедничка слика од сите монитори. Анимацискиот излез на "
             L"мониторот што се снима не може да се исклучи за време на снимањето; затворањето на "
             L"апликацијата при снимање бара потврда. Паузата и блокирањето на чуварот важат за целата "
@@ -5835,9 +5912,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Помоћ" },
         LocalizedText{ TXT_ABOUT, L"О програму" },
         LocalizedText{ TXT_CLOSE, L"Затвори" },
-        LocalizedText{ TXT_SNAPSHOT, L"Сачувај PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG слика је сачувана." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Није могуће сачувати PNG слику." },
+        LocalizedText{ TXT_SNAPSHOT, L"Снимак…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP слика је сачувана." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Није могуће сачувати BMP/GIF/JPEG/PNG/TIFF/WebP слику." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Деинсталирај чувар екрана" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Чувар екрана је деинсталиран." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -5900,7 +5977,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"примењује ту вредност на све изабране мониторе.\r\n\r\nУПРАВЉАЊЕ\r\nПокрените "
             L"FlightCorridor.exe. Подешавања се стално чувају и ради само једна инстанца апликације. Поље "
             L"монитора или двоструки клик на ред укључује или искључује анимацијски излаз. Анимацију можете "
-            L"паузирати и наставити. PNG и MP4 бележе први активни монитор анимације, не заједничку слику "
+            L"паузирати и наставити. BMP/GIF/JPEG/PNG/TIFF/WebP и MP4 бележе први активни монитор анимације, "
+            L"не заједничку слику "
             L"свих монитора. Анимацијски излаз сниманог монитора не можете искључити током снимања; "
             L"затварање апликације током снимања захтева потврду. Пауза и блокада чувара екрана важе за целу "
             L"апликацију, без обзира на избор монитора. Када је блокада укључена, чувар екрана система "
@@ -5992,9 +6070,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Довідка" },
         LocalizedText{ TXT_ABOUT, L"Про програму" },
         LocalizedText{ TXT_CLOSE, L"Закрити" },
-        LocalizedText{ TXT_SNAPSHOT, L"Зберегти PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Зображення PNG збережено." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Не вдалося зберегти зображення PNG." },
+        LocalizedText{ TXT_SNAPSHOT, L"Знімок…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Зображення BMP/GIF/JPEG/PNG/TIFF/WebP збережено." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Не вдалося зберегти зображення BMP/GIF/JPEG/PNG/TIFF/WebP." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Видалити заставку" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Заставку видалено." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -6057,7 +6135,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"параметра або натискання на повзунок застосовує це значення до всіх вибраних моніторів.\r\n\r\n"
             L"КЕРУВАННЯ\r\nЗапустіть FlightCorridor.exe. Налаштування зберігаються постійно, працює лише "
             L"один екземпляр програми. Прапорець монітора або подвійне клацання рядка вмикає чи вимикає "
-            L"виведення анімації. Анімацію можна призупинити та продовжити. PNG і MP4 захоплюють перший "
+            L"виведення анімації. Анімацію можна призупинити та продовжити. BMP/GIF/JPEG/PNG/TIFF/WebP і MP4 "
+            L"захоплюють перший "
             L"активний монітор анімації, а не спільне зображення всіх моніторів. Під час запису не можна "
             L"вимкнути виведення анімації монітора, який записується; закриття програми під час запису "
             L"потребує підтвердження. Призупинення та блокування заставки діють для всієї програми незалежно "
@@ -6151,9 +6230,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_HELP, L"Справка" },
         LocalizedText{ TXT_ABOUT, L"О программе" },
         LocalizedText{ TXT_CLOSE, L"Закрыть" },
-        LocalizedText{ TXT_SNAPSHOT, L"Сохранить PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Изображение PNG сохранено." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Не удалось сохранить изображение PNG." },
+        LocalizedText{ TXT_SNAPSHOT, L"Снимок…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Изображение BMP/GIF/JPEG/PNG/TIFF/WebP сохранено." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Не удалось сохранить изображение BMP/GIF/JPEG/PNG/TIFF/WebP." },
         LocalizedText{ TXT_UNINSTALL_SCREEN_SAVER, L"Удалить заставку" },
         LocalizedText{ TXT_UNINSTALLATION_SUCCEEDED, L"Заставка удалена." },
         LocalizedText{ TXT_UNINSTALLATION_FAILED,
@@ -6219,7 +6298,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"или нажатие на ползунок применяет это значение ко всем выбранным мониторам.\r\n\r\nУПРАВЛЕНИЕ\r"
             L"\nЗапустите FlightCorridor.exe. Настройки сохраняются постоянно, работает только один "
             L"экземпляр приложения. Флажок монитора или двойной щелчок по строке включает либо выключает "
-            L"вывод анимации. Анимацию можно приостановить и продолжить. PNG и MP4 захватывают первый "
+            L"вывод анимации. Анимацию можно приостановить и продолжить. BMP/GIF/JPEG/PNG/TIFF/WebP и MP4 "
+            L"захватывают первый "
             L"активный монитор анимации, а не общее изображение всех мониторов. Во время записи нельзя "
             L"отключить вывод анимации записываемого монитора; закрытие приложения во время записи требует "
             L"подтверждения. Пауза и блокировка заставки действуют для всего приложения независимо от выбора "

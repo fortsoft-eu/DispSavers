@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ImageExport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="AboutForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -92,6 +95,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ImageExport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="AboutForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.1.0
  */
 
 #define NOMINMAX
@@ -256,7 +256,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"vývoj, F9: Spustit záznam; F10: Ukončit záznam. Kurzor se po 1 sekundě nečinnosti skryje a "
             L"pohybem se objeví. Tab/Shift+Tab přechází mezi prvky, Alt vyvolá podtržené volby. Esc zavře "
             L"nápovědu či O programu, v hlavním okně aplikaci ukončí.\r\n\r\nSNÍMEK A SPRÁVA SPOŘIČE V "
-            L"EXE\r\nSnímek uloží PNG aktuálně nahrávaného monitoru, jinak prvního aktivního, v jeho "
+            L"EXE\r\nSnímek uloží BMP/GIF/JPEG/PNG/TIFF/WebP aktuálně nahrávaného monitoru, jinak prvního "
+            L"aktivního, v jeho "
             L"rozlišení; scénu nerestartuje. Nabízí složku Obrázky, případně Dokumenty. Blokovat spořič "
             L"při animaci brání spuštění spořiče Windows při viditelné, nepozastavené animaci. Nulová "
             L"rychlost není pozastavení. Instalace z EXE rozbalí přiložený SCR a vybere jej jako spořič "
@@ -620,7 +621,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"focused, Space pauses/resumes, F9: Start recording; F10: Stop recording. The cursor hides "
             L"after 1 second of inactivity and reappears on movement. Tab/Shift+Tab navigates controls; "
             L"Alt activates underlined commands. Esc closes Help/About, or exits the main "
-            L"window.\r\n\r\nSNAPSHOT AND SCREEN SAVER MANAGEMENT IN EXE\r\nSnapshot saves a PNG of the "
+            L"window.\r\n\r\nSNAPSHOT AND SCREEN SAVER MANAGEMENT IN EXE\r\nSnapshot saves a "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP of the "
             L"recorded display, or otherwise the first active display, at its resolution without "
             L"restarting the scene. Pictures is suggested, with Documents as fallback. Prevent screen "
             L"saver during animation inhibits the Windows screen saver while animation is visible and not "
@@ -987,7 +989,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"focused, Space pauses/resumes, F9: Start recording; F10: Stop recording. The cursor hides "
             L"after 1 second of inactivity and reappears on movement. Tab/Shift+Tab navigates controls; "
             L"Alt activates underlined commands. Esc closes Help/About, or exits the main "
-            L"window.\r\n\r\nSNAPSHOT AND SCREEN SAVER MANAGEMENT IN EXE\r\nSnapshot saves a PNG of the "
+            L"window.\r\n\r\nSNAPSHOT AND SCREEN SAVER MANAGEMENT IN EXE\r\nSnapshot saves a "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP of the "
             L"recorded display, or otherwise the first active display, at its resolution without "
             L"restarting the scene. Pictures is suggested, with Documents as fallback. Prevent screen "
             L"saver during animation inhibits the Windows screen saver while animation is visible and not "
@@ -1355,7 +1358,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"focused, Space pauses/resumes, F9: Start recording; F10: Stop recording. The cursor hides "
             L"after 1 second of inactivity and reappears on movement. Tab/Shift+Tab navigates controls; "
             L"Alt activates underlined commands. Esc closes Help/About, or exits the main "
-            L"window.\r\n\r\nSNAPSHOT AND SCREEN SAVER MANAGEMENT IN EXE\r\nSnapshot saves a PNG of the "
+            L"window.\r\n\r\nSNAPSHOT AND SCREEN SAVER MANAGEMENT IN EXE\r\nSnapshot saves a "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP of the "
             L"recorded display, or otherwise the first active display, at its resolution without "
             L"restarting the scene. Pictures is suggested, with Documents as fallback. Prevent screen "
             L"saver during animation inhibits the Windows screen saver while animation is visible and not "
@@ -1733,7 +1737,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"erscheint bei Bewegung. Tab/Shift+Tab wechselt Steuerelemente, Alt aktiviert unterstrichene "
             L"Befehle. Esc schließt Hilfe/Info beziehungsweise die Anwendung im "
             L"Hauptfenster.\r\n\r\nSCHNAPPSCHUSS UND BILDSCHIRMSCHONERVERWALTUNG IN EXE\r\nSchnappschuss "
-            L"speichert den aufgenommenen, sonst den ersten aktiven Bildschirm als PNG in seiner Auflösung "
+            L"speichert den aufgenommenen, sonst den ersten aktiven Bildschirm als "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP in seiner Auflösung "
             L"ohne Szenenneustart. Vorgeschlagen wird Bilder, ersatzweise Dokumente. Das Sperren des "
             L"Bildschirmschoners während der Animation verhindert dessen Start, solange die Animation "
             L"sichtbar und nicht pausiert ist. Tempo null ist keine Pause. Die Installation aus EXE "
@@ -2122,7 +2127,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"l’enregistrement. Le pointeur disparaît après 1 seconde d'inactivité et réapparaît en "
             L"bougeant. Tab/Shift+Tab parcourt les commandes ; Alt active les lettres soulignées. Esc "
             L"ferme Aide/À propos, ou quitte depuis la fenêtre principale.\r\n\r\nCAPTURE ET GESTION DE "
-            L"L’ÉCRAN DE VEILLE DANS EXE\r\nLa capture sauvegarde en PNG l’écran en cours "
+            L"L’ÉCRAN DE VEILLE DANS EXE\r\nLa capture sauvegarde en BMP/GIF/JPEG/PNG/TIFF/WebP l’écran en "
+            L"cours "
             L"d’enregistrement, sinon le premier écran actif, à sa résolution et sans redémarrer la scène. "
             L"Le dossier proposé est Images, sinon Documents. Bloquer l’écran de veille pendant "
             L"l’animation empêche son lancement tant que l’animation est visible et non suspendue. Une "
@@ -2507,7 +2513,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"F9: Iniciar grabación; F10: Detener grabación. El cursor se oculta tras 1 segundo inactivo y "
             L"reaparece al moverlo. Tab/Shift+Tab recorre controles; Alt activa comandos subrayados. Esc "
             L"cierra Ayuda/Acerca de, o sale desde la ventana principal.\r\n\r\nCAPTURA Y GESTIÓN DEL "
-            L"PROTECTOR EN EXE\r\nLa captura guarda en PNG la pantalla que se está grabando o, en su "
+            L"PROTECTOR EN EXE\r\nLa captura guarda en BMP/GIF/JPEG/PNG/TIFF/WebP la pantalla que se está "
+            L"grabando o, en su "
             L"defecto, la primera activa, a su resolución y sin reiniciar la escena. Se propone Imágenes, "
             L"o Documentos como alternativa. Bloquear el protector durante la animación impide que se "
             L"inicie mientras la animación esté visible y no pausada. Velocidad cero no equivale a pausa. "
@@ -2886,7 +2893,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"registrazione; F10: Ferma registrazione. Il puntatore scompare dopo 1 secondo inattivo e "
             L"ritorna muovendolo. Tab/Shift+Tab passa tra i controlli; Alt attiva i comandi sottolineati. "
             L"Esc chiude Guida/Informazioni, oppure esce dalla finestra principale.\r\n\r\nISTANTANEA E "
-            L"GESTIONE DEL SALVASCHERMO IN EXE\r\nL’istantanea salva in PNG lo schermo in registrazione, "
+            L"GESTIONE DEL SALVASCHERMO IN EXE\r\nL’istantanea salva in BMP/GIF/JPEG/PNG/TIFF/WebP lo "
+            L"schermo in registrazione, "
             L"altrimenti il primo attivo, alla sua risoluzione senza riavviare la scena. La cartella "
             L"proposta è Immagini, altrimenti Documenti. Bloccare il salvaschermo durante l’animazione ne "
             L"impedisce l’avvio finché l’animazione è visibile e non in pausa. Velocità zero non significa "
@@ -3263,7 +3271,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"oculta-se após 1 segundo inativo e reaparece ao mover-se. Tab/Shift+Tab percorre controlos; "
             L"Alt ativa comandos sublinhados. Esc fecha Ajuda/Acerca de ou sai na janela "
             L"principal.\r\n\r\nINSTANTÂNEO E GESTÃO DA PROTEÇÃO DE ECRÃ NO EXE\r\nO instantâneo guarda um "
-            L"PNG do ecrã em gravação ou, caso contrário, do primeiro ativo, à sua resolução e sem "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP do ecrã em gravação ou, caso contrário, do primeiro ativo, à sua "
+            L"resolução e sem "
             L"reiniciar a cena. Sugere Imagens, ou Documentos como alternativa. Bloquear a proteção de "
             L"ecrã durante a animação impede a sua ativação enquanto a animação estiver visível e sem "
             L"pausa. Velocidade zero não é pausa. A instalação a partir do EXE extrai o SCR incluído e "
@@ -3630,7 +3639,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"F10: Zatrzymaj nagrywanie. Kursor znika po 1 sekundzie bezruchu i wraca po poruszeniu. "
             L"Tab/Shift+Tab przechodzi między kontrolkami, Alt wybiera podkreślone polecenia. Esc zamyka "
             L"Pomoc/Informacje lub kończy aplikację z głównego okna.\r\n\r\nZDJĘCIE I ZARZĄDZANIE "
-            L"WYGASZACZEM W EXE\r\nZdjęcie zapisuje PNG nagrywanego monitora, a w pozostałych przypadkach "
+            L"WYGASZACZEM W EXE\r\nZdjęcie zapisuje BMP/GIF/JPEG/PNG/TIFF/WebP nagrywanego monitora, a w "
+            L"pozostałych przypadkach "
             L"pierwszego aktywnego, w jego rozdzielczości i bez restartu sceny. Proponowany jest folder "
             L"Obrazy, zastępczo Dokumenty. Blokowanie wygaszacza podczas animacji zapobiega jego "
             L"uruchomieniu, gdy animacja jest widoczna i nie jest wstrzymana. Prędkość zero nie oznacza "
@@ -3996,7 +4006,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"medzerník prepína pozastavenie, F9: Spustiť záznam; F10: Ukončiť záznam. Kurzor po 1 sekunde "
             L"nečinnosti zmizne a pohybom sa objaví. Tab/Shift+Tab prechádza prvky, Alt vyvolá "
             L"podčiarknuté voľby. Esc zavrie Pomoc/O programe alebo ukončí hlavné okno.\r\n\r\nSNÍMKA A "
-            L"SPRÁVA ŠETRIČA V EXE\r\nSnímka uloží PNG zaznamenávaného monitora, inak prvého aktívneho, v "
+            L"SPRÁVA ŠETRIČA V EXE\r\nSnímka uloží BMP/GIF/JPEG/PNG/TIFF/WebP zaznamenávaného monitora, inak "
+            L"prvého aktívneho, v "
             L"jeho rozlíšení bez reštartu scény. Ponúka priečinok Obrázky, prípadne Dokumenty. Blokovanie "
             L"šetriča pri animácii bráni jeho spusteniu, kým je animácia viditeľná a nepozastavená. Nulová "
             L"rýchlosť nie je pozastavenie. Inštalácia z EXE rozbalí priložený SCR a vyberie ho ako šetrič "
@@ -4362,7 +4373,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Stop optagelse. Markøren skjules efter 1 sekund uden aktivitet og vises ved bevægelse. "
             L"Tab/Shift+Tab skifter kontrol, Alt aktiverer understregede kommandoer. Esc lukker Hjælp/Om "
             L"eller afslutter fra hovedvinduet.\r\n\r\nØJEBLIKSBILLEDE OG PAUSESKÆRM I "
-            L"EXE\r\nØjebliksbillede gemmer en PNG af den skærm, der optages, ellers den første aktive, i "
+            L"EXE\r\nØjebliksbillede gemmer en BMP/GIF/JPEG/PNG/TIFF/WebP af den skærm, der optages, ellers "
+            L"den første aktive, i "
             L"dens opløsning uden at genstarte scenen. Billeder foreslås, ellers Dokumenter. Blokering af "
             L"pauseskærmen under animation forhindrer dens start, mens animationen er synlig og ikke på "
             L"pause. Hastighed nul er ikke pause. Installation fra EXE pakker den medfølgende SCR ud og "
@@ -4731,7 +4743,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"toimettomuuden jälkeen ja palaa liikkeestä. Tab/Shift+Tab siirtyy säätimissä, Alt valitsee "
             L"alleviivatut komennot. Esc sulkee Ohje/Tietoja-ikkunan tai poistuu "
             L"pääikkunasta.\r\n\r\nTILANNEKUVA JA NÄYTÖNSÄÄSTÄJÄN HALLINTA EXE:SSÄ\r\nTilannekuva "
-            L"tallentaa PNG:n tallennettavasta näytöstä tai muuten ensimmäisestä aktiivisesta näytöstä sen "
+            L"tallentaa BMP/GIF/JPEG/PNG/TIFF/WebP:n tallennettavasta näytöstä tai muuten ensimmäisestä "
+            L"aktiivisesta näytöstä sen "
             L"tarkkuudella aloittamatta tilannetta uudelleen. Ehdotettu kansio on Kuvat, varalla "
             L"Tiedostot. Näytönsäästäjän esto animaation aikana estää sen käynnistymisen, kun animaatio "
             L"näkyy eikä ole tauolla. Nollanopeus ei ole tauko. Asennus EXE:stä purkaa mukana tulevan "
@@ -5097,7 +5110,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"staðfestingar. Með áherslu á hreyfimynd skiptir bilslá hléi, F9: Hefja upptöku; F10: Stöðva "
             L"upptöku. Bendill felst eftir 1 sekúndu án hreyfingar og birtist við hreyfingu. Tab/Shift+Tab "
             L"færist milli stjórna; Alt virkjar undirstrikaðar skipanir. Esc lokar Hjálp/Um eða hættir úr "
-            L"aðalglugga.\r\n\r\nSKJÁMYND OG STJÓRNUN SKJÁHVÍLU Í EXE\r\nSkjámynd vistar PNG af skjánum "
+            L"aðalglugga.\r\n\r\nSKJÁMYND OG STJÓRNUN SKJÁHVÍLU Í EXE\r\nSkjámynd vistar "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP af skjánum "
             L"sem er í upptöku, annars fyrsta virka skjánum, í upplausn hans án þess að endurræsa senuna. "
             L"Mappan Myndir er lögð til, annars Skjöl. Lokun á skjáhvílu meðan hreyfimynd er í gangi kemur "
             L"í veg fyrir ræsingu hennar meðan hreyfimyndin er sýnileg og ekki í hléi. Núllhraði er ekki "
@@ -5464,7 +5478,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"opptak. Pekeren skjules etter 1 sekund uten aktivitet og vises ved bevegelse. Tab/Shift+Tab "
             L"flytter mellom kontroller; Alt aktiverer understrekede kommandoer. Esc lukker Hjelp/Om eller "
             L"avslutter fra hovedvinduet.\r\n\r\nØYEBLIKKSBILDE OG SKJERMSPARER I EXE\r\nØyeblikksbilde "
-            L"lagrer en PNG av skjermen som tas opp, ellers den første aktive, i dens oppløsning uten å "
+            L"lagrer en BMP/GIF/JPEG/PNG/TIFF/WebP av skjermen som tas opp, ellers den første aktive, i dens "
+            L"oppløsning uten å "
             L"starte scenen på nytt. Bilder foreslås, ellers Dokumenter. Blokkering av skjermspareren "
             L"under animasjon hindrer at den starter mens animasjonen er synlig og ikke satt på pause. "
             L"Hastighet null er ikke pause. Installasjon fra EXE pakker ut den medfølgende SCR-en og "
@@ -5835,7 +5850,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"animationen växlar Blanksteg paus, F9: Starta inspelning; F10: Stoppa inspelning. Pekaren "
             L"döljs efter 1 sekund utan aktivitet och visas vid rörelse. Tab/Shift+Tab flyttar mellan "
             L"kontroller; Alt aktiverar understrukna kommandon. Esc stänger Hjälp/Om eller avslutar i "
-            L"huvudfönstret.\r\n\r\nÖGONBLICKSBILD OCH SKÄRMSLÄCKARE I EXE\r\nÖgonblicksbild sparar en PNG "
+            L"huvudfönstret.\r\n\r\nÖGONBLICKSBILD OCH SKÄRMSLÄCKARE I EXE\r\nÖgonblicksbild sparar en "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP "
             L"av skärmen som spelas in, annars den första aktiva, i dess upplösning utan att starta om "
             L"scenen. Bilder föreslås, annars Dokument. Blockering av skärmsläckaren under animation "
             L"hindrar den från att starta när animationen är synlig och inte pausad. Hastighet noll är "
@@ -6202,7 +6218,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"hareketsizlikten sonra gizlenir, hareketle görünür. Tab/Shift+Tab denetimler arasında gezer; "
             L"Alt altı çizili komutları çalıştırır. Esc Yardım/Hakkında'yı kapatır veya ana pencerede "
             L"uygulamadan çıkar.\r\n\r\nEXE’DE ANLIK GÖRÜNTÜ VE EKRAN KORUYUCU YÖNETİMİ\r\nAnlık görüntü, "
-            L"kayıt yapılan ekranı veya kayıt yoksa ilk etkin ekranı kendi çözünürlüğünde PNG olarak "
+            L"kayıt yapılan ekranı veya kayıt yoksa ilk etkin ekranı kendi çözünürlüğünde "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP olarak "
             L"saklar; sahneyi yeniden başlatmaz. Resimler klasörü, yoksa Belgeler önerilir. Animasyon "
             L"sırasında ekran koruyucuyu engelleme, animasyon görünür ve duraklatılmamışken koruyucunun "
             L"başlamasını önler. Sıfır hız duraklatma değildir. EXE’den kurulum, içerilen SCR’yi açar ve "
@@ -6416,9 +6433,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Windowsi ekraanisäästja…" },
         LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Windowsi ekraanisäästja sätteid ei saa avada." },
         LocalizedText{ TXT_RESET_SETTINGS, L"Lähtesta väärtused" },
-        LocalizedText{ TXT_SNAPSHOT, L"Salvesta PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG-pilt on salvestatud." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"PNG-pilti ei saanud salvestada." },
+        LocalizedText{ TXT_SNAPSHOT, L"Hetktõmmis…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP-pilt on salvestatud." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"BMP/GIF/JPEG/PNG/TIFF/WebP-pilti ei saanud salvestada." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Tõkesta animatsiooni ajal ekraanisäästja" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Elusrakkude juhuslik värv stseeni igal taaskäivitamisel"
@@ -6566,7 +6583,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"animatsioonis lülitab tühik pausi, F9: Alusta salvestamist; F10: Peata salvestamine. Kursor "
             L"kaob 1 sekundi tegevusetuse järel ning ilmub liigutamisel. Tab/Shift+Tab liigub "
             L"juhtelementide vahel, Alt aktiveerib allajoonitud käsud. Esc sulgeb Abi/Teave või väljub "
-            L"peaaknast.\r\n\r\nHETKTÕMMIS JA EKRAANISÄÄSTJA HALDUS EXE-S\r\nHetktõmmis salvestab PNG "
+            L"peaaknast.\r\n\r\nHETKTÕMMIS JA EKRAANISÄÄSTJA HALDUS EXE-S\r\nHetktõmmis salvestab "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP "
             L"salvestatavast kuvarist või muul juhul esimesest aktiivsest kuvarist selle eraldusvõimega, "
             L"stseeni taasalustamata. Pakutakse kausta Pildid, selle puudumisel Dokumendid. Ekraanisäästja "
             L"blokeerimine animatsiooni ajal takistab selle käivitumist, kui animatsioon on nähtav ega ole "
@@ -6782,9 +6800,11 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Ní féidir socruithe spárálaí scáileáin Windows a oscailt."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Athshocraigh luachanna" },
-        LocalizedText{ TXT_SNAPSHOT, L"Sábháil PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Sábháladh an íomhá PNG." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Níorbh fhéidir an íomhá PNG a shábháil." },
+        LocalizedText{ TXT_SNAPSHOT, L"Seat scáileáin…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Sábháladh an íomhá BMP/GIF/JPEG/PNG/TIFF/WebP." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED,
+            L"Níorbh fhéidir an íomhá BMP/GIF/JPEG/PNG/TIFF/WebP a shábháil."
+        },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Cosc ar spárálaí scáileáin le linn beochana" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Dath randamach do chealla beo gach uair a athshocraítear an radharc"
@@ -6939,7 +6959,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"agus filleann sé le gluaiseacht. Bogann Tab/Shift+Tab idir rialtáin; gníomhaíonn Alt "
             L"orduithe a bhfuil líne fúthu. Dúnann Esc Cabhair/Maidir leis, nó scoireann sé sa "
             L"phríomhfhuinneog.\r\n\r\nGABHÁIL ÍOMHÁ AGUS BAINISTIÚ AN SPÁRÁLAÍ IN EXE\r\nSábhálann "
-            L"gabháil íomhá PNG den scáileán atá á thaifeadadh, nó den chéad scáileán gníomhach murach "
+            L"gabháil íomhá BMP/GIF/JPEG/PNG/TIFF/WebP den scáileán atá á thaifeadadh, nó den chéad scáileán "
+            L"gníomhach murach "
             L"sin, ag a thaifeach féin gan an radharc a atosú. Moltar Pictiúir, nó Doiciméid mar rogha "
             L"eile. Cuireann bac ar an spárálaí le linn beochana cosc ar a thosú fad atá an bheochan "
             L"infheicthe agus gan sos. Ní hionann luas nialasach agus sos. Díphacálann suiteáil ó EXE an "
@@ -7161,9 +7182,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Nepavyko atverti „Windows“ ekrano užsklandos parametrų."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Atkurti reikšmes" },
-        LocalizedText{ TXT_SNAPSHOT, L"Išsaugoti PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG vaizdas išsaugotas." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nepavyko išsaugoti PNG vaizdo." },
+        LocalizedText{ TXT_SNAPSHOT, L"Momentinė kopija…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP vaizdas išsaugotas." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nepavyko išsaugoti BMP/GIF/JPEG/PNG/TIFF/WebP vaizdo." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Animacijos metu neleisti ekrano užsklandos" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Atsitiktinė gyvų langelių spalva kiekvieną kartą paleidus sceną iš naujo"
@@ -7313,7 +7334,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"ir grįžta pajudinus. Tab/Shift+Tab keičia valdiklį, Alt vykdo pabrauktas komandas. Esc "
             L"uždaro Žinyną/Apie arba išeina pagrindiniame lange.\r\n\r\nMOMENTINĖ KOPIJA IR UŽSKLANDOS "
             L"VALDYMAS EXE\r\nMomentinė kopija išsaugo įrašomo arba, jei neįrašoma, pirmojo aktyvaus "
-            L"ekrano PNG jo raiška nepaleidžiant scenos iš naujo. Siūlomas aplankas Paveikslėliai, kitu "
+            L"ekrano BMP/GIF/JPEG/PNG/TIFF/WebP jo raiška nepaleidžiant scenos iš naujo. Siūlomas aplankas "
+            L"Paveikslėliai, kitu "
             L"atveju Dokumentai. Užsklandos blokavimas animacijos metu neleidžia jai įsijungti, kol "
             L"animacija matoma ir nepristabdyta. Nulinis greitis nėra pauzė. Diegimas iš EXE išpakuoja "
             L"pridėtą SCR ir parenka jį kaip Windows užsklandą. Diegiant ir šalinant gali reikėti "
@@ -7528,9 +7550,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Nevar atvērt Windows ekrānsaudzētāja iestatījumus."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Atiestatīt vērtības" },
-        LocalizedText{ TXT_SNAPSHOT, L"Saglabāt PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG attēls ir saglabāts." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Neizdevās saglabāt PNG attēlu." },
+        LocalizedText{ TXT_SNAPSHOT, L"Momentuzņēmums…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP attēls ir saglabāts." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Neizdevās saglabāt BMP/GIF/JPEG/PNG/TIFF/WebP attēlu." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Animācijas laikā bloķēt ekrānsaudzētāju" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Nejauša dzīvo šūnu krāsa katrā ainas restartēšanā"
@@ -7676,7 +7698,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"ierakstīšanu; F10: Beigt ierakstīšanu. Kursors pazūd pēc 1 sekundes bezdarbības un parādās "
             L"kustoties. Tab/Shift+Tab pāriet starp vadīklām, Alt aktivizē pasvītrotās komandas. Esc "
             L"aizver Palīdzība/Par vai iziet galvenajā logā.\r\n\r\nMOMENTUZŅĒMUMS UN EKRĀNSAUDZĒTĀJA "
-            L"PĀRVALDĪBA EXE\r\nMomentuzņēmums saglabā PNG no ierakstāmā ekrāna vai citādi no pirmā aktīvā "
+            L"PĀRVALDĪBA EXE\r\nMomentuzņēmums saglabā BMP/GIF/JPEG/PNG/TIFF/WebP no ierakstāmā ekrāna vai "
+            L"citādi no pirmā aktīvā "
             L"ekrāna tā izšķirtspējā, neatsākot ainu. Tiek piedāvāta mape Attēli, citādi Dokumenti. "
             L"Ekrānsaudzētāja bloķēšana animācijas laikā neļauj tam ieslēgties, kamēr animācija ir redzama "
             L"un nav pauzē. Nulles ātrums nav pauze. Instalēšana no EXE izpako pievienoto SCR un izvēlas "
@@ -7889,9 +7912,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Nem sikerült megnyitni a Windows képernyőkímélő beállításait."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Értékek visszaállítása" },
-        LocalizedText{ TXT_SNAPSHOT, L"PNG mentése…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"A PNG-kép mentve." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"A PNG-kép mentése sikertelen." },
+        LocalizedText{ TXT_SNAPSHOT, L"Pillanatkép…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"A BMP/GIF/JPEG/PNG/TIFF/WebP-kép mentve." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"A BMP/GIF/JPEG/PNG/TIFF/WebP-kép mentése sikertelen." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Képernyőkímélő tiltása animáció közben" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Élő cellák véletlen színe a jelenet minden újraindításakor"
@@ -8042,7 +8065,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Felvétel indítása; F10: Felvétel leállítása. A mutató 1 másodperc tétlenség után eltűnik, "
             L"mozgásra visszatér. Tab/Shift+Tab léptet, Alt az aláhúzott parancsot indítja. Esc bezárja a "
             L"Súgó/Névjegy ablakot, a főablakban kilép.\r\n\r\nPILLANATKÉP ÉS A KÉPERNYŐKÍMÉLŐ KEZELÉSE AZ "
-            L"EXE-BEN\r\nA pillanatkép a rögzített kijelzőt, egyébként az első aktív kijelzőt menti PNG-be "
+            L"EXE-BEN\r\nA pillanatkép a rögzített kijelzőt, egyébként az első aktív kijelzőt menti "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP-be "
             L"annak felbontásával, a jelenet újraindítása nélkül. A javasolt mappa Képek, ennek hiányában "
             L"Dokumentumok. A képernyőkímélő tiltása animáció közben megakadályozza az indulását, amíg az "
             L"animáció látható és nincs szüneteltetve. A nulla sebesség nem szünet. Az EXE-ből történő "
@@ -8264,9 +8288,11 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Ma setgħux jinfetħu s-settings tal-iscreensaver tal-Windows."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Irrisettja l-valuri" },
-        LocalizedText{ TXT_SNAPSHOT, L"Issejvja PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"L-immaġni PNG ġiet issejvjata." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Ma setgħetx tiġi ssejvjata l-immaġni PNG." },
+        LocalizedText{ TXT_SNAPSHOT, L"Stampa…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"L-immaġni BMP/GIF/JPEG/PNG/TIFF/WebP ġiet issejvjata." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED,
+            L"Ma setgħetx tiġi ssejvjata l-immaġni BMP/GIF/JPEG/PNG/TIFF/WebP."
+        },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Imblokka l-iscreen saver waqt l-animazzjoni" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Kulur każwali għaċ-ċelloli ħajjin kull darba li terġa’ tibda x-xena"
@@ -8416,7 +8442,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Waqqaf ir-reġistrazzjoni. Il-kerser jinħeba wara 1 sekonda inattiva u jidher meta jiċċaqlaq. "
             L"Tab/Shift+Tab jgħaddi bejn il-kontrolli; Alt jattiva kmandi sottolinjati. Esc jagħlaq "
             L"Għajnuna/Dwar jew joħroġ mit-tieqa prinċipali.\r\n\r\nSTAMPA U ĠESTJONI TAL-ISCREENSAVER "
-            L"FL-EXE\r\nL-istampa ssalva PNG tal-iskrin li qed jiġi rreġistrat, inkella tal-ewwel skrin "
+            L"FL-EXE\r\nL-istampa ssalva BMP/GIF/JPEG/PNG/TIFF/WebP tal-iskrin li qed jiġi rreġistrat, "
+            L"inkella tal-ewwel skrin "
             L"attiv, bir-riżoluzzjoni tiegħu mingħajr ma terġa’ tibda x-xena. Jiġi ssuġġerit il-folder "
             L"Stampi, inkella Dokumenti. L-imblukkar tal-iscreensaver waqt l-animazzjoni ma jħallihx jibda "
             L"sakemm l-animazzjoni tkun viżibbli u mhux f’pawża. Veloċità żero mhijiex pawża. "
@@ -8637,9 +8664,11 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"De instellingen voor de Windows-schermbeveiliging kunnen niet worden geopend."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Waarden herstellen" },
-        LocalizedText{ TXT_SNAPSHOT, L"PNG opslaan…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"De PNG-afbeelding is opgeslagen." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"De PNG-afbeelding kon niet worden opgeslagen." },
+        LocalizedText{ TXT_SNAPSHOT, L"Momentopname…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"De BMP/GIF/JPEG/PNG/TIFF/WebP-afbeelding is opgeslagen." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED,
+            L"De BMP/GIF/JPEG/PNG/TIFF/WebP-afbeelding kon niet worden opgeslagen."
+        },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Schermbeveiliging blokkeren tijdens animatie" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Willekeurige kleur van levende cellen bij elke herstart van de scène"
@@ -8792,7 +8821,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"verdwijnt na 1 seconde stilstand en keert bij beweging terug. Tab/Shift+Tab doorloopt "
             L"bediening, Alt activeert onderstreepte opdrachten. Esc sluit Help/Info of verlaat het "
             L"hoofdvenster.\r\n\r\nMOMENTOPNAME EN SCHERMBEVEILIGINGSBEHEER IN EXE\r\nMomentopname bewaart "
-            L"een PNG van het opgenomen scherm, anders het eerste actieve, op zijn resolutie zonder de "
+            L"een BMP/GIF/JPEG/PNG/TIFF/WebP van het opgenomen scherm, anders het eerste actieve, op zijn "
+            L"resolutie zonder de "
             L"scène te herstarten. Afbeeldingen wordt voorgesteld, anders Documenten. Schermbeveiliging "
             L"blokkeren tijdens animatie voorkomt de start ervan zolang de animatie zichtbaar en niet "
             L"gepauzeerd is. Snelheid nul is geen pauze. Installatie vanuit EXE pakt de meegeleverde SCR "
@@ -9015,9 +9045,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Nu se pot deschide setările economizorului de ecran Windows."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Resetează valorile" },
-        LocalizedText{ TXT_SNAPSHOT, L"Salvare PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Imaginea PNG a fost salvată." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Imaginea PNG nu a putut fi salvată." },
+        LocalizedText{ TXT_SNAPSHOT, L"Instantaneu…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Imaginea BMP/GIF/JPEG/PNG/TIFF/WebP a fost salvată." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Imaginea BMP/GIF/JPEG/PNG/TIFF/WebP nu a putut fi salvată." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Blocare economizor în timpul animației" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Culoare aleatorie a celulelor vii la fiecare repornire a scenei"
@@ -9167,7 +9197,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Oprire înregistrare. Cursorul dispare după 1 secundă inactivă și revine la mișcare. "
             L"Tab/Shift+Tab parcurge controalele; Alt activează comenzile subliniate. Esc închide "
             L"Ajutor/Despre sau iese din fereastra principală.\r\n\r\nCAPTURĂ ȘI ADMINISTRAREA "
-            L"ECONOMIZORULUI ÎN EXE\r\nCaptura salvează un PNG al ecranului înregistrat sau, în lipsa "
+            L"ECONOMIZORULUI ÎN EXE\r\nCaptura salvează un BMP/GIF/JPEG/PNG/TIFF/WebP al ecranului "
+            L"înregistrat sau, în lipsa "
             L"înregistrării, al primului ecran activ, la rezoluția sa și fără repornirea scenei. Se "
             L"propune folderul Imagini, alternativ Documente. Blocarea economizorului în timpul animației "
             L"împiedică pornirea sa cât timp animația este vizibilă și nu este în pauză. Viteza zero nu "
@@ -9381,9 +9412,11 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Δεν είναι δυνατό το άνοιγμα των ρυθμίσεων προφύλαξης οθόνης των Windows."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Επαναφορά τιμών" },
-        LocalizedText{ TXT_SNAPSHOT, L"Αποθήκευση PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Η εικόνα PNG αποθηκεύτηκε." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Δεν ήταν δυνατή η αποθήκευση της εικόνας PNG." },
+        LocalizedText{ TXT_SNAPSHOT, L"Στιγμιότυπο…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Η εικόνα BMP/GIF/JPEG/PNG/TIFF/WebP αποθηκεύτηκε." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED,
+            L"Δεν ήταν δυνατή η αποθήκευση της εικόνας BMP/GIF/JPEG/PNG/TIFF/WebP."
+        },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Αναστολή προφύλαξης οθόνης κατά την κίνηση" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Τυχαίο χρώμα ζωντανών κελιών σε κάθε επανεκκίνηση της σκηνής"
@@ -9536,7 +9569,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"δευτερόλεπτο αδράνειας και επανέρχεται με κίνηση. Tab/Shift+Tab αλλάζει στοιχείο· Alt "
             L"ενεργοποιεί υπογραμμισμένες εντολές. Esc κλείνει Βοήθεια/Πληροφορίες ή τερματίζει στο κύριο "
             L"παράθυρο.\r\n\r\nΣΤΙΓΜΙΟΤΥΠΟ ΚΑΙ ΔΙΑΧΕΙΡΙΣΗ ΠΡΟΦΥΛΑΞΗΣ ΟΘΟΝΗΣ ΣΤΟ EXE\r\nΤο στιγμιότυπο "
-            L"αποθηκεύει PNG της οθόνης που καταγράφεται ή αλλιώς της πρώτης ενεργής, στην ανάλυσή της "
+            L"αποθηκεύει BMP/GIF/JPEG/PNG/TIFF/WebP της οθόνης που καταγράφεται ή αλλιώς της πρώτης ενεργής, "
+            L"στην ανάλυσή της "
             L"χωρίς επανεκκίνηση της σκηνής. Προτείνεται ο φάκελος Εικόνες, εναλλακτικά Έγγραφα. Ο "
             L"αποκλεισμός προφύλαξης κατά την κινούμενη εικόνα αποτρέπει την εκκίνησή της όσο η εικόνα "
             L"είναι ορατή και δεν είναι σε παύση. Μηδενική ταχύτητα δεν σημαίνει παύση. Η εγκατάσταση από "
@@ -9760,9 +9794,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Nije moguće otvoriti postavke čuvara ekrana u Windowsu."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Vrati vrijednosti" },
-        LocalizedText{ TXT_SNAPSHOT, L"Sačuvaj PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG slika je sačuvana." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nije moguće sačuvati PNG sliku." },
+        LocalizedText{ TXT_SNAPSHOT, L"Snimak…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP slika je sačuvana." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nije moguće sačuvati BMP/GIF/JPEG/PNG/TIFF/WebP sliku." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Spriječi čuvar ekrana tokom animacije" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Nasumična boja živih ćelija pri svakom ponovnom pokretanju scene"
@@ -9909,7 +9943,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Pokreni snimanje; F10: Zaustavi snimanje. Pokazivač nestaje nakon 1 sekunde mirovanja i "
             L"vraća se pomjeranjem. Tab/Shift+Tab prelazi između kontrola; Alt aktivira podvučene naredbe. "
             L"Esc zatvara Pomoć/O programu ili izlazi iz glavnog prozora.\r\n\r\nSNIMAK SLIKE I "
-            L"UPRAVLJANJE ČUVAROM U EXE\r\nSnimak slike čuva PNG monitora koji se snima, inače prvog "
+            L"UPRAVLJANJE ČUVAROM U EXE\r\nSnimak slike čuva BMP/GIF/JPEG/PNG/TIFF/WebP monitora koji se "
+            L"snima, inače prvog "
             L"aktivnog, u njegovoj rezoluciji bez ponovnog pokretanja scene. Predlaže mapu Slike, inače "
             L"Dokumenti. Blokiranje čuvara tokom animacije sprečava njegovo pokretanje dok je animacija "
             L"vidljiva i nije pauzirana. Nulta brzina nije pauza. Instalacija iz EXE raspakuje priloženi "
@@ -10126,9 +10161,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Nije moguće otvoriti postavke čuvara zaslona u Windowsu."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Vrati vrijednosti" },
-        LocalizedText{ TXT_SNAPSHOT, L"Spremi PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG slika je spremljena." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nije moguće spremiti PNG sliku." },
+        LocalizedText{ TXT_SNAPSHOT, L"Snimka…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP slika je spremljena." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nije moguće spremiti BMP/GIF/JPEG/PNG/TIFF/WebP sliku." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Spriječi čuvar zaslona tijekom animacije" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Nasumična boja živih ćelija pri svakom ponovnom pokretanju scene"
@@ -10276,7 +10311,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Pokreni snimanje; F10: Zaustavi snimanje. Pokazivač nestaje nakon 1 sekunde mirovanja i "
             L"vraća se pomicanjem. Tab/Shift+Tab prelazi između kontrola; Alt aktivira podcrtane naredbe. "
             L"Esc zatvara Pomoć/O programu ili izlazi iz glavnog prozora.\r\n\r\nSNIMKA SLIKE I "
-            L"UPRAVLJANJE ČUVAROM U EXE\r\nSnimka slike sprema PNG monitora koji se snima, inače prvog "
+            L"UPRAVLJANJE ČUVAROM U EXE\r\nSnimka slike sprema BMP/GIF/JPEG/PNG/TIFF/WebP monitora koji se "
+            L"snima, inače prvog "
             L"aktivnog, u njegovoj razlučivosti bez ponovnog pokretanja scene. Predlaže mapu Slike, inače "
             L"Dokumenti. Blokiranje čuvara tijekom animacije sprječava njegovo pokretanje dok je animacija "
             L"vidljiva i nije zaustavljena stankom. Nulta brzina nije stanka. Instalacija iz EXE raspakira "
@@ -10493,9 +10529,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Nastavitev ohranjevalnika zaslona Windows ni mogoče odpreti."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Ponastavi vrednosti" },
-        LocalizedText{ TXT_SNAPSHOT, L"Shrani PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Slika PNG je shranjena." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Slike PNG ni bilo mogoče shraniti." },
+        LocalizedText{ TXT_SNAPSHOT, L"Posnetek…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Slika BMP/GIF/JPEG/PNG/TIFF/WebP je shranjena." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Slike BMP/GIF/JPEG/PNG/TIFF/WebP ni bilo mogoče shraniti." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Prepreči ohranjevalnik med animacijo" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Naključna barva živih celic ob vsakem ponovnem zagonu prizora"
@@ -10641,7 +10677,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"animacija fokus, preslednica preklopi premor, F9: Začni snemanje; F10: Ustavi snemanje. "
             L"Kazalec se skrije po 1 sekundi nedejavnosti in vrne ob premiku. Tab/Shift+Tab prehaja med "
             L"kontrolniki; Alt sproži podčrtane ukaze. Esc zapre Pomoč/O programu ali konča v glavnem "
-            L"oknu.\r\n\r\nPOSNETEK SLIKE IN UPRAVLJANJE OHRANJEVALNIKA V EXE\r\nPosnetek slike shrani PNG "
+            L"oknu.\r\n\r\nPOSNETEK SLIKE IN UPRAVLJANJE OHRANJEVALNIKA V EXE\r\nPosnetek slike shrani "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP "
             L"snemanega zaslona, sicer prvega aktivnega, v njegovi ločljivosti brez ponovnega začetka "
             L"prizora. Predlaga mapo Slike, sicer Dokumenti. Blokiranje ohranjevalnika med animacijo "
             L"prepreči njegov zagon, dokler je animacija vidna in ni začasno ustavljena. Ničelna hitrost "
@@ -10857,9 +10894,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Nije moguće otvoriti podešavanja čuvara ekrana u Windowsu."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Vrati vrijednosti" },
-        LocalizedText{ TXT_SNAPSHOT, L"Sačuvaj PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG slika je sačuvana." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nije moguće sačuvati PNG sliku." },
+        LocalizedText{ TXT_SNAPSHOT, L"Snimak…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP slika je sačuvana." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Nije moguće sačuvati BMP/GIF/JPEG/PNG/TIFF/WebP sliku." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Spriječi čuvar ekrana tokom animacije" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Nasumična boja živih ćelija pri svakom ponovnom pokretanju scene"
@@ -11006,7 +11043,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"mijenja pauzu, F9: Pokreni snimanje; F10: Zaustavi snimanje. Pokazivač nestaje poslije 1 "
             L"sekunde mirovanja i vraća se pomjeranjem. Tab/Shift+Tab prelazi između kontrola; Alt "
             L"aktivira podvučene naredbe. Esc zatvara Pomoć/O programu ili izlazi iz glavnog "
-            L"prozora.\r\n\r\nSNIMAK SLIKE I UPRAVLJANJE ČUVAROM U EXE\r\nSnimak slike čuva PNG monitora "
+            L"prozora.\r\n\r\nSNIMAK SLIKE I UPRAVLJANJE ČUVAROM U EXE\r\nSnimak slike čuva "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP monitora "
             L"koji se snima, inače prvog aktivnog, u njegovoj rezoluciji bez ponovnog pokretanja scene. "
             L"Predlaže fasciklu Slike, inače Dokumenti. Blokiranje čuvara tokom animacije sprečava njegovo "
             L"pokretanje dok je animacija vidljiva i nije pauzirana. Nulta brzina nije pauza. Instalacija "
@@ -11219,9 +11257,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Застаўка Windows…" },
         LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Не ўдалося адкрыць параметры застаўкі Windows." },
         LocalizedText{ TXT_RESET_SETTINGS, L"Скінуць значэнні" },
-        LocalizedText{ TXT_SNAPSHOT, L"Захаваць PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Відарыс PNG захаваны." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Не ўдалося захаваць відарыс PNG." },
+        LocalizedText{ TXT_SNAPSHOT, L"Здымак…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Відарыс BMP/GIF/JPEG/PNG/TIFF/WebP захаваны." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Не ўдалося захаваць відарыс BMP/GIF/JPEG/PNG/TIFF/WebP." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Блакаваць застаўку падчас анімацыі" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Выпадковы колер жывых клетак пры кожным перазапуску сцэны"
@@ -11368,7 +11406,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Спыніць запіс. Курсор знікае пасля 1 секунды бяздзейнасці і вяртаецца пры руху. "
             L"Tab/Shift+Tab пераходзіць паміж элементамі, Alt запускае падкрэсленыя каманды. Esc закрывае "
             L"Даведку/Пра праграму або завяршае праграму ў галоўным акне.\r\n\r\nЗДЫМАК І КІРАВАННЕ "
-            L"ЗАСТАЎКАЙ У EXE\r\nЗдымак захоўвае PNG манітора, які запісваецца, інакш першага актыўнага, у "
+            L"ЗАСТАЎКАЙ У EXE\r\nЗдымак захоўвае BMP/GIF/JPEG/PNG/TIFF/WebP манітора, які запісваецца, інакш "
+            L"першага актыўнага, у "
             L"яго раздзяляльнасці без перазапуску сцэны. Прапануецца папка Выявы, інакш Дакументы. "
             L"Блакаванне застаўкі падчас анімацыі не дазваляе ёй запускацца, пакуль анімацыя бачная і не "
             L"прыпыненая. Нулявая хуткасць не з’яўляецца паўзай. Усталяванне з EXE распакоўвае ўбудаваны "
@@ -11580,9 +11619,11 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Настройките на скрийнсейвъра на Windows не могат да се отворят."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Нулиране на стойностите" },
-        LocalizedText{ TXT_SNAPSHOT, L"Запис на PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG изображението е запазено." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"PNG изображението не може да се запази." },
+        LocalizedText{ TXT_SNAPSHOT, L"Снимка…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP изображението е запазено." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED,
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP изображението не може да се запази."
+        },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Блокиране на скрийнсейвъра при анимация" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Случаен цвят на живите клетки при всяко рестартиране на сцената"
@@ -11730,7 +11771,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"F10: Спиране на записа. Курсорът изчезва след 1 секунда бездействие и се връща при движение. "
             L"Tab/Shift+Tab сменя контролата; Alt активира подчертаните команди. Esc затваря Помощ/Относно "
             L"или излиза от главния прозорец.\r\n\r\nСНИМКА И УПРАВЛЕНИЕ НА СКРИЙНСЕЙВЪРА В "
-            L"EXE\r\nСнимката запазва PNG на записвания монитор, иначе на първия активен, с неговата "
+            L"EXE\r\nСнимката запазва BMP/GIF/JPEG/PNG/TIFF/WebP на записвания монитор, иначе на първия "
+            L"активен, с неговата "
             L"резолюция без рестартиране на сцената. Предлага се папка Картини, иначе Документи. "
             L"Блокирането на скрийнсейвъра по време на анимация не позволява да се стартира, докато "
             L"анимацията е видима и не е на пауза. Нулева скорост не означава пауза. Инсталирането от EXE "
@@ -11944,9 +11986,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Не може да се отворат поставките за заштитникот на екран на Windows."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Ресетирај вредности" },
-        LocalizedText{ TXT_SNAPSHOT, L"Зачувај PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG сликата е зачувана." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"PNG сликата не може да се зачува." },
+        LocalizedText{ TXT_SNAPSHOT, L"Снимка…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP сликата е зачувана." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"BMP/GIF/JPEG/PNG/TIFF/WebP сликата не може да се зачува." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Блокирај го чуварот за време на анимацијата" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Случајна боја на живите клетки при секое рестартирање на сцената"
@@ -12096,7 +12138,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"снимање; F10: Запри снимање. Покажувачот исчезнува по 1 секунда неактивност и се враќа со "
             L"движење. Tab/Shift+Tab преминува меѓу контролите; Alt ги активира подвлечените наредби. Esc "
             L"затвора Помош/За програмата или излегува во главниот прозорец.\r\n\r\nСНИМКА НА СЛИКА И "
-            L"УПРАВУВАЊЕ СО ЧУВАРОТ ВО EXE\r\nСнимката на слика зачувува PNG од мониторот што се снима, "
+            L"УПРАВУВАЊЕ СО ЧУВАРОТ ВО EXE\r\nСнимката на слика зачувува BMP/GIF/JPEG/PNG/TIFF/WebP од "
+            L"мониторот што се снима, "
             L"инаку од првиот активен, во неговата резолуција без повторно почнување на сцената. Се "
             L"предлага папката Слики, инаку Документи. Блокирањето на чуварот за време на анимацијата го "
             L"спречува неговото стартување додека анимацијата е видлива и не е паузирана. Нулта брзина не "
@@ -12316,9 +12359,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"Није могуће отворити подешавања чувара екрана у Windows-у."
         },
         LocalizedText{ TXT_RESET_SETTINGS, L"Врати вредности" },
-        LocalizedText{ TXT_SNAPSHOT, L"Сачувај PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"PNG слика је сачувана." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Није могуће сачувати PNG слику." },
+        LocalizedText{ TXT_SNAPSHOT, L"Снимак…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"BMP/GIF/JPEG/PNG/TIFF/WebP слика је сачувана." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Није могуће сачувати BMP/GIF/JPEG/PNG/TIFF/WebP слику." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Спречи чувар екрана током анимације" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Насумична боја живих ћелија при сваком поновном покретању сцене"
@@ -12463,7 +12506,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"анимација у фокусу, Размак мења паузу, F9: Покрени снимање; F10: Заустави снимање. Показивач "
             L"нестаје после 1 секунде мировања и враћа се померањем. Tab/Shift+Tab прелази између "
             L"контрола; Alt активира подвучене наредбе. Esc затвара Помоћ/О програму или излази из главног "
-            L"прозора.\r\n\r\nСНИМАК СЛИКЕ И УПРАВЉАЊЕ ЧУВАРОМ У EXE\r\nСнимак слике чува PNG монитора "
+            L"прозора.\r\n\r\nСНИМАК СЛИКЕ И УПРАВЉАЊЕ ЧУВАРОМ У EXE\r\nСнимак слике чува "
+            L"BMP/GIF/JPEG/PNG/TIFF/WebP монитора "
             L"који се снима, иначе првог активног, у његовој резолуцији без поновног покретања сцене. "
             L"Предлаже фасциклу Слике, иначе Документи. Блокирање чувара током анимације спречава његово "
             L"покретање док је анимација видљива и није паузирана. Нулта брзина није пауза. Инсталација из "
@@ -12676,9 +12720,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Заставка Windows…" },
         LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Не вдалося відкрити параметри заставки Windows." },
         LocalizedText{ TXT_RESET_SETTINGS, L"Скинути значення" },
-        LocalizedText{ TXT_SNAPSHOT, L"Зберегти PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Зображення PNG збережено." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Не вдалося зберегти зображення PNG." },
+        LocalizedText{ TXT_SNAPSHOT, L"Знімок…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Зображення BMP/GIF/JPEG/PNG/TIFF/WebP збережено." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Не вдалося зберегти зображення BMP/GIF/JPEG/PNG/TIFF/WebP." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Блокувати заставку під час анімації" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Випадковий колір живих клітин під час кожного перезапуску сцени"
@@ -12825,7 +12869,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"перемикає паузу, F9: Почати запис; F10: Зупинити запис. Курсор зникає після 1 секунди "
             L"бездіяльності й повертається при русі. Tab/Shift+Tab переходить між елементами, Alt запускає "
             L"підкреслені команди. Esc закриває Довідку/Про програму або завершує програму в головному "
-            L"вікні.\r\n\r\nЗНІМОК І КЕРУВАННЯ ЗАСТАВКОЮ В EXE\r\nЗнімок зберігає PNG монітора, що "
+            L"вікні.\r\n\r\nЗНІМОК І КЕРУВАННЯ ЗАСТАВКОЮ В EXE\r\nЗнімок зберігає BMP/GIF/JPEG/PNG/TIFF/WebP "
+            L"монітора, що "
             L"записується, інакше першого активного, з його роздільністю без перезапуску сцени. "
             L"Пропонується папка Зображення, інакше Документи. Блокування заставки під час анімації "
             L"запобігає її запуску, поки анімація видима й не призупинена. Нульова швидкість не є паузою. "
@@ -13033,9 +13078,9 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
         LocalizedText{ TXT_SYSTEM_SCREEN_SAVER, L"Заставка Windows…" },
         LocalizedText{ TXT_SYSTEM_SCREEN_SAVER_FAILED, L"Не удалось открыть параметры заставки Windows." },
         LocalizedText{ TXT_RESET_SETTINGS, L"Сбросить значения" },
-        LocalizedText{ TXT_SNAPSHOT, L"Сохранить PNG…" },
-        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Изображение PNG сохранено." },
-        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Не удалось сохранить изображение PNG." },
+        LocalizedText{ TXT_SNAPSHOT, L"Снимок…" },
+        LocalizedText{ TXT_SNAPSHOT_SAVED, L"Изображение BMP/GIF/JPEG/PNG/TIFF/WebP сохранено." },
+        LocalizedText{ TXT_SNAPSHOT_FAILED, L"Не удалось сохранить изображение BMP/GIF/JPEG/PNG/TIFF/WebP." },
         LocalizedText{ TXT_PREVENT_SCREEN_SAVER, L"Блокировать заставку во время анимации" },
         LocalizedText{ TXT_RANDOM_ALIVE_COLOR,
             L"Случайный цвет живых клеток при каждом перезапуске сцены"
@@ -13183,7 +13228,8 @@ constexpr std::initializer_list<LocalizedLanguage> languageDefinitions{
             L"запись. Курсор исчезает после 1 секунды бездействия и возвращается при движении. "
             L"Tab/Shift+Tab перемещается между элементами, Alt запускает подчёркнутые команды. Esc "
             L"закрывает Справку/О программе или завершает приложение в главном окне.\r\n\r\nСНИМОК И "
-            L"УПРАВЛЕНИЕ ЗАСТАВКОЙ В EXE\r\nСнимок сохраняет PNG записываемого монитора, иначе первого "
+            L"УПРАВЛЕНИЕ ЗАСТАВКОЙ В EXE\r\nСнимок сохраняет BMP/GIF/JPEG/PNG/TIFF/WebP записываемого "
+            L"монитора, иначе первого "
             L"активного, в его разрешении без перезапуска сцены. Предлагается папка Изображения, иначе "
             L"Документы. Блокировка заставки во время анимации предотвращает её запуск, пока анимация "
             L"видима и не приостановлена. Нулевая скорость не является паузой. Установка из EXE "

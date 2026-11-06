@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.1.0
  */
 
 #define NOMINMAX
@@ -1092,7 +1092,7 @@ static double CurrentRefreshRate(HWND window) {
             return frequency;
         }
     }
-    return 60.0;
+    return 120.0;
 }
 
 /// Acquires the standalone-instance mutex without waiting for another running instance.
@@ -1404,16 +1404,17 @@ static bool CheckSurfaceRecordingSupport(RenderSurface& surface, unsigned record
     return surface.renderer->CheckRecordingSupport(recordingRate, app->settings.recording);
 }
 
-/// Tests PNG capture support while holding the renderer lock, without retaining the lock during a dialog.
+/// Tests image capture support while holding the renderer lock, without retaining the lock during a dialog.
 static bool CheckSurfaceSnapshotSupport(RenderSurface& surface) {
     const std::lock_guard lock(surface.rendererMutex);
     return surface.renderer->CheckSnapshotSupport();
 }
 
 /// Saves one animation surface while holding its renderer lock.
-static bool SaveSurfaceSnapshot(RenderSurface& surface, const wchar_t* file) {
+static bool SaveSurfaceSnapshot(RenderSurface& surface, const wchar_t* file,
+        SnapshotFormat format = SnapshotFormat::Png) {
     const std::lock_guard lock(surface.rendererMutex);
-    return surface.renderer->SaveSnapshot(file);
+    return surface.renderer->SaveSnapshot(file, format);
 }
 
 /// Finalizes recording and reports encoder failures that occur before or during finalization.
@@ -1477,7 +1478,7 @@ static void StartRecording(HWND owner) {
     UpdateRecordingButton();
 }
 
-/// Prompts for a PNG path, reacquires the current output and reports the snapshot result.
+/// Prompts for an image path and format, reacquires the current output and reports the snapshot result.
 static void SaveSnapshot(HWND owner) {
     RenderSurface* surface = PrimarySurface();
     if (!app || app->mode != RunMode::Application || !surface || !surface->renderer) {
@@ -1491,24 +1492,22 @@ static void SaveSnapshot(HWND owner) {
     wchar_t file[MAX_PATH]{};
     wcscpy_s(file, TimestampedFileName(PNG_EXTENSION).c_str());
     const std::wstring initialDirectory = ExistingKnownFolder(CSIDL_MYPICTURES, CSIDL_PERSONAL);
-    OPENFILENAMEW dialog{};
-    dialog.lStructSize = sizeof(dialog);
-    dialog.hwndOwner = owner;
-    dialog.lpstrFilter = L"PNG (*.png)\0*.png\0\0";
-    dialog.lpstrFile = file;
-    dialog.nMaxFile = MAX_PATH;
-    dialog.lpstrDefExt = PNG_EXTENSION;
-    dialog.lpstrInitialDir = initialDirectory.empty() ? nullptr : initialDirectory.c_str();
-    dialog.Flags = OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST;
-    if (!GetSaveFileNameW(&dialog)) {
+    SnapshotFormat format = SnapshotFormat::Png;
+    const HRESULT selected = ImageExport::ChoosePath(owner,
+        initialDirectory.empty() ? nullptr : initialDirectory.c_str(), file, format);
+    if (selected == HRESULT_FROM_WIN32(ERROR_CANCELLED)) {
+        return;
+    }
+    if (FAILED(selected)) {
+        MessageBoxW(owner, GetLocalizedText(ActiveLanguage(), TXT_SNAPSHOT_FAILED), PRODUCT_NAME,
+            MB_OK | MB_ICONERROR);
         return;
     }
     surface = PrimarySurface();
     if (!surface || !surface->renderer || app->closing.load(std::memory_order_relaxed)) {
         return;
     }
-    const bool saved = SaveSurfaceSnapshot(*surface, file);
-    if (saved) {
+    if (SaveSurfaceSnapshot(*surface, file, format)) {
         ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_SNAPSHOT_SAVED));
     } else {
         ShowTransientStatus(GetLocalizedText(ActiveLanguage(), TXT_SNAPSHOT_FAILED));

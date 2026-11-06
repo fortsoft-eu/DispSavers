@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.1.0
  */
 
 #pragma once
 
 #include "Mp4Recorder.h"
+#include "ImageExport.h"
 #include <windows.h>
 #include <cstdint>
 #include <vector>
@@ -115,10 +116,10 @@ public:
     /// Returns the recorder's most recent HRESULT.
     HRESULT RecordingError() const;
 
-    /// Saves the current back buffer as a PNG image.
-    bool SaveSnapshot(const wchar_t* path) const;
+    /// Saves the current back buffer in the selected image format.
+    bool SaveSnapshot(const wchar_t* path, SnapshotFormat format = SnapshotFormat::Png) const;
 
-    /// Tests the complete PNG capture pipeline with the current scene and an in-memory stream.
+    /// Tests the complete image capture pipeline with the current scene and an in-memory stream.
     bool CheckSnapshotSupport() const;
 
     /// Returns the current render-target width.
