@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Last modified for version 1.3.0.0
+Last modified for version 1.3.1.1
 #>
 
 [CmdletBinding()]
@@ -53,7 +53,7 @@ $projects = @(
             (Join-Path $root "Release\FlyingSolids.exe"),
             (Join-Path $root "Release\FlyingSolids.scr")
         )
-        License = Join-Path $root "license.txt"
+        License = Join-Path $root "FlyingSolids\Release\license.utf8"
     }
     [PSCustomObject]@{
         Name    = "FlightCorridor"
@@ -61,7 +61,7 @@ $projects = @(
             (Join-Path $root "Release\FlightCorridor.exe"),
             (Join-Path $root "Release\FlightCorridor.scr")
         )
-        License = Join-Path $root "license.txt"
+        License = Join-Path $root "FlightCorridor\Release\license.utf8"
     }
     [PSCustomObject]@{
         Name    = "SpaceFlight"
@@ -69,7 +69,7 @@ $projects = @(
             (Join-Path $root "Release\SpaceFlight.exe"),
             (Join-Path $root "Release\SpaceFlight.scr")
         )
-        License = Join-Path $root "license.txt"
+        License = Join-Path $root "SpaceFlight\Release\license.utf8"
     }
     [PSCustomObject]@{
         Name    = "GameOfLife"
