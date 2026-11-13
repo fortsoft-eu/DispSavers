@@ -42,8 +42,6 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <OutDir>$(ProjectDir)..\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
     <TargetName>SpaceFlight</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>

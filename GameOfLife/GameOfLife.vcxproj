@@ -42,8 +42,6 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <OutDir>$(ProjectDir)..\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
     <SnapshotLicenseNotices>$(ProjectDir)LifePatternsLicense.txt</SnapshotLicenseNotices>
     <TargetName>GameOfLife</TargetName>
     <TargetExt>.exe</TargetExt>
