@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.1.0
+ * Last modified for version 1.3.2.0
  */
 
 #define NOMINMAX
@@ -48,6 +48,19 @@ using Microsoft::WRL::ComPtr;
 typedef SIZE_T(__cdecl* EncodeFunction)(const BYTE*, int, int, int, BYTE**);
 typedef void(__cdecl* FreeFunction)(void*);
 
+/// Maps one exact RGB color to its GIF palette index.
+struct GifColor {
+    DWORD color;
+    BYTE index;
+};
+
+/// Retains the heap-backed exact-color lookup table and the WIC palette entries.
+struct GifPalette {
+    GifColor* colors;
+    WICColor entries[256];
+    UINT count;
+};
+
 static const COMDLG_FILTERSPEC IMAGE_FILTERS[] = {
     { L"Windows Bitmap BMP (*.bmp)", L"*.bmp" },
     { L"CompuServe GIF 89a (*.gif)", L"*.gif" },
@@ -71,8 +84,8 @@ static constexpr wchar_t LIBRARY_NAME[] = L"libwebp.dll";
 
 /// Compares every cached byte with the validated bundled library before loading it.
 static bool CachedLibraryMatches(const wchar_t* path, const BYTE* bytes, DWORD size) {
-    HANDLE file = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_DELETE, nullptr,
-        OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    HANDLE file = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_DELETE,
+        nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (file == INVALID_HANDLE_VALUE) {
         return false;
     }
@@ -309,20 +322,144 @@ static bool CreateImageTemporary(const wchar_t* path, wchar_t* temporary) {
     return GetTempFileNameW(folder, L"DSI", 0, temporary) != 0;
 }
 
-/// Converts BGRA pixels to the selected native codec's pixel format, including a quantized GIF palette.
+/// Returns one RGB lookup key without including alpha or row padding.
+static DWORD ImagePixelColor(const BYTE* pixel) {
+    return pixel[0] | pixel[1] << 8 | pixel[2] << 16;
+}
+
+/// Builds the same exact GIF palette as the common writer and rejects images requiring quantization.
+static HRESULT BuildGifPalette(const BYTE* pixels, unsigned width, unsigned height, unsigned stride,
+        GifPalette& palette) {
+    for (unsigned y = 0; y < height; ++y) {
+        const BYTE* row = pixels + static_cast<SIZE_T>(y) * stride;
+        for (unsigned x = 0; x < width; ++x) {
+            DWORD color = ImagePixelColor(row + x * 4);
+            DWORD slot = color * 2654435761U >> 20;
+            while (palette.colors[slot].color && palette.colors[slot].color != color + 1) {
+                slot = slot + 1 & 4095;
+            }
+            if (!palette.colors[slot].color) {
+                if (palette.count == 256) {
+                    return WINCODEC_ERR_PALETTEUNAVAILABLE;
+                }
+                palette.colors[slot].color = color + 1;
+                palette.colors[slot].index = static_cast<BYTE>(palette.count);
+                palette.entries[palette.count++] = color | 0xFF000000;
+            }
+        }
+    }
+    return S_OK;
+}
+
+/// Resolves a previously validated exact GIF color without changing its palette.
+static BYTE GifPaletteIndex(const BYTE* pixel, const GifPalette& palette) {
+    DWORD color = ImagePixelColor(pixel);
+    DWORD slot = color * 2654435761U >> 20;
+    while (palette.colors[slot].color != color + 1) {
+        slot = slot + 1 & 4095;
+    }
+    return palette.colors[slot].index;
+}
+
+/// Detects meaningful alpha so opaque PNG and TIFF images can use the common writer's RGB output.
+static bool ImageHasAlpha(const BYTE* pixels, unsigned width, unsigned height, unsigned stride) {
+    for (unsigned y = 0; y < height; ++y) {
+        const BYTE* row = pixels + static_cast<SIZE_T>(y) * stride;
+        for (unsigned x = 0; x < width; ++x) {
+            if (row[x * 4 + 3] != 255) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+/// Streams native encoder scanlines with at most one row or 64 KiB of additional pixel storage.
+static HRESULT WriteWicPixels(IWICBitmapFrameEncode* frame, REFWICPixelFormatGUID format, unsigned width,
+        unsigned height, unsigned stride, const BYTE* pixels, const GifPalette& palette) {
+    bool indexed = format == GUID_WICPixelFormat8bppIndexed;
+    bool bgra = format == GUID_WICPixelFormat32bppBGRA;
+    bool rgba = format == GUID_WICPixelFormat32bppRGBA;
+    bool bgr = format == GUID_WICPixelFormat24bppBGR;
+    bool rgb = format == GUID_WICPixelFormat24bppRGB;
+    if (!indexed && !bgra && !rgba && !bgr && !rgb) {
+        return WINCODEC_ERR_UNSUPPORTEDPIXELFORMAT;
+    }
+    if (indexed && !palette.colors) {
+        return WINCODEC_ERR_PALETTEUNAVAILABLE;
+    }
+    unsigned bytesPerPixel = 3;
+    if (indexed) {
+        bytesPerPixel = 1;
+    } else if (bgra || rgba) {
+        bytesPerPixel = 4;
+    }
+    unsigned rowStride = bgra ? stride : width * bytesPerPixel;
+    unsigned batchHeight = std::min(height, std::max(1U, 65536U / rowStride));
+    BYTE* buffer = nullptr;
+    if (!bgra) {
+        buffer = static_cast<BYTE*>(HeapAlloc(GetProcessHeap(), 0,
+            static_cast<SIZE_T>(rowStride) * batchHeight));
+        if (!buffer) {
+            return E_OUTOFMEMORY;
+        }
+    }
+    HRESULT result = S_OK;
+    for (unsigned y = 0; y < height;) {
+        unsigned rows = std::min(batchHeight, height - y);
+        BYTE* output = bgra ? const_cast<BYTE*>(pixels + static_cast<SIZE_T>(y) * stride) : buffer;
+        if (!bgra) {
+            for (unsigned row = 0; row < rows; ++row) {
+                const BYTE* input = pixels + static_cast<SIZE_T>(y + row) * stride;
+                BYTE* destination = output + static_cast<SIZE_T>(row) * rowStride;
+                for (unsigned x = 0; x < width; ++x) {
+                    const BYTE* pixel = input + x * 4;
+                    if (indexed) {
+                        destination[x] = GifPaletteIndex(pixel, palette);
+                    } else {
+                        BYTE* encoded = destination + x * bytesPerPixel;
+                        encoded[0] = rgb || rgba ? pixel[2] : pixel[0];
+                        encoded[1] = pixel[1];
+                        encoded[2] = rgb || rgba ? pixel[0] : pixel[2];
+                        if (rgba) {
+                            encoded[3] = pixel[3];
+                        }
+                    }
+                }
+            }
+        }
+        result = frame->WritePixels(rows, rowStride, rows * rowStride, output);
+        if (FAILED(result)) {
+            break;
+        }
+        y += rows;
+    }
+    if (buffer) {
+        HeapFree(GetProcessHeap(), 0, buffer);
+    }
+    return result;
+}
+
+/// Encodes exact-color GIF or native RGB/BGRA scanlines without copying the complete image into WIC.
 static HRESULT EncodeWic(IWICImagingFactory* factory, IStream* stream, SnapshotFormat format, unsigned width,
         unsigned height, unsigned stride, const BYTE* pixels) {
-    ComPtr<IWICBitmap> bitmap;
+    GifPalette colors{};
+    HRESULT result = S_OK;
+    if (format == SnapshotFormat::Gif) {
+        colors.colors = static_cast<GifColor*>(HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY,
+            4096 * sizeof(GifColor)));
+        if (!colors.colors) {
+            return E_OUTOFMEMORY;
+        }
+        result = BuildGifPalette(pixels, width, height, stride, colors);
+    }
     ComPtr<IWICBitmapEncoder> encoder;
     ComPtr<IWICBitmapFrameEncode> frame;
     ComPtr<IPropertyBag2> properties;
-    ComPtr<IWICFormatConverter> converter;
     ComPtr<IWICPalette> palette;
-    HRESULT result = factory->CreateBitmapFromMemory(width, height, GUID_WICPixelFormat32bppBGRA,
-        stride, stride * height, const_cast<BYTE*>(pixels), &bitmap);
     if (SUCCEEDED(result)) {
-        result = factory->CreateEncoder(*IMAGE_CONTAINERS[static_cast<unsigned>(format) - 1], nullptr,
-            &encoder);
+        result = factory->CreateEncoder(*IMAGE_CONTAINERS[static_cast<unsigned>(format) - 1],
+            nullptr, &encoder);
     }
     if (SUCCEEDED(result)) {
         result = encoder->Initialize(stream, WICBitmapEncoderNoCache);
@@ -336,38 +473,50 @@ static HRESULT EncodeWic(IWICImagingFactory* factory, IStream* stream, SnapshotF
     if (SUCCEEDED(result)) {
         result = frame->SetSize(width, height);
     }
-    WICPixelFormatGUID target = GUID_WICPixelFormat32bppBGRA;
+    if (SUCCEEDED(result) && format != SnapshotFormat::Gif) {
+        result = frame->SetResolution(96, 96);
+    }
+    bool alpha = (format == SnapshotFormat::Png || format == SnapshotFormat::Tiff)
+        && ImageHasAlpha(pixels, width, height, stride);
+    WICPixelFormatGUID target = GUID_WICPixelFormat24bppBGR;
+    if (format == SnapshotFormat::Gif) {
+        target = GUID_WICPixelFormat8bppIndexed;
+    } else if (alpha) {
+        target = GUID_WICPixelFormat32bppBGRA;
+    }
     if (SUCCEEDED(result)) {
         result = frame->SetPixelFormat(&target);
     }
-    IWICBitmapSource* source = bitmap.Get();
-    if (SUCCEEDED(result) && target != GUID_WICPixelFormat32bppBGRA) {
-        if (target == GUID_WICPixelFormat8bppIndexed) {
+    if (SUCCEEDED(result)
+            && alpha
+            && target != GUID_WICPixelFormat32bppBGRA
+            && target != GUID_WICPixelFormat32bppRGBA) {
+        result = WINCODEC_ERR_UNSUPPORTEDPIXELFORMAT;
+    }
+    if (SUCCEEDED(result) && format == SnapshotFormat::Gif) {
+        if (target != GUID_WICPixelFormat8bppIndexed) {
+            result = WINCODEC_ERR_UNSUPPORTEDPIXELFORMAT;
+        } else {
             result = factory->CreatePalette(&palette);
-            if (SUCCEEDED(result)) {
-                result = palette->InitializeFromBitmap(bitmap.Get(), 256, FALSE);
-            }
-            if (SUCCEEDED(result)) {
-                result = frame->SetPalette(palette.Get());
-            }
         }
         if (SUCCEEDED(result)) {
-            result = factory->CreateFormatConverter(&converter);
+            result = palette->InitializeCustom(colors.entries, colors.count);
         }
         if (SUCCEEDED(result)) {
-            result = converter->Initialize(bitmap.Get(), target, WICBitmapDitherTypeErrorDiffusion,
-                palette.Get(), 0.0, WICBitmapPaletteTypeCustom);
+            result = frame->SetPalette(palette.Get());
         }
-        source = converter.Get();
     }
     if (SUCCEEDED(result)) {
-        result = frame->WriteSource(source, nullptr);
+        result = WriteWicPixels(frame.Get(), target, width, height, stride, pixels, colors);
     }
     if (SUCCEEDED(result)) {
         result = frame->Commit();
     }
     if (SUCCEEDED(result)) {
         result = encoder->Commit();
+    }
+    if (colors.colors) {
+        HeapFree(GetProcessHeap(), 0, colors.colors);
     }
     return result;
 }
