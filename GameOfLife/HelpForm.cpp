@@ -21,15 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.2.2
  */
 
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include "HelpForm.h"
-#include "AppSettings.h"
-#include "main.h"
-#include "ProgramIcons.h"
+#include APPLICATION_HEADER
 #include "resource.h"
 #include "SelectionEdit.h"
 #include "SystemDialogTemplate.h"
@@ -45,7 +43,11 @@ HWND HelpForm::GetWindow() const {
 /// Destroys this form and releases its controls and owned fonts.
 void HelpForm::Close() const {
     if (window != nullptr) {
-        DestroyWindow(window);
+        if (modal) {
+            EndDialog(window, IDCANCEL);
+        } else {
+            DestroyWindow(window);
+        }
     }
 }
 
@@ -58,9 +60,8 @@ void HelpForm::Refresh(AppLanguage selectedLanguage, bool applicationMode) {
     appMode = applicationMode;
     std::wstring title = std::wstring(PRODUCT_NAME) + L" — " + GetLocalizedText(language, TXT_HELP);
     SetWindowTextW(window, title.c_str());
-    const wchar_t* helpText =
-        GetLocalizedText(language, appMode ? TXT_APPLICATION_HELP : TXT_SCREEN_SAVER_HELP);
-    SetDlgItemTextW(window, ID_INFO_TEXT, helpText);
+    std::wstring helpText = InformationHelpText(language, appMode);
+    SetDlgItemTextW(window, ID_INFO_TEXT, helpText.c_str());
     SetDlgItemTextW(window, ID_INFO_CLOSE, Mnemonic(language, TXT_CLOSE).c_str());
     Layout();
 }
@@ -94,7 +95,7 @@ bool HelpForm::ApplyStyle(bool updateFont) {
     if (previousFont != nullptr) {
         DeleteObject(previousFont);
     }
-    programIcons->Apply(window);
+    ApplyInformationFormIcons(window, instance);
     Layout();
     RedrawWindow(window, nullptr, nullptr, RDW_INVALIDATE | RDW_ERASE | RDW_FRAME | RDW_ALLCHILDREN);
     return true;
@@ -109,7 +110,7 @@ void HelpForm::Layout() const {
     GetClientRect(window, &client);
     SIZE margin = InformationDialogUnits(uiFont, 8, 8);
     SIZE gap = InformationDialogUnits(uiFont, 4, 6);
-    SIZE button = InformationButtonSize(window, uiFont);
+    SIZE button = InformationButtonSize(window, uiFont, IDD_HELP);
     int textTop = margin.cy;
     int buttonY = client.bottom - margin.cy - button.cy;
     PlaceInformationControl(window, ID_INFO_CLOSE, client.right - margin.cx - button.cx, buttonY,
@@ -136,7 +137,7 @@ INT_PTR HelpForm::HandleMessage(UINT message, WPARAM wParam, LPARAM lParam) {
     }
     if (message == WM_CLOSE
             || message == WM_COMMAND && (LOWORD(wParam) == ID_INFO_CLOSE || LOWORD(wParam) == IDCANCEL)) {
-        DestroyWindow(window);
+        Close();
         return TRUE;
     }
     if (message == WM_SIZE) {
@@ -175,7 +176,7 @@ void HelpForm::StateSaved(PersistWindowState* sender, const PersistWindowStateEv
         return;
     }
     form->settings->helpWindowState = sender->GetState();
-    form->settings->SaveWindowPositions();
+    SaveInformationWindowPositions(*form->settings);
 }
 
 /// Associates the native dialog with its form object and dispatches only this form's messages.
@@ -184,58 +185,37 @@ INT_PTR CALLBACK HelpForm::DialogProc(HWND dialog, UINT message, WPARAM wParam, 
         HelpForm* form = reinterpret_cast<HelpForm*>(lParam);
         form->window = dialog;
         SetWindowLongPtrW(dialog, DWLP_USER, reinterpret_cast<LONG_PTR>(form));
+        if (!form->Initialize()) {
+            form->Close();
+        }
         return FALSE;
     }
     HelpForm* form = reinterpret_cast<HelpForm*>(GetWindowLongPtrW(dialog, DWLP_USER));
     return form == nullptr ? FALSE : form->HandleMessage(message, wParam, lParam);
 }
 
-/// Creates or activates this form with its own template, state, controls and saved placement.
-void HelpForm::Show(HWND owner, HINSTANCE module, AppSettings& preferences, const ProgramIcons& icons,
-        PersistWindowState& state, AppLanguage selectedLanguage, bool applicationMode) {
-    instance = module;
-    placement = &state;
-    if (window != nullptr && IsWindow(window)) {
-        placement->BringToFront();
-        return;
-    }
-    settings = &preferences;
-    programIcons = &icons;
-    language = selectedLanguage;
-    appMode = applicationMode;
-    initialized = false;
-    placement->SetSavingOptions(PersistWindowStateSavingOptions::None);
-    placement->SetDetectionOptions(WindowDetectionOptions::NoDetection);
-    placement->SetUseWindowsDefaultLocation(false);
-    placement->SetUseWindowsDefaultSize(false);
-    placement->Load(settings->helpWindowState);
-    UINT resource = IDD_HELP;
-    DLGTEMPLATE* definition = LoadSystemDialogTemplate(instance, resource, nullptr);
-    if (definition == nullptr) {
-        return;
-    }
-    window = CreateDialogIndirectParamW(instance, definition, nullptr, DialogProc,
-        reinterpret_cast<LPARAM>(this));
-    HeapFree(GetProcessHeap(), 0, definition);
-    if (window == nullptr) {
-        return;
+/// Initializes the same native Help controls and placement for either creation mode.
+bool HelpForm::Initialize() {
+    if (modal) {
+        LONG_PTR extended = GetWindowLongPtrW(window, GWL_EXSTYLE);
+        SetWindowLongPtrW(window, GWL_EXSTYLE, extended & ~WS_EX_APPWINDOW | WS_EX_DLGMODALFRAME);
+        SetWindowPos(window, nullptr, 0, 0, 0, 0,
+            SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
     }
     uiFont = reinterpret_cast<HFONT>(SendMessageW(window, WM_GETFONT, 0, 0));
     initialized = true;
     if (!InstallSelectionEditHandler(GetDlgItem(window, ID_INFO_TEXT))
             || !ApplyStyle(false)) {
-        DestroyWindow(window);
-        return;
+        return false;
     }
     SetWindowTheme(window, nullptr, nullptr);
     SendDlgItemMessageW(window, ID_INFO_TEXT, EM_SETLIMITTEXT, 0x7FFFFFFE, 0);
     HWND text = GetDlgItem(window, ID_INFO_TEXT);
     SendMessageW(text, EM_SETWORDBREAKPROC, 0, reinterpret_cast<LPARAM>(InformationWordBreakProc));
     if (!SetWindowSubclass(text, InformationTextSubclassProc, INFORMATION_TEXT_SUBCLASS_ID, 0)) {
-        DestroyWindow(window);
-        return;
+        return false;
     }
-    RefreshInformationWindows(owner);
+    RefreshInformationWindows(ownerWindow);
     SendMessageW(text, EM_SETSEL, 0, 0);
     placement->SetDisableSaveSize(false);
     placement->SetDisableSaveWindowState(false);
@@ -244,11 +224,46 @@ void HelpForm::Show(HWND owner, HINSTANCE module, AppSettings& preferences, cons
     bool defaultPosition = saved.x == CW_USEDEFAULT || saved.y == CW_USEDEFAULT;
     if (defaultPosition && !PositionInformationWindowByWindowsDefault(window)
             || !placement->Attach(window, "Help")) {
-        DestroyWindow(window);
-        return;
+        return false;
     }
     Layout();
-    UpdateInformationWindowsTopmost(owner);
+    UpdateInformationWindowsTopmost(ownerWindow);
     SetFocus(GetDlgItem(window, ID_INFO_CLOSE));
-    placement->Show();
+    if (!modal) {
+        placement->Show();
+    }
+    return true;
+}
+
+/// Creates or activates the shared Help form, optionally using the native modal dialog loop.
+void HelpForm::Show(HWND owner, HINSTANCE module, AppSettings& preferences, PersistWindowState& state,
+        AppLanguage selectedLanguage, bool applicationMode, bool modalDialog) {
+    if (window != nullptr && IsWindow(window)) {
+        placement->BringToFront();
+        return;
+    }
+    instance = module;
+    ownerWindow = owner;
+    placement = &state;
+    settings = &preferences;
+    language = selectedLanguage;
+    appMode = applicationMode;
+    modal = modalDialog;
+    initialized = false;
+    placement->SetSavingOptions(PersistWindowStateSavingOptions::None);
+    placement->SetDetectionOptions(WindowDetectionOptions::NoDetection);
+    placement->SetUseWindowsDefaultLocation(false);
+    placement->SetUseWindowsDefaultSize(false);
+    placement->Load(settings->helpWindowState);
+    DLGTEMPLATE* definition = LoadSystemDialogTemplate(instance, IDD_HELP, nullptr);
+    if (definition == nullptr) {
+        return;
+    }
+    if (modal) {
+        ShowModalInformationForm(instance, definition, ownerWindow, DialogProc,
+            reinterpret_cast<LPARAM>(this));
+    } else {
+        CreateDialogIndirectParamW(instance, definition, nullptr, DialogProc, reinterpret_cast<LPARAM>(this));
+    }
+    HeapFree(GetProcessHeap(), 0, definition);
 }

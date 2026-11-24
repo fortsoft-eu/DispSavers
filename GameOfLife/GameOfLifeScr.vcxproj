@@ -48,13 +48,14 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
+      <PreprocessorDefinitions>APPLICATION_HEADER=&quot;AppSettings.h&quot;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(ProjectDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Usp10.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Usp10.lib;Windowscodecs.lib;Winspool.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -97,6 +98,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FindForm.cpp" />
+    <ClCompile Include="PrintSettings.cpp" />
+    <ClCompile Include="ModernPrintDialog.cpp">
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <DisableSpecificWarnings>4291</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="ImageExport.cpp" />
     <ClCompile Include="AboutForm.cpp" />
     <ClCompile Include="HelpForm.cpp" />
@@ -121,6 +128,9 @@
     <ClCompile Include="WindowRedrawScope.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FindForm.h" />
+    <ClInclude Include="PrintSettings.h" />
+    <ClInclude Include="ModernPrintDialog.h" />
     <ClInclude Include="ImageExport.h" />
     <ClInclude Include="AboutForm.h" />
     <ClInclude Include="HelpForm.h" />
@@ -175,6 +185,7 @@ if errorlevel 1 exit /b %errorlevel%</Command>
   <ItemGroup>
     <None Include="prepare.ps1" />
     <None Include="ResourcePacker.cs" />
+    <None Include="ResourceIcons.cs" />
     <None Include="..\license.txt" />
     <None Include="LifePatternsLicense.txt" />
   </ItemGroup>

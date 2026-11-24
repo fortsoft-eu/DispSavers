@@ -21,56 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.2.2
  */
 
 #pragma once
 
 #include <windows.h>
+#include <string>
 #include <vector>
 
-/// Owns the large and small application icons loaded from a Windows system library.
+/// Extracts the embedded icon library and owns all icons shared by application windows and controls.
 class ProgramIcons {
-    /// Large and small system icons cached for one window DPI.
-    struct IconPair {
-        UINT dpi;
-        HICON large;
-        HICON smallIcon;
+    struct IconEntry {
+        HICON icon;
+        int index;
+        int width;
+        int height;
     };
 
 public:
-    /// Creates an empty icon owner.
     ProgramIcons() = default;
-
-    /// Releases any loaded icons.
     ~ProgramIcons();
-
-    /// Prevents copying ownership of icon handles.
     ProgramIcons(const ProgramIcons&) = delete;
-
-    /// Prevents copying ownership of icon handles.
     ProgramIcons& operator=(const ProgramIcons&) = delete;
 
-    /// Loads the application icons from shell32.dll at index 34.
-    bool Load();
+    /// Validates and extracts the bundled DLL, reusing identical cached bytes and loaded icons.
+    HRESULT Initialize(HINSTANCE instance, const std::wstring& cacheRoot);
 
-    /// Loads an icon at the requested pixel size; the caller must release it with DestroyIcon.
-    HICON LoadSized(UINT size) const;
+    /// Returns a shared cached icon; this class retains ownership and callers must not destroy it.
+    HICON LoadIconAtIndex(int index, int width, int height) const;
 
-    /// Applies the cached large and small system icons selected for this window DPI.
-    void Apply(HWND window) const;
+    /// Applies shared small and large icons using native metrics for the target window's current DPI.
+    void Apply(HWND window, int iconIndex = 0) const;
 
-    /// Returns the large application icon, or null when loading has failed.
-    HICON Large() const;
-
-    /// Returns the small application icon, or null when loading has failed.
-    HICON Small() const;
+    /// Returns the extracted library's absolute path after successful initialization.
+    const std::wstring& GetPath() const;
 
 private:
-    /// Releases the currently owned icon handles.
-    void Reset();
+    std::wstring path;
+    mutable std::vector<IconEntry> icons;
 
-    HICON large = nullptr;
-    HICON smallIcon = nullptr;
-    mutable std::vector<IconPair> windowIcons;
+    void ClearIcons();
 };

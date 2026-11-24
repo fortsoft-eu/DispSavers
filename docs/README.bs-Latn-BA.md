@@ -100,6 +100,10 @@ Koristite FlightCorridor.scr kao Windows čuvar ekrana s odvojenim postavkama. P
 
 Windows 7–11 podržava sve funkcije. Za Windows Vista SP2 morate instalirati ažuriranja KB971512 i KB2117917; MP4 snimanje na Visti ne radi. Potreban je Direct3D 11, a za MP4 i Media Foundation te H.264 koder. Interfejs i dokumentacija dostupni su na 36 jezika. Samostalna aplikacija može raditi i na Linuxu putem Winea; integracija kao čuvar ekrana dostupna je samo na Windowsu.
 
+## Pretraga i štampanje
+
+Pomoć / O programu: Ctrl+F — Pronađi; F3 — Pronađi sljedeće; Shift+F3 — Pronađi prethodno; Ctrl+P — Štampaj.
+
 ## Prevođenje i pakovanje
 
 Otvorite DispSavers.slnx u Visual Studiju i prevedite Release | x86 pomoću MSVC v145 i Windows SDK-a. Na stranici Signing projekta postavite certifikat i obavezni RFC 3161 server vremenskog žiga; lične vrijednosti ostaju u ignorisanoj datoteci .vcxproj.user. Potpisani SCR s vremenskim žigom ugrađuje se u EXE, a zatim se potpisuje i EXE. PackageRelease.ps1 pravi zajedničku arhivu `DispSavers-<version>-win32.zip` bez izmjena binarnih datoteka u Release.

@@ -15,6 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FindForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PrintSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModernPrintDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ImageExport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -93,11 +102,23 @@
     <None Include="ResourcePacker.cs">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="ResourceIcons.cs">
+      <Filter>Source Files</Filter>
+    </None>
     <None Include="..\license.txt">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="FindForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PrintSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModernPrintDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ImageExport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

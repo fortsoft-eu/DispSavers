@@ -100,6 +100,10 @@ A FlightCorridor.scr Windows-képernyőkímélőként használható, az alkalmaz
 
 A Windows 7–11 minden funkciót támogat. Windows Vista SP2 alatt telepíteni kell a KB971512 és KB2117917 frissítést; az MP4-felvétel Vistán nem működik. Direct3D 11 támogatás szükséges, az MP4-hez Media Foundation és H.264-kódoló is kell. A kezelőfelület és a dokumentáció 36 nyelven érhető el. Az önálló alkalmazás Linuxon is futhat a Wine segítségével; a képernyőkímélőként való integráció csak Windows alatt érhető el.
 
+## Keresés és nyomtatás
+
+Súgó / Névjegy: Ctrl+F — Keresés; F3 — Következő keresése; Shift+F3 — Előző keresése; Ctrl+P — Nyomtatás.
+
 ## Fordítás és csomagolás
 
 Nyissa meg a DispSavers.slnx fájlt Visual Studióban, és fordítsa a Release | x86 konfigurációt MSVC v145 és Windows SDK használatával. A Signing oldalon adja meg a tanúsítványt és a kötelező RFC 3161 időbélyeg-kiszolgálót; a személyes adatok az ignorált .vcxproj.user fájlban maradnak. Az aláírt, időbélyegzett SCR az EXE-be kerül, majd az EXE is aláírást kap. A PackageRelease.ps1 közös `DispSavers-<version>-win32.zip` csomagot készít a Release binárisainak módosítása nélkül.

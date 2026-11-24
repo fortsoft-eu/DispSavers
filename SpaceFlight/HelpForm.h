@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.2.2
  */
 
 #pragma once
@@ -31,19 +31,17 @@
 #include <string>
 
 struct AppSettings;
-class ProgramIcons;
 
 /// Manages the resizable Help dialog, its controls and fonts, and its saved placement.
 class HelpForm {
 
 public:
-
     /// Returns this form's native window, or null while it is closed.
     HWND GetWindow() const;
 
-    /// Creates or activates this form with its own template, state, controls and saved placement.
-    void Show(HWND owner, HINSTANCE module, AppSettings& preferences, const ProgramIcons& icons,
-        PersistWindowState& state, AppLanguage selectedLanguage, bool applicationMode);
+    /// Creates or activates the shared Help form, optionally using the native modal dialog loop.
+    void Show(HWND owner, HINSTANCE module, AppSettings& preferences, PersistWindowState& state,
+        AppLanguage selectedLanguage, bool applicationMode, bool modalDialog = false);
 
     /// Updates this form's localized captions and content without changing the other form.
     void Refresh(AppLanguage selectedLanguage, bool applicationMode);
@@ -56,15 +54,19 @@ public:
 
 private:
     HWND window = nullptr;
+    HWND ownerWindow = nullptr;
     HFONT uiFont = nullptr;
     HINSTANCE instance = nullptr;
     AppSettings* settings = nullptr;
-    const ProgramIcons* programIcons = nullptr;
     PersistWindowState* placement = nullptr;
     AppLanguage language = LANG_EN_US;
     bool appMode = false;
     bool ownsFont = false;
     bool initialized = false;
+    bool modal = false;
+
+    /// Initializes native controls and placement for either creation mode.
+    bool Initialize();
 
     /// Anchors the Help edit and Close button to the current client area.
     void Layout() const;

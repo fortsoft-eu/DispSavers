@@ -100,6 +100,10 @@ Folosiți FlightCorridor.scr drept economizor de ecran Windows, cu setări separ
 
 Windows 7–11 acceptă toate funcțiile. Pentru Windows Vista SP2 trebuie instalate actualizările KB971512 și KB2117917; înregistrarea MP4 nu funcționează pe Vista. Este necesar Direct3D 11, iar pentru MP4 și Media Foundation și un codificator H.264. Interfața și documentația sunt disponibile în 36 de limbi. Aplicația independentă poate rula și pe Linux prin Wine; integrarea ca economizor de ecran este disponibilă numai pe Windows.
 
+## Căutare și imprimare
+
+Ajutor / Despre: Ctrl+F — Căutare; F3 — Găsește următorul; Shift+F3 — Găsește precedentul; Ctrl+P — Imprimare.
+
 ## Compilare și împachetare
 
 Deschideți DispSavers.slnx în Visual Studio și compilați Release | x86 cu MSVC v145 și Windows SDK. În pagina Signing a proiectului configurați certificatul și serverul obligatoriu de marcă temporală RFC 3161; datele personale rămân în fișierul ignorat .vcxproj.user. SCR semnat și marcat temporal este încorporat în EXE, apoi este semnat și EXE. PackageRelease.ps1 creează arhiva comună `DispSavers-<version>-win32.zip` fără a modifica fișierele binare din Release.

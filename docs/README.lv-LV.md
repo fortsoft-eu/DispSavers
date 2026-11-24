@@ -100,6 +100,10 @@ Izmantojiet FlightCorridor.scr kā Windows ekrānsaudzētāju. Tā iestatījumi 
 
 Windows 7–11 atbalsta visas funkcijas. Windows Vista SP2 jāinstalē atjauninājumi KB971512 un KB2117917; MP4 ierakstīšana Vistā nedarbojas. Nepieciešams Direct3D 11 atbalsts, bet MP4 vajadzīgi Media Foundation un H.264 kodētājs. Saskarne un dokumentācija ir pieejama 36 valodās. Atsevišķā lietotne var darboties arī Linux vidē, izmantojot Wine; ekrānsaudzētāja integrācija ir pieejama tikai Windows vidē.
 
+## Meklēšana un drukāšana
+
+Palīdzība / Par programmu: Ctrl+F — Atrast; F3 — Atrast nākamo; Shift+F3 — Atrast iepriekšējo; Ctrl+P — Drukāt.
+
 ## Būvēšana un pakošana
 
 Atveriet DispSavers.slnx programmā Visual Studio un būvējiet Release | x86 ar MSVC v145 un Windows SDK. Projekta Signing lapā norādiet sertifikātu un obligāto RFC 3161 laika zīmoga serveri; personīgās vērtības paliek ignorētajā .vcxproj.user failā. Parakstītais SCR ar laika zīmogu tiek ievietots EXE, pēc tam paraksta arī EXE. PackageRelease.ps1 izveido kopīgu `DispSavers-<version>-win32.zip` arhīvu, nemainot Release bināros failus.

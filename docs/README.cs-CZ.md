@@ -100,6 +100,10 @@ Zapnout náhled spustí celoobrazovkový náhled na všech monitorech; změny lz
 
 Windows 7 až Windows 11 podporují všechny funkce včetně snímků BMP/GIF/JPEG/PNG/TIFF/WebP a záznamu MP4. Pro spuštění aplikace ve Windows Vista SP2 je nutné nainstalovat aktualizace KB971512 a KB2117917. Záznam MP4 na Vistě v současné verzi nefunguje. Vykreslování vyžaduje Direct3D 11, nikoli jen starší DirectX runtime. Záznam MP4 vyžaduje dostupné součásti Media Foundation a kodér H.264. Samostatná aplikace může běžet také na Linuxu prostřednictvím Wine; integrace spořiče obrazovky je dostupná pouze ve Windows.
 
+## Hledání a tisk
+
+Nápověda / O programu: Ctrl+F — Najít; F3 — Najít další; Shift+F3 — Najít předchozí; Ctrl+P — Tisk.
+
 ## Sestavení a balíček
 
 Otevřete `DispSavers.slnx` ve Visual Studiu s nástroji MSVC v145 a Windows SDK. Zvolte `Release | x86` a znovu sestavte celé řešení; vzniknou `Release\FlyingSolids.exe`, `Release\FlyingSolids.scr`, `Release\FlightCorridor.exe`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.exe`, `Release\SpaceFlight.scr`, `Release\GameOfLife.exe` a `Release\GameOfLife.scr`. Konfigurace x64 není k dispozici.

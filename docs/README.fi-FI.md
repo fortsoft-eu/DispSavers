@@ -100,6 +100,10 @@ Ota esikatselu käyttöön käynnistää koko näytön esikatselun kaikilla näy
 
 Windows 7–Windows 11 tukevat kaikkia toimintoja, myös BMP/GIF/JPEG/PNG/TIFF/WebP-tilannekuvia ja MP4-tallennusta. Sovelluksen suorittaminen Windows Vista SP2:ssa edellyttää päivitysten KB971512 ja KB2117917 asentamista. MP4-tallennus ei toimi Vistassa nykyisessä versiossa. Näyttäminen vaatii Direct3D 11:n, ei pelkästään vanhempaa DirectX-ajoympäristöä. MP4-tallennus vaatii käytettävissä olevat Media Foundation -komponentit ja H.264-enkooderin. Itsenäinen sovellus voi toimia myös Linuxissa Winen kautta; näytönsäästäjäintegraatio on käytettävissä vain Windowsissa.
 
+## Haku ja tulostus
+
+Ohje / Tietoja: Ctrl+F — Etsi; F3 — Etsi seuraava; Shift+F3 — Etsi edellinen; Ctrl+P — Tulosta.
+
 ## Koonti
 
 Avaa `DispSavers.slnx` Visual Studiossa käyttäen MSVC v145:tä ja Windows SDK:ta. Valitse `Release | x86` ja kokoa ratkaisu uudelleen, jolloin syntyvät `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` ja `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. x64-kokoonpanoa ei ole.

@@ -100,9 +100,15 @@ Enable preview starts a full-screen preview on every display while the settings 
 
 Windows 7 through Windows 11 support all features, including BMP/GIF/JPEG/PNG/TIFF/WebP snapshots and MP4 recording. To run the application on Windows Vista SP2, you must install updates KB971512 and KB2117917. MP4 recording does not work on Vista in the current version. Rendering requires Direct3D 11, not just an older DirectX runtime. MP4 recording requires available Media Foundation components and an H.264 encoder. The standalone application can also run on Linux through Wine; screen saver integration is available only on Windows.
 
+## Search and printing
+
+Help and About support Find (Ctrl+F), Find Next (F3), Find Previous (Shift+F3), Page Setup, and Print (Ctrl+P). Right-click the text for these commands. Search supports case sensitivity, backward searching, whole words, line starts or ends, regular expressions, and a history of the 30 most recent searches in the current session.
+
 ## Building and packaging
 
 Open `DispSavers.slnx` in Visual Studio with MSVC v145 and a Windows SDK. Select `Release | x86` and rebuild the solution to produce `Release\FlyingSolids.exe`, `Release\FlyingSolids.scr`, `Release\FlightCorridor.exe`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.exe`, `Release\SpaceFlight.scr`, `Release\GameOfLife.exe`, and `Release\GameOfLife.scr`. No x64 configuration is provided.
+
+The build extracts the application icon from index 0 of `Common\Resources.dll` and embeds only that icon as an icon resource. The complete DLL is compressed and embedded as data in each EXE and SCR. At startup, the shared resource-library component extracts it to `%LOCALAPPDATA%\FortSoft\DispSavers\Resources.dll`. All four screen savers share this single DLL and library version. All application and About icons use index 0; Find uses index 1. Identical cached DLLs are reused. `ProgramIcons` owns and reuses all loaded icon handles by index and native dimensions, releasing them automatically. Forms and controls borrow these handles.
 
 Package these build outputs by running `PackageRelease.ps1` without signing parameters. The script uses temporary copies, leaves files in `Release` unchanged, and only verifies existing valid signatures. It creates the single `DispSavers-<version>-win32.zip` archive containing `FlyingSolids\FlyingSolids.exe`, `FlyingSolids\FlyingSolids.scr`, `FlyingSolids\license.txt`, `FlightCorridor\FlightCorridor.exe`, `FlightCorridor\FlightCorridor.scr`, `FlightCorridor\license.txt`, `SpaceFlight\SpaceFlight.exe`, `SpaceFlight\SpaceFlight.scr`, `SpaceFlight\license.txt`, `GameOfLife\GameOfLife.exe`, `GameOfLife\GameOfLife.scr`, and `GameOfLife\license.txt`. The previous ZIP is removed at the start of a run; verification failure prevents creation of a new archive.
 

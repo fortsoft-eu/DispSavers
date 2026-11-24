@@ -100,6 +100,10 @@ Enable preview starts a full-screen preview on every display and allows live adj
 
 Windows 7 through Windows 11 support all features, including BMP/GIF/JPEG/PNG/TIFF/WebP snapshots and MP4 recording. To run the application on Windows Vista SP2, you must install updates KB971512 and KB2117917. MP4 recording does not work on Vista in the current version. Rendering requires Direct3D 11, not just an older DirectX runtime. MP4 recording requires available Media Foundation components and an H.264 encoder. The standalone application can also run on Linux through Wine; screen saver integration is available only on Windows.
 
+## Search and printing
+
+Help / About: Ctrl+F — Find; F3 — Find Next; Shift+F3 — Find Previous; Ctrl+P — Print.
+
 ## Building and packaging
 
 Open `DispSavers.slnx` in Visual Studio with MSVC v145 and a Windows SDK. Select `Release | x86` and rebuild the solution to produce `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` and `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. No x64 configuration is provided.

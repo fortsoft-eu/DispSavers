@@ -100,6 +100,10 @@ Włącz podgląd uruchamia podgląd pełnoekranowy na wszystkich monitorach. Okn
 
 Systemy od Windows 7 do Windows 11 obsługują wszystkie funkcje, w tym zrzuty BMP/GIF/JPEG/PNG/TIFF/WebP i nagrywanie MP4. Do uruchomienia aplikacji w systemie Windows Vista SP2 konieczne jest zainstalowanie aktualizacji KB971512 i KB2117917. Nagrywanie MP4 nie działa w Vista w obecnej wersji. Wyświetlanie wymaga Direct3D 11, a nie tylko starszego środowiska DirectX. Nagrywanie MP4 wymaga dostępnych składników Media Foundation i kodera H.264. Samodzielna aplikacja może również działać w systemie Linux za pośrednictwem Wine; integracja jako wygaszacz ekranu jest dostępna tylko w systemie Windows.
 
+## Wyszukiwanie i drukowanie
+
+Pomoc / O programie: Ctrl+F — Znajdź; F3 — Znajdź następny; Shift+F3 — Znajdź poprzedni; Ctrl+P — Drukuj.
+
 ## Kompilowanie
 
 Otwórz `DispSavers.slnx` w Visual Studio z MSVC v145 i Windows SDK. Wybierz `Release | x86` i przebuduj rozwiązanie, aby utworzyć `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` oraz `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. Konfiguracja x64 nie jest dostępna.

@@ -100,6 +100,10 @@ Anlık görüntüler ve kayıtlar, tüm monitörlerin birleşik görüntüsünü
 
 Windows 7 ile Windows 11 arasındaki sürümler, BMP/GIF/JPEG/PNG/TIFF/WebP anlık görüntüler ve MP4 kaydı dâhil tüm özellikleri destekler. Uygulamayı Windows Vista SP2'de çalıştırmak için KB971512 ve KB2117917 güncellemelerini yüklemeniz gerekir. Geçerli sürümde MP4 kaydı Vista'da çalışmaz. Görüntüleme, yalnızca eski bir DirectX çalışma zamanı değil, Direct3D 11 gerektirir. MP4 kaydı, kullanılabilir Media Foundation bileşenleri ve bir H.264 kodlayıcı gerektirir. Bağımsız uygulama Wine aracılığıyla Linux üzerinde de çalışabilir; ekran koruyucu bütünleştirmesi yalnızca Windows’ta kullanılabilir.
 
+## Arama ve yazdırma
+
+Yardım / Hakkında: Ctrl+F — Bul; F3 — Sonrakini bul; Shift+F3 — Öncekini bul; Ctrl+P — Yazdır.
+
 ## Derleme
 
 `DispSavers.slnx` dosyasını MSVC v145 ve Windows SDK bulunan Visual Studio’da açın. `Release | x86` seçin ve çözümü yeniden derleyerek `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` ve `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr` dosyalarını oluşturun. x64 yapılandırması yoktur.

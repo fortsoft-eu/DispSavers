@@ -5,6 +5,8 @@
 #define IDR_EMBEDDED_SCREEN_SAVER            203
 #define IDR_LICENSE                          204
 #define IDR_LIBRARY_WEBP                     213
+#define IDR_IMAGE_LIBRARY                    216
+#define IDI_APPLICATION_ICON                 201
 
 #define IDD_APPLICATION_SETTINGS             209
 #define IDD_SETTINGS_PANEL                   205
@@ -19,8 +21,6 @@
 #define SCREEN_SAVER_CONTENT_WIDTH_DLU       531
 #define SCREEN_SAVER_CONTENT_HEIGHT_DLU      230
 
-#define DIALOG_BUTTON_WIDTH_DLU              43
-#define DIALOG_BUTTON_HEIGHT_DLU             12
 #define ABOUT_LICENSE_WIDTH_96DPI            508
 #define ABOUT_LICENSE_HEIGHT_96DPI           267
 
@@ -67,6 +67,7 @@
 #define ID_STATUS_RESET_TIMER                1401
 #define ID_SCREEN_SAVER_CHECK_TIMER          1402
 #define ID_ANIMATION_CURSOR_TIMER            1403
+#define ID_RECORD_CHECK_TIMER                1405
 
 #define ID_INFO_TEXT                         1500
 #define ID_INFO_ICON                         1501
@@ -88,13 +89,32 @@
 #define ID_RECORD_RATE_LABEL                 1706
 #define ID_RECORD_NOTE                       1707
 
+#define IDD_FIND                             215
+#define IDC_FIND_LABEL                       1201
+#define IDC_FIND_TEXT                        1202
+#define IDC_FIND_MATCH_CASE                  1203
+#define IDC_FIND_BACKWARD                    1204
+#define IDC_FIND_WHOLE_WORDS                 1205
+#define IDC_FIND_STARTS_WITH                 1206
+#define IDC_FIND_ENDS_WITH                   1207
+#define IDC_FIND_REGEX                       1208
+#define IDC_FIND_GRIP                        1209
+#define ID_EDIT_COPY                         40020
+#define ID_EDIT_SELECT_ALL                   40021
+#define ID_EDIT_FIND                         40022
+#define ID_EDIT_FIND_NEXT                    40023
+#define ID_EDIT_FIND_PREVIOUS                40024
+#define ID_FILE_PRINT                        40025
+#define ID_FILE_PAGE_SETUP                   40026
+#define ID_HELP_CONTENTS                     40027
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE             214
-#define _APS_NEXT_COMMAND_VALUE              40001
-#define _APS_NEXT_CONTROL_VALUE              1708
+#define _APS_NEXT_RESOURCE_VALUE             217
+#define _APS_NEXT_COMMAND_VALUE              40028
+#define _APS_NEXT_CONTROL_VALUE              1210
 #define _APS_NEXT_SYMED_VALUE                101
 #endif
 #endif

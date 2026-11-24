@@ -100,6 +100,10 @@ Activer l’aperçu lance un aperçu plein écran sur tous les moniteurs ; la bo
 
 Windows 7 à Windows 11 prennent en charge toutes les fonctions, y compris les captures BMP/GIF/JPEG/PNG/TIFF/WebP et l’enregistrement MP4. Pour exécuter l’application sous Windows Vista SP2, il est nécessaire d’installer les mises à jour KB971512 et KB2117917. L’enregistrement MP4 ne fonctionne pas sous Vista dans la version actuelle. L’affichage nécessite Direct3D 11, et pas seulement un ancien environnement d’exécution DirectX. L’enregistrement MP4 nécessite les composants Media Foundation et un encodeur H.264 disponibles. L’application autonome peut également fonctionner sous Linux avec Wine ; l’intégration comme économiseur d’écran est disponible uniquement sous Windows.
 
+## Recherche et impression
+
+Aide / À propos: Ctrl+F — Rechercher; F3 — Suivant; Shift+F3 — Précédent; Ctrl+P — Imprimer.
+
 ## Compilation
 
 Ouvrez `DispSavers.slnx` dans Visual Studio avec MSVC v145 et un SDK Windows. Sélectionnez `Release | x86` et régénérez la solution pour produire `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` et `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. Aucune configuration x64 n’est fournie.

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.2.2
  */
 
 #pragma once
@@ -29,9 +29,14 @@
 #include "Localization.h"
 #include <windows.h>
 #include <string>
+#include <string_view>
 #include <vector>
 
+struct AppSettings;
+class ProgramIcons;
+
 /// Application identity and the subclass identifier shared by the information forms.
+extern ProgramIcons programIcons;
 extern const wchar_t PRODUCT_NAME[];
 extern const wchar_t WEBSITE_URL[];
 extern const UINT_PTR INFORMATION_TEXT_SUBCLASS_ID;
@@ -60,9 +65,8 @@ bool GetDialogFontBaseUnits(HFONT font, SIZE* units);
 /// Converts current information-dialog font units to native pixel dimensions.
 SIZE InformationDialogUnits(HFONT font, int x, int y);
 
-/// Measures the common native Close button using its current font and existing dialog-unit minimum and
-/// padding.
-SIZE InformationButtonSize(HWND window, HFONT font);
+/// Uses the template dimensions and widens the Close button for its current text when necessary.
+SIZE InformationButtonSize(HWND window, HFONT font, int resourceId);
 
 /// Measures a label's wrapped height at the requested width using its actual font, or returns zero if a DC
 /// is unavailable.
@@ -103,3 +107,41 @@ int CALLBACK InformationWordBreakProc(wchar_t* text, int position, int length, i
 /// Lets information windows handle Enter, Escape and Tab from their read-only text fields.
 LRESULT CALLBACK InformationTextSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam,
     UINT_PTR subclassId, DWORD_PTR referenceData);
+
+struct PrintJob;
+class PrintSettings;
+
+static const UINT findVisibilityChangedMessage = WM_APP + 60;
+static const UINT findMatchMessage = WM_APP + 61;
+
+UINT WindowDpi(HWND window);
+HFONT CreateUiFont(HWND window);
+SIZE DialogUnits(HFONT font, int x, int y);
+SIZE PreferredButtonSize(HWND button, const SIZE& minimum);
+RECT ControlRect(HWND window, HWND parent);
+void PlaceControl(HWND window, int x, int y, int width, int height);
+bool ReadControlMetrics(HWND control, TEXTMETRICW* metrics);
+bool ComboBoxTextRect(HWND combo, RECT* rectangle);
+void UpdateComboBoxMetrics(HWND combo);
+void UpdateComboBoxDropDownSize(HWND combo);
+LONG ControlTextBaseline(HWND control);
+void AlignControlBaseline(HWND control, HWND reference);
+void UpdateEditMetrics(HWND edit, HWND enclosingCombo = nullptr);
+wchar_t* CopyControlText(HWND control);
+const wchar_t* T(TextId id);
+int GetApplicationLanguage();
+const wchar_t* GetLocalizedText(AppLanguage language, std::string_view key);
+PrintJob* CapturePrintJob(HWND owner, HWND edit, const wchar_t* title, const RECT& margins);
+PrintJob* ChooseReportPrinter(HWND owner, HWND edit, const wchar_t* title, PrintSettings& settings,
+    wchar_t* error, int errorCapacity);
+bool PrintReportPages(PrintJob* job);
+void FreePrintJob(PrintJob* job);
+
+std::wstring InformationHelpText(AppLanguage language, bool applicationMode);
+void SaveInformationWindowPositions(const AppSettings& settings);
+HICON LoadInformationFormIcon(HINSTANCE instance, int size);
+void ApplyInformationFormIcons(HWND window, HINSTANCE instance, int iconIndex = 0);
+
+bool TranslateModalInformationMessage(HWND owner, MSG& message);
+INT_PTR ShowModalInformationForm(HINSTANCE instance, const DLGTEMPLATE* definition, HWND owner,
+    DLGPROC procedure, LPARAM parameter);

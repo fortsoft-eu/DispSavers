@@ -100,6 +100,10 @@ Slå på forhåndsvisning starter en fullskjermsvisning på alle skjermer. Innst
 
 Windows 7 til Windows 11 støtter alle funksjoner, inkludert BMP/GIF/JPEG/PNG/TIFF/WebP-skjermbilder og MP4-opptak. For å kjøre programmet på Windows Vista SP2 må oppdateringene KB971512 og KB2117917 installeres. MP4-opptak fungerer ikke på Vista i den gjeldende versjonen. Visningen krever Direct3D 11, ikke bare en eldre DirectX-kjøretid. MP4-opptak krever tilgjengelige Media Foundation-komponenter og en H.264-koder. Det frittstående programmet kan også kjøre på Linux via Wine; integrasjon som skjermsparer er bare tilgjengelig på Windows.
 
+## Søk og utskrift
+
+Hjelp / Om: Ctrl+F — Finn; F3 — Finn neste; Shift+F3 — Finn forrige; Ctrl+P — Skriv ut.
+
 ## Bygging
 
 Åpne `DispSavers.slnx` i Visual Studio med MSVC v145 og Windows SDK. Velg `Release | x86` og bygg løsningen på nytt for å lage `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` og `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. Det finnes ingen x64-konfigurasjon.

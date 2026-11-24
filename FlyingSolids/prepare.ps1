@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Last modified for version 1.3.1.1
+Last modified for version 1.3.2.2
 #>
 
 param(
@@ -33,7 +33,8 @@ param(
     [string]$License,
     [string]$Notices,
     [string]$WebpLicense,
-    [string]$Resource
+    [string]$Resource,
+    [switch]$ApplicationIcon
 )
 
 $ErrorActionPreference = 'Stop'
@@ -42,10 +43,16 @@ $directory = Split-Path -Parent $Output
 $resourceCompilerLibraries = $env:LIB
 try {
     $env:LIB = ''
+    if ($ApplicationIcon) {
+        Add-Type -Path (Join-Path $PSScriptRoot 'ResourceIcons.cs')
+    }
     Add-Type -Path (Join-Path $PSScriptRoot 'ResourcePacker.cs') -ReferencedAssemblies 'System.dll', `
         'System.IO.Compression.dll'
 } finally {
     $env:LIB = $resourceCompilerLibraries
+}
+if ($ApplicationIcon) {
+    [ResourceIcons]::Extract($Source, 0, (Join-Path $directory 'Application.ico'))
 }
 [ResourcePacker]::Pack($Source, $Output, $RawData.IsPresent)
 

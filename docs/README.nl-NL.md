@@ -100,6 +100,10 @@ Gebruik FlightCorridor.scr als Windows-schermbeveiliging met eigen instellingen.
 
 Windows 7–11 ondersteunt alle functies. Voor Windows Vista SP2 moet u updates KB971512 en KB2117917 installeren; MP4-opname werkt niet op Vista. Direct3D 11-ondersteuning is vereist; voor MP4 zijn ook Media Foundation en een H.264-encoder nodig. Interface en documentatie zijn beschikbaar in 36 talen. De zelfstandige toepassing kan ook op Linux draaien via Wine; integratie als schermbeveiliging is alleen beschikbaar op Windows.
 
+## Zoeken en afdrukken
+
+Help / Info: Ctrl+F — Zoeken; F3 — Volgende zoeken; Shift+F3 — Vorige zoeken; Ctrl+P — Afdrukken.
+
 ## Bouwen en verpakken
 
 Open DispSavers.slnx in Visual Studio en bouw Release | x86 met MSVC v145 en een Windows SDK. Stel het certificaat en de verplichte RFC 3161-tijdstempelserver in op de projectpagina Signing; persoonlijke waarden blijven in het genegeerde .vcxproj.user-bestand. De ondertekende SCR met tijdstempel wordt in de EXE opgenomen, waarna ook de EXE wordt ondertekend. PackageRelease.ps1 maakt één `DispSavers-<version>-win32.zip` voor alle vier schermbeveiligingen zonder de binaire bestanden in Release te wijzigen.

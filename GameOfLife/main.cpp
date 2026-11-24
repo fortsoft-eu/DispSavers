@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.1.0
+ * Last modified for version 1.3.2.2
  */
 
 #define NOMINMAX
@@ -29,6 +29,9 @@
 #include "AboutForm.h"
 #include "AppSettings.h"
 #include "HelpForm.h"
+#include "FindForm.h"
+#include "ModernPrintDialog.h"
+#include "PrintSettings.h"
 #include "main.h"
 #include "Localization.h"
 #include "MonitorInfo.h"
@@ -51,6 +54,12 @@
 #include <commctrl.h>
 #include <commdlg.h>
 #include <dwmapi.h>
+#include <dwrite.h>
+#include <d2d1.h>
+#include <richedit.h>
+#include <richole.h>
+#include <tom.h>
+#include <wrl/client.h>
 #include <RestartManager.h>
 #include <shellapi.h>
 #include <shlobj.h>
@@ -64,6 +73,7 @@
 #include <cmath>
 #include <cwchar>
 #include <cwctype>
+#include <exception>
 #include <limits>
 #include <memory>
 #include <mutex>
@@ -108,7 +118,7 @@ constexpr UINT UPDATE_SETTINGS_ACTION_BUTTONS = WM_APP + 5;
 constexpr UINT UPDATE_OUTPUTS = WM_APP + 6;
 constexpr UINT ENSURE_SETTINGS_CONTROL_VISIBLE = WM_APP + 7;
 constexpr UINT UPDATE_SETTINGS_CONTROL_METRICS = WM_APP + 8;
-constexpr UINT RESTORE_SETTINGS_FOCUS = WM_APP + 9;
+constexpr UINT RESTORE_SETTINGS_FOCUS = WM_APP + 19;
 constexpr UINT PATTERN_CATALOG_LOADED = WM_APP + 10;
 constexpr std::size_t PATTERN_ITEMS_PER_BATCH = 128;
 constexpr int ID_OK = IDOK;
@@ -116,8 +126,8 @@ constexpr int ID_ANIMATION_PRIMARY = 0;
 constexpr std::array<int, 0> ANIMATION_RADIO_IDS{};
 constexpr wchar_t MP4_EXTENSION[] = L"mp4";
 constexpr wchar_t PNG_EXTENSION[] = L"png";
-constexpr wchar_t SETTINGS_COLOR_PREVIEW_PROPERTY[] = L"CalClock.SettingsColorPreview";
-constexpr wchar_t SETTINGS_COLOR_BUTTON_PROPERTY[] = L"CalClock.SettingsColorButton";
+constexpr wchar_t SETTINGS_COLOR_PREVIEW_PROPERTY[] = L"GameOfLife.SettingsColorPreview";
+constexpr wchar_t SETTINGS_COLOR_BUTTON_PROPERTY[] = L"GameOfLife.SettingsColorButton";
 constexpr UINT_PTR SETTINGS_COLOR_PREVIEW_SUBCLASS_ID = 0xF508;
 constexpr bool themesDisabled = false;
 constexpr wchar_t KERNEL_LIBRARY[] = L"kernel32.dll";
@@ -125,7 +135,6 @@ constexpr UINT SCREEN_SAVER_CHECK_INTERVAL = 1000;
 
 using CreatePowerRequest = HANDLE(WINAPI*)(PREASON_CONTEXT);
 using SetPowerRequest = BOOL(WINAPI*)(HANDLE, POWER_REQUEST_TYPE);
-
 using GetSystemWow64DirectoryWFunction = UINT(WINAPI*)(LPWSTR, UINT);
 using StartSession = DWORD(WINAPI*)(DWORD*, DWORD, WCHAR[]);
 using EndSession = DWORD(WINAPI*)(DWORD);
@@ -182,7 +191,6 @@ struct Application {
     HINSTANCE instance = nullptr;
     HANDLE installProcess = nullptr;
     HANDLE screenSaverInhibition = nullptr;
-    ProgramIcons programIcons;
     RunMode mode = RunMode::Application;
     AppSettings settings;
     RECT worldBounds{};
@@ -308,10 +316,34 @@ struct UiTextLine {
     LONG gap;
 };
 
-/// Application instance
+/// Collects an immutable RTF snapshot without changing the RichEdit's selection or viewport.
+struct PrintRtfCapture {
+    std::vector<BYTE> bytes;
+};
+
+static const UINT printCompleteMessage = WM_APP + 62;
+static const UINT modernPrintCompleteMessage = WM_APP + 9;
+
+/// Application module and instance
+static HINSTANCE hInstance = GetModuleHandleW(nullptr);
 static Application* app = nullptr;
+ProgramIcons programIcons;
 
 /// Information windows
+static HWND informationOwner = nullptr;
+static HWND informationHelpWindow = nullptr;
+static HWND informationAboutWindow = nullptr;
+static HWND searchWindow = nullptr;
+static thread_local HWND modalInformationOwner = nullptr;
+static HANDLE printThread = nullptr;
+static FindForm find;
+static PrintSettings printSettings;
+static PrintJob* activePrintJob = nullptr;
+static ModernPrintDialog* modernPrint = nullptr;
+static AppLanguage componentLanguage = LANG_EN_US;
+static AppLanguage informationLanguage = LANG_EN_US;
+static bool printDialogOpen = false;
+static bool informationClosing = false;
 static HelpForm helpForm;
 static AboutForm aboutForm;
 static PersistWindowState settingsWindowState;
@@ -369,11 +401,873 @@ static void ShowTransientStatus(const wchar_t* text);
 /// Publishes a loaded catalog on the UI thread and starts the requested animation.
 static void CompletePatternCatalogLoad(bool succeeded, SettingsWindowData* data);
 
-/// Returns the settings panel, or the settings window when no separate panel is used.
-static HWND SettingsContentWindow(HWND window) {
-    SettingsWindowData* data =
-        reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
-    return data && data->contentWindow ? data->contentWindow : window;
+/// Associates information windows with their owner and synchronizes search targets and language.
+static void InitializeInformationCommands(HWND window, HWND help, HWND about, AppLanguage selectedLanguage);
+
+/// Updates the shared information language and refreshes Find when it changes.
+static void SetInformationLanguage(AppLanguage selectedLanguage);
+
+/// Refreshes the Help and About search targets and closes Find when both forms are gone.
+static void UpdateFindWindows(HWND help, HWND about);
+
+/// Returns the text edit in the last active Help or About form, retaining that form during search input.
+static HWND TextTarget();
+
+/// Routes the modeless Find form and information-window keyboard commands.
+static bool TranslateInformationMessage(MSG& message);
+
+/// Handles search, print completion and Help commands for the owning information window.
+static bool HandleInformationMessage(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
+
+/// Appends a localized information-window command with the requested enabled state.
+static void AppendInformationContextItem(HMENU menu, UINT command, TextId caption, bool enabled);
+
+/// Builds the active information edit's clipboard, search and printing context menu.
+static bool ShowInformationContextMenu(HWND control, LPARAM location);
+
+/// Dispatches clipboard, search, page setup and printing commands to the active information edit.
+static void HandleInformationCommand(UINT command);
+
+/// Opens Page Setup for the active information window and reports any dialog failure.
+static void PageSetup();
+
+/// Captures immutable text before opening the selected native printing path.
+static void PrintReport();
+
+/// Prints the captured pages and posts completion without accessing the originating edit.
+static DWORD WINAPI PrintDocument(void* parameter);
+
+/// Releases a completed classic print job on the UI thread.
+static void CompletePrint(PrintJob* job);
+
+/// Releases the notification reference and any still-active modern print source.
+static void CompleteModernPrint(ModernPrintDialog* completed);
+
+/// Closes Find, cancels outstanding print jobs and drains their queued completion notifications.
+static void CloseInformationCommands();
+
+/// Routes dialog-loop keyboard messages through the information-window command handlers.
+static LRESULT CALLBACK InformationModalFilter(int code, WPARAM wParam, LPARAM lParam) {
+    MSG* message = reinterpret_cast<MSG*>(lParam);
+    if (code == MSGF_DIALOGBOX
+            && message->message >= WM_KEYFIRST
+            && message->message <= WM_KEYLAST
+            && TranslateModalInformationMessage(modalInformationOwner, *message)) {
+        return 1;
+    }
+    return CallNextHookEx(nullptr, code, wParam, lParam);
+}
+
+/// Appends search and printing instructions to the selected application or screen-saver help.
+std::wstring InformationHelpText(AppLanguage language, bool applicationMode) {
+    std::wstring text =
+        GetLocalizedText(language, applicationMode ? TXT_APPLICATION_HELP : TXT_SCREEN_SAVER_HELP);
+    text += L"\r\n\r\n";
+    text += GetLocalizedText(language, TXT_INFORMATION_TOOLS_HELP);
+    return text;
+}
+
+/// Persists the saved window placements through the application settings.
+void SaveInformationWindowPositions(const AppSettings& settings) {
+    settings.SaveWindowPositions();
+}
+
+/// Borrows the cached application icon at the requested native dimensions.
+HICON LoadInformationFormIcon(HINSTANCE, int size) {
+    return programIcons.LoadIconAtIndex(0, size, size);
+}
+
+/// Applies the shared small and large icons for the information window and its current DPI.
+void ApplyInformationFormIcons(HWND window, HINSTANCE, int iconIndex) {
+    programIcons.Apply(window, iconIndex);
+}
+
+/// Runs a native modal information dialog while routing its keyboard input through the shared handlers.
+INT_PTR ShowModalInformationForm(HINSTANCE instance, const DLGTEMPLATE* definition, HWND owner,
+        DLGPROC procedure, LPARAM parameter) {
+    HWND previous = modalInformationOwner;
+    modalInformationOwner = owner;
+    HHOOK hook = SetWindowsHookExW(WH_MSGFILTER, InformationModalFilter, nullptr, GetCurrentThreadId());
+    if (hook == nullptr) {
+        modalInformationOwner = previous;
+        OutputDebugStringW(L"Could not install the modal information-dialog message filter.\n");
+        return -1;
+    }
+    INT_PTR result = DialogBoxIndirectParamW(instance, definition, owner, procedure, parameter);
+    if (!UnhookWindowsHookEx(hook)) {
+        OutputDebugStringW(L"Could not release the modal information-dialog message filter.\n");
+    }
+    modalInformationOwner = previous;
+    return result;
+}
+
+/// Returns the effective DPI through the shared system-dialog implementation.
+UINT WindowDpi(HWND window) {
+    return GetSystemDialogDpi(window);
+}
+
+/// Creates an owned system dialog font for the target window's DPI.
+HFONT CreateUiFont(HWND window) {
+    return CreateSystemDialogFont(window);
+}
+
+/// Returns a control's window bounds mapped into its parent's client coordinates.
+RECT ControlRect(HWND window, HWND parent) {
+    RECT rectangle = RECT{};
+    GetWindowRect(window, &rectangle);
+    MapWindowPoints(HWND_DESKTOP, parent, reinterpret_cast<POINT*>(&rectangle), 2);
+    return rectangle;
+}
+
+/// Positions and sizes a control without activation, Z-order changes or copied stale pixels.
+void PlaceControl(HWND window, int x, int y, int width, int height) {
+    SetWindowPos(window, nullptr, x, y, width > 0 ? width : 1, height > 0 ? height : 1,
+        SWP_NOZORDER | SWP_NOACTIVATE);
+}
+
+/// Reads text metrics from the control's current font and reports whether measurement succeeded.
+bool ReadControlMetrics(HWND control, TEXTMETRICW* metrics) {
+    HDC dc = GetDC(control);
+    if (!dc) {
+        return false;
+    }
+    HFONT font = reinterpret_cast<HFONT>(SendMessageW(control, WM_GETFONT, 0, 0));
+    HGDIOBJ old = font ? SelectObject(dc, font) : nullptr;
+    bool success = GetTextMetricsW(dc, metrics) != FALSE;
+    if (old) {
+        SelectObject(dc, old);
+    }
+    ReleaseDC(control, dc);
+    return success;
+}
+
+/// Returns the native selected-text rectangle used for combo-box baseline alignment.
+bool ComboBoxTextRect(HWND combo, RECT* rectangle) {
+    COMBOBOXINFO information = {};
+    information.cbSize = sizeof(information);
+    if (!GetComboBoxInfo(combo, &information)) {
+        return false;
+    }
+    *rectangle = information.rcItem;
+    return true;
+}
+
+/// Fits native combo selection and list-item heights to its current font and system borders.
+void UpdateComboBoxMetrics(HWND combo) {
+    LRESULT selectionHeight = SendMessageW(combo, CB_GETITEMHEIGHT, static_cast<WPARAM>(-1), 0);
+    TEXTMETRICW metrics = TEXTMETRICW{};
+    if (selectionHeight == CB_ERR || !ReadControlMetrics(combo, &metrics)) {
+        return;
+    }
+    LONG height = metrics.tmHeight + 2 * GetSystemMetrics(SM_CYBORDER);
+    if (selectionHeight != height) {
+        SendMessageW(combo, CB_SETITEMHEIGHT, static_cast<WPARAM>(-1), height);
+    }
+    if (SendMessageW(combo, CB_GETITEMHEIGHT, 0, 0) != metrics.tmHeight) {
+        SendMessageW(combo, CB_SETITEMHEIGHT, 0, metrics.tmHeight);
+    }
+}
+
+/// Calculates the rendered text baseline in screen coordinates from native control content and font metrics.
+LONG ControlTextBaseline(HWND control) {
+    RECT rectangle = RECT{};
+    GetClientRect(control, &rectangle);
+    POINT origin = POINT{};
+    ClientToScreen(control, &origin);
+    TEXTMETRICW metrics = TEXTMETRICW{};
+    ReadControlMetrics(control, &metrics);
+    wchar_t name[32];
+    GetClassNameW(control, name, 32);
+    LONG textTop = 0;
+    if (CompareStringOrdinal(name, -1, L"EDIT", -1, TRUE) == CSTR_EQUAL) {
+        SendMessageW(control, EM_GETRECT, 0, reinterpret_cast<LPARAM>(&rectangle));
+        textTop = rectangle.top;
+    } else if (CompareStringOrdinal(name, -1, L"COMBOBOX", -1, TRUE) == CSTR_EQUAL) {
+        if (ComboBoxTextRect(control, &rectangle)) {
+            textTop = rectangle.top + (rectangle.bottom - rectangle.top - metrics.tmHeight) / 2;
+        }
+    } else if (CompareStringOrdinal(name, -1, L"BUTTON", -1, TRUE) == CSTR_EQUAL) {
+        HTHEME theme = GetWindowTheme(control);
+        LONG textHeight = metrics.tmHeight;
+        LONG type = GetWindowLongW(control, GWL_STYLE) & BS_TYPEMASK;
+        if (!theme) {
+            rectangle.bottom -= GetSystemMetrics(SM_CYBORDER);
+        } else if (type == BS_PUSHBUTTON || type == BS_DEFPUSHBUTTON) {
+            RECT content = RECT{};
+            if (SUCCEEDED(GetThemeBackgroundContentRect(theme, nullptr, 1, 1, &rectangle, &content))) {
+                rectangle = content;
+            }
+        } else if (type == BS_CHECKBOX || type == BS_AUTOCHECKBOX) {
+            SIZE glyph = SIZE{};
+            if (SUCCEEDED(GetThemePartSize(theme, nullptr, 3, 1, nullptr, TS_TRUE, &glyph))
+                    && glyph.cy > textHeight) {
+                textHeight = glyph.cy;
+            }
+        }
+        textTop = rectangle.top + (rectangle.bottom - rectangle.top - textHeight) / 2;
+    } else if (CompareStringOrdinal(name, -1, L"STATIC", -1, TRUE) == CSTR_EQUAL
+            && GetWindowLongW(control, GWL_STYLE) & SS_CENTERIMAGE) {
+        textTop = (rectangle.bottom - rectangle.top - metrics.tmHeight) / 2;
+    }
+    return origin.y + textTop + metrics.tmAscent;
+}
+
+/// Moves a control vertically to match the reference control's rendered text baseline.
+void AlignControlBaseline(HWND control, HWND reference) {
+    LONG distance = ControlTextBaseline(reference) - ControlTextBaseline(control);
+    if (distance) {
+        RECT bounds = ControlRect(control, GetParent(control));
+        SetWindowPos(control, nullptr, bounds.left, bounds.top + distance, 0, 0,
+            SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOCOPYBITS);
+    }
+}
+
+/// Fits an edit's text inset and height to current font and theme metrics, including edits inside combo
+/// boxes.
+void UpdateEditMetrics(HWND edit, HWND enclosingCombo) {
+    HWND frameWindow = enclosingCombo ? enclosingCombo : edit;
+    RECT bounds = RECT{};
+    POINT client = POINT{};
+    if (!GetWindowRect(frameWindow, &bounds) || !ClientToScreen(edit, &client)) {
+        return;
+    }
+    TEXTMETRICW metrics = TEXTMETRICW{};
+    if (!ReadControlMetrics(edit, &metrics)) {
+        return;
+    }
+    LONG contentLeft = GetSystemMetrics(SM_CXEDGE) + GetSystemMetrics(SM_CXBORDER);
+    LONG contentTop = GetSystemMetrics(SM_CYEDGE) + GetSystemMetrics(SM_CYBORDER);
+    LONG contentBottom = contentTop;
+    if (GetWindowTheme(frameWindow)) {
+        HTHEME theme = OpenThemeData(nullptr, L"Combobox");
+        if (theme) {
+            RECT frame = RECT{ 0, 0, bounds.right - bounds.left, bounds.bottom - bounds.top };
+            RECT content = RECT{};
+            if (SUCCEEDED(GetThemeBackgroundContentRect(theme, nullptr, 5, 1, &frame, &content))) {
+                contentLeft = content.left;
+                contentTop = content.top;
+                contentBottom = frame.bottom - content.bottom;
+            }
+            CloseThemeData(theme);
+        }
+    }
+    LONG borderWidth = client.x - bounds.left - (enclosingCombo ? GetSystemMetrics(SM_CXBORDER) : 0);
+    LONG leftMargin = contentLeft > borderWidth ? contentLeft - borderWidth : 0;
+    DWORD margins = static_cast<DWORD>(SendMessageW(edit, EM_GETMARGINS, 0, 0));
+    if (LOWORD(margins) != leftMargin) {
+        SendMessageW(edit, EM_SETMARGINS, EC_LEFTMARGIN, MAKELPARAM(leftMargin, 0));
+    }
+    LONG height = metrics.tmHeight + contentTop + contentBottom + 2 * GetSystemMetrics(SM_CYBORDER);
+    if (!enclosingCombo && height != bounds.bottom - bounds.top) {
+        SetWindowPos(edit, nullptr, 0, 0, bounds.right - bounds.left, height,
+            SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+    }
+}
+
+/// Copies a rich-text stream into memory and reports allocation failures to the native streaming API.
+static DWORD CALLBACK CapturePrintRtf(DWORD_PTR cookie, LPBYTE bytes, LONG count, LONG* copied) {
+    PrintRtfCapture* captured = reinterpret_cast<PrintRtfCapture*>(cookie);
+    try {
+        captured->bytes.insert(captured->bytes.end(), bytes, bytes + count);
+        *copied = count;
+        return ERROR_SUCCESS;
+    } catch (const std::exception& error) {
+        OutputDebugStringA("Capturing RTF for printing failed: ");
+        OutputDebugStringA(error.what());
+        OutputDebugStringA("\n");
+        *copied = 0;
+        return ERROR_NOT_ENOUGH_MEMORY;
+    }
+}
+
+/// Reads one native character-format run through TOM without moving the visible selection.
+static bool CapturePrintRun(ITextRange* range, UINT start, UINT end, PrintTextRun& run) {
+    Microsoft::WRL::ComPtr<ITextFont> font;
+    if (FAILED(range->GetFont(&font))) {
+        return false;
+    }
+    BSTR rawName = nullptr;
+    if (FAILED(font->GetName(&rawName))) {
+        return false;
+    }
+    std::unique_ptr<wchar_t, decltype(&SysFreeString)> name(rawName, SysFreeString);
+    float size = 0;
+    LONG color = 0;
+    LONG bold = tomFalse;
+    LONG italic = tomFalse;
+    LONG underline = tomFalse;
+    LONG strike = tomFalse;
+    bool captured = SUCCEEDED(font->GetSize(&size))
+        && SUCCEEDED(font->GetForeColor(&color))
+        && SUCCEEDED(font->GetBold(&bold))
+        && SUCCEEDED(font->GetItalic(&italic))
+        && SUCCEEDED(font->GetUnderline(&underline))
+        && SUCCEEDED(font->GetStrikeThrough(&strike));
+    if (!captured || !name || !*name || size <= 0) {
+        return false;
+    }
+    run.start = start;
+    run.length = end - start;
+    run.color = color == tomAutoColor ? RGB(0, 0, 0) : static_cast<COLORREF>(color);
+    run.heightTwips = static_cast<LONG>(size * 20.0f + 0.5f);
+    run.weight = bold == tomTrue ? FW_BOLD : FW_NORMAL;
+    run.italic = italic == tomTrue;
+    run.underline = underline != tomFalse;
+    run.strikeOut = strike == tomTrue;
+    wcsncpy_s(run.family, name.get(), _TRUNCATE);
+    return true;
+}
+
+/// Applies captured character formats to a complete modern layout or a page-relative text range.
+static HRESULT FormatPrintLayout(const PrintJob* job, IUnknown* text, IUnknown* drawing, UINT start,
+        UINT length) {
+    Microsoft::WRL::ComPtr<IDWriteTextLayout> layout;
+    Microsoft::WRL::ComPtr<ID2D1RenderTarget> target;
+    HRESULT result = text->QueryInterface(IID_PPV_ARGS(&layout));
+    if (SUCCEEDED(result)) {
+        result = drawing->QueryInterface(IID_PPV_ARGS(&target));
+    }
+    for (UINT index = 0; SUCCEEDED(result) && index < job->formatCount; ++index) {
+        const PrintTextRun& run = job->formats[index];
+        UINT first = std::max(start, run.start);
+        UINT end = std::min(start + length, run.start + run.length);
+        if (first >= end) {
+            continue;
+        }
+        DWRITE_TEXT_RANGE range{ first - start, end - first };
+        result = layout->SetFontFamilyName(run.family, range);
+        if (SUCCEEDED(result)) {
+            result = layout->SetFontSize(run.heightTwips / 15.0f, range);
+        }
+        if (SUCCEEDED(result)) {
+            result = layout->SetFontWeight(static_cast<DWRITE_FONT_WEIGHT>(run.weight), range);
+        }
+        if (SUCCEEDED(result)) {
+            DWRITE_FONT_STYLE style = run.italic ? DWRITE_FONT_STYLE_ITALIC : DWRITE_FONT_STYLE_NORMAL;
+            result = layout->SetFontStyle(style, range);
+        }
+        if (SUCCEEDED(result)) {
+            result = layout->SetUnderline(run.underline, range);
+        }
+        if (SUCCEEDED(result)) {
+            result = layout->SetStrikethrough(run.strikeOut, range);
+        }
+        D2D1_COLOR_F color{ GetRValue(run.color) / 255.0f, GetGValue(run.color) / 255.0f,
+            GetBValue(run.color) / 255.0f, 1.0f };
+        Microsoft::WRL::ComPtr<ID2D1SolidColorBrush> brush;
+        if (SUCCEEDED(result)) {
+            result = target->CreateSolidColorBrush(color, &brush);
+        }
+        if (SUCCEEDED(result)) {
+            result = layout->SetDrawingEffect(brush.Get(), range);
+        }
+    }
+    return result;
+}
+
+/// Captures the RichEdit's RTF, native font and immutable modern-print formatting runs.
+static bool CaptureRichPrintJob(PrintJob* job, HWND edit) {
+    Microsoft::WRL::ComPtr<IRichEditOle> ole;
+    if (!SendMessageW(edit, EM_GETOLEINTERFACE, 0, reinterpret_cast<LPARAM>(ole.GetAddressOf()))) {
+        return false;
+    }
+    Microsoft::WRL::ComPtr<ITextDocument> document;
+    Microsoft::WRL::ComPtr<ITextRange> range;
+    if (FAILED(ole.As(&document)) || FAILED(document->Range(0, 0, &range))) {
+        return false;
+    }
+    try {
+        std::vector<PrintTextRun> formats;
+        LONG position = 0;
+        LONG length = lstrlenW(job->report);
+        while (position < length) {
+            LONG count = 0;
+            LONG end = 0;
+            bool measured = SUCCEEDED(range->SetRange(position, position + 1))
+                && SUCCEEDED(range->Expand(tomCharFormat, &count))
+                && SUCCEEDED(range->GetEnd(&end));
+            end = std::min(end, length);
+            PrintTextRun run{};
+            if (!measured || end <= position || !CapturePrintRun(range.Get(), position, end, run)) {
+                return false;
+            }
+            formats.push_back(run);
+            position = end;
+        }
+        PrintRtfCapture rtf;
+        EDITSTREAM stream{};
+        stream.dwCookie = reinterpret_cast<DWORD_PTR>(&rtf);
+        stream.pfnCallback = CapturePrintRtf;
+        SendMessageW(edit, EM_STREAMOUT, SF_RTF, reinterpret_cast<LPARAM>(&stream));
+        if (stream.dwError
+                || rtf.bytes.empty()
+                || rtf.bytes.size() > MAXDWORD
+                || formats.size() > MAXDWORD / sizeof(PrintTextRun)) {
+            return false;
+        }
+        job->richText = static_cast<BYTE*>(HeapAlloc(GetProcessHeap(), 0, rtf.bytes.size()));
+        job->formats = static_cast<PrintTextRun*>(HeapAlloc(GetProcessHeap(), 0,
+            formats.size() * sizeof(PrintTextRun)));
+        if (!job->richText || !job->formats) {
+            return false;
+        }
+        memcpy(job->richText, rtf.bytes.data(), rtf.bytes.size());
+        memcpy(job->formats, formats.data(), formats.size() * sizeof(PrintTextRun));
+        job->richTextSize = static_cast<ULONG>(rtf.bytes.size());
+        job->formatCount = static_cast<UINT>(formats.size());
+        job->formatLayout = FormatPrintLayout;
+        CHARFORMAT2W font{};
+        font.cbSize = sizeof(font);
+        SendMessageW(edit, EM_GETCHARFORMAT, SCF_DEFAULT, reinterpret_cast<LPARAM>(&font));
+        job->fontDpi = 1440;
+        job->font.lfHeight = -font.yHeight;
+        job->font.lfWidth = 0;
+        job->font.lfWeight = font.dwEffects & CFE_BOLD ? FW_BOLD : FW_NORMAL;
+        job->font.lfItalic = static_cast<BYTE>((font.dwEffects & CFE_ITALIC) != 0);
+        job->font.lfUnderline = static_cast<BYTE>((font.dwEffects & CFE_UNDERLINE) != 0);
+        job->font.lfStrikeOut = static_cast<BYTE>((font.dwEffects & CFE_STRIKEOUT) != 0);
+        wcsncpy_s(job->font.lfFaceName, font.szFaceName, _TRUNCATE);
+        return true;
+    } catch (const std::exception& error) {
+        OutputDebugStringA("Capturing character formats for printing failed: ");
+        OutputDebugStringA(error.what());
+        OutputDebugStringA("\n");
+        return false;
+    }
+}
+
+/// Captures text, rich formatting, font, DPI, margins and title independently of later edits.
+PrintJob* CapturePrintJob(HWND owner, HWND edit, const wchar_t* title, const RECT& margins) {
+    PrintJob* job = static_cast<PrintJob*>(HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof(PrintJob)));
+    if (!job) {
+        return nullptr;
+    }
+    job->target = owner;
+    job->fontDpi = WindowDpi(edit);
+    HFONT font = reinterpret_cast<HFONT>(SendMessageW(edit, WM_GETFONT, 0, 0));
+    HFONT systemFont = font ? nullptr : CreateUiFont(edit);
+    if (!font) {
+        font = systemFont;
+    }
+    job->report = CopyControlText(edit);
+    bool captured = job->report && GetObjectW(font, sizeof(job->font), &job->font) == sizeof(job->font);
+    if (systemFont) {
+        DeleteObject(systemFont);
+    }
+    wchar_t className[32]{};
+    GetClassNameW(edit, className, ARRAYSIZE(className));
+    if (captured && !_wcsicmp(className, MSFTEDIT_CLASS)) {
+        captured = CaptureRichPrintJob(job, edit);
+    }
+    if (!captured) {
+        FreePrintJob(job);
+        return nullptr;
+    }
+    wcsncpy_s(job->title, title, _TRUNCATE);
+    job->margins = margins;
+    return job;
+}
+
+/// Captures the active report and attaches the printer selected through the classic print dialog.
+PrintJob* ChooseReportPrinter(HWND owner, HWND edit, const wchar_t* title, PrintSettings& settings,
+        wchar_t* error, int errorCapacity) {
+    error[0] = 0;
+    PrintJob* job = CapturePrintJob(owner, edit, title, settings.GetMargins());
+    if (!job) {
+        wcsncpy_s(error, errorCapacity, T(TXT_PRINT_FAILED), _TRUNCATE);
+        return nullptr;
+    }
+    job->printer = settings.ChoosePrinter(owner, &job->printToFile, T(TXT_PRINT_FAILED),
+        error, errorCapacity);
+    if (!job->printer) {
+        FreePrintJob(job);
+        return nullptr;
+    }
+    return job;
+}
+
+/// Paginates and prints the captured text with its font and margins while honoring cancellation.
+bool PrintReportPages(PrintJob* job) {
+    if (job->canceled || !job->fontDpi) {
+        return false;
+    }
+    PrintLayout layout;
+    RECT area = PrintContentRect(job->printer, job->margins);
+    if (!layout.Initialize(*job, job->printer, area, GetDeviceCaps(job->printer, LOGPIXELSX),
+        GetDeviceCaps(job->printer, LOGPIXELSY))) {
+        return false;
+    }
+    DOCINFOW document = DOCINFOW{};
+    document.cbSize = sizeof(document);
+    document.lpszDocName = job->title;
+    document.lpszOutput = job->printToFile ? L"FILE:" : nullptr;
+    bool started = !job->canceled && StartDocW(job->printer, &document) > 0;
+    bool success = started;
+    for (UINT page = 0; page < layout.GetPageCount() && success; ++page) {
+        if (job->canceled || StartPage(job->printer) <= 0) {
+            success = false;
+            break;
+        }
+        success = layout.DrawPage(job->printer, page) && EndPage(job->printer) > 0;
+    }
+    if (success && !job->canceled) {
+        success = EndDoc(job->printer) > 0;
+    } else {
+        success = false;
+    }
+    if (!success) {
+        DWORD failure = GetLastError();
+        if (failure == ERROR_CANCELLED || failure == ERROR_PRINT_CANCELLED) {
+            InterlockedExchange(&job->canceled, 1);
+        }
+        if (started) {
+            AbortDoc(job->printer);
+        }
+    }
+    return success;
+}
+
+/// Returns a borrowed localized UI string in the current application language.
+const wchar_t* T(TextId id) {
+    return GetLocalizedText(componentLanguage, id);
+}
+
+/// Returns the language currently used by the shared information-window components.
+int GetApplicationLanguage() {
+    return componentLanguage;
+}
+
+/// Maps shared regular-expression diagnostic keys to the application's localized messages.
+const wchar_t* GetLocalizedText(AppLanguage language, std::string_view key) {
+    if (key == "regexInvalid") {
+        return GetLocalizedText(language, TXT_REGEX_INVALID);
+    }
+    if (key == "regexEscape") {
+        return GetLocalizedText(language, TXT_REGEX_ESCAPE);
+    }
+    if (key == "regexBracket") {
+        return GetLocalizedText(language, TXT_REGEX_BRACKET);
+    }
+    if (key == "regexParenthesis") {
+        return GetLocalizedText(language, TXT_REGEX_PARENTHESIS);
+    }
+    if (key == "regexRepeat") {
+        return GetLocalizedText(language, TXT_REGEX_REPEAT);
+    }
+    if (key == "regexRange") {
+        return GetLocalizedText(language, TXT_REGEX_RANGE);
+    }
+    if (key == "regexComplexity") {
+        return GetLocalizedText(language, TXT_REGEX_COMPLEXITY);
+    }
+    return L"";
+}
+
+/// Associates information windows with their owner and synchronizes search targets and language.
+static void InitializeInformationCommands(HWND window, HWND help, HWND about, AppLanguage selectedLanguage) {
+    informationOwner = window;
+    informationClosing = false;
+    UpdateFindWindows(help, about);
+    SetInformationLanguage(selectedLanguage);
+}
+
+/// Updates the shared information language and refreshes Find when it changes.
+static void SetInformationLanguage(AppLanguage selectedLanguage) {
+    componentLanguage = selectedLanguage;
+    if (informationLanguage != selectedLanguage) {
+        informationLanguage = selectedLanguage;
+        find.RefreshLanguage();
+    }
+}
+
+/// Refreshes the Help and About search targets and closes Find when both forms are gone.
+static void UpdateFindWindows(HWND help, HWND about) {
+    informationHelpWindow = help;
+    informationAboutWindow = about;
+    HWND target = TextTarget();
+    find.SetTarget(target);
+    if (target == nullptr && help == nullptr && about == nullptr) {
+        find.Close();
+    }
+}
+
+/// Returns the text edit in the last active Help or About form, retaining that form during search input.
+static HWND TextTarget() {
+    HWND active = GetActiveWindow();
+    if (active != nullptr && (active == informationHelpWindow || active == informationAboutWindow)) {
+        searchWindow = active;
+    }
+    if (searchWindow != nullptr
+            && (searchWindow == informationHelpWindow || searchWindow == informationAboutWindow)) {
+        return GetDlgItem(searchWindow, ID_INFO_TEXT);
+    }
+    searchWindow = nullptr;
+    return nullptr;
+}
+
+/// Routes the modeless Find form and information-window keyboard commands.
+static bool TranslateInformationMessage(MSG& message) {
+    find.SetTarget(TextTarget());
+    HWND active = GetActiveWindow();
+    if (message.message == WM_KEYDOWN
+            && active != nullptr
+            && (active == informationHelpWindow || active == informationAboutWindow)) {
+        bool control = GetKeyState(VK_CONTROL) < 0;
+        if (control && message.wParam == L'F') {
+            find.Show(informationOwner);
+            return true;
+        }
+        if (message.wParam == VK_F3) {
+            find.FindNext(informationOwner, GetKeyState(VK_SHIFT) < 0);
+            return true;
+        }
+        if (control && message.wParam == L'P') {
+            PrintReport();
+            return true;
+        }
+    }
+    return find.Translate(&message);
+}
+
+/// Handles search, print completion and Help commands for the owning information window.
+static bool HandleInformationMessage(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
+    if (window != informationOwner) {
+        return false;
+    }
+    if (message == findVisibilityChangedMessage) {
+        UpdateInformationWindowsTopmost(informationOwner);
+        return true;
+    }
+    if (message == findMatchMessage) {
+        HWND target = reinterpret_cast<HWND>(wParam);
+        HWND dialog = reinterpret_cast<HWND>(lParam);
+        if (target == informationHelpWindow || target == informationAboutWindow) {
+            ShowWindow(target, SW_SHOWNOACTIVATE);
+            SetWindowPos(target, dialog, 0, 0, 0, 0,
+                SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+        }
+        return true;
+    }
+    if (message == printCompleteMessage) {
+        CompletePrint(reinterpret_cast<PrintJob*>(lParam));
+        return true;
+    }
+    if (message == modernPrintCompleteMessage) {
+        CompleteModernPrint(reinterpret_cast<ModernPrintDialog*>(lParam));
+        return true;
+    }
+    if (message == WM_COMMAND && LOWORD(wParam) == ID_HELP_CONTENTS) {
+        SendMessageW(informationOwner, WM_COMMAND, ID_HELP, 0);
+        return true;
+    }
+    return false;
+}
+
+/// Appends a localized information-window command with the requested enabled state.
+static void AppendInformationContextItem(HMENU menu, UINT command, TextId caption, bool enabled) {
+    AppendMenuW(menu, MF_STRING | (enabled ? MF_ENABLED : MF_GRAYED), command,
+        GetLocalizedText(informationLanguage, caption));
+}
+
+/// Builds the active information edit's clipboard, search and printing context menu.
+static bool ShowInformationContextMenu(HWND control, LPARAM location) {
+    HWND parent = GetParent(control);
+    if (parent != informationHelpWindow && parent != informationAboutWindow) {
+        return false;
+    }
+    searchWindow = parent;
+    find.SetTarget(control);
+    HMENU menu = CreatePopupMenu();
+    if (menu == nullptr) {
+        return true;
+    }
+    DWORD first = 0;
+    DWORD last = 0;
+    SendMessageW(control, EM_GETSEL, reinterpret_cast<WPARAM>(&first), reinterpret_cast<LPARAM>(&last));
+    bool hasText = GetWindowTextLengthW(control) > 0;
+    bool printable = hasText && !printThread && !modernPrint && !printDialogOpen;
+    AppendInformationContextItem(menu, ID_EDIT_COPY, TXT_COPY, first != last);
+    AppendInformationContextItem(menu, ID_EDIT_SELECT_ALL, TXT_SELECT_ALL, hasText);
+    AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
+    AppendInformationContextItem(menu, ID_EDIT_FIND, TXT_FIND_MENU, hasText);
+    AppendInformationContextItem(menu, ID_EDIT_FIND_NEXT, TXT_FIND_NEXT_MENU, hasText);
+    AppendInformationContextItem(menu, ID_EDIT_FIND_PREVIOUS, TXT_FIND_PREVIOUS_MENU, hasText);
+    AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
+    AppendInformationContextItem(menu, ID_FILE_PAGE_SETUP, TXT_PAGE_SETUP, printable);
+    AppendInformationContextItem(menu, ID_FILE_PRINT, TXT_PRINT, printable);
+    POINT point = { GET_X_LPARAM(location), GET_Y_LPARAM(location) };
+    if (location == -1) {
+        RECT bounds = {};
+        GetWindowRect(control, &bounds);
+        point = POINT{ bounds.left, bounds.top };
+    }
+    UINT command = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_RIGHTBUTTON, point.x, point.y,
+        0, parent, nullptr);
+    DestroyMenu(menu);
+    HandleInformationCommand(command);
+    return true;
+}
+
+/// Dispatches clipboard, search, page setup and printing commands to the active information edit.
+static void HandleInformationCommand(UINT command) {
+    HWND edit = TextTarget();
+    switch (command) {
+        case ID_EDIT_COPY:
+            SendMessageW(edit, WM_COPY, 0, 0);
+            break;
+        case ID_EDIT_SELECT_ALL:
+            SendMessageW(edit, EM_SETSEL, 0, -1);
+            break;
+        case ID_EDIT_FIND:
+            find.Show(informationOwner);
+            break;
+        case ID_EDIT_FIND_NEXT:
+            find.FindNext(informationOwner, false);
+            break;
+        case ID_EDIT_FIND_PREVIOUS:
+            find.FindNext(informationOwner, true);
+            break;
+        case ID_FILE_PAGE_SETUP:
+            PageSetup();
+            break;
+        case ID_FILE_PRINT:
+            PrintReport();
+            break;
+    }
+}
+
+/// Opens Page Setup for the active information window and reports any dialog failure.
+static void PageSetup() {
+    if (informationClosing || printThread || modernPrint || printDialogOpen || !TextTarget()) {
+        return;
+    }
+    wchar_t error[512] = {};
+    printDialogOpen = true;
+    printSettings.PageSetup(searchWindow, T(TXT_PRINT_FAILED), error, ARRAYSIZE(error));
+    printDialogOpen = false;
+    if (*error) {
+        MessageBoxW(searchWindow, error, PRODUCT_NAME, MB_OK | MB_ICONERROR);
+    }
+}
+
+/// Captures immutable text before opening the selected native printing path.
+static void PrintReport() {
+    if (informationClosing || printThread || modernPrint || printDialogOpen) {
+        return;
+    }
+    HWND edit = TextTarget();
+    if (edit == nullptr) {
+        return;
+    }
+    HWND window = GetParent(edit);
+    wchar_t title[MAX_PATH] = {};
+    GetWindowTextW(window, title, ARRAYSIZE(title));
+    if (UseModernPrintDialog()) {
+        PrintJob* snapshot = CapturePrintJob(informationOwner, edit, title, printSettings.GetMargins());
+        modernPrint = snapshot
+            ? CreateModernPrint(snapshot, printSettings, modernPrintCompleteMessage)
+            : nullptr;
+        HRESULT result = modernPrint ? ShowModernPrint(modernPrint, window) : E_OUTOFMEMORY;
+        if (FAILED(result)) {
+            CloseModernPrint(modernPrint);
+            modernPrint = nullptr;
+            if (result != HRESULT_FROM_WIN32(ERROR_CANCELLED)) {
+                MessageBoxW(window, T(TXT_PRINT_FAILED), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+            }
+        }
+        return;
+    }
+    wchar_t error[512] = {};
+    printDialogOpen = true;
+    PrintJob* job = ChooseReportPrinter(window, edit, title, printSettings, error, ARRAYSIZE(error));
+    printDialogOpen = false;
+    if (job == nullptr) {
+        if (*error) {
+            MessageBoxW(window, error, PRODUCT_NAME, MB_OK | MB_ICONERROR);
+        }
+        return;
+    }
+    job->target = informationOwner;
+    activePrintJob = job;
+    printThread = CreateThread(nullptr, 0, PrintDocument, job, 0, nullptr);
+    if (printThread == nullptr) {
+        FreePrintJob(job);
+        activePrintJob = nullptr;
+        MessageBoxW(window, T(TXT_PRINT_FAILED), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+    }
+}
+
+/// Prints the captured pages and posts completion without accessing the originating edit.
+static DWORD WINAPI PrintDocument(void* parameter) {
+    PrintJob* job = static_cast<PrintJob*>(parameter);
+    job->success = PrintReportPages(job);
+    PostMessageW(job->target, printCompleteMessage, 0, reinterpret_cast<LPARAM>(job));
+    return 0;
+}
+
+/// Releases a completed classic print job on the UI thread.
+static void CompletePrint(PrintJob* job) {
+    if (job != activePrintJob) {
+        return;
+    }
+    WaitForSingleObject(printThread, INFINITE);
+    CloseHandle(printThread);
+    printThread = nullptr;
+    bool failed = !job->success && !job->canceled;
+    FreePrintJob(job);
+    activePrintJob = nullptr;
+    if (failed && !informationClosing) {
+        MessageBoxW(informationOwner, T(TXT_PRINT_FAILED), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+    }
+}
+
+/// Releases the notification reference and any still-active modern print source.
+static void CompleteModernPrint(ModernPrintDialog* completed) {
+    if (completed != modernPrint) {
+        ReleaseModernPrint(completed);
+        return;
+    }
+    bool failed = CloseModernPrint(modernPrint);
+    modernPrint = nullptr;
+    ReleaseModernPrint(completed);
+    if (failed && !informationClosing) {
+        MessageBoxW(informationOwner, T(TXT_PRINT_FAILED), PRODUCT_NAME, MB_OK | MB_ICONERROR);
+    }
+}
+
+/// Closes Find, cancels outstanding print jobs and drains their queued completion notifications.
+static void CloseInformationCommands() {
+    informationClosing = true;
+    find.Close();
+    find.SetTarget(nullptr);
+    if (modernPrint != nullptr) {
+        CloseModernPrint(modernPrint);
+        modernPrint = nullptr;
+    }
+    if (printThread != nullptr) {
+        InterlockedExchange(&activePrintJob->canceled, 1);
+        CancelDC(activePrintJob->printer);
+        WaitForSingleObject(printThread, INFINITE);
+        CloseHandle(printThread);
+        FreePrintJob(activePrintJob);
+        printThread = nullptr;
+        activePrintJob = nullptr;
+    }
+    if (informationOwner != nullptr) {
+        MSG pending = {};
+        while (PeekMessageW(&pending, informationOwner, modernPrintCompleteMessage,
+                modernPrintCompleteMessage, PM_REMOVE)) {
+            ReleaseModernPrint(reinterpret_cast<ModernPrintDialog*>(pending.lParam));
+        }
+        while (PeekMessageW(&pending, informationOwner, printCompleteMessage,
+                printCompleteMessage, PM_REMOVE)) {
+            OutputDebugStringW(L"Discarded a completed print notification during shutdown.\r\n");
+        }
+    }
+    informationOwner = nullptr;
+    informationHelpWindow = nullptr;
+    informationAboutWindow = nullptr;
+    searchWindow = nullptr;
 }
 
 /// Resolves an explicit language preference or falls back to the operating system.
@@ -664,6 +1558,9 @@ std::wstring GetControlText(HWND control) {
 LRESULT CALLBACK InformationTextSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam,
         UINT_PTR subclassId, DWORD_PTR referenceData) {
     UNREFERENCED_PARAMETER(referenceData);
+    if (msg == WM_CONTEXTMENU && ShowInformationContextMenu(window, lParam)) {
+        return 0;
+    }
     if (msg == WM_GETDLGCODE) {
         LRESULT result = DefSubclassProc(window, msg, wParam, lParam);
         if (wParam == VK_RETURN || wParam == VK_ESCAPE || wParam == VK_TAB) {
@@ -716,7 +1613,8 @@ int CALLBACK InformationWordBreakProc(wchar_t* text, int position, int length, i
         if (position == length) {
             position--;
         }
-        while (position > 0 && (!attributes[position].fCharStop
+        while (position > 0
+            && (!attributes[position].fCharStop
                 || !attributes[position].fSoftBreak && !attributes[position - 1].fWhiteSpace)) {
             position--;
         }
@@ -724,7 +1622,8 @@ int CALLBACK InformationWordBreakProc(wchar_t* text, int position, int length, i
         if (position < length) {
             position++;
         }
-        while (position < length && (!attributes[position].fCharStop
+        while (position < length
+            && (!attributes[position].fCharStop
                 || !attributes[position].fSoftBreak && !attributes[position - 1].fWhiteSpace)) {
             position++;
         }
@@ -1216,10 +2115,49 @@ SIZE InformationDialogUnits(HFONT font, int x, int y) {
     return SIZE{ MulDiv(x, units.cx, 4), MulDiv(y, units.cy, 8) };
 }
 
-/// Measures the common native Close button using its current font and existing dialog-unit minimum and
-/// padding.
-SIZE InformationButtonSize(HWND window, HFONT font) {
-    SIZE button = InformationDialogUnits(font, DIALOG_BUTTON_WIDTH_DLU, DIALOG_BUTTON_HEIGHT_DLU);
+/// Skips a native dialog-template string or ordinal resource identifier.
+static const WORD* SkipDialogTemplateString(const WORD* value) {
+    if (*value == 0xFFFF) {
+        return value + 2;
+    }
+    while (*value != 0) {
+        value++;
+    }
+    return value + 1;
+}
+
+/// Scales a control's authored dimensions from its extended dialog resource using the current font.
+static SIZE DialogResourceControlSize(int resourceId, int id, HFONT font) {
+    HRSRC resource = FindResourceW(hInstance, MAKEINTRESOURCEW(resourceId), RT_DIALOG);
+    HGLOBAL loaded = resource == nullptr ? nullptr : LoadResource(hInstance, resource);
+    const WORD* definition = loaded == nullptr ? nullptr : static_cast<const WORD*>(LockResource(loaded));
+    if (definition == nullptr || SizeofResource(hInstance, resource) < 26 || definition[1] != 0xFFFF) {
+        return SIZE{};
+    }
+    WORD count = definition[8];
+    const WORD* item = SkipDialogTemplateString(definition + 13);
+    item = SkipDialogTemplateString(item);
+    item = SkipDialogTemplateString(item);
+    if ((definition[6] & DS_SETFONT) != 0) {
+        item = SkipDialogTemplateString(item + 3);
+    }
+    for (WORD index = 0; index < count; index++) {
+        item = reinterpret_cast<const WORD*>(reinterpret_cast<UINT_PTR>(item) + 3 & ~UINT_PTR{ 3 });
+        int controlId = item[10] | item[11] << 16;
+        if (controlId == id) {
+            return InformationDialogUnits(font, static_cast<short>(item[8]), static_cast<short>(item[9]));
+        }
+        item = SkipDialogTemplateString(item + 12);
+        item = SkipDialogTemplateString(item);
+        WORD bytes = *item++;
+        item = reinterpret_cast<const WORD*>(reinterpret_cast<const BYTE*>(item) + bytes);
+    }
+    return SIZE{};
+}
+
+/// Uses the template dimensions and widens the Close button for its current text when necessary.
+SIZE InformationButtonSize(HWND window, HFONT font, int resourceId) {
+    SIZE button = DialogResourceControlSize(resourceId, ID_INFO_CLOSE, font);
     SIZE ideal = {};
     HWND closeButton = GetDlgItem(window, ID_INFO_CLOSE);
     if (!SendMessageW(closeButton, BCM_GETIDEALSIZE, 0, reinterpret_cast<LPARAM>(&ideal))) {
@@ -1277,6 +2215,8 @@ static void SaveFormPosition(HWND window, int* x, int* y) {
 static void RefreshInformationWindows(AppLanguage language, bool appMode) {
     helpForm.Refresh(language, appMode);
     aboutForm.Refresh(language);
+    SetInformationLanguage(language);
+    UpdateFindWindows(helpForm.GetWindow(), aboutForm.GetWindow());
     if (recordingSettingsWindow && IsWindow(recordingSettingsWindow)) {
         RecordingWindowData* data =
             reinterpret_cast<RecordingWindowData*>(GetWindowLongPtrW(recordingSettingsWindow, DWLP_USER));
@@ -1293,6 +2233,7 @@ void RefreshInformationWindows(HWND owner) {
         reinterpret_cast<const SettingsWindowData*>(GetWindowLongPtrW(owner, GWLP_USERDATA));
     if (data != nullptr) {
         RefreshInformationWindows(data->language, data->appMode);
+        InitializeInformationCommands(owner, helpForm.GetWindow(), aboutForm.GetWindow(), data->language);
     }
 }
 
@@ -1338,6 +2279,7 @@ static void ClampFormPosition(int* x, int* y, int width, int height) {
 
 /// Closes independent information and recording-settings windows before their settings storage is released.
 static void CloseInformationWindows() {
+    CloseInformationCommands();
     helpForm.Close();
     aboutForm.Close();
     if (recordingSettingsWindow != nullptr) {
@@ -1352,7 +2294,12 @@ void UpdateInformationWindowsTopmost(HWND settingsWindow) {
     if ((GetWindowLongPtrW(settingsWindow, GWL_EXSTYLE) & WS_EX_TOPMOST) != 0) {
         position = HWND_TOPMOST;
     }
-    const HWND windows[]{ helpForm.GetWindow(), aboutForm.GetWindow(), recordingSettingsWindow };
+    const HWND windows[]{
+        helpForm.GetWindow(),
+        aboutForm.GetWindow(),
+        find.GetWindow(),
+        recordingSettingsWindow
+    };
     for (HWND window : windows) {
         if (window != nullptr) {
             SetWindowPos(window, position, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
@@ -1389,12 +2336,11 @@ static void ShowInformationWindow(HWND owner, bool help, AppLanguage language, b
         return;
     }
     if (help) {
-        helpForm.Show(owner, app->instance, *settingsData->settings, app->programIcons,
-            helpWindowState, language, appMode);
+        helpForm.Show(owner, app->instance, *settingsData->settings, helpWindowState, language, appMode);
     } else {
-        aboutForm.Show(owner, app->instance, *settingsData->settings, app->programIcons,
-            aboutWindowState, language);
+        aboutForm.Show(owner, app->instance, *settingsData->settings, aboutWindowState, language, false);
     }
+    InitializeInformationCommands(owner, helpForm.GetWindow(), aboutForm.GetWindow(), language);
 }
 
 /// Adjusts a dropdown's pending position and size to the monitor work area before it becomes visible.
@@ -1449,7 +2395,7 @@ static LRESULT CALLBACK ComboBoxDropDownSubclassProc(HWND window, UINT msg, WPAR
 /// Measures current items in the dropdown font immediately before opening, adding borders, padding, and
 /// scrollbar space. Limits the list to 13 visible items and keeps it at least as wide as its combo within
 /// the monitor work area.
-static void UpdateComboBoxDropDownSize(HWND combo) {
+void UpdateComboBoxDropDownSize(HWND combo) {
     if (combo == nullptr) {
         return;
     }
@@ -1520,7 +2466,7 @@ static void UpdateComboBoxDropDownSize(HWND combo) {
 }
 
 /// Converts dialog units using the supplied font metrics rather than fixed pixel assumptions.
-static SIZE DialogUnits(HFONT font, int x, int y) {
+SIZE DialogUnits(HFONT font, int x, int y) {
     HDC dc = GetDC(nullptr);
     SIZE extent = SIZE{};
     TEXTMETRICW metrics = TEXTMETRICW{};
@@ -2054,7 +3000,7 @@ static void AlignSettingsLabel(HWND label, HWND reference) {
 }
 
 /// Copies control text into a null-terminated process-heap buffer owned by the caller.
-static wchar_t* CopyControlText(HWND control) {
+wchar_t* CopyControlText(HWND control) {
     int length = GetWindowTextLengthW(control);
     wchar_t* text = static_cast<wchar_t*>(HeapAlloc(GetProcessHeap(), 0,
         (static_cast<SIZE_T>(length) + 1) * sizeof(wchar_t)));
@@ -2065,7 +3011,7 @@ static wchar_t* CopyControlText(HWND control) {
 }
 
 /// Expands a native button only as needed for its current localized text and native padding.
-static SIZE PreferredButtonSize(HWND button, const SIZE& minimum) {
+SIZE PreferredButtonSize(HWND button, const SIZE& minimum) {
     SIZE size = SIZE{};
     if (!SendMessageW(button, BCM_GETIDEALSIZE, 0, reinterpret_cast<LPARAM>(&size))) {
         wchar_t* text = CopyControlText(button);
@@ -2124,14 +3070,11 @@ static SIZE LayoutRecordingSettings(HWND window) {
     }
     constexpr int radioStep = 20;
     const int rowGap = std::max(9L, spacing.cy);
-    SIZE buttonSize = DialogUnits(font, DIALOG_BUTTON_WIDTH_DLU, DIALOG_BUTTON_HEIGHT_DLU);
-    constexpr int buttons[]{ IDOK, IDCANCEL };
-    for (int id : buttons) {
-        const SIZE preferred = PreferredButtonSize(GetDlgItem(window, id), buttonSize);
-        buttonSize.cx = preferred.cx;
-    }
-    const int buttonHeight = buttonSize.cy;
-    const int buttonWidth = buttonSize.cx;
+    const SIZE acceptMinimum = DialogResourceControlSize(IDD_RECORDING_SETTINGS, IDOK, font);
+    const SIZE cancelMinimum = DialogResourceControlSize(IDD_RECORDING_SETTINGS, IDCANCEL, font);
+    const SIZE accept = PreferredButtonSize(GetDlgItem(window, IDOK), acceptMinimum);
+    const SIZE cancel = PreferredButtonSize(GetDlgItem(window, IDCANCEL), cancelMinimum);
+    const int buttonWidth = std::max(accept.cx, cancel.cx);
     const int buttonGap = DialogUnits(font, 6, 0).cx;
     const int labelGap = std::max(4L, spacing.cx);
     const int bottomMargin = margins.cy;
@@ -2169,9 +3112,9 @@ static SIZE LayoutRecordingSettings(HWND window) {
     const int buttonsTop = noteTop + noteHeight + rowGap;
     const int cancelLeft = width - margin - buttonWidth;
     SetWindowPos(GetDlgItem(window, IDOK), nullptr, cancelLeft - buttonGap - buttonWidth, buttonsTop,
-        buttonWidth, buttonHeight, SWP_NOZORDER | SWP_NOACTIVATE);
-    SetWindowPos(GetDlgItem(window, IDCANCEL), nullptr, cancelLeft, buttonsTop, buttonWidth, buttonHeight,
-        SWP_NOZORDER | SWP_NOACTIVATE);
+        buttonWidth, acceptMinimum.cy, SWP_NOZORDER | SWP_NOACTIVATE);
+    SetWindowPos(GetDlgItem(window, IDCANCEL), nullptr, cancelLeft, buttonsTop, buttonWidth,
+        cancelMinimum.cy, SWP_NOZORDER | SWP_NOACTIVATE);
     AlignSettingsLabel(GetDlgItem(window, ID_RECORD_SIZE_LABEL), GetDlgItem(window, ID_RECORD_SIZE));
     AlignSettingsLabel(GetDlgItem(window, ID_RECORD_RATE_LABEL), GetDlgItem(window, ID_RECORD_RATE));
     AlignSettingsButton(GetDlgItem(window, IDCANCEL), GetDlgItem(window, IDOK));
@@ -2185,7 +3128,7 @@ static SIZE LayoutRecordingSettings(HWND window) {
 
 /// Recreates the shared system font and recalculates dialog geometry after metric, theme or DPI changes.
 static void RefreshRecordingSettingsFont(HWND window, RecordingWindowData& data) {
-    app->programIcons.Apply(window);
+    programIcons.Apply(window);
     const HFONT previous = data.font;
     data.font = CreateSystemDialogFont(window);
     if (data.font) {
@@ -2208,7 +3151,7 @@ static void RefreshRecordingSettingsFont(HWND window, RecordingWindowData& data)
 
 /// Refreshes localized recording captions and fits the buttons without altering unconfirmed choices.
 static void RefreshRecordingSettingsWindow(HWND window, RecordingWindowData& data) {
-    app->programIcons.Apply(window);
+    programIcons.Apply(window);
     const AppLanguage stringsLanguage = data.language;
     const AppLanguage commonLanguage = data.language;
     SetWindowTextW(window,
@@ -2819,6 +3762,13 @@ static bool HasReadyAnimationSurface() {
     return false;
 }
 
+/// Returns the settings panel, or the settings window when no separate panel is used.
+static HWND SettingsContentWindow(HWND window) {
+    SettingsWindowData* data =
+        reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+    return data && data->contentWindow ? data->contentWindow : window;
+}
+
 /// Replaces the single status-bar part without changing application state.
 static void SetStatus(const wchar_t* text) {
     if (app && app->status) {
@@ -3214,11 +4164,17 @@ static void ResizeRenderSurface(RenderSurface& surface, unsigned width, unsigned
 /// Handles animation-window lifecycle, resizing, cursor visibility and EXE or SCR input commands.
 static LRESULT CALLBACK RenderProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam) {
     if (msg == WM_NCCREATE) {
+        programIcons.Apply(window);
         CREATESTRUCTW* create = reinterpret_cast<CREATESTRUCTW*>(lParam);
         SetWindowLongPtrW(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(create->lpCreateParams));
     }
     RenderSurface* surface = reinterpret_cast<RenderSurface*>(GetWindowLongPtrW(window, GWLP_USERDATA));
     switch (msg) {
+        case WM_DPICHANGED:
+        case WM_SETTINGCHANGE:
+        case WM_THEMECHANGED:
+            programIcons.Apply(window);
+            break;
         case WM_WINDOWPOSCHANGED:
             if (app && app->mode == RunMode::Application) {
                 UpdateControlWindowTopmost(app->controlWindow);
@@ -3811,8 +4767,8 @@ static void RememberCheckedMonitors(HWND window, SettingsWindowData& data) {
 /// Selects the saved pattern and enables the combo only after its current items have been populated.
 static void UpdatePatternComboSelection(HWND combo, SettingsWindowData& data) {
     const unsigned selected = PatternCatalog::Find(data.settings->patternId);
-    const std::vector<unsigned>::iterator item =
-        std::find(data.patternItems.begin(), data.patternItems.end(), selected);
+    const std::vector<unsigned>::iterator item = std::find(data.patternItems.begin(),
+        data.patternItems.end(), selected);
     const LRESULT selection = item == data.patternItems.end() ? 0 : item - data.patternItems.begin();
     if (static_cast<std::size_t>(selection) < data.patternItemsAdded
             && SendMessageW(combo, CB_GETCURSEL, 0, 0) != selection) {
@@ -4668,6 +5624,7 @@ static void UpdatePauseButton() {
     SetWindowTextIfChanged(button, PreserveControlMnemonic(button, GetLocalizedText(ActiveLanguage(), text)));
 }
 
+/// Synchronizes one Life slider and its localized caption with the current setting.
 static void UpdateSettingsSlider(HWND window, const SettingsWindowData& data, int sliderId) {
     window = SettingsContentWindow(window);
     const TextId texts[]{ TXT_CELL_SIZE, TXT_GENERATION_RATE, TXT_INITIAL_DENSITY };
@@ -4695,6 +5652,7 @@ static void UpdateSettingsSlider(HWND window, const SettingsWindowData& data, in
     }
 }
 
+/// Refreshes the pattern combo and enables density controls only for random-noise starts.
 static void UpdateSettingsPatterns(HWND window, SettingsWindowData& data) {
     UpdatePatternCombo(window, data);
     UpdatePatternControlMetrics(window);
@@ -4703,6 +5661,7 @@ static void UpdateSettingsPatterns(HWND window, SettingsWindowData& data) {
     EnableSettingsControl(GetDlgItem(window, ID_INITIAL_DENSITY_LABEL), !data.settings->patternsOnly, &data);
 }
 
+/// Refreshes the cell-size slider, action buttons, preview caption and current status.
 static void UpdateSettingsOutputControls(HWND window, SettingsWindowData& data) {
     UpdateSettingsSlider(window, data, ID_CELL_SIZE);
     UpdateSettingsActionButtons(window);
@@ -4826,6 +5785,15 @@ static void ApplySettingsChanges(SettingsWindowData& data, bool reset) {
     UpdateScreenSaverInhibition();
 }
 
+
+/// Applies the grid checkbox, enforces valid cell spacing and synchronizes the cell-size slider.
+static void UpdateGridSettings(HWND window, HWND controls, SettingsWindowData& data) {
+    const unsigned previousSize = data.settings->cellSize;
+    data.settings->showGrid = IsDlgButtonChecked(controls, ID_SHOW_GRID) == BST_CHECKED;
+    data.settings->cellSize = std::max(previousSize, data.settings->showGrid ? 2U : 1U);
+    ApplySettingsChanges(data, previousSize != data.settings->cellSize);
+    UpdateSettingsSlider(window, data, ID_CELL_SIZE);
+}
 
 /// Restores slider values and colors with a displayed cell size of 8 px in either grid mode.
 static void ResetSettings(HWND window, SettingsWindowData& data) {
@@ -4953,8 +5921,8 @@ static LRESULT CreateSettingsControls(HWND window, SettingsWindowData& data) {
                 GetDlgItem(window, ID_GRID_SWATCH))) {
         return -1;
     }
-    const unsigned displayedCellSize =
-        data.settings->cellSize - static_cast<unsigned>(data.settings->showGrid);
+    const unsigned displayedCellSize = data.settings->cellSize
+        - static_cast<unsigned>(data.settings->showGrid);
     SendDlgItemMessageW(window, ID_CELL_SIZE, TBM_SETPOS, TRUE, displayedCellSize);
     SendDlgItemMessageW(window, ID_GENERATION_RATE, TBM_SETPOS, TRUE, data.settings->generationsPerSecond);
     SendDlgItemMessageW(window, ID_INITIAL_DENSITY, TBM_SETPOS, TRUE, data.settings->densityPercent);
@@ -5085,6 +6053,9 @@ static bool HandleMonitorNotification(HWND window, SettingsWindowData& data, LPA
 
 /// Handles settings actions, system changes, scrolling, installation progress and window shutdown.
 static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam) {
+    if (HandleInformationMessage(window, msg, wParam, lParam)) {
+        return TRUE;
+    }
     SettingsWindowData* data =
         reinterpret_cast<SettingsWindowData*>(GetWindowLongPtrW(window, GWLP_USERDATA));
     const HWND controls = SettingsContentWindow(window);
@@ -5117,7 +6088,7 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             return 0;
         case UPDATE_SETTINGS_CONTROL_METRICS:
             if (data) {
-                app->programIcons.Apply(window);
+                programIcons.Apply(window);
                 UpdateSettingsControlMetrics(window);
                 UpdatePatternControlMetrics(window);
                 if (data->contentWindow) {
@@ -5255,8 +6226,7 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
             if (wParam == ID_RECORD_CHECK_TIMER) {
                 RenderSurface* source = RecordingSurface();
                 if (source
-                    && (FAILED(source->renderer->RecordingError())
-                        || !source->renderer->IsRecording())) {
+                        && (FAILED(source->renderer->RecordingError()) || !source->renderer->IsRecording())) {
                     StopRecording();
                 }
                 return 0;
@@ -5387,14 +6357,8 @@ static LRESULT CALLBACK SettingsProc(HWND window, UINT msg, WPARAM wParam, LPARA
                     }
                     return 0;
                 case ID_SHOW_GRID:
-                {
-                    const unsigned previousSize = data->settings->cellSize;
-                    data->settings->showGrid = IsDlgButtonChecked(controls, ID_SHOW_GRID) == BST_CHECKED;
-                    data->settings->cellSize = std::max(previousSize, data->settings->showGrid ? 2U : 1U);
-                    ApplySettingsChanges(*data, previousSize != data->settings->cellSize);
-                    UpdateSettingsSlider(window, *data, ID_CELL_SIZE);
+                    UpdateGridSettings(window, controls, *data);
                     return 0;
-                }
                 case ID_PREVENT_SCREEN_SAVER:
                     data->settings->preventScreenSaver =
                         IsDlgButtonChecked(controls, ID_PREVENT_SCREEN_SAVER) == BST_CHECKED;
@@ -5516,8 +6480,6 @@ static bool RegisterClasses(HINSTANCE instance) {
     render.lpfnWndProc = RenderProc;
     render.lpszClassName = RENDER_CLASS;
     render.hCursor = LoadCursorW(nullptr, IDC_ARROW);
-    render.hIcon = app->programIcons.Large();
-    render.hIconSm = app->programIcons.Small();
     render.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
     WNDCLASSEXW settings = render;
     settings.lpfnWndProc = DefDlgProcW;
@@ -5536,7 +6498,7 @@ static INT_PTR CALLBACK SettingsDialogProc(HWND window, UINT msg, WPARAM, LPARAM
         if (CreateSettingsControls(window, *data) != 0) {
             DestroyWindow(window);
         } else {
-            app->programIcons.Apply(window);
+            programIcons.Apply(window);
         }
     }
     return FALSE;
@@ -5618,6 +6580,10 @@ static void CompletePatternCatalogLoad(bool succeeded, SettingsWindowData* data)
 
 /// Processes independent dialog keys only when that window owns the keyboard focus.
 static bool HandleInformationDialogMessage(MSG& msg) {
+    UpdateFindWindows(helpForm.GetWindow(), aboutForm.GetWindow());
+    if (TranslateInformationMessage(msg)) {
+        return true;
+    }
     HWND focusedWindow = GetAncestor(GetFocus(), GA_ROOT);
     if (helpForm.GetWindow() != nullptr
             && focusedWindow == helpForm.GetWindow()
@@ -5635,6 +6601,11 @@ static bool HandleInformationDialogMessage(MSG& msg) {
         return true;
     }
     return false;
+}
+
+/// Routes dialog-loop input through the information and recording-settings windows.
+bool TranslateModalInformationMessage(HWND, MSG& message) {
+    return HandleInformationDialogMessage(message);
 }
 
 /// Removes leading and trailing Unicode whitespace.
@@ -5779,7 +6750,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstan
     Application application;
     app = &application;
     application.instance = instance;
-    if (!application.programIcons.Load()) {
+    wchar_t local[MAX_PATH] = {};
+    HRESULT libraryResult =
+        SHGetFolderPathW(nullptr, CSIDL_LOCAL_APPDATA, nullptr, SHGFP_TYPE_CURRENT, local);
+    if (SUCCEEDED(libraryResult)) {
+        std::wstring cacheRoot = std::wstring(local) + L"\\FortSoft\\DispSavers";
+        libraryResult = programIcons.Initialize(instance, cacheRoot);
+    }
+    if (FAILED(libraryResult)) {
+        const std::wstring error = std::wstring(PRODUCT_NAME) + L" could not initialize Resources.dll: "
+            + std::to_wstring(static_cast<unsigned long>(libraryResult)) + L"\n";
+        OutputDebugStringW(error.c_str());
         return 1;
     }
     const bool screenSaver = IsScrExecutable();

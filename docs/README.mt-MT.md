@@ -100,6 +100,10 @@ Uża FlightCorridor.scr bħala screen saver ta’ Windows. L-issettjar tiegħu h
 
 Windows 7–11 jappoġġja l-funzjonijiet kollha. Fuq Windows Vista SP2 għandhom jiġu installati l-aġġornamenti KB971512 u KB2117917; ir-reġistrazzjoni MP4 ma taħdimx fuq Vista. Huwa meħtieġ Direct3D 11 u, għall-MP4, Media Foundation u encoder H.264. L-interface u d-dokumentazzjoni huma disponibbli f’36 lingwa. L-applikazzjoni indipendenti tista’ taħdem ukoll fuq Linux permezz ta’ Wine; l-integrazzjoni bħala screen saver hija disponibbli biss fuq Windows.
 
+## Tfittxija u stampar
+
+Għajnuna / Dwar: Ctrl+F — Sib; F3 — Sib li jmiss; Shift+F3 — Sib ta’ qabel; Ctrl+P — Stampa.
+
 ## Kumpilazzjoni u ppakkjar
 
 Iftaħ DispSavers.slnx f’Visual Studio u kkumpila Release | x86 b’MSVC v145 u Windows SDK. Fil-paġna Signing tal-proġett issettja ċ-ċertifikat u s-server obbligatorju tal-marka tal-ħin RFC 3161; il-valuri personali jibqgħu fil-fajl injorat .vcxproj.user. L-SCR iffirmat u bil-marka tal-ħin jiddaħħal fl-EXE, imbagħad jiġi ffirmat l-EXE. PackageRelease.ps1 joħloq l-arkivju komuni `DispSavers-<version>-win32.zip` mingħajr ma jbiddel il-binarji f’Release.

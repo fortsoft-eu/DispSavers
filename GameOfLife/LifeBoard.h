@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.2.2
  */
 
 #pragma once
@@ -127,8 +127,8 @@ public:
     HRESULT Advance(unsigned generations = 1);
 
     /// Draws one monitor view of the shared world into the supplied render target.
-    void DrawTo(ID3D11RenderTargetView* target, unsigned width, unsigned height,
-        const RECT& worldBounds, const RECT& viewBounds);
+    void DrawTo(ID3D11RenderTargetView* target, unsigned width, unsigned height, const RECT& worldBounds,
+        const RECT& viewBounds);
 
     /// Updates cell spacing and rebuilds the visible-cell mask when cycle detection is enabled.
     void SetCellSize(unsigned size);

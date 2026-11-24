@@ -100,6 +100,10 @@ Attiva anteprima avvia un’anteprima a schermo intero su tutti i monitor; le im
 
 I sistemi da Windows 7 a Windows 11 supportano tutte le funzioni, comprese le istantanee BMP/GIF/JPEG/PNG/TIFF/WebP e la registrazione MP4. Per eseguire l’applicazione su Windows Vista SP2, è necessario installare gli aggiornamenti KB971512 e KB2117917. La registrazione MP4 non funziona in Vista nella versione attuale. La visualizzazione richiede Direct3D 11, non soltanto un vecchio runtime DirectX. La registrazione MP4 richiede componenti Media Foundation e un codificatore H.264 disponibili. L’applicazione autonoma può essere eseguita anche su Linux tramite Wine; l’integrazione come salvaschermo è disponibile solo su Windows.
 
+## Ricerca e stampa
+
+Guida / Informazioni: Ctrl+F — Trova; F3 — Trova successivo; Shift+F3 — Trova precedente; Ctrl+P — Stampa.
+
 ## Compilazione
 
 Aprire `DispSavers.slnx` in Visual Studio con MSVC v145 e Windows SDK. Selezionare `Release | x86` e ricompilare la soluzione per creare `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` e `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. Non è prevista una configurazione x64.

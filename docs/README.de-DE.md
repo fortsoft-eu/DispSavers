@@ -100,6 +100,10 @@ Vorschau einschalten startet eine Vollbildvorschau auf allen Monitoren. Der Eins
 
 Windows 7 bis Windows 11 unterstützen alle Funktionen einschließlich BMP/GIF/JPEG/PNG/TIFF/WebP-Schnappschüssen und MP4-Aufnahmen. Zum Ausführen der Anwendung unter Windows Vista SP2 müssen die Updates KB971512 und KB2117917 installiert werden. MP4-Aufnahmen funktionieren unter Vista in der aktuellen Version nicht. Die Darstellung erfordert Direct3D 11, nicht nur eine ältere DirectX-Laufzeitumgebung. MP4-Aufnahmen benötigen verfügbare Media-Foundation-Komponenten und einen H.264-Encoder. Die eigenständige Anwendung kann über Wine auch unter Linux ausgeführt werden; die Integration als Bildschirmschoner ist nur unter Windows verfügbar.
 
+## Suche und Drucken
+
+Hilfe / Info: Ctrl+F — Suchen; F3 — Weitersuchen; Shift+F3 — Rückwärts weitersuchen; Ctrl+P — Drucken.
+
 ## Erstellen und Paketieren
 
 Öffnen Sie `DispSavers.slnx` in Visual Studio mit MSVC v145 und Windows SDK. Wählen Sie `Release | x86` und erstellen Sie die Projektmappe neu; dabei entstehen `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` und `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. Eine x64-Konfiguration ist nicht vorhanden.

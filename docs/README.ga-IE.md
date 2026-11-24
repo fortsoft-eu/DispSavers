@@ -100,6 +100,10 @@ Roghnaigh Viewport nó TV i socruithe taifeadta. Coinníonn Viewport toisí agus
 
 Tacaíonn Windows 7–11 leis na gnéithe uile. Ar Windows Vista SP2 ní mór nuashonruithe KB971512 agus KB2117917 a shuiteáil; ní oibríonn taifeadadh MP4 ar Vista. Teastaíonn tacaíocht Direct3D 11, agus Media Foundation agus ionchódóir H.264 le haghaidh MP4. Tá an comhéadan agus an doiciméadú ar fáil i 36 teanga. Is féidir leis an bhfeidhmchlár neamhspleách rith ar Linux trí Wine freisin; níl comhtháthú mar spárálaí scáileáin ar fáil ach ar Windows.
 
+## Cuardach agus priontáil
+
+Cabhair / Maidir leis: Ctrl+F — Aimsigh; F3 — Aimsigh an chéad cheann eile; Shift+F3 — Aimsigh an ceann roimhe; Ctrl+P — Priontáil.
+
 ## Tiomsú agus pacáistiú
 
 Oscail DispSavers.slnx in Visual Studio agus tiomsaigh Release | x86 le MSVC v145 agus Windows SDK. Socraigh an teastas agus an freastalaí stampa ama RFC 3161 éigeantach ar leathanach Signing an tionscadail; coinnítear na luachanna pearsanta sa chomhad neamhrianaithe .vcxproj.user. Leabaítear an SCR sínithe agus stampáilte san EXE agus sínítear an EXE ina dhiaidh. Cruthaíonn PackageRelease.ps1 `DispSavers-<version>-win32.zip` do na ceithre spárálaí gan na dénártha in Release a athrú.

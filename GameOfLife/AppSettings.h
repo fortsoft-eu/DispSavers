@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.2.2
  */
 
 #pragma once
 
+#include "main.h"
 #include "PersistWindowState.h"
 #include "Mp4Recorder.h"
 #include <limits>

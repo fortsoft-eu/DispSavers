@@ -100,6 +100,10 @@ Käivitage FlightCorridor.scr Windowsi ekraanisäästjana. Selle sätted on rake
 
 Windows 7–11 toetab kõiki funktsioone. Windows Vista SP2 jaoks tuleb paigaldada värskendused KB971512 ja KB2117917; MP4 salvestamine Vistas ei tööta. Vaja on Direct3D 11 tuge ning MP4 jaoks Media Foundationi ja H.264 kodeerijat. Liides ja dokumentatsioon on saadaval 36 keeles. Eraldiseisev rakendus võib Wine’i kaudu töötada ka Linuxis; ekraanisäästja integratsioon on saadaval ainult Windowsis.
 
+## Otsing ja printimine
+
+Spikker / Teave: Ctrl+F — Otsi; F3 — Otsi järgmine; Shift+F3 — Otsi eelmine; Ctrl+P — Prindi.
+
 ## Koostamine ja pakkimine
 
 Avage DispSavers.slnx Visual Studios ja koostage Release | x86. Vaja on MSVC v145 ja Windows SDK-d. Projekti Signing-lehel määratakse sertifikaat ja kohustuslik RFC 3161 ajatempliserver; isiklikud väärtused jäävad ignoreeritud .vcxproj.user-faili. Allkirjastatud ja ajatempliga SCR lisatakse EXE-sse, seejärel allkirjastatakse ka EXE. PackageRelease.ps1 loob `DispSavers-<version>-win32.zip` arhiivi kõigi nelja ekraanisäästja jaoks ega muuda Release-kausta binaarfaile.

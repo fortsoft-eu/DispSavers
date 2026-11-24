@@ -100,6 +100,10 @@ Activar vista previa inicia una vista previa a pantalla completa en todos los mo
 
 Windows 7 a Windows 11 admiten todas las funciones, incluidas las capturas BMP/GIF/JPEG/PNG/TIFF/WebP y la grabación MP4. Para ejecutar la aplicación en Windows Vista SP2, es necesario instalar las actualizaciones KB971512 y KB2117917. La grabación MP4 no funciona en Vista en la versión actual. La representación requiere Direct3D 11, no solo un entorno de ejecución antiguo de DirectX. La grabación MP4 requiere componentes de Media Foundation y un codificador H.264 disponibles. La aplicación independiente también puede ejecutarse en Linux mediante Wine; la integración como salvapantallas solo está disponible en Windows.
 
+## Búsqueda e impresión
+
+Ayuda / Acerca de: Ctrl+F — Buscar; F3 — Buscar siguiente; Shift+F3 — Buscar anterior; Ctrl+P — Imprimir.
+
 ## Compilación
 
 Abra `DispSavers.slnx` en Visual Studio con MSVC v145 y un SDK de Windows. Seleccione `Release | x86` y recompile la solución para generar `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` y `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. No hay configuración x64.

@@ -100,6 +100,10 @@ Naudokite FlightCorridor.scr kaip Windows ekrano užsklandą. Jos nuostatos atsk
 
 Windows 7–11 palaiko visas funkcijas. Windows Vista SP2 būtina įdiegti naujinimus KB971512 ir KB2117917; MP4 įrašymas Vistoje neveikia. Reikalingas Direct3D 11 palaikymas, o MP4 įrašymui Media Foundation ir H.264 koduotuvas. Sąsaja ir dokumentacija pateikiamos 36 kalbomis. Atskiroji programa taip pat gali veikti Linux sistemoje per Wine; integracija kaip ekrano užsklanda galima tik Windows sistemoje.
 
+## Paieška ir spausdinimas
+
+Žinynas / Apie: Ctrl+F — Rasti; F3 — Rasti kitą; Shift+F3 — Rasti ankstesnį; Ctrl+P — Spausdinti.
+
 ## Kompiliavimas ir pakavimas
 
 Atidarykite DispSavers.slnx Visual Studio ir kompiliuokite Release | x86 su MSVC v145 ir Windows SDK. Projekto Signing puslapyje nurodykite sertifikatą ir privalomą RFC 3161 laiko žymos serverį; asmeninės reikšmės lieka ignoruojamame .vcxproj.user faile. Pasirašytas SCR su laiko žyma įtraukiamas į EXE, tada pasirašomas ir EXE. PackageRelease.ps1 sukuria bendrą `DispSavers-<version>-win32.zip` archyvą nekeisdamas Release dvejetainių failų.

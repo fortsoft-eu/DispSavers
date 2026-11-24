@@ -100,6 +100,10 @@ Virkja forskoðun ræsir forskoðun á öllum skjám. Stillingaglugginn helst op
 
 Windows 7 til Windows 11 styðja alla eiginleika, þar á meðal BMP/GIF/JPEG/PNG/TIFF/WebP-skjámyndir og MP4-upptöku. Til að keyra forritið á Windows Vista SP2 þarf að setja upp uppfærslurnar KB971512 og KB2117917. MP4-upptaka virkar ekki í Vista í núverandi útgáfu. Birting krefst Direct3D 11, ekki aðeins eldri DirectX-keyrsluumhverfis. MP4-upptaka krefst tiltækra Media Foundation-íhluta og H.264-kóðara. Sjálfstæða forritið getur einnig keyrt á Linux með Wine; samþætting sem skjáhvíla er aðeins í boði á Windows.
 
+## Leit og prentun
+
+Hjálp / Um: Ctrl+F — Finna; F3 — Finna næsta; Shift+F3 — Finna fyrra; Ctrl+P — Prenta.
+
 ## Smíði
 
 Opnaðu `DispSavers.slnx` í Visual Studio með MSVC v145 og Windows SDK. Veldu `Release | x86` og endursmíðaðu lausnina til að búa til `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` og `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. Engin x64-stilling er til.

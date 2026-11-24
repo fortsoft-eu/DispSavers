@@ -100,6 +100,10 @@ Ativar pré-visualização inicia uma pré-visualização em ecrã inteiro em to
 
 Os sistemas Windows 7 a Windows 11 suportam todas as funcionalidades, incluindo capturas BMP/GIF/JPEG/PNG/TIFF/WebP e gravação MP4. Para executar a aplicação no Windows Vista SP2, é necessário instalar as atualizações KB971512 e KB2117917. A gravação MP4 não funciona no Vista na versão atual. A apresentação requer Direct3D 11, não apenas um runtime DirectX mais antigo. A gravação MP4 requer componentes Media Foundation e um codificador H.264 disponíveis. A aplicação autónoma também pode ser executada no Linux através do Wine; a integração como proteção de ecrã está disponível apenas no Windows.
 
+## Pesquisa e impressão
+
+Ajuda / Acerca de: Ctrl+F — Localizar; F3 — Localizar seguinte; Shift+F3 — Localizar anterior; Ctrl+P — Imprimir.
+
 ## Compilação
 
 Abra `DispSavers.slnx` no Visual Studio com MSVC v145 e um Windows SDK. Selecione `Release | x86` e recompile a solução para criar `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` e `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. Não existe configuração x64.

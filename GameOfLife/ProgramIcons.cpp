@@ -21,20 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.2.2
  */
 
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include "ProgramIcons.h"
 #include "SystemDialogTemplate.h"
+#include "PackedResource.h"
+#include "resource.h"
 #include <shlobj.h>
-#include <shellapi.h>
-#include <string>
+#include <cstring>
+#include <memory>
+#include <vector>
+
+#pragma comment(lib, "Shell32.lib")
 
 using GetSystemMetricsForDpiFunction = int(WINAPI*)(int, UINT);
 
-/// Reads the requested native icon metric at the window DPI, or the system DPI on older Windows.
+static const DWORD resourceSignature = 0x4D494450;
+
+/// Returns the native icon metric for the target DPI, or the system metric on older Windows.
 static int SystemIconMetric(int metric, UINT dpi) {
     static const GetSystemMetricsForDpiFunction getSystemMetricsForDpi =
         reinterpret_cast<GetSystemMetricsForDpiFunction>(
@@ -42,121 +49,184 @@ static int SystemIconMetric(int metric, UINT dpi) {
     return getSystemMetricsForDpi ? getSystemMetricsForDpi(metric, dpi) : GetSystemMetrics(metric);
 }
 
-/// Resolves the full path to a Windows system icon library.
-static std::wstring SystemIconLibraryPath(const wchar_t* libraryName) {
-    wchar_t systemDirectory[MAX_PATH]{};
-    const UINT length = GetSystemDirectoryW(systemDirectory, MAX_PATH);
-    if (length == 0 || length >= static_cast<UINT>(MAX_PATH)) {
-        return std::wstring{};
+/// Computes the ZIP-compatible CRC32 used by the existing packed-library format.
+static DWORD ResourceChecksum(const BYTE* bytes, DWORD size) {
+    DWORD checksum = ~0UL;
+    while (size-- != 0) {
+        checksum ^= *bytes++;
+        for (int bit = 0; bit < 8; bit++) {
+            checksum = checksum >> 1 ^ 0UL - (checksum & 1) & 0xEDB88320UL;
+        }
     }
-    std::wstring libraryPath(systemDirectory, length);
-    libraryPath += L"\\";
-    libraryPath += libraryName;
-    return libraryPath;
+    return ~checksum;
 }
 
-/// Loads matching large and small icons from a Windows system library.
-static bool ExtractSystemIconPair(const wchar_t* libraryName, int iconIndex, UINT dpi,
-        HICON& largeIcon, HICON& smallIcon) {
-    const std::wstring libraryPath = SystemIconLibraryPath(libraryName);
-    if (libraryPath.empty()) {
+/// Compares the cached file's complete contents against the embedded length and CRC32.
+static bool ResourceCacheMatches(const std::wstring& path, DWORD size, DWORD checksum) {
+    HANDLE file = CreateFileW(path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_DELETE,
+        nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (file == INVALID_HANDLE_VALUE) {
         return false;
     }
-    largeIcon = nullptr;
-    smallIcon = nullptr;
-    const UINT size = MAKELONG(SystemIconMetric(SM_CXICON, dpi), SystemIconMetric(SM_CXSMICON, dpi));
-    if (SHDefExtractIconW(libraryPath.c_str(), iconIndex, 0, &largeIcon, &smallIcon, size) != S_OK
-            || largeIcon == nullptr || smallIcon == nullptr) {
-        if (largeIcon != nullptr) {
-            DestroyIcon(largeIcon);
+    LARGE_INTEGER length = {};
+    bool matches = GetFileSizeEx(file, &length) && length.QuadPart == size;
+    if (matches) {
+        std::vector<BYTE> bytes(size);
+        DWORD offset = 0;
+        while (matches && offset < size) {
+            DWORD received = 0;
+            matches = ReadFile(file, bytes.data() + offset, size - offset, &received, nullptr)
+                && received != 0;
+            offset += received;
         }
-        if (smallIcon != nullptr) {
-            DestroyIcon(smallIcon);
-        }
-        largeIcon = nullptr;
-        smallIcon = nullptr;
-        return false;
+        matches = matches && ResourceChecksum(bytes.data(), size) == checksum;
     }
-    return true;
+    CloseHandle(file);
+    return matches;
 }
 
-/// Releases any loaded icons.
+/// Releases the process-heap buffer allocated by the shared resource decoder.
+static void ReleaseResourceBytes(BYTE* bytes) {
+    if (!HeapFree(GetProcessHeap(), 0, bytes)) {
+        OutputDebugStringW(L"Could not release the decoded Resources.dll buffer.\n");
+    }
+}
+
+/// Flushes a complete decoded DLL to a temporary file and atomically installs it in the cache.
+static HRESULT WriteResourceCache(const std::wstring& path, const BYTE* bytes, DWORD size) {
+    std::wstring temporary = path + L"." + std::to_wstring(GetCurrentProcessId()) + L".partial";
+    HANDLE file = CreateFileW(temporary.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_NEW,
+        FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (file == INVALID_HANDLE_VALUE) {
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
+    HRESULT result = S_OK;
+    DWORD offset = 0;
+    while (SUCCEEDED(result) && offset < size) {
+        DWORD written = 0;
+        if (!WriteFile(file, bytes + offset, size - offset, &written, nullptr)) {
+            result = HRESULT_FROM_WIN32(GetLastError());
+        } else if (written == 0) {
+            result = HRESULT_FROM_WIN32(ERROR_WRITE_FAULT);
+        }
+        offset += written;
+    }
+    if (SUCCEEDED(result) && !FlushFileBuffers(file)) {
+        result = HRESULT_FROM_WIN32(GetLastError());
+    }
+    if (!CloseHandle(file) && SUCCEEDED(result)) {
+        result = HRESULT_FROM_WIN32(GetLastError());
+    }
+    if (SUCCEEDED(result)
+            && !MoveFileExW(temporary.c_str(), path.c_str(),
+                MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) {
+        result = HRESULT_FROM_WIN32(GetLastError());
+    }
+    if (FAILED(result) && !DeleteFileW(temporary.c_str())) {
+        OutputDebugStringW(L"Could not remove the incomplete Resources.dll cache file.\n");
+    }
+    return result;
+}
+
+/// Resolves the library directly in the application profile cache without loading executable code.
+static HRESULT ResourceCachePath(const std::wstring& directory, std::wstring* path) {
+    int created = SHCreateDirectoryExW(nullptr, directory.c_str(), nullptr);
+    if (created != ERROR_SUCCESS && created != ERROR_ALREADY_EXISTS) {
+        return HRESULT_FROM_WIN32(created);
+    }
+    *path = directory + L"\\Resources.dll";
+    return S_OK;
+}
+
+/// Validates and atomically extracts the complete embedded DLL, reusing an identical cached file.
+HRESULT ProgramIcons::Initialize(HINSTANCE instance, const std::wstring& cacheRoot) {
+    HRSRC resource = FindResourceW(instance, MAKEINTRESOURCEW(IDR_IMAGE_LIBRARY), RT_RCDATA);
+    HGLOBAL loaded = resource == nullptr ? nullptr : LoadResource(instance, resource);
+    const BYTE* packed = loaded == nullptr ? nullptr : static_cast<const BYTE*>(LockResource(loaded));
+    DWORD packedSize = resource == nullptr ? 0 : SizeofResource(instance, resource);
+    if (packed == nullptr || packedSize <= 12) {
+        return HRESULT_FROM_WIN32(ERROR_RESOURCE_DATA_NOT_FOUND);
+    }
+    DWORD signature = 0;
+    DWORD size = 0;
+    DWORD checksum = 0;
+    std::memcpy(&signature, packed, sizeof(signature));
+    std::memcpy(&size, packed + 4, sizeof(size));
+    std::memcpy(&checksum, packed + 8, sizeof(checksum));
+    if (signature != resourceSignature || size == 0 || size > 128UL * 1024 * 1024) {
+        return HRESULT_FROM_WIN32(ERROR_INVALID_DATA);
+    }
+    std::wstring destination;
+    HRESULT result = ResourceCachePath(cacheRoot, &destination);
+    if (FAILED(result)) {
+        return result;
+    }
+    if (!ResourceCacheMatches(destination, size, checksum)) {
+        BYTE* decoded = nullptr;
+        DWORD decodedSize = 0;
+        if (!UnpackLibraryBytes(packed, packedSize, &decoded, &decodedSize)) {
+            return HRESULT_FROM_WIN32(ERROR_INVALID_DATA);
+        }
+        std::unique_ptr<BYTE, decltype(&ReleaseResourceBytes)> buffer(decoded, ReleaseResourceBytes);
+        result = WriteResourceCache(destination, buffer.get(), decodedSize);
+        if (FAILED(result)) {
+            return result;
+        }
+    }
+    if (path != destination) {
+        ClearIcons();
+        path = destination;
+    }
+    return S_OK;
+}
+
+/// Releases every cached icon after all application windows and controls have closed.
 ProgramIcons::~ProgramIcons() {
-    Reset();
+    ClearIcons();
 }
 
-/// Loads the application icons from shell32.dll at index 34.
-bool ProgramIcons::Load() {
-    HICON largeIcon = nullptr;
-    HICON loadedSmallIcon = nullptr;
-    if (!ExtractSystemIconPair(L"shell32.dll", 34, GetSystemDialogDpi(nullptr), largeIcon, loadedSmallIcon)) {
-        return false;
-    }
-    Reset();
-    large = largeIcon;
-    smallIcon = loadedSmallIcon;
-    return true;
-}
-
-/// Loads an icon at the requested pixel size; the caller must release it with DestroyIcon.
-HICON ProgramIcons::LoadSized(UINT size) const {
-    const std::wstring libraryPath = SystemIconLibraryPath(L"shell32.dll");
-    if (libraryPath.empty()) {
-        return nullptr;
+/// Returns a shared cached icon; this class retains ownership and callers must not destroy it.
+HICON ProgramIcons::LoadIconAtIndex(int index, int width, int height) const {
+    for (const IconEntry& entry : icons) {
+        if (entry.index == index && entry.width == width && entry.height == height) {
+            return entry.icon;
+        }
     }
     HICON icon = nullptr;
-    if (SHDefExtractIconW(libraryPath.c_str(), 34, 0, &icon, nullptr, size) != S_OK) {
+    UINT extracted = PrivateExtractIconsW(path.c_str(), index, width, height, &icon, nullptr, 1, 0);
+    if (extracted != 1) {
         if (icon != nullptr) {
             DestroyIcon(icon);
         }
         return nullptr;
     }
+    icons.push_back(IconEntry{ icon, index, width, height });
     return icon;
 }
 
-/// Applies the cached large and small system icons selected for this window DPI.
-void ProgramIcons::Apply(HWND window) const {
-    const UINT dpi = GetSystemDialogDpi(window);
-    for (const IconPair& icons : windowIcons) {
-        if (icons.dpi == dpi) {
-            SendMessageW(window, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(icons.large));
-            SendMessageW(window, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(icons.smallIcon));
-            return;
+/// Applies shared small and large icons using native metrics for the target window's current DPI.
+void ProgramIcons::Apply(HWND window, int iconIndex) const {
+    UINT dpi = GetSystemDialogDpi(window);
+    const int types[] = { ICON_SMALL, ICON_BIG };
+    for (int type : types) {
+        int width = SystemIconMetric(type == ICON_SMALL ? SM_CXSMICON : SM_CXICON, dpi);
+        int height = SystemIconMetric(type == ICON_SMALL ? SM_CYSMICON : SM_CYICON, dpi);
+        HICON icon = LoadIconAtIndex(iconIndex, width, height);
+        if (icon != nullptr) {
+            SendMessageW(window, WM_SETICON, type, reinterpret_cast<LPARAM>(icon));
         }
     }
-    HICON largeIcon = nullptr;
-    HICON loadedSmallIcon = nullptr;
-    if (!ExtractSystemIconPair(L"shell32.dll", 34, dpi, largeIcon, loadedSmallIcon)) {
-        return;
-    }
-    windowIcons.push_back(IconPair{ dpi, largeIcon, loadedSmallIcon });
-    SendMessageW(window, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(largeIcon));
-    SendMessageW(window, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(loadedSmallIcon));
 }
 
-/// Returns the large application icon, or null when loading has failed.
-HICON ProgramIcons::Large() const {
-    return large;
+/// Returns the extracted library's absolute path after successful initialization.
+const std::wstring& ProgramIcons::GetPath() const {
+    return path;
 }
 
-/// Returns the small application icon, or null when loading has failed.
-HICON ProgramIcons::Small() const {
-    return smallIcon;
-}
-
-/// Releases the currently owned icon handles.
-void ProgramIcons::Reset() {
-    for (const IconPair& icons : windowIcons) {
-        DestroyIcon(icons.smallIcon);
-        DestroyIcon(icons.large);
+/// Releases the owned icon handles before replacing the library or destroying this component.
+void ProgramIcons::ClearIcons() {
+    for (const IconEntry& entry : icons) {
+        DestroyIcon(entry.icon);
     }
-    windowIcons.clear();
-    if (smallIcon != nullptr && smallIcon != large) {
-        DestroyIcon(smallIcon);
-    }
-    if (large != nullptr) {
-        DestroyIcon(large);
-    }
-    large = nullptr;
-    smallIcon = nullptr;
+    icons.clear();
 }

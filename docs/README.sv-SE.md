@@ -100,6 +100,10 @@ Aktivera förhandsvisning startar en helskärmsvisning på alla bildskärmar. In
 
 Windows 7 till Windows 11 stöder alla funktioner, inklusive BMP/GIF/JPEG/PNG/TIFF/WebP-skärmbilder och MP4-inspelning. För att köra programmet på Windows Vista SP2 måste uppdateringarna KB971512 och KB2117917 installeras. MP4-inspelning fungerar inte på Vista i den aktuella versionen. Visningen kräver Direct3D 11, inte bara en äldre DirectX-körningsmiljö. MP4-inspelning kräver tillgängliga Media Foundation-komponenter och en H.264-kodare. Det fristående programmet kan även köras på Linux via Wine; integrering som skärmsläckare är endast tillgänglig på Windows.
 
+## Sökning och utskrift
+
+Hjälp / Om: Ctrl+F — Sök; F3 — Sök nästa; Shift+F3 — Sök föregående; Ctrl+P — Skriv ut.
+
 ## Bygge
 
 Öppna `DispSavers.slnx` i Visual Studio med MSVC v145 och Windows SDK. Välj `Release | x86` och bygg om lösningen för att skapa `Release\FlyingSolids.exe`, `Release\FlightCorridor.exe`, `Release\GameOfLife.exe`, `Release\GameOfLife.scr`, `Release\SpaceFlight.exe` och `Release\FlyingSolids.scr`, `Release\FlightCorridor.scr`, `Release\SpaceFlight.scr`. Ingen x64-konfiguration finns.

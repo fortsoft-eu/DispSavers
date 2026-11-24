@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.0.0
+ * Last modified for version 1.3.2.2
  */
 
 #pragma once
@@ -31,7 +31,6 @@
 #include <string>
 
 struct AppSettings;
-class ProgramIcons;
 
 /// Manages the About dialog, its controls and fonts, and its saved position.
 class AboutForm {
@@ -40,9 +39,9 @@ public:
     /// Returns this form's native window, or null while it is closed.
     HWND GetWindow() const;
 
-    /// Creates or activates this form with its own template, state, controls and saved placement.
-    void Show(HWND owner, HINSTANCE module, AppSettings& preferences, const ProgramIcons& icons,
-        PersistWindowState& state, AppLanguage selectedLanguage);
+    /// Creates or activates the shared About form, optionally using the native modal dialog loop.
+    void Show(HWND owner, HINSTANCE module, AppSettings& preferences, PersistWindowState& state,
+        AppLanguage selectedLanguage, bool modalDialog = false);
 
     /// Updates this form's localized captions and content without changing the other form.
     void Refresh(AppLanguage selectedLanguage);
@@ -56,12 +55,11 @@ public:
 private:
     HWND window = nullptr;
     HWND tooltip = nullptr;
+    HWND ownerWindow = nullptr;
     HFONT uiFont = nullptr;
     HFONT licenseFont = nullptr;
-    HICON productIcon = nullptr;
     HINSTANCE instance = nullptr;
     AppSettings* settings = nullptr;
-    const ProgramIcons* programIcons = nullptr;
     PersistWindowState* placement = nullptr;
     AppLanguage language = LANG_EN_US;
     SIZE referenceLicense = {};
@@ -69,6 +67,10 @@ private:
     wchar_t tooltipText[256] = {};
     bool ownsFont = false;
     bool initialized = false;
+    bool modal = false;
+
+    /// Initializes native controls, content and placement for either creation mode.
+    bool Initialize();
 
     /// Builds the natural About layout from its fixed license dimensions, then fits it to the monitor work
     /// area. Resize notifications anchor the edit to the right and bottom edges and the Close button to the
