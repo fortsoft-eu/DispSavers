@@ -108,10 +108,10 @@
     <ClCompile Include="AboutForm.cpp" />
     <ClCompile Include="HelpForm.cpp" />
     <ClCompile Include="AppSettings.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Localization.cpp" />
     <ClCompile Include="LifeBoard.cpp" />
     <ClCompile Include="MonitorLayout.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="MonitorInfo.cpp" />
     <ClCompile Include="Mp4Recorder.cpp" />
     <ClCompile Include="PatternCatalog.cpp" />
