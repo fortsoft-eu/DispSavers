@@ -102,7 +102,7 @@ Windows 7 through Windows 11 support all features, including BMP/GIF/JPEG/PNG/TI
 
 ## Search and printing
 
-Help and About support Find (Ctrl+F), Find Next (F3), Find Previous (Shift+F3), Page Setup, and Print (Ctrl+P). Right-click the text for these commands. Search supports case sensitivity, backward searching, whole words, line starts or ends, regular expressions, and a history of the 30 most recent searches in the current session.
+Help and About support Find (Ctrl+F), Find Next (F3), Find Previous (Shift+F3), and Print (Ctrl+P) through keyboard shortcuts. Search supports case sensitivity, backward searching, whole words, line starts or ends, regular expressions, and a history of the 30 most recent searches in the current session.
 
 ## Building and packaging
 

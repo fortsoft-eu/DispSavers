@@ -485,18 +485,6 @@ static bool TranslateInformationMessage(MSG& message);
 /// Handles search, print completion and Help commands for the owning information window.
 static bool HandleInformationMessage(HWND window, UINT message, WPARAM wParam, LPARAM lParam);
 
-/// Appends a localized information-window command with the requested enabled state.
-static void AppendInformationContextItem(HMENU menu, UINT command, TextId caption, bool enabled);
-
-/// Builds the active information edit's clipboard, search and printing context menu.
-static bool ShowInformationContextMenu(HWND control, LPARAM location);
-
-/// Dispatches clipboard, search, page setup and printing commands to the active information edit.
-static void HandleInformationCommand(UINT command);
-
-/// Opens Page Setup for the active information window and reports any dialog failure.
-static void PageSetup();
-
 /// Captures immutable text before opening the selected native printing path.
 static void PrintReport();
 
@@ -1127,93 +1115,6 @@ static bool HandleInformationMessage(HWND window, UINT message, WPARAM wParam, L
         return true;
     }
     return false;
-}
-
-/// Appends a localized information-window command with the requested enabled state.
-static void AppendInformationContextItem(HMENU menu, UINT command, TextId caption, bool enabled) {
-    AppendMenuW(menu, MF_STRING | (enabled ? MF_ENABLED : MF_GRAYED), command,
-        GetLocalizedText(informationLanguage, caption));
-}
-
-/// Builds the active information edit's clipboard, search and printing context menu.
-static bool ShowInformationContextMenu(HWND control, LPARAM location) {
-    HWND parent = GetParent(control);
-    if (parent != informationHelpWindow && parent != informationAboutWindow) {
-        return false;
-    }
-    searchWindow = parent;
-    find.SetTarget(control);
-    HMENU menu = CreatePopupMenu();
-    if (menu == nullptr) {
-        return true;
-    }
-    DWORD first = 0;
-    DWORD last = 0;
-    SendMessageW(control, EM_GETSEL, reinterpret_cast<WPARAM>(&first), reinterpret_cast<LPARAM>(&last));
-    bool hasText = GetWindowTextLengthW(control) > 0;
-    bool printable = hasText && !printThread && !modernPrint && !printDialogOpen;
-    AppendInformationContextItem(menu, ID_EDIT_COPY, TXT_COPY, first != last);
-    AppendInformationContextItem(menu, ID_EDIT_SELECT_ALL, TXT_SELECT_ALL, hasText);
-    AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
-    AppendInformationContextItem(menu, ID_EDIT_FIND, TXT_FIND_MENU, hasText);
-    AppendInformationContextItem(menu, ID_EDIT_FIND_NEXT, TXT_FIND_NEXT_MENU, hasText);
-    AppendInformationContextItem(menu, ID_EDIT_FIND_PREVIOUS, TXT_FIND_PREVIOUS_MENU, hasText);
-    AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
-    AppendInformationContextItem(menu, ID_FILE_PAGE_SETUP, TXT_PAGE_SETUP, printable);
-    AppendInformationContextItem(menu, ID_FILE_PRINT, TXT_PRINT, printable);
-    POINT point = { GET_X_LPARAM(location), GET_Y_LPARAM(location) };
-    if (location == -1) {
-        RECT bounds = {};
-        GetWindowRect(control, &bounds);
-        point = POINT{ bounds.left, bounds.top };
-    }
-    UINT command = TrackPopupMenu(menu, TPM_RETURNCMD | TPM_RIGHTBUTTON, point.x, point.y,
-        0, parent, nullptr);
-    DestroyMenu(menu);
-    HandleInformationCommand(command);
-    return true;
-}
-
-/// Dispatches clipboard, search, page setup and printing commands to the active information edit.
-static void HandleInformationCommand(UINT command) {
-    HWND edit = TextTarget();
-    switch (command) {
-        case ID_EDIT_COPY:
-            SendMessageW(edit, WM_COPY, 0, 0);
-            break;
-        case ID_EDIT_SELECT_ALL:
-            SendMessageW(edit, EM_SETSEL, 0, -1);
-            break;
-        case ID_EDIT_FIND:
-            find.Show(informationOwner);
-            break;
-        case ID_EDIT_FIND_NEXT:
-            find.FindNext(informationOwner, false);
-            break;
-        case ID_EDIT_FIND_PREVIOUS:
-            find.FindNext(informationOwner, true);
-            break;
-        case ID_FILE_PAGE_SETUP:
-            PageSetup();
-            break;
-        case ID_FILE_PRINT:
-            PrintReport();
-            break;
-    }
-}
-
-/// Opens Page Setup for the active information window and reports any dialog failure.
-static void PageSetup() {
-    if (informationClosing || printThread || modernPrint || printDialogOpen || !TextTarget()) {
-        return;
-    }
-    wchar_t error[512] = {};
-    printDialogOpen = true;
-    printSettings.PageSetup(searchWindow, T(TXT_PRINT_FAILED), error, ARRAYSIZE(error));
-    printDialogOpen = false;
-    if (*error) {
-        MessageBoxW(searchWindow, error, PRODUCT_NAME, MB_OK | MB_ICONERROR);
-    }
 }
 
 /// Captures immutable text before opening the selected native printing path.
@@ -4005,9 +3906,6 @@ std::wstring GetControlText(HWND control) {
 LRESULT CALLBACK InformationTextSubclassProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam,
         UINT_PTR subclassId, DWORD_PTR referenceData) {
     UNREFERENCED_PARAMETER(referenceData);
-    if (msg == WM_CONTEXTMENU && ShowInformationContextMenu(window, lParam)) {
-        return 0;
-    }
     if (msg == WM_GETDLGCODE) {
         LRESULT result = DefSubclassProc(window, msg, wParam, lParam);
         if (wParam == VK_RETURN || wParam == VK_ESCAPE || wParam == VK_TAB) {
