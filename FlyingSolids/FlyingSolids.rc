@@ -283,8 +283,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,3,2,2
- PRODUCTVERSION 1,3,2,2
+ FILEVERSION 1,3,3,0
+ PRODUCTVERSION 1,3,3,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -301,12 +301,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FortSoft"
             VALUE "FileDescription", "FlyingSolids"
-            VALUE "FileVersion", "1.3.2.2"
+            VALUE "FileVersion", "1.3.3.0"
             VALUE "InternalName", "FlyingSolids.exe"
             VALUE "LegalCopyright", "Copyright © Petr Červinka — FortSoft 2026"
             VALUE "OriginalFilename", "FlyingSolids.exe"
             VALUE "ProductName", "FlyingSolids"
-            VALUE "ProductVersion", "1.3.2.2"
+            VALUE "ProductVersion", "1.3.3.0"
         END
     END
     BLOCK "VarFileInfo"
