@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.2.2
+ * Last modified for version 1.3.3.0
  */
 
 #define NOMINMAX
@@ -40,11 +40,89 @@
 #include <climits>
 #include <vector>
 
+/// Refreshes layout after Windows completes native dialog DPI scaling.
+static const UINT nativeDialogDpiChangedMessage = WM_APP + 25;
+
 const UINT_PTR ABOUT_CONTROL_SUBCLASS_ID = 0xCC03;
 const UINT_PTR ABOUT_LICENSE_SUBCLASS_ID = 0xCC06;
 const int ABOUT_ICON_SIZE = 32;
 const int ABOUT_LARGE_ICON_SIZE = 48;
 const int ABOUT_LARGE_ICON_DPI = 130;
+
+/// Skips a native dialog-template string or ordinal resource identifier.
+static const WORD* SkipDialogTemplateString(const WORD* value) {
+    if (*value == 0xFFFF) {
+        return value + 2;
+    }
+    while (*value != 0) {
+        value++;
+    }
+    return value + 1;
+}
+
+/// Lets Windows map a control's authored minimum width using the current native dialog font.
+static LONG DialogResourceControlWidth(HWND window, int resourceId, int id) {
+    HINSTANCE hInstance = GetModuleHandleW(nullptr);
+    HRSRC resource = FindResourceW(hInstance, MAKEINTRESOURCEW(resourceId), RT_DIALOG);
+    HGLOBAL loaded = resource == nullptr ? nullptr : LoadResource(hInstance, resource);
+    const WORD* definition = loaded == nullptr ? nullptr : static_cast<const WORD*>(LockResource(loaded));
+    if (definition == nullptr || SizeofResource(hInstance, resource) < 26 || definition[1] != 0xFFFF) {
+        return 0;
+    }
+    WORD count = definition[8];
+    const WORD* item = SkipDialogTemplateString(definition + 13);
+    item = SkipDialogTemplateString(item);
+    item = SkipDialogTemplateString(item);
+    if ((definition[6] & DS_SETFONT) != 0) {
+        item = SkipDialogTemplateString(item + 3);
+    }
+    for (WORD index = 0; index < count; index++) {
+        item = reinterpret_cast<const WORD*>(reinterpret_cast<UINT_PTR>(item) + 3 & ~UINT_PTR{ 3 });
+        int controlId = item[10] | item[11] << 16;
+        if (controlId == id) {
+            RECT bounds = RECT{ 0, 0, static_cast<short>(item[8]), 0 };
+            MapDialogRect(window, &bounds);
+            return bounds.right;
+        }
+        item = SkipDialogTemplateString(item + 12);
+        item = SkipDialogTemplateString(item);
+        WORD bytes = *item++;
+        item = reinterpret_cast<const WORD*>(reinterpret_cast<const BYTE*>(item) + bytes);
+    }
+    return 0;
+}
+
+/// Fits localized button text above its template width while preserving the current native height.
+static SIZE DialogButtonSize(HWND button, int resourceId) {
+    HWND parent = GetParent(button);
+    LONG width = DialogResourceControlWidth(parent, resourceId, GetDlgCtrlID(button));
+    SIZE size{};
+    if (!SendMessageW(button, BCM_GETIDEALSIZE, 0, reinterpret_cast<LPARAM>(&size))) {
+        HDC dc = GetDC(button);
+        if (dc != nullptr) {
+            HFONT font = reinterpret_cast<HFONT>(SendMessageW(button, WM_GETFONT, 0, 0));
+            HGDIOBJ previous = font == nullptr ? nullptr : SelectObject(dc, font);
+            std::wstring text(GetWindowTextLengthW(button) + 1, L'\0');
+            GetWindowTextW(button, &text[0], static_cast<int>(text.size()));
+            RECT bounds{};
+            DrawTextW(dc, text.c_str(), -1, &bounds, DT_CALCRECT | DT_SINGLELINE);
+            RECT padding = RECT{ 0, 0, 12, 0 };
+            MapDialogRect(parent, &padding);
+            size.cx = bounds.right + padding.right + 2 * GetSystemMetrics(SM_CXEDGE);
+            if (previous != nullptr) {
+                SelectObject(dc, previous);
+            }
+            ReleaseDC(button, dc);
+        }
+    }
+    if (size.cx < width) {
+        size.cx = width;
+    }
+    RECT bounds{};
+    GetWindowRect(button, &bounds);
+    size.cy = bounds.bottom - bounds.top;
+    return size;
+}
 
 /// Creates the About license font using Consolas at the reference 8-point size.
 /// The caller owns the returned GDI font, which may be null on failure.
@@ -381,9 +459,11 @@ bool AboutForm::ApplyStyle(bool updateFont) {
     if (window == nullptr) {
         return false;
     }
-    HFONT font = uiFont;
+    HFONT font;
     if (updateFont) {
         font = CreateSystemDialogFont(window);
+    } else {
+        font = reinterpret_cast<HFONT>(SendMessageW(window, WM_GETFONT, 0, 0));
     }
     if (font == nullptr) {
         return false;
@@ -395,9 +475,9 @@ bool AboutForm::ApplyStyle(bool updateFont) {
         }
         return false;
     }
-    HFONT previousFont = ownsFont ? uiFont : nullptr;
+    HFONT previousFont = ownsFont && uiFont != font ? uiFont : nullptr;
+    ownsFont = updateFont || ownsFont && uiFont == font;
     uiFont = font;
-    ownsFont = updateFont;
     SendMessageW(window, WM_SETFONT, reinterpret_cast<WPARAM>(font), FALSE);
     const int ids[] = { ID_INFO_PRODUCT, ID_INFO_WEBSITE, ID_INFO_LINK, ID_INFO_TEXT, ID_INFO_CLOSE };
     const wchar_t* theme = nullptr;
@@ -467,7 +547,7 @@ void AboutForm::Layout(bool resize) const {
     UINT dpi = GetSystemDialogDpi(window);
     SIZE margin = InformationDialogUnits(uiFont, 8, 8);
     SIZE gap = InformationDialogUnits(uiFont, 4, 6);
-    SIZE button = InformationButtonSize(window, uiFont, IDD_ABOUT);
+    SIZE button = DialogButtonSize(GetDlgItem(window, ID_INFO_CLOSE), IDD_ABOUT);
     int textTop = margin.cy;
     if (resize) {
         SIZE license = {
@@ -528,10 +608,6 @@ void AboutForm::Layout(bool resize) const {
 
 /// Handles this form's native commands, layout, theme, DPI changes and resource cleanup.
 INT_PTR AboutForm::HandleMessage(UINT message, WPARAM wParam, LPARAM lParam) {
-    if (message == WM_GETFONT && uiFont != nullptr) {
-        SetWindowLongPtrW(window, DWLP_MSGRESULT, reinterpret_cast<LONG_PTR>(uiFont));
-        return TRUE;
-    }
     if (message == WM_SYSCOMMAND && (wParam & 0xFFF0) == SC_SCREENSAVE && ShouldInhibitScreenSaver()) {
         return TRUE;
     }
@@ -573,10 +649,11 @@ INT_PTR AboutForm::HandleMessage(UINT message, WPARAM wParam, LPARAM lParam) {
         return TRUE;
     }
     if (message == WM_DPICHANGED) {
-        const RECT* bounds = reinterpret_cast<const RECT*>(lParam);
-        SetWindowPos(window, nullptr, bounds->left, bounds->top, bounds->right - bounds->left,
-            bounds->bottom - bounds->top, SWP_NOZORDER | SWP_NOACTIVATE);
-        ApplyStyle(true);
+        PostMessageW(window, nativeDialogDpiChangedMessage, 0, 0);
+        return FALSE;
+    }
+    if (message == nativeDialogDpiChangedMessage) {
+        ApplyStyle(false);
         return TRUE;
     }
     if (message == WM_NCDESTROY) {

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  **
- * Last modified for version 1.3.2.2
+ * Last modified for version 1.3.3.0
  */
 
 #pragma once
@@ -85,8 +85,6 @@ private:
 
     HFONT uiFont;
     PersistWindowState placement;
-    SIZE buttonSize;
-    UINT templateDpi;
     LONG minimumWidth;
     LONG fixedHeight;
     wchar_t* query;
@@ -155,9 +153,6 @@ private:
 
     /// Handles combo notifications, search options, Find Next and Close commands.
     INT_PTR HandleCommand(WPARAM wParam);
-
-    /// Applies suggested DPI bounds and refreshes native fonts and geometry.
-    INT_PTR HandleDpiChange(LPARAM lParam);
 
     /// Supplies the measured minimum width while PersistWindowState fixes the form's height.
     INT_PTR HandleMinMax(LPARAM lParam) const;
