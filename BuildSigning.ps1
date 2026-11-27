@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Last modified for version 1.3.0.0
+Last modified for version 1.3.3.0
 #>
 
 [CmdletBinding()]
@@ -155,10 +155,25 @@ function Sign-Binary {
     $signArguments = @("sign", "/sha1", $Certificate.Thumbprint, "/fd", "SHA256",
         "/tr", $TimestampUrl, "/td", "SHA256", "/v", $Path)
 
-    Write-Host "Signing $([IO.Path]::GetFileName($Path))"
-    & $ToolPath @signArguments
-    if ($LASTEXITCODE -ne 0) {
-        throw "Signing failed for '$Path'."
+    $signingMutex = [System.Threading.Mutex]::new($false, "Local\FortSoft.CodeSigning")
+    $lockHeld = $false
+    try {
+        try {
+            $lockHeld = $signingMutex.WaitOne()
+        } catch [System.Threading.AbandonedMutexException] {
+            $lockHeld = $true
+            Write-Warning ("Recovered an abandoned signing lock: {0}" -f $_.Exception.Message)
+        }
+        Write-Host "Signing $([IO.Path]::GetFileName($Path))"
+        & $ToolPath @signArguments
+        if ($LASTEXITCODE -ne 0) {
+            throw "Signing failed for '$Path'."
+        }
+    } finally {
+        if ($lockHeld) {
+            $signingMutex.ReleaseMutex()
+        }
+        $signingMutex.Dispose()
     }
     Confirm-BinarySignature -Path $Path -ToolPath $ToolPath
 }
